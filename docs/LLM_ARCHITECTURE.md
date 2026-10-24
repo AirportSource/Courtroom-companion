@@ -399,6 +399,23 @@ against the character's capabilities. It cannot touch the filesystem, run comman
 URLs, asset paths, React components or CSS. The frontend re-validates the response shape
 (`parseChatResponse`) before playing it.
 
+### Generated text artifacts (milestone 2)
+
+Artifact-capable chat turns add one separate optional `artifactAction` to the provider's shared
+turn envelope; **CharacterReply itself remains unchanged**. `app/artifacts/contracts.py` derives
+that envelope from the existing character schema. The shared gateway strictly validates a narrow
+`create_text_artifact {filename, format, content}` action and runs the existing dialogue repair.
+CharacterService saves the bounded inert UTF-8 file through ArtifactStore before delivering the
+final reply; failure uses the existing character error performance. No action content reaches
+director input or conversation history, and no provider adapter learns about storage.
+
+The current UI sends `requestId` with chat, enabling local/same-origin task status, duplicate
+coalescing and cancellation. `artifact_working` / `artifact_ready` cues and artifact metadata are
+separate from reply/performance. Ordinary chat produces no file or ready cue. Legacy chat without
+requestId and profile Test Connection remain dialogue-only. See `docs/ARTIFACTS.md` for exact API,
+limits, atomic publication, persistent receipts, cancellation boundary and the minimal text UI.
+The polished delivery/summon/Court Record flow remains milestone 3.
+
 ## Setup
 
 ```

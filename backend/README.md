@@ -48,3 +48,16 @@ For an environment-seeded Anthropic profile in a fresh config directory, set
 For example, `COURTROOM_LLM_API_KEY_ENV=ANTHROPIC_API_KEY` selects that backend variable without
 creating a second secret mechanism. Native structured output requires a supported model;
 unsupported models/formats fail safely without retrying through a different provider.
+
+## Generated text artifacts (milestone 2)
+
+Chat can save validated `.txt`, `.md` and `.py` content as inert UTF-8 text under
+`backend/.local/outputs/` (or `COURTROOM_CONFIG_DIR/outputs`, backend override
+`COURTROOM_OUTPUTS_DIR`). The limit is 64 KiB per file, 200 files and 8 MiB backing content.
+Python is never executed/imported/compiled. Provider adapters and credentials are unchanged.
+
+Use any configured real provider with an explicit file request. For an offline Fake check,
+send `#artifact-py`, `#artifact-md` or `#artifact-txt`. The Generated files panel displays,
+downloads and deletes text. Chat sends one `requestId`; `/api/chat/turns/{id}` provides status
+and cancellation. All artifact routes require local/same-origin access. Full persistence,
+security and duplicate/cancellation behavior: `docs/ARTIFACTS.md`.

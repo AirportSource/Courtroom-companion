@@ -303,3 +303,42 @@ The runtime Igiari WOFF2 SHA-256 is `02C1EFFCD76F86721EE266E51BECF006950B199EDDE
 The runtime DotGothic16 TTF SHA-256 is `155DA8F318553C11D9DFFC2AFFBC7C2114C6A46F9740BCF639ED5568AF92BE71`, identical to `docs/references/dotgothic16/DotGothic16-Regular.ttf`. Embedded metadata reports family `DotGothic16` (`ドットゴシック16` in Japanese), face/style `Regular` / `Normal`, version 1.101, and SIL Open Font License 1.1. No separate licence or readme was supplied in that reference folder.
 
 The former runtime `ui/fonts/ace_attorney.ttf` was removed so the asset validator has no orphaned media. Its byte-identical source remains at `docs/references/Ace-Attorney.ttf` (SHA-256 `04DF2EEABE29CB5EB1B7537A0E1288FE6BEC8B9524BF6BCE50C03104C8B8DCBC`). The effective stack is Igiari → bundled DotGothic16 → Japanese/system sans-serif emergency fallbacks.
+
+---
+
+## Update 2026-10-24 (music + Court Record milestone)
+
+New totals: **25 music tracks** · **3 evidence icons** · 2 new manifests (`music/soundtrack.json`, `court-record/court-record.json`). `npm run validate:assets` now also validates both manifests (structure, files, PNG dimensions, loop regions) and reports **189 referenced files, 0 errors**.
+
+### Music (`music/`, manifest `music/soundtrack.json`, D-043/D-044)
+
+`music/original/`: 25 MP3 files, MPEG-1 Layer III, 44.1 kHz, 128 kbps, ~58 MB in total. Byte-identical to `docs/original_tracks/`.
+
+| Category | Tracks (OST number) |
+|---|---|
+| bgm (16) | 02, 03, 04, 05, 07, 10, 13, 14, 15, 16, 18, 19, 23, 30, 32, 33 |
+| contextual (9) | 06, 08, 09, 11, 17, 20, 22, 24, 29 |
+| excluded (9, no runtime file) | 01, 12, 21, 25, 26, 27, 28, 31, 34 |
+
+Curated loops exist for 03, 08, 09, 13, 16, 17, 22, 29, 30 and 32. The table and method are in `docs/MUSIC.md`. Profile `default` → `maya_fey_turnabout_sisters_2001` (unlooped), alternative `initial_investigation_2001`.
+
+### Court Record (`court-record/`, manifest `court-record/court-record.json`, D-047)
+
+| ID | File | Size | Name |
+|---|---|---|---|
+| `thinker_statue` | `evidence/thinker_statue.png` | 64×64 RGB | The Thinker |
+| `envelope_tied` | `evidence/envelope_tied.png` | 64×64 RGB | Tied Envelope (neutral name) |
+| `cellphone_blue` | `evidence/cellphone_blue.png` | 64×64 RGB | Blue Cellphone (neutral name) |
+
+Profiles: none yet. The Talk Options backdrop reuses `ui/menu/talk-option.png` (`menu_talk_option`).
+
+Imported user music is **not** an asset: it lives in the git-ignored `backend/.local/music/`.
+
+## Update 2026-10-24 (presentation + audio UX milestone)
+
+- `audio/effects/`: 7 new effect WAVs (shock, supershock, badum, deskslam, dramapound, phonebeep, swoop), sound ids `fx_*`.
+- audio.json `events` adds `user_typing` → `blip_male` and `sfx_<name>` for the 8 semantic SFX names (D-049).
+- `characters/maya/character.json` gains `waiting: { emotion: thinking, animation: thinking_side }`; `performance.json` gains the `sfx` rules.
+- `music/soundtrack.json` gains `profiles.maya_fey`.
+- `ui/ui.json` DotGothic16 fallback gains `sizeAdjust: "75%"` (D-051).
+- `npm run validate:assets`: **196 referenced files, 0 errors**.

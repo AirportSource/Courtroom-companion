@@ -657,3 +657,130 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - Real Windows-vault browser flow used a temporary synthetic key: Add Anthropic, no base-URL field, save password with input cleared, switch away/back retaining Configured status, replace/remove, and clean missing-key Test Connection. Inspected 256×192 editor/key-actions/lower-settings screenshots: no row overlap, horizontal overflow or browser exceptions. No secret appeared in local/session storage or API responses. Temporary profile/key/artifacts were removed.
 - No saved Anthropic profile/credential was configured for a real Claude smoke test. No cloud generation was requested; live English/French/Japanese/personality/multi-beat/director/pagination behavior remains unverified.
 - No changes to CredentialStore/security, CharacterService, CharacterReply, CharacterDirector rules, paginator, fonts, Maya assets or performance rules. `docs/sfx general/` preserved. No commit/push.
+
+---
+
+## 2026-10-24 — Music system (original / imported / radio) and Court Record
+
+**Process and models**
+- Lead (integration, shared files, validation): Claude Opus 5.5, since the session model could not be switched. The requested lead model was Sonnet 5.5 medium.
+- Four parallel workers, each with its own files and a definition under `.claude/agents/`:
+  - music-core: Sonnet, medium;
+  - music-import-loop: Sonnet, high;
+  - youtube-radio: Sonnet, medium;
+  - court-record-assets: Haiku, medium.
+- The lead wrote the shared contract `src/music/types.ts` before the workers started. It owned settings, App, Settings/Conversation/Title screens, CSS, `main.py` registration, the validator and docs.
+
+**Implemented**
+- **MusicEngine (D-043):**
+  - serialized, abortable source switching that never overlaps;
+  - shared AudioContext with Web Audio loop regions in samples;
+  - LRU buffer cache; fades; pause/resume; blocked→retry on unlock.
+- **Soundtrack (D-044):**
+  - 25 byte-identical OST runtime copies + `soundtrack.json` (16 bgm, 9 contextual, 9 excluded manifest-only);
+  - Maya/default relation lives in profile data.
+- **Built-in loops:**
+  - decoded in Chrome at 44.1 kHz; analyser proposals plus an independent envelope-lag search;
+  - scored on post-seam musical coverage, envelope identity and seam correlation;
+  - 10 tracks accepted (table in `docs/MUSIC.md`), 15 left `loop: null`, including Maya Fey 2001;
+  - no loop claimed as a DS loop point.
+- **Imports (D-045):**
+  - backend library in ignored `backend/.local/music/`, magic-byte typing, 64 MB cap, traversal-safe IDs;
+  - Web Worker loop analyser with calibrated confidence;
+  - loop editor with preview (BGM pauses meanwhile), accept and coarse/fine/sample nudges, and an opt-in crossfade.
+- **Radio (D-046):**
+  - official visible IFrame player in the out-of-stage Music dock;
+  - configurable video ID with URL parsing; autoplay-blocked/unavailable/offline states.
+- **Court Record (D-047):**
+  - 3 evidence icons extracted 1:1 from `evidences_profiles_full.png` and verified pixel-identical;
+  - data-driven manifest; DS Court Record view (main menu + conversation overlay; descriptions use the D-032 marquee);
+  - generic Talk Options over the original talk-option panel, with the topic sent as a normal chat message.
+- **Validator** extended to `soundtrack.json` and `court-record.json`, reusing the runtime TS validators.
+
+**Browser verification (Chrome, dev servers)**
+- Menus, Settings music rows, Court Record and Talk Options checked at integer scales 3×/4×/auto: no overlap, no horizontal overflow, pixelated rendering, dialogue box and fonts unchanged, no console errors.
+- **Game music:** the profile default played. Initial Investigation's node received exactly loopStart 2.300 s / loopEnd 50.3112 s.
+- **Switching:** Game → Radio during loading started 0 Web Audio nodes; Radio → Off left the engine null/idle.
+- **Radio:** the Lofi preset `jfKfPfyJRdk` got YouTube error 150 (embedding refused), shown honestly, and the preset was marked unverified. YouTube's sample video `M7lc1UVf-VE` played in the visible player and persisted.
+- **Imports:** a synthetic WAV was uploaded with a hostile filename (sanitised). The loop was auto-detected at 2.001–10.001 s at 93 %, accepted (persisted `user-accepted`) and played with that loop. Fake MP3 → 415, traversal ID → 404, no paths in responses. The test upload was deleted.
+- **Not done:** no audio was heard. Loop quality is metric-validated only.
+
+**Found and fixed during integration**
+- Settings allow-list test updated for the music fields.
+- Dev HMR could leave an orphaned music engine; the runtime is now disposed on hot reload and exposed as `window.__ccMusic` in dev.
+- Loop preview overlapped BGM; added `onPreviewChange`, so the host pauses and resumes only what it paused.
+- Court Record descriptions were truncated; they now use the existing marquee.
+- music-core's placeholder "all loops null" test replaced by a provenance test.
+
+**Final checks**
+- Backend pytest: 252 passed (60 new). Frontend `npm test`: 149 passed (118 new).
+- `validate:assets`: 189 files, 0 errors. Build: pass (92 modules + 13.7 kB worker). Lint: pass. `git diff --check`: pass.
+- Nothing committed or pushed. Untracked source folders (`docs/original_tracks/`, `docs/references/music|court-record/`, `docs/references/evidence.png`, `docs/sfx general/`, `docs/websites/`) were left alone.
+
+---
+
+## 2026-10-24 — Music finishing pass
+
+**Radio preset**
+- Replaced stale Lofi Girl ID `jfKfPfyJRdk` with the supplied current candidate `EWrX250Zhko`; official oEmbed returned the expected stream title.
+- Tested from the app origin through YouTube's official IFrame API. The player returned error 150 (embedding disabled). Preset metadata and Radio UI now show it unavailable; the generic URL/ID path remains intact, with no workaround. Old saved preset selections reset to the current candidate.
+
+**Built-in loop review**
+- Decoded all 15 previously-null runtime tracks in Chrome at 44.1 kHz, downmixed all channels to mono, and ran the existing analyser. Maya and Cross-Examination Moderato also received a slower offline search across 1×/2×/4×/8× feature windows, 4–64 s periods and three similarity levels, with full-sample lag refinement and the same D-044 acceptance thresholds.
+- Added metric-validated loop metadata for Cross-Examination Moderato, Maya Fey – Turnabout Sisters 2001, Detention Center, Marvin Grossberg and The Class Trial. Existing accepted loops were preserved. Maya's top three candidates and Cross-Examination's alternatives, metrics and dispositions are recorded in `docs/MUSIC.md`.
+- Ten playable tracks still have `loop: null`; excluded manifest-only tracks remain null by design. No audio was auditioned and no point is claimed to be an original Nintendo DS loop point.
+
+**Validation**
+- Frontend: 182 tests passed; asset validation passed (196 references, 0 errors); production build passed (97 modules); lint passed; `git diff --check` passed.
+- Temporary analysis script/report were removed. No commit or push.
+
+---
+
+## 2026-10-24 — Milestone 1 of 3: character presentation and audio UX
+
+**Process and models**
+- Lead (integration of ConversationScreen/App/Settings/MusicDock/validator/docs and browser validation): Claude Opus 5.5. The session model could not be switched to the requested Sonnet 5.5 medium.
+- Workers: character-performance (Sonnet, high), audio-ux (Sonnet, medium), typography-validation (Haiku, default effort).
+- A separate concurrent session ran a music finishing pass in the same tree. It added D-048, five more built-in loops (including Maya Fey 2001) and the `EWrX250Zhko` preset (error 150). Its edits were kept, and this milestone's decisions were numbered D-049–D-051 after it.
+
+**Implemented**
+- **Waiting/thinking pose (D-049):** pure `nextPhase` machine plus `character.json` `waiting` (Maya `thinking_side`); the validator checks the block.
+- **Semantic beat SFX (D-049):** director `Segment.sfx` from `performance.json` rules → frontend audio.json `sfx_<name>`, first page only, once per line key. 7 curated byte-identical WAVs; new SFX vol/mute settings.
+- **Typing blips (D-049):** `user_typing` event → `blip_male`, `insertText`-only, IME-safe, 60 ms throttle, blip volume/mute.
+- **Kanji scale (D-051):** ui.json FontFace descriptors with DotGothic16 `sizeAdjust: "75%"`, chosen from TTF-table metrics (kanji ink 15 → about 11.2 px against kana 11 px).
+- **Import UX:** button + drop zone, formats/limit visible, step strip (Selected → Checking → Uploading → Analysing loop → Ready), human-readable failures, the new track auto-selected with its loop editor open, loop state per row, library open by default when Imported is selected.
+- **BGM lifecycle (D-050):** a scene context; menus silent (future `menu` profile supported), the conversation plays the character profile (`profiles.maya_fey`), leaving fades out, and a dock Play on a menu auditions until the next screen change.
+
+**Browser verification (Chrome, isolated backend on 8010 with a scratch config, FakeProvider only)**
+- **Music:** the menu and location select stayed idle; entering the conversation played Maya Fey 2001.
+- **Typing:** typing gave one male blip per voiced character at human pace. Modifier/navigation keys gave none, and the input value was unchanged.
+- **Waiting:** submitting showed the thinking pose animating through its blink cycle (048 → 049 → 050 → 051).
+- **Errors:** `#error` left waiting into the in-character error line and then input.
+- **Japanese:** the `#japanese` reply showed balanced kanji/kana on three lines with the arrow reserved. The paginator measured a kanji at 12 px with DotGothic16 `sizeAdjust=75%`, and all test sentences fit in three lines.
+- **SFX:** the shocked beat played `fx_shock` exactly once across all pages.
+- **Import:** a fake .mp3 gave "Could not import not-audio.mp3: The browser could not decode this audio file."; a synthetic WAV went through every step to "Ready" with a 93 % candidate at 2.001–10.001 s.
+- The user's own dev servers (8000/5173, real profile config) were found running and were not touched or used for chat.
+- **Not done:** no audio heard (SFX choices and loops unauditioned); the `#timeout` waiting → error path was interrupted by an HMR reload from the concurrent session (covered by unit tests).
+
+**Final checks**
+- Backend 259 passed. Frontend 182 passed. `validate:assets` 196 / 0 errors. Build 97 modules. Lint and `git diff --check` pass.
+- No commit or push.
+
+---
+
+## 2026-10-24 — Milestone 2 of 3: safe generated text artifacts
+
+**Repository safety**
+- Read CLAUDE.md and persistent docs; inspected status and recent commits before edits. Starting HEAD `178fda9`; captured SHA-256 baseline for 303 already-modified/untracked files in ignored local audit storage. All starting work is treated as user-owned. Codex listed only the current agent; pre-existing Claude processes were present, so filesystem hashes/file sets were also checked for unexpected writes.
+- Source/reference folders and archives were preserved. No add/stage, commit, push, stash, reset, revert, branch switch or history operation. Detailed starting inventory, newly created files, this milestone's edits to existing files and concurrency findings: `docs/MILESTONE_2_CHANGE_AUDIT.md`.
+
+**Implementation**
+- Added `app/artifacts/`: one strict txt/md/py action, schema derived from the existing reply schema, bounded UTF-8 store with server UUIDs, atomic file/catalog publication, safe duplicate display names, persistent receipts and corrupt/missing/orphan handling. Python remains inert text.
+- Shared gateway parsing and CharacterService associate an optional action with a conversation turn; CharacterReply, director rules, paginator, providers' HTTP translation, profile credentials and milestone 1 presentation rules are preserved. One model generation supplies both the final acknowledgement and optional action; actions/content stay outside assistant history.
+- Added local metadata/text/download/delete and turn status/cancel routes, duplicate request coalescing, semantic working/ready/failed cues and an out-of-stage text panel. Legacy dialogue-only calls and provider connection tests cannot create files. No milestone 3 phone/summon/cinematic flow was added.
+
+**Verification**
+- Mocked all four provider transports through shared validation → safe persistence → director. Deterministic coverage includes hostile/Unicode names, UTF-8 byte limits, disallowed action fields, no Python execution, publication failures, reload/receipts, missing/changed/orphan/corrupt storage, cancellation before POST/during generation/at action checkpoint, simultaneous duplicates, local access, safe download and secret/path redaction.
+- Chrome with an isolated Fake backend/config verified txt/md/py creation, duplicate name suffixes, semantic cue order, one final paginated response, thinking while waiting, cancellation returning to input, provider error performance, normal chat with no artifacts, navigation/reload persistence, preview/download/delete and no content in browser storage. Logical stage remained 256×192; screenshots inspected; no browser exceptions. A cancellation-response race found in the browser was corrected and the complete flow rerun successfully.
+- Final **complete integrated suite against the combined working tree**: backend **309 passed / 1 skipped** (Windows developer symlink privilege unavailable); frontend **188 passed**; assets **196 references / 0 errors**; build **100 modules**, pass; lint clean; `git diff --check` pass. All earlier provider/service/director, typography, paginator, audio/music, waiting and Court Record tests run with the new tests.
+- Final baseline/hash/file-set audit found **no unexpected concurrent modifications** outside the declared milestone files. HEAD stayed `178fda9`; nothing was staged. Browser fixture scripts, dedicated backend/Vite processes, scratch config/output files and Chrome profile were removed; ignored audit snapshot/results/screenshots remain for review. Source archives and all unrelated starting work were preserved.

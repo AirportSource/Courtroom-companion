@@ -153,6 +153,20 @@ class FakeProvider(LLMProvider):
             return RawCompletion({"beats": [{"text": "   ", "emotion": "happy"}]}, self.model)
         if "#text" in lowered:
             return RawCompletion("Sorry, I only speak plain text today.", self.model)
+        # Explicit offline fixtures only; real providers use the shared semantic turn schema.
+        # Ordinary Fake patterns and keyword behavior stay unchanged.
+        if "artifactAction" in request.response_schema.get("properties", {}):
+            for extension, filename, content in [
+                ("py", "hello_maya.py", 'print("Hello from Maya.")\n'),
+                ("md", "checklist.md", "# Checklist\n\n- [ ] Review the evidence\n- [ ] Take a break\n"),
+                ("txt", "answer.txt", "Hello! Your text file is ready.\n"),
+            ]:
+                if f"#artifact-{extension}" in lowered:
+                    return RawCompletion(json.dumps({
+                        "beats": [{"text": "All done! Your file is ready below.", "emotion": "happy", "intensity": 0.4}],
+                        "settleEmotion": "happy", "artifactAction": {"type": "create_text_artifact",
+                            "filename": filename, "format": extension, "content": content},
+                    }), self.model)
         pattern = next((p for p in ("messy", "french", "japanese") if f"#{p}" in lowered), None) or choose_pattern(message)
         # Real providers return JSON text; mimic that so the shared parser is exercised.
         return RawCompletion(json.dumps(PATTERNS[pattern]), self.model)

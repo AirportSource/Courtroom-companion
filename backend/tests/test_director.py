@@ -237,3 +237,61 @@ def test_maya_performance_data_is_fully_valid(maya):
     # Every gesture / intensity variant / alias in performance.json references real data.
     assert maya.warnings == []
     assert set(maya.gestures) and set(maya.intensity_variants)
+
+
+# ---- semantic reaction sounds ----------------------------------------------------------------
+
+
+def test_strong_reaction_earns_its_sfx(maya):
+    t, _ = run(maya, reply({"text": "What?!", "emotion": "anxious", "intensity": 0.8, "reaction": "shock"}))
+    assert t.segments[0].reaction == "shocked"
+    assert t.segments[0].sfx == "shock"
+    assert t.to_json()["segments"][0]["sfx"] == "shock"
+
+
+def test_ordinary_reply_is_silent(maya):
+    t, _ = run(maya, reply({"text": "Sure.", "emotion": "happy", "intensity": 0.5}))
+    assert t.segments[0].sfx is None
+    low, _ = run(maya, reply({"text": "Hm.", "emotion": "excited", "intensity": 0.6}))
+    assert low.segments[0].sfx is None
+
+
+def test_strong_emotion_without_reaction_gets_emotion_sfx(maya):
+    t, _ = run(maya, reply({"text": "Yes!!", "emotion": "excited", "intensity": 0.9}))
+    assert t.segments[0].reaction is None
+    assert t.segments[0].sfx == "emphasis"
+    unmapped, _ = run(maya, reply({"text": "Hmm.", "emotion": "thinking", "intensity": 0.99}))
+    assert unmapped.segments[0].sfx is None
+
+
+def test_suppressed_reaction_produces_no_sfx(maya):
+    r = reply({"text": "What?!", "emotion": "surprised", "intensity": 0.95})
+    first, state = run(maya, r)
+    assert first.segments[0].sfx == "shock"
+    again, _ = run(maya, r, state, now=1000.0)  # inside the cooldown
+    assert again.segments[0].reaction is None
+    assert again.segments[0].sfx is None
+
+
+def test_sfx_capped_per_reply_and_deterministic(maya):
+    r = reply(
+        {"text": "No way?!", "emotion": "surprised", "intensity": 0.95},
+        {"text": "Ha ha, really, truly, honestly so funny!", "emotion": "playful", "intensity": 0.95},
+    )
+    a, _ = run(maya, r)
+    b, _ = run(maya, r)
+    assert [s.sfx for s in a.segments] == ["shock", None]
+    assert [s.sfx for s in a.segments] == [s.sfx for s in b.segments]
+
+
+def test_character_without_sfx_data_is_silent(mock_character):
+    t, _ = run(mock_character, reply({"text": "Wow!", "emotion": "surprised", "intensity": 1.0}))
+    assert all(s.sfx is None for s in t.segments)
+
+
+def test_maya_sfx_data_is_valid(maya):
+    from app.characters.repository import SFX_NAMES
+
+    assert not [w for w in maya.warnings if "sfx" in w]
+    assert maya.sfx.reactions == {"shocked": "shock"}
+    assert set(maya.sfx.reactions.values()) | set(maya.sfx.emotions.values()) <= SFX_NAMES

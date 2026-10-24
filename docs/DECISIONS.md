@@ -454,3 +454,123 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - Extend profile types/credential-using types and the compact editor. Anthropic requires a model, uses the same OS credential reference/environment fallback, and has no editable base URL. Existing profile credential actions, activation and history-free Test Connection work without another endpoint/storage mechanism.
 - **Evidence:** Anthropic's [native structured-output documentation](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) describes the JSON Schema subset/projection; the [2026-10-21 migration guide](https://platform.claude.com/docs/en/api/migration-2026-10-21) documents the removed sampling parameters and current auth header. Mocked transport/profile tests and a real Windows-vault browser flow verify the integration; live Claude generation requires a configured real profile credential.
 - **Rationale:** native Anthropic transport fits the existing provider boundary while preserving one character contract, one secret store and the same validated presentation path.
+
+## D-043 — One generic MusicEngine with three sources
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Extends:** D-005 (central audio, separate categories) and D-019 (one AudioContext).
+- **Decision:**
+  - A single `MusicEngine` owns master BGM volume/mute, fades and source switching.
+  - It drives sources through one `MusicSource` contract (`src/music/types.ts`): `original` and `imported` share one Web Audio implementation, and `radio` is the official YouTube player.
+  - Requests are serialized. The previous source is fully stopped before the next starts, a switch during loading aborts silently, and the same track is never restarted.
+  - Loop regions are canonical in samples, with their sample rate, and converted to seconds only at playback.
+  - The engine knows no character, provider, LLM or file name. Which track is a character's or the default's lives only in `soundtrack.json` profiles. LLM output never chooses music, paths or URLs.
+  - A future MusicDirector would issue the same logical `play(kind, trackId)` requests.
+  - Music volume is independent from blip/SFX volume.
+  - The music UI outside the logical stage lives in an App-level Music dock, like the chat bar (D-035).
+- **Rationale:** one place guarantees "never two BGM sources" and respects autoplay rules. Sources stay swappable without touching the conversation pipeline.
+
+## D-044 — Built-in loops are curated offline from the OST MP3s; never claimed as DS loop points
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - The 25 non-excluded tracks are byte-identical runtime copies (D-002 applies: ~58 MB).
+  - Loop metadata is curated offline and written into `soundtrack.json`; it is not computed at runtime. A loop is accepted only when post-seam musical coverage ≥ 0.70, envelope identity ≥ 0.92 and seam correlation ≥ 0.95 (method in `docs/MUSIC.md`). Provenance is `curated-analysis`, and the note states it is not an original DS loop point and was not verified by listening.
+  - 10 tracks passed. The other 15, including the Maya default, keep `loop: null` (play through and restart) until corrected manually.
+  - Built-in tracks never get an automatic crossfade.
+  - Excluded tracks (01, 12, 21, 25, 26, 27, 28, 31, 34) are listed in the manifest without a runtime file and can never enter the BGM pool. The source files are untouched.
+- **Rationale:** these are OST masters, not DS sequence data. Shipping only metric-validated loops, and honestly marking the rest, beats inventing loop points.
+- **Open:** whether ~58 MB of MP3 should be committed normally or through Git LFS is the owner's call before committing.
+
+## D-045 — Imported music stored by the local backend; automatic loop analysis in a Web Worker
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - Imported files and `library.json` live in the git-ignored `backend/.local/music/`, behind `/api/music/imports`, which reuses the local/same-origin guard of D-041.
+  - Uploads are raw streamed bodies, so no python-multipart dependency is needed. The size cap is 64 MB; type is checked by magic bytes, files get server-generated names, and IDs are strict with confined paths. No paths are returned and nothing is executed.
+  - Loop detection is lightweight DSP: chroma/band features → lag-similarity runs → sample-level refinement → calibrated confidence. It runs in a Web Worker, with no LLM or ML.
+  - A proposal is persisted as `auto-detected`; the user accepts (`user-accepted`) or adjusts (`user-adjusted`). Analysis never re-runs once a loop is stored.
+  - A short baked crossfade is an opt-in fallback for imported low-confidence loops only.
+- **Rationale:** the backend gives cleaner persistence and security than browser storage for large files. Worker analysis keeps the UI responsive.
+
+## D-046 — Radio uses only the official YouTube IFrame Player, visible outside the DS stage
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - The Radio source is a real, visible 356×200 embedded player in the Music dock, controlled only through the IFrame API (play, pause, volume, state), with no overlays.
+  - There is no download, extraction, proxying, scraping or hidden player.
+  - The video ID is user configuration. The Lofi Girl preset is data and marked unverified: on 2026-10-24, embedding was refused for `jfKfPfyJRdk` (error 150).
+  - Autoplay blocks become a "press Play" state recovered by a real click.
+- **Rationale:** compliance with YouTube's embed terms, and preservation of the 256×192 DS layout.
+
+## D-047 — Data-driven Court Record and generic Talk Options
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - `assets/court-record/court-record.json` (v1) lists entries `{id, type: evidence|profile, name, description, asset{src,width,height}}` plus ordering. Source-sheet rectangles are recorded only as provenance data, never in components.
+  - Icons are exact 64×64 slot-interior crops (frame excluded) from `evidences_profiles_full.png`, drawn at native size with nearest-neighbour scaling.
+  - Uncertain identities get neutral IDs/names (`envelope_tied`, `cellphone_blue`); no case lore is invented.
+  - `TalkOptions` is a generic list (label/enabled/isNew/order, deterministic sort, disabled skipped) over the existing `menu_talk_option` backdrop. The chosen topic returns to the conversation as an ordinary user message through the existing chat path. Sample topics are dev data and character-neutral.
+  - No case logic or evidence correctness yet.
+  - Validated by `npm run validate:assets` and pixel-identity tests.
+- **Rationale:** adding evidence needs only data + PNG. The LLM never supplies UI assets or paths.
+
+## D-048 — Music finishing: preserve evidence thresholds, update unavailable radio preset
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - Keep the built-in loop acceptance thresholds from D-044 unchanged. A slower offline pass may search more phrase/window scales and refine at full sample resolution, but weak candidates stay out of `soundtrack.json`.
+  - Add only candidates that pass coverage ≥0.70, envelope identity ≥0.92 and seam correlation ≥0.95. Added metric-validated loops for Cross-Examination Moderato, Maya Fey – Turnabout Sisters 2001, Detention Center, Marvin Grossberg and The Class Trial. No loop is claimed as an original Nintendo DS loop point or verified by listening.
+  - The supplied current Lofi Girl candidate `EWrX250Zhko` was tested through the official IFrame API from the app origin and returned error 150. Keep it in preset metadata as unavailable, leave the generic YouTube implementation/configuration intact, and do not work around the refusal. Reset the retired saved preset ID to the current default.
+- **Rationale:** finish built-in curation where the existing evidence is strong without treating approximate candidates as source-game data; report the blocked preset honestly.
+
+## D-049 — Data-driven waiting pose, semantic beat SFX and typing blips
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Extends:** D-034 (Character Director) and D-028 (logical sound events). CharacterReply is unchanged.
+- **Decision:**
+  - The conversation phase is a pure state machine (`engine/presentation.ts` `nextPhase`: submit/response/error/cancel/finished → `input | waiting | performing`). Every request outcome leaves `waiting`, and it is provider-independent.
+  - While waiting, the character performs its `character.json` `waiting` block (Maya: `thinking` / `thinking_side`) in idle mode, with no reaction and no talking. The idle loop keeps animating; invalid or missing data falls back to the default emotion. The asset validator checks the block.
+  - The director attaches an optional semantic `sfx` to timeline segments, from the closed set `surprise, shock, realization, comic, emphasis, tension, notification, soft_transition`. The rules live in `performance.json` `sfx`:
+    - a surviving reaction maps through `reactions`; otherwise `emotions` applies only at ≥ `minIntensity`;
+    - suppressed reactions produce no sound;
+    - at most one per segment and `maxPerReply` per reply;
+    - deterministic, with no filenames and no character names in code.
+  - The frontend maps a name to audio.json event `sfx_<name>`. Only a beat's first page carries it, and it plays once per line key, so pagination never replays it. Reaction SFX have their own SFX volume/mute settings.
+  - Typing blips: the user's own text input plays audio.json event `user_typing` (→ `blip_male`). This comes only from `insertText` input with a voiced character: no modifiers, navigation, paste, deletions, whitespace or punctuation; silent during IME composition, one blip at commit; ≥ 60 ms gap. Blip volume/mute apply, and the input value is never touched.
+- **Rationale:** the presentation reacts like the games without the model naming files, and without one-sound-per-page spam.
+
+## D-050 — Character BGM belongs to the conversation scene
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Extends:** D-043. The engine stays character-independent.
+- **Decision:**
+  - `useMusicSync(soundtrack, context)` with `context = { scene: 'menu', audition? } | { scene: 'conversation', characterId }`.
+  - Menus (title, settings, selection screens, Court Record) are silent unless a `menu` soundtrack profile exists (none yet, so future menu music remains possible) or the user explicitly presses Play in the music dock. That audition lasts until the next screen change.
+  - The conversation plays the selected source. For Original, the chosen track wins, else `profiles[characterId]` (`maya_fey`), else `default`.
+  - Leaving the scene fades the music out through the engine. Same-track requests are never restarted, and volume/mute are preserved.
+- **Rationale:** the character's theme should mark entering the scene, not play over menus.
+
+## D-051 — DotGothic16 fallback scaled with `size-adjust: 75%`
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Extends:** D-038 (DotGothic16 as the deterministic Kanji fallback). The Igiari primary font, 16 px size and 15 px line height are unchanged.
+- **Decision:**
+  - `ui.json` fallback entries may carry CSS font-metric descriptors (`sizeAdjust`, `ascentOverride`, `descentOverride`, `lineGapOverride`; validated percentages). They are applied when registering the FontFace.
+  - DotGothic16 uses `sizeAdjust: "75%"` (12 px effective). Measured from the font tables, at 16 px the median kanji ink height was 15 px against 11 px for Igiari kana (ratio 1.36); at 75% it is about 11.2 px (ratio 1.02).
+  - Because the descriptor lives on the same FontFace the paginator's canvas measurer uses, measurement and rendering stay identical. Chrome measured a kanji at 12 px.
+  - Trade-off: DotGothic16 is only pixel-crisp at 16 px multiples, so kanji render slightly soft. No crisp size matches Igiari's height.
+  - The about 0.9 px lower ink centre of kanji was accepted after visual review; no baseline hack was added.
+- **Rationale:** balanced kanji and kana without shrinking the whole font or diverging from the paginator.
+
+## D-052 — Safe generated text artifacts beside the character reply
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - Keep CharacterReply unchanged. Derive one shared turn envelope from its existing schema with a separate optional strict `create_text_artifact {filename, format, content}` action. Reuse common dialogue repair, all providers, profile credentials and character context. Invalid actions cannot be repaired into broader operations.
+  - CharacterService owns the validated action and completes backing/catalog publication before directing/delivering the one final acknowledgement. Failures use the existing character error line. File content/storage details never enter director input or assistant history.
+  - Allow only inert UTF-8 txt/md/py, ≤64 KiB each, ≤200 files and ≤8 MiB backing content including orphan/interrupted files. Use backend-generated IDs, sanitized/unique display names, non-overwriting atomic backing publication and atomic metadata. No shell, subprocess, import/compile/execute, arbitrary paths or general tool dispatcher.
+  - Persist metadata and hashed request receipts under ignored local outputs storage. Missing/changed content is unavailable; orphan/temp files remain inert; corrupt metadata is preserved for repair. One local backend worker owns the store.
+  - Current chat supplies a requestId and uses local/same-origin task status/cancellation and duplicate coalescing. Cues `artifact_working` / `artifact_ready` are separate from CharacterReply; no ready state is published after failed/cancelled creation. Cancellation before the bounded atomic commit prevents creation; a completed commit remains honestly ready. Legacy chat/Test Connection remain dialogue-only.
+  - Use a minimal plain-text Generated files panel outside the DS stage. Full phone/summon/evidence cinematic and final Court Record redesign are milestone 3.
+- **Rationale:** explicit small-file creation can fit the existing conversation boundary without giving generated text execution privileges or coupling providers to filesystem/presentation behavior. Full details and limits: `docs/ARTIFACTS.md`.

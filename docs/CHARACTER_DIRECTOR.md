@@ -144,3 +144,25 @@ replays it.
 
 The prompt asks for 1–3 beats and a new beat only when the emotion clearly changes. The
 director enforces the cap and merges or holds anything that would look hyperactive.
+
+## Semantic SFX (D-049)
+
+Segments may carry `"sfx": "<name>"` (closed set: surprise, shock, realization, comic, emphasis, tension, notification, soft_transition), chosen from `performance.json` `sfx`:
+
+```json
+"sfx": { "maxPerReply": 1, "minIntensity": 0.75,
+         "reactions": { "shocked": "shock" },
+         "emotions": { "surprised": "surprise", "excited": "emphasis", "playful": "comic", "anxious": "tension", "thinking": null } }
+```
+
+Rules:
+- A surviving reaction takes precedence. Otherwise the emotion mapping applies only at ≥ `minIntensity`.
+- A reaction suppressed by threshold, cap or cooldown produces no sound.
+- At most one sound per segment and `maxPerReply` per reply.
+- Deterministic.
+
+The frontend plays audio.json event `sfx_<name>` once, on the segment's first page only.
+
+## Waiting performance (D-049)
+
+`character.json` `waiting` names the pose shown while a reply is generated (Maya: `thinking` / `thinking_side`, idle loop, no reaction).

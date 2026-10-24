@@ -18,6 +18,8 @@ from .providers.openai_compatible import OpenAICompatibleProvider
 from .providers.anthropic import AnthropicProvider
 from .repair import parse_reply
 from .schemas import CharacterReply, ChatMessage
+from ..artifacts.contracts import CreateTextArtifact
+from ..artifacts.parsing import parse_artifact_turn
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +48,7 @@ class GatewayResult:
     warnings: list[str] = field(default_factory=list)
     #: Short machine-readable failure reason ("timeout", "provider_error", "invalid_reply").
     error: str | None = None
+    artifact_action: CreateTextArtifact | None = None
 
 
 class LLMGateway:
@@ -89,6 +92,9 @@ class LLMGateway:
             logger.exception("LLM provider %s failed", self.config.type)
             return GatewayResult(None, ["provider failed"], error="provider_error")
 
+        if "artifactAction" in response_schema.get("properties", {}):
+            parsed = parse_artifact_turn(raw.content)
+            return GatewayResult(parsed.reply, parsed.warnings, parsed.error, parsed.action)
         repaired = parse_reply(raw.content)
         if repaired.reply is None:
             return GatewayResult(None, repaired.warnings, error="invalid_reply")

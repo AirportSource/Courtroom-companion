@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "thinker_statue",
+      "type": "evidence",
+      "name": "The Thinker",
+      "description": "A statue of a man deep in thought.",
+      "asset": { "src": "evidence/thinker_statue.png", "width": 64, "height": 64 },
+      "provenance": {
+        "source": "docs/references/court-record/evidences_profiles_full.png",
+        "rect": { "x": 430, "y": 4, "width": 64, "height": 64 }
+      }
+    },
+    {
+      "id": "envelope_tied",
+      "type": "evidence",
+      "name": "Tied Envelope",
+      "description": "A manila envelope bound with string.",
+      "asset": { "src": "evidence/envelope_tied.png", "width": 64, "height": 64 },
+      "provenance": {
+        "source": "docs/references/court-record/evidences_profiles_full.png",
+        "rect": { "x": 75, "y": 4, "width": 64, "height": 64 }
+      }
+    },
+    {
+      "id": "cellphone_blue",
+      "type": "evidence",
+      "name": "Blue Cellphone",
+      "description": "A blue mobile phone.",
+      "asset": { "src": "evidence/cellphone_blue.png", "width": 64, "height": 64 },
+      "provenance": {
+        "source": "docs/references/court-record/evidences_profiles_full.png",
+        "rect": { "x": 288, "y": 501, "width": 64, "height": 64 }
+      }
+    }
+  ],
+  "order": {
+    "evidence": ["thinker_statue", "envelope_tied", "cellphone_blue"],
+    "profiles": []
+  }
+}

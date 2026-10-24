@@ -1,7 +1,10 @@
 // Loads asset manifests from public/assets, validates their shape at runtime and resolves
 // manifest-relative paths to URLs. Problems with individual entries become warnings and the
 // entry is dropped; only an unusable manifest throws.
+import { readFontMetrics, hasFontMetrics, fontFaceCss } from './fontMetrics.ts'
+import { readWaiting } from './presentation.ts'
 import type {
+  FontMetricDescriptors,
   AnimationClip,
   AudioManifest,
   Background,
@@ -292,6 +295,7 @@ export async function loadCharacter(manifestUrl: string): Promise<LoadedCharacte
     animations,
     reactions,
     emotions,
+    waiting: readWaiting(manifest.waiting, emotions, animations, defaultEmotion),
     warnings,
   }
 }
@@ -354,18 +358,31 @@ export async function loadUi(): Promise<LoadedUi> {
   for (const [id, font] of Object.entries(isRecord(raw.fonts) ? raw.fonts : {})) {
     if (!isRecord(font) || typeof font.src !== 'string' || typeof font.family !== 'string') continue
     try {
-      const bundledFallbacks = (Array.isArray(font.fallbacks) ? font.fallbacks : []).filter(
-        (fallback): fallback is { src: string; family: string } =>
-          isRecord(fallback) && typeof fallback.src === 'string' && typeof fallback.family === 'string',
+      const bundledFallbacks = (Array.isArray(font.fallbacks) ? font.fallbacks : [])
+        .filter(
+          (fallback): fallback is Record<string, unknown> & { src: string; family: string } =>
+            isRecord(fallback) && typeof fallback.src === 'string' && typeof fallback.family === 'string',
+        )
+        .map((fallback) => ({ src: fallback.src, family: fallback.family, metrics: readFontMetrics(fallback) }))
+      const fontSources = [{ src: font.src, family: font.family, metrics: {} as FontMetricDescriptors }, ...bundledFallbacks]
+      await Promise.all(
+        fontSources.map(async ({ src, family, metrics }) => {
+          const url = new URL(src, manifestUrl).href
+          if (hasFontMetrics(metrics)) {
+            // @font-face so size-adjust & co apply to DOM text and canvas measurement alike.
+            const style = document.createElement('style')
+            style.textContent = fontFaceCss(family, url, metrics)
+            document.head.append(style)
+            await document.fonts.load(`16px ${JSON.stringify(family)}`, 'あ漢')
+            return
+          }
+          document.fonts.add(await new FontFace(family, `url(${url})`).load())
+        }),
       )
-      const fontSources = [{ src: font.src, family: font.family }, ...bundledFallbacks]
-      const faces = await Promise.all(
-        fontSources.map(({ src, family }) => new FontFace(family, `url(${new URL(src, manifestUrl).href})`).load()),
-      )
-      faces.forEach((face) => document.fonts.add(face))
       ui.fonts[id] = {
         family: font.family,
         fallbackFamilies: bundledFallbacks.map(({ family }) => family),
+        fallbackMetrics: Object.fromEntries(bundledFallbacks.map(({ family, metrics }) => [family, metrics])),
         pixelSize: typeof font.pixelSize === 'number' ? font.pixelSize : 16,
         letterSpacing: typeof font.letterSpacing === 'number' ? font.letterSpacing : 0,
         wordSpacing: typeof font.wordSpacing === 'number' ? font.wordSpacing : 0,

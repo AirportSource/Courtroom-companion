@@ -22,7 +22,7 @@ test('dialogue font manifest bundles Igiari with deterministic DotGothic16 fallb
   assert.deepEqual(dialogueFont, {
     src: 'fonts/Igiari.woff2',
     family: 'Igiari',
-    fallbacks: [{ src: 'fonts/DotGothic16-Regular.ttf', family: 'DotGothic16' }],
+    fallbacks: [{ src: 'fonts/DotGothic16-Regular.ttf', family: 'DotGothic16', sizeAdjust: '75%' }],
     pixelSize: 16,
     letterSpacing: 0,
     wordSpacing: 0,

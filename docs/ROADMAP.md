@@ -16,14 +16,14 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
   - `backgrounds.json` with `bg_01`…`bg_29` and validated dimensions. Semantic names are still descriptions only; bg_18 has characters baked in.
 - [x] Stabilize SFX — 2026-10-24
   - `audio.json` v1 (D-012): 18 sounds in `blip` / `dialogue` / `effect` / `ui`, blip paths fixed.
-- [ ] Prepare loopable music
-  - No music files exist. `assets/music/` folder reserved.
+- [~] Prepare loopable music — 2026-10-24: 25 OST tracks + `soundtrack.json`; 15 metric-validated loops, 10 playable tracks remain `loop: null`; Maya now has a metric-validated loop. No loop verified by listening; see D-048 and `docs/MUSIC.md`.
 - [~] Prepare UI assets
   - 2026-10-24: CSS stand-ins remain for the dialogue box, name plate, arrow and menu buttons; original title and menu-panel art are in use.
   - [~] Owner-supplied sources received: title sheet, exclamations, Igiari distribution, DotGothic16 source and miscellaneous background sheet. **Missing:** a text box / name plate / arrow source.
   - [x] `ui.json` manifest + validator coverage; title art, exclamations and font extracted — 2026-10-24
   - [x] Igiari WOFF2 is the primary stage/UI font at 16 px, measured by the live paginator — 2026-10-24 (D-037)
   - [x] Deterministic Japanese fallback — bundled DotGothic16 supplies Kanji after Igiari; system Japanese fonts are tertiary only — 2026-10-24 (D-038)
+  - [x] Kanji/kana visual balance: DotGothic16 `size-adjust: 75%`, paginator-consistent — 2026-10-24 (D-051)
   - [~] Authentic Japanese typography — DotGothic16 is visually compatible but is not claimed to be the original Ace Attorney Kanji font
   - [x] Menu panels from the miscellaneous sheet → `ui/menu/`, used as menu backgrounds — 2026-10-24 (D-031)
   - [ ] Replace the remaining CSS stand-ins (text box, name plate, arrow, menu buttons)
@@ -54,13 +54,22 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [x] Menu/navigation SFX via logical events (cursor/confirm/cancel/open/page/save/start) — 2026-10-24 (D-028)
 - [x] Lightweight engine tests (`npm test`, node:test) — 2026-10-24 (D-029)
 - [x] Settings: text speed, blip volume, mute, fullscreen — 2026-10-24
-- [ ] Music manager and crossfade (single active track, no restart of same track)
+- [x] Music manager: one MusicEngine, Web Audio loop regions in samples, fades, single active source, no restart of same track, separate BGM volume/mute — 2026-10-24 (D-043)
+- [x] Imported music: backend library, Web Worker auto-loop with confidence, preview/accept/adjust, crossfade fallback — 2026-10-24 (D-045); verified with a synthetic WAV, not yet with real user music
+- [~] YouTube radio via the official IFrame Player — 2026-10-24 (D-046, D-048); official player test of current Lofi Girl candidate `EWrX250Zhko` returned error 150, preset is marked unavailable; generic video URL/ID remains configurable
+- [ ] Manual by-ear loop validation of built-in tracks (Maya Fey, Initial Investigation, Cross-Examination Moderato, Suspense, a contextual track)
+- [ ] MusicDirector (logical music intents → engine), not LLM-chosen paths
+- [x] Character BGM only in the conversation scene; menus silent; leaving fades out — 2026-10-24 (D-050)
+- [x] Semantic reaction SFX (director → `sfx_<name>` events, once per beat) + SFX volume/mute — 2026-10-24 (D-049); sounds chosen by name, not yet listened to
+- [x] User typing blips (male), IME-safe and throttled — 2026-10-24 (D-049)
+- [x] Discoverable import UX (button + drop zone, visible steps, readable failures, auto-open loop editor) — 2026-10-24
 
 ## Phase 5 — Conversation intelligence
 - [x] Structured LLM contract — 2026-10-24: CharacterReply (multi-beat: text / emotion / intensity / reaction / gesture + settleEmotion), shared parse+validate+repair (D-033)
 - [x] FastAPI backend — 2026-10-24: `/api/health`, `/api/characters/{id}/capabilities`, `/api/chat`; CharacterService; in-memory sessions
 - [x] Provider-agnostic LLM gateway + adapter contract + FakeProvider — 2026-10-24 (D-033)
 - [x] Character Director → PerformanceTimeline driving the existing dialogue/animation engines — 2026-10-24 (D-034)
+- [x] Waiting/thinking performance while the reply is generated (data-driven, provider-independent) — 2026-10-24 (D-049)
 - [x] Minimal chat UX in the conversation scene (input → waiting → performance → settle) — 2026-10-24
 - [x] First real provider adapter: Ollama native HTTP API, JSON-Schema output, backend model discovery and Settings controls — 2026-10-24 (D-039)
 - [x] Generic OpenAI-compatible provider: Chat Completions, native JSON Schema, backend-only secret state and Settings test flow — 2026-10-24 (D-040)
@@ -70,5 +79,18 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [ ] Conversation memory (in-memory 12-message history only so far)
 - [ ] Effects/music intent in the contract (exclamations, music moods)
 
+## Phase 5b — Court Record & Talk Options
+- [x] Data-driven Court Record manifest + 3 native evidence icons + DS Court Record view (main menu + conversation overlay) — 2026-10-24 (D-047)
+- [x] Generic Talk Options over the original talk-option panel; chosen topic returns as a normal chat message — 2026-10-24 (D-047)
+- [ ] Profiles entries, more evidence, case logic / presenting evidence
+
 ## Phase 6 — Voice input
 - [ ] Microphone / Whisper
+
+## Milestone 2 of 3 — Safe generated artifacts (D-052)
+- [x] One shared, strict optional text-artifact action beside CharacterReply; all four providers reuse it
+- [x] Bounded UTF-8 txt/md/py storage with opaque backing IDs, atomic publication, persistent metadata/receipts and safe display names
+- [x] Local list/metadata/content/download/delete API; Python remains inert text
+- [x] Turn working/ready/failed cues, duplicate coalescing, explicit cancellation, stable error performance and normal-chat regression coverage
+- [x] Minimal out-of-stage Generated files panel: preview, full text, download, delete and reload/navigation persistence
+- [ ] Milestone 3: final file-only Court Record, phone interaction, summon box, evidence-added cinematic and polished artifact inspector

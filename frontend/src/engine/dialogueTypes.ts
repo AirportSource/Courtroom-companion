@@ -1,4 +1,5 @@
 import type { AnimationId, CharacterId, EmotionId, ReactionId, SoundId } from './manifestTypes.ts'
+import type { SfxName } from './performance.ts'
 
 /** One line of scripted (later: LLM-produced) dialogue. Purely logical IDs, no asset paths. */
 export interface DialogueLine {
@@ -12,4 +13,6 @@ export interface DialogueLine {
   animation?: AnimationId
   /** Optional explicit one-shot reaction; null = none. Omitted = the emotion's own binding. */
   reaction?: ReactionId | null
+  /** Semantic reaction sound (closed set); only ever set on a segment's first page. */
+  sfx?: SfxName | null
 }

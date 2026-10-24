@@ -7,7 +7,8 @@
       "fallbacks": [
         {
           "src": "fonts/DotGothic16-Regular.ttf",
-          "family": "DotGothic16"
+          "family": "DotGothic16",
+          "sizeAdjust": "75%"
         }
       ],
       "pixelSize": 16,

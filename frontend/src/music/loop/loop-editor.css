@@ -1,0 +1,144 @@
+/* Loop editor: normal DOM, mounted outside the 256x192 DS stage. */
+.loop-editor {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 640px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font: 14px/1.4 system-ui, sans-serif;
+  color: #f2f2f2;
+  background: #1c1c28;
+  border: 1px solid #4a4a66;
+  border-radius: 6px;
+}
+.loop-editor__title {
+  margin: 0;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.loop-editor__status,
+.loop-editor__error,
+.loop-editor__confidence {
+  margin: 0;
+}
+.loop-editor__error {
+  color: #ff9c9c;
+}
+.loop-editor__points {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+.loop-editor__points dt {
+  font-size: 12px;
+  opacity: 0.75;
+}
+.loop-editor__points dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.loop-editor__time {
+  width: 7ch;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+  background: #0f0f18;
+  border: 1px solid #4a4a66;
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+.loop-editor__ms {
+  width: 5ch;
+  font: inherit;
+  color: inherit;
+  background: #0f0f18;
+  border: 1px solid #4a4a66;
+  border-radius: 3px;
+}
+.loop-editor__confidence {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  border-left: 4px solid #8a8aa8;
+  background: #232336;
+}
+.loop-editor__confidence span {
+  font-size: 12px;
+  opacity: 0.8;
+}
+.loop-editor__confidence[data-quality='high'] {
+  border-left-color: #7fd98b;
+}
+.loop-editor__confidence[data-quality='medium'] {
+  border-left-color: #e6c75c;
+}
+.loop-editor__confidence[data-quality='low'] {
+  border-left-color: #ff9c9c;
+}
+.loop-editor__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+.loop-editor__row select {
+  font: inherit;
+  color: inherit;
+  background: #0f0f18;
+  border: 1px solid #4a4a66;
+  border-radius: 3px;
+  max-width: 100%;
+}
+.loop-editor__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.loop-editor button {
+  font: inherit;
+  color: inherit;
+  background: #2f2f4a;
+  border: 1px solid #4a4a66;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.loop-editor button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.loop-editor button:focus-visible,
+.loop-editor input:focus-visible,
+.loop-editor select:focus-visible {
+  outline: 2px solid #9fb4ff;
+  outline-offset: 1px;
+}
+.loop-editor__adjust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.loop-editor__adjust fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0;
+  padding: 6px 8px;
+  border: 1px solid #4a4a66;
+  border-radius: 4px;
+}
+.loop-editor__nudge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+.loop-editor__nudge button {
+  min-width: 28px;
+  padding: 2px 6px;
+}

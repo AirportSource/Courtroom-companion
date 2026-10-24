@@ -74,6 +74,8 @@ export interface CharacterManifest {
   animations: Record<AnimationId, AnimationManifest>
   reactions?: Record<ReactionId, ReactionManifest>
   emotions: Record<EmotionId, EmotionBindingManifest>
+  /** Optional pose held (idle, looping) while a reply is pending. Invalid parts fall back. */
+  waiting?: { emotion?: EmotionId; animation?: AnimationId }
   unassignedFrames?: string[]
 }
 
@@ -150,14 +152,26 @@ export interface LoadedCharacter {
   animations: Record<AnimationId, CharacterAnimation>
   reactions: Record<ReactionId, AnimationClip>
   emotions: Record<EmotionId, EmotionBindingManifest>
+  /** Pose while a reply is pending; null = use the default emotion. */
+  waiting?: { emotion: EmotionId; animation: AnimationId } | null
   /** Non-fatal problems found while loading (missing frames, bad references...). */
   warnings: string[]
+}
+
+/** `@font-face` metric descriptors, as percentages (e.g. "87.5%"). */
+export interface FontMetricDescriptors {
+  sizeAdjust?: string
+  ascentOverride?: string
+  descentOverride?: string
+  lineGapOverride?: string
 }
 
 export interface UiFont {
   family: string
   /** Bundled fallback families, already loaded and registered in stack order. */
   fallbackFamilies: string[]
+  /** CSS font metric descriptors applied to each fallback family (see fontFaceCss). */
+  fallbackMetrics: Record<string, FontMetricDescriptors>
   /** Size (CSS px, i.e. stage px) at which one font pixel = one stage pixel. */
   pixelSize: number
   /** Letter spacing (px at pixelSize) that keeps glyph advances on whole pixels. */

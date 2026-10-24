@@ -36,6 +36,26 @@ class DirectorSettings:
     ms_per_char: int = 40
 
 
+#: Closed set of semantic reaction sound names. The frontend plays audio.json event `sfx_<name>`.
+SFX_NAMES = frozenset(
+    {"surprise", "shock", "realization", "comic", "emphasis", "tension", "notification", "soft_transition"}
+)
+
+
+@dataclass(frozen=True)
+class SfxSettings:
+    """Semantic reaction sounds. Disabled (empty maps) unless performance.json defines `sfx`."""
+
+    #: At most this many reaction sounds per reply.
+    max_per_reply: int = 1
+    #: Intensity a beat needs to earn an emotion-driven sound (a surviving reaction needs none).
+    min_intensity: float = 0.7
+    #: Reaction id -> sfx name.
+    reactions: dict[str, str] = field(default_factory=dict)
+    #: Emotion id -> sfx name, for strong beats without a reaction.
+    emotions: dict[str, str] = field(default_factory=dict)
+
+
 @dataclass(frozen=True)
 class Gesture:
     animation: str
@@ -69,6 +89,7 @@ class CharacterProfile:
     emotion_aliases: dict[str, str] = field(default_factory=dict)
     reaction_aliases: dict[str, str] = field(default_factory=dict)
     director: DirectorSettings = field(default_factory=DirectorSettings)
+    sfx: SfxSettings = field(default_factory=SfxSettings)
     error_text: str = "..."
     error_emotion: str | None = None
     personality: str = ""
@@ -189,6 +210,8 @@ class CharacterRepository:
         emotion_aliases = {a: t for a, t in (perf.get("emotionAliases") or {}).items() if t in emotions}
         reaction_aliases = {a: t for a, t in (perf.get("reactionAliases") or {}).items() if t in reactions}
 
+        sfx = self._read_sfx(perf.get("sfx"), emotions, reactions, reaction_aliases, warnings)
+
         error = perf.get("errorLine") or {}
         personality_path = pack_dir / "personality.md"
         return CharacterProfile(
@@ -204,8 +227,45 @@ class CharacterRepository:
             emotion_aliases=emotion_aliases,
             reaction_aliases=reaction_aliases,
             director=director,
+            sfx=sfx,
             error_text=str(error.get("text") or "..."),
             error_emotion=error.get("emotion") if error.get("emotion") in emotions else None,
             personality=personality_path.read_text(encoding="utf-8") if personality_path.exists() else "",
             warnings=warnings,
+        )
+
+    @staticmethod
+    def _read_sfx(
+        raw: Any,
+        emotions: dict[str, EmotionBinding],
+        reactions: frozenset[str],
+        reaction_aliases: dict[str, str],
+        warnings: list[str],
+    ) -> SfxSettings:
+        if not isinstance(raw, dict):
+            return SfxSettings()
+
+        def table(key: str, known: Any) -> dict[str, str]:
+            out: dict[str, str] = {}
+            for name, sfx in (raw.get(key) or {}).items():
+                if sfx is None:
+                    continue  # explicit "no sound"
+                if name not in known:
+                    warnings.append(f"sfx.{key}: unknown id '{name}'; dropped")
+                elif sfx not in SFX_NAMES:
+                    warnings.append(f"sfx.{key}: unknown sfx '{sfx}' for '{name}'; dropped")
+                else:
+                    out[name] = sfx
+            return out
+
+        defaults = SfxSettings()
+        try:
+            max_per_reply = max(0, int(raw.get("maxPerReply", defaults.max_per_reply)))
+        except (TypeError, ValueError):
+            max_per_reply = defaults.max_per_reply
+        return SfxSettings(
+            max_per_reply=max_per_reply,
+            min_intensity=_clamp01(raw.get("minIntensity"), defaults.min_intensity),
+            reactions=table("reactions", reactions),
+            emotions=table("emotions", emotions),
         )

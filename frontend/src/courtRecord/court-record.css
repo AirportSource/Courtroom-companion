@@ -1,0 +1,201 @@
+/* Court Record (cr-) and Talk Options (to-) screens. Both are laid out in logical stage pixels
+   (256×192) and sit inside a PixelStage, so every size here is a fixed px value. Colours come
+   from the stage tokens in index.css. */
+
+/* ---- Court Record ---- */
+
+.cr-view {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 256px;
+  height: 192px;
+  overflow: hidden;
+  background: #1e2430;
+  color: #fff;
+}
+
+.cr-tabs {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 256px;
+  height: 20px;
+}
+
+.cr-tab {
+  position: absolute;
+  top: 2px;
+  width: 112px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  line-height: 14px;
+  color: #fff;
+  background: var(--dialogue-bg);
+  border: 1px solid var(--frame-light);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.cr-tab:nth-child(1) {
+  left: 8px;
+}
+
+.cr-tab:nth-child(2) {
+  left: 136px;
+}
+
+.cr-tab[aria-selected='true'] {
+  color: #fff8c8;
+  background: var(--nameplate-bg);
+  box-shadow: inset 0 0 0 1px var(--nameplate-edge);
+}
+
+.cr-grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 256px;
+  height: 192px;
+  pointer-events: none;
+}
+
+.cr-cell {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Icons are drawn at native size; the selection frame sits just outside the 64 px slot. */
+.cr-cell-icon {
+  display: block;
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  user-select: none;
+}
+
+.cr-cell[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid #fff8c8;
+  pointer-events: none;
+}
+
+.cr-empty {
+  position: absolute;
+  left: 0;
+  top: 80px;
+  width: 256px;
+  margin: 0;
+  line-height: 16px;
+  text-align: center;
+  color: #c8c8d8;
+  text-shadow: 1px 1px #000;
+}
+
+.cr-detail {
+  position: absolute;
+  left: 0;
+  top: 156px;
+  width: 256px;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 2px 8px;
+  background: var(--dialogue-bg);
+  border-top: 1px solid var(--frame-light);
+  overflow: hidden;
+}
+
+.cr-detail-name,
+.cr-detail-text {
+  margin: 0;
+  height: 16px;
+  line-height: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cr-detail-name {
+  color: #fff8c8;
+}
+
+/* ---- Talk Options ---- */
+
+.to-view {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 256px;
+  height: 192px;
+  overflow: hidden;
+  background: #1f3d2b;
+  color: #fff;
+}
+
+.to-list {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 256px;
+  height: 192px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.to-option {
+  position: absolute;
+  left: 16px;
+  width: 224px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 16px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.to-option[aria-selected='true'] {
+  color: #fff8c8;
+}
+
+.to-option[aria-disabled='true'] {
+  color: #7d8a80;
+  cursor: default;
+}
+
+.to-cursor {
+  position: absolute;
+  left: -12px;
+  top: 4px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid #fff8c8;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+.to-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.to-new {
+  flex: none;
+  color: var(--title-gold);
+  text-shadow: 1px 1px #000;
+}

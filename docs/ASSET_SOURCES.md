@@ -71,3 +71,34 @@ Added by the owner in commit `2c3e957` ("added assets"); the original download s
 | Blips, dialogue/effect/UI SFX (18) | `frontend/public/assets/audio/` | Ace Attorney series sound effects (© Capcom). Source unknown. |
 
 If the owner remembers the sources, add them here.
+
+---
+
+## Music and Court Record sources (received 2026-10-24)
+
+All are third-party copyrighted material (© Capcom), supplied manually by the owner. Source files stay **untracked** in `docs/` and must not be committed without the owner's decision. Runtime copies are listed below.
+
+| Logical asset | Runtime file(s) | Source file | Source | Credit / licence | Purpose |
+|---|---|---|---|---|---|
+| Original soundtrack (25 non-excluded tracks, `music/soundtrack.json`) | `frontend/public/assets/music/original/NN-<kebab-title>.mp3` (byte-identical copies) | `docs/references/music/pwaa-original-soundtrack.zip` (38 entries, 34 distinct tracks; the `-`/`:`/`_` name variants are byte-identical duplicates), extracted unchanged to `docs/original_tracks/` | Owner-supplied "Phoenix Wright: Ace Attorney" OST MP3 set. Download page not recorded. `docs/websites/sounds_sites.txt` lists an owner bookmark to The Sounds Resource (3DS Trilogy); it is not confirmed as the source of this zip. | © Capcom | Game-music BGM/contextual source. The 9 excluded tracks have no runtime copy. Loop points are project analysis of the OST (D-044), not DS data. |
+| Evidence `thinker_statue`, `envelope_tied`, `cellphone_blue` | `frontend/public/assets/court-record/evidence/{thinker_statue,envelope_tied,cellphone_blue}.png` (64×64 RGB each) | `docs/references/court-record/evidences_profiles_full.png` (1008×711) | Owner-supplied evidence/profile sheet; download page not recorded | © Capcom. Sheet note: "Ripped by Shoda. No credit needed." (credited anyway) | Exact 1:1 crops of each tile's 64×64 slot interior: x,y = (430,4), (75,4), (288,501). Pixels unchanged; the grey slot background is kept. Verified 4096/4096 px identical each. |
+| — | — | `docs/references/evidence.png` (1008×711) | Same sheet | same | Pixel-identical RGB to `evidences_profiles_full.png`. It differs only by sRGB/gAMA/cHRM/pHYs chunks, so the chunk-free copy was used. |
+| — | — | `docs/references/court-record/penseur.png`, `file_document.png`, `phone.png` | Owner-supplied enlarged crops | © Capcom | **Identification references only**, never runtime assets. |
+| `menu_talk_option` (already in runtime since D-031) | `ui/menu/talk-option.png` | `docs/references/court-record/under_screen_background.png` (274×217 screenshot with label/border) | Owner-supplied | © Capcom | Re-verified 0-pixel-difference against this screenshot's 256×192 interior at (10,14). Reused as the Talk Options backdrop; no duplicate asset. |
+
+Not used: `docs/sfx general/` (unrelated to this milestone, untracked).
+
+### Semantic reaction SFX (added 2026-10-24, D-049)
+
+Byte-identical copies (verified with `cmp`) from the owner-supplied pack `docs/sfx general/` (source not recorded; © Capcom Ace Attorney SFX). Chosen by name and duration; **not listened to**.
+
+| Event | Sound id | Runtime file | Source file |
+|---|---|---|---|
+| `sfx_surprise` | `fx_surprise` | `audio/effects/shock.wav` (20,364 B) | `sfx-shock.wav` |
+| `sfx_shock` | `fx_shock` | `audio/effects/supershock.wav` (43,980 B) | `sfx-supershock.wav` |
+| `sfx_realization` | `sfx_realization` (existing) | `audio/dialogue/realization/realization.wav` | pre-existing runtime sound |
+| `sfx_comic` | `fx_comic` | `audio/effects/badum.wav` (48,956 B) | `sfx-badum.wav` |
+| `sfx_emphasis` | `fx_emphasis` | `audio/effects/deskslam.wav` (30,924 B) | `sfx-deskslam.wav` |
+| `sfx_tension` | `fx_tension` | `audio/effects/dramapound.wav` (7,200 B) | `sfx-dramapound.wav` |
+| `sfx_notification` | `fx_notification` | `audio/effects/phonebeep.wav` (8,236 B) | `sfx-phonebeep.wav` |
+| `sfx_soft_transition` | `fx_soft_transition` | `audio/effects/swoop.wav` (3,992 B) | `sfx-swoop.wav` |

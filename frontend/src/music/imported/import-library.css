@@ -1,0 +1,175 @@
+/* Imported music panel: normal DOM, mounted outside the 256x192 DS stage. */
+.import-library {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 640px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font: 14px/1.4 system-ui, sans-serif;
+  color: #f2f2f2;
+  background: #1c1c28;
+  border: 1px solid #4a4a66;
+  border-radius: 6px;
+}
+.import-library__title {
+  margin: 0;
+  font-size: 16px;
+}
+.import-library__hint,
+.import-library__error {
+  margin: 0;
+}
+.import-library__hint {
+  font-size: 12px;
+  opacity: 0.75;
+}
+.import-library__error {
+  color: #ff9c9c;
+}
+.import-library__bar,
+.import-library__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.import-library button {
+  font: inherit;
+  color: inherit;
+  background: #2f2f4a;
+  border: 1px solid #4a4a66;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.import-library button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.import-library button:focus-visible {
+  outline: 2px solid #9fb4ff;
+  outline-offset: 1px;
+}
+.import-library__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.import-library__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  padding: 6px 8px;
+  background: #232336;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.import-library__item[data-selected='true'] {
+  border-color: #9fb4ff;
+}
+.import-library__item[data-playing='true'] .import-library__name::before {
+  content: '> ';
+}
+.import-library__summary {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 200px;
+}
+.import-library__name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.import-library__meta {
+  font-size: 12px;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+
+/* Import zone, step list and loop-state badges. */
+.import-library__drop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 10px;
+  border: 2px dashed #4a4a66;
+  border-radius: 6px;
+}
+.import-library__drop[data-dragging='true'] {
+  border-color: #9fb4ff;
+  background: #26263d;
+}
+.import-library__import {
+  font-weight: 700;
+  padding: 6px 16px !important;
+  background: #3b4a9a !important;
+}
+.import-library__drop-text {
+  font-size: 13px;
+}
+.import-library__formats {
+  font-size: 11px;
+  opacity: 0.7;
+}
+.import-library__status {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.import-library__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 11px;
+}
+.import-library__steps li {
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #232336;
+  opacity: 0.55;
+}
+.import-library__steps li[data-state='done'] {
+  opacity: 1;
+  background: #2d4a3a;
+}
+.import-library__steps li[data-state='active'] {
+  opacity: 1;
+  background: #3b4a9a;
+}
+.import-library__steps li[data-state='failed'] {
+  opacity: 1;
+  background: #6b2d2d;
+}
+.import-library__status-text {
+  margin: 0;
+  font-size: 12px;
+}
+.import-library__status[data-step='failed'] .import-library__status-text {
+  color: #ff9c9c;
+}
+.import-library__badge {
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 3px;
+  background: #34344f;
+}
+.import-library__badge[data-loop='automatic'] {
+  background: #5a4a1e;
+}
+.import-library__badge[data-loop='accepted'],
+.import-library__badge[data-loop='adjusted'] {
+  background: #2d4a3a;
+}
+.import-library__badge[data-loop='missing'] {
+  background: #6b2d2d;
+}

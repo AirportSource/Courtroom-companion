@@ -15,6 +15,7 @@ class AudioEngine {
   private readonly encoded = new Map<SoundId, Promise<ArrayBuffer | null>>()
   private readonly decoding = new Set<SoundId>()
   private readonly buffers = new Map<SoundId, AudioBuffer>()
+  private readonly unlockListeners = new Set<() => void>()
   private readonly lastEventAt = new Map<string, number>()
   /** Number of times each sound actually started (diagnostics / dev testing). */
   readonly playCounts = new Map<SoundId, number>()
@@ -36,9 +37,25 @@ class AudioEngine {
     return this.context?.state === 'running'
   }
 
+  /** The shared AudioContext (null until the first unlock()). Music shares it (D-019). */
+  getContext(): AudioContext | null {
+    return this.context
+  }
+
+  /** Called whenever the shared context becomes (or already is) running after a gesture. */
+  onUnlock(listener: () => void): () => void {
+    this.unlockListeners.add(listener)
+    return () => this.unlockListeners.delete(listener)
+  }
+
   /** Create/resume the audio context. Call from a user gesture handler. */
   unlock(): void {
-    if (!this.context) this.context = new AudioContext()
+    if (!this.context) {
+      this.context = new AudioContext()
+      this.context.addEventListener('statechange', () => {
+        if (this.context?.state === 'running') for (const listener of [...this.unlockListeners]) listener()
+      })
+    }
     if (this.context.state === 'suspended') void this.context.resume()
     for (const id of this.encoded.keys()) this.decode(id)
   }

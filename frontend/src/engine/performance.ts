@@ -4,6 +4,28 @@
 import type { TextLayout } from './dialogueLayout.ts'
 import type { DialogueLine } from './dialogueTypes.ts'
 import { initializeProviderProfiles } from '../settings/providerProfiles.ts'
+import { cancelTurn, parseArtifact, parseTurnTask, watchTurn, type GeneratedArtifact, type TurnTask } from '../artifacts/artifacts.ts'
+
+/** Closed set of semantic reaction sounds; the frontend plays audio event `sfx_<name>`. */
+export const SFX_NAMES = [
+  'surprise',
+  'shock',
+  'realization',
+  'comic',
+  'emphasis',
+  'tension',
+  'notification',
+  'soft_transition',
+] as const
+export type SfxName = (typeof SFX_NAMES)[number]
+
+export function asSfx(value: unknown): SfxName | null {
+  return typeof value === 'string' && (SFX_NAMES as readonly string[]).includes(value) ? (value as SfxName) : null
+}
+
+export function sfxEventId(name: SfxName): string {
+  return `sfx_${name}`
+}
 
 export interface PerformanceSegment {
   text: string
@@ -13,6 +35,8 @@ export interface PerformanceSegment {
   intensity: number
   reaction: string | null
   gesture: string | null
+  /** Semantic reaction sound chosen by the director; null = silent. */
+  sfx?: SfxName | null
   estimatedMs: number
 }
 
@@ -27,6 +51,8 @@ export interface ChatResponse {
   performance: PerformanceTimeline
   provider: { type: string; model: string | null }
   warnings: string[]
+  task?: TurnTask
+  artifacts?: GeneratedArtifact[]
 }
 
 const ID = /^[a-z0-9_]{1,64}$/
@@ -57,6 +83,7 @@ export function parseChatResponse(raw: unknown): ChatResponse {
         intensity: typeof seg.intensity === 'number' ? seg.intensity : 0.5,
         reaction: asId(seg.reaction),
         gesture: asId(seg.gesture),
+        sfx: asSfx(seg.sfx),
         estimatedMs: typeof seg.estimatedMs === 'number' ? seg.estimatedMs : 0,
       },
     ]
@@ -68,6 +95,13 @@ export function parseChatResponse(raw: unknown): ChatResponse {
     string,
     unknown
   >
+  const task = parseTurnTask(body.task)
+  const artifacts = Array.isArray(body.artifacts) ? body.artifacts.flatMap((raw) => {
+    const artifact = parseArtifact(raw); return artifact ? [artifact] : []
+  }) : undefined
+  if (task?.state === 'artifact-ready' && !artifacts?.some((artifact) => artifact.id === task.artifactId && artifact.status === 'ready')) {
+    throw new Error('The ready file metadata was missing from the reply.')
+  }
   return {
     performance: {
       characterId: typeof perf.characterId === 'string' ? perf.characterId : '',
@@ -83,6 +117,8 @@ export function parseChatResponse(raw: unknown): ChatResponse {
       model: typeof provider.model === 'string' ? provider.model : null,
     },
     warnings: Array.isArray(body.warnings) ? body.warnings.filter((w): w is string => typeof w === 'string') : [],
+    ...(task ? { task } : {}),
+    ...(artifacts ? { artifacts } : {}),
   }
 }
 
@@ -273,7 +309,7 @@ export function paginate(text: string, layout: TextLayout): string[] {
 
 /**
  * Timeline -> existing dialogue lines (one per page). Every page of a segment keeps the
- * director's emotion and pose; the segment's reaction plays only on its first page, so
+ * director's emotion and pose; the segment's reaction and sound play only on its first page, so
  * advancing pages never re-triggers it. The director is not re-run.
  */
 export function timelineToLines(timeline: PerformanceTimeline, layout: TextLayout): DialogueLine[] {
@@ -283,20 +319,30 @@ export function timelineToLines(timeline: PerformanceTimeline, layout: TextLayou
       text: page,
       animation: segment.animation,
       reaction: i === 0 ? segment.reaction : null,
+      sfx: i === 0 ? (segment.sfx ?? null) : null,
     })),
   )
 }
 
-export class ChatError extends Error {}
+export class ChatError extends Error {
+  cancelled: boolean
+  constructor(message: string, cancelled = false) { super(message); this.cancelled = cancelled }
+}
 
 /** POST /api/chat (proxied to the backend by Vite in development). */
 export async function sendChat(
-  request: { character: string; message: string; sessionId: string },
+  request: { character: string; message: string; sessionId: string; requestId?: string },
   timeoutMs = 135_000,
+  options: { signal?: AbortSignal; onTask?: (task: TurnTask) => void } = {},
 ): Promise<ChatResponse> {
   await initializeProviderProfiles()
   const controller = new AbortController()
+  const polling = new AbortController()
+  const abort = () => controller.abort()
+  options.signal?.addEventListener('abort', abort, { once: true })
+  if (options.signal?.aborted) controller.abort()
   const timer = window.setTimeout(() => controller.abort(), timeoutMs)
+  if (request.requestId && options.onTask && !controller.signal.aborted) void watchTurn(request.requestId, polling.signal, options.onTask)
   try {
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -305,13 +351,21 @@ export async function sendChat(
       signal: controller.signal,
     })
     if (!response.ok) throw new ChatError(`the server answered ${response.status}`)
-    return parseChatResponse(await response.json())
+    const parsed = parseChatResponse(await response.json())
+    polling.abort()
+    if (!controller.signal.aborted && parsed.task) options.onTask?.(parsed.task)
+    return parsed
   } catch (error) {
     if (error instanceof ChatError) throw error
-    if (error instanceof DOMException && error.name === 'AbortError') throw new ChatError('the server took too long')
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      if (request.requestId) void cancelTurn(request.requestId)
+      throw new ChatError(options.signal?.aborted ? 'request cancelled' : 'the server took too long', Boolean(options.signal?.aborted))
+    }
     throw new ChatError(error instanceof Error ? error.message : 'could not reach the server')
   } finally {
     window.clearTimeout(timer)
+    polling.abort()
+    options.signal?.removeEventListener('abort', abort)
   }
 }
 

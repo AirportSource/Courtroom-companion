@@ -3,6 +3,10 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
+// Node 24 strips TypeScript types natively: the runtime validators stay the single source of truth.
+import { validateSoundtrackManifest } from '../src/music/soundtrack.ts'
+import { validateLoopRegion } from '../src/music/loopMath.ts'
+import { validateCourtRecordManifest } from '../src/courtRecord/courtRecord.ts'
 
 const ASSETS = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'assets')
 const MEDIA = /\.(png|gif|webp|jpe?g|wav|mp3|ogg|m4a|flac|ttf|otf|woff2?)$/i
@@ -160,6 +164,44 @@ if (ui) {
   }
 }
 
+// Music (original soundtrack). Excluded tracks are manifest-only (no runtime file).
+const musicDir = join(ASSETS, 'music')
+const soundtrack = existsSync(join(musicDir, 'soundtrack.json')) ? readJson(join(musicDir, 'soundtrack.json')) : null
+if (soundtrack) {
+  for (const error of validateSoundtrackManifest(soundtrack)) errors.push(`music/soundtrack.json ${error}`)
+  for (const [id, track] of Object.entries(soundtrack.tracks ?? {})) {
+    if (track?.src !== undefined) checkFile(musicDir, track.src, `music/soundtrack.json tracks.${id}`)
+    // Flat loop entries are canonical in samples; a malformed one would silently play unlooped.
+    if (track?.loop !== null && track?.loop !== undefined) {
+      const { startSample, endSample, sampleRate } = track.loop
+      const result = validateLoopRegion({ startSample, endSample, sampleRate })
+      if (!result.ok) errors.push(`music/soundtrack.json tracks.${id}.loop: ${result.reason}`)
+    }
+  }
+}
+
+// Court Record. The runtime drops malformed entries with a warning; here every warning fails.
+const recordDir = join(ASSETS, 'court-record')
+const record = existsSync(join(recordDir, 'court-record.json')) ? readJson(join(recordDir, 'court-record.json')) : null
+if (record) {
+  try {
+    for (const warning of validateCourtRecordManifest(record).warnings) errors.push(`court-record.json ${warning}`)
+  } catch (err) {
+    errors.push(err.message)
+  }
+  for (const entry of Array.isArray(record.entries) ? record.entries : []) {
+    const where = `court-record.json ${entry?.id}`
+    checkFile(recordDir, entry?.asset?.src, where)
+    const full = join(recordDir, entry?.asset?.src ?? '')
+    if (existsSync(full) && /\.png$/i.test(full)) {
+      const { width, height } = pngSize(full)
+      if (width !== entry.asset.width || height !== entry.asset.height) {
+        errors.push(`${where}: declared ${entry.asset.width}x${entry.asset.height}, actual ${width}x${height}`)
+      }
+    }
+  }
+}
+
 // Characters
 const charDir = join(ASSETS, 'characters')
 const index = readJson(join(charDir, 'index.json'))
@@ -213,6 +255,13 @@ for (const [charId, manifestPath] of Object.entries(index?.characters ?? {})) {
     }
     if (target.reaction !== undefined && !reactions[target.reaction]) {
       errors.push(`${where} emotions.${emotion}: unknown reaction "${target.reaction}"`)
+    }
+  }
+  // Optional waiting/thinking pose (D-048): must name a real emotion and animation.
+  if (char.waiting !== undefined) {
+    if (!emotions[char.waiting?.emotion]) errors.push(`${where} waiting.emotion: unknown emotion "${char.waiting?.emotion}"`)
+    if (char.waiting?.animation !== undefined && !animations[char.waiting.animation]) {
+      errors.push(`${where} waiting.animation: unknown animation "${char.waiting.animation}"`)
     }
   }
   for (const key of ['defaultEmotion', 'fallbackEmotion']) {

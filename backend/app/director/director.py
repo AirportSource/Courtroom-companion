@@ -37,6 +37,9 @@ class Segment:
     gesture: str | None = None
     #: Estimated on-screen time used for pose-hold / cooldown decisions.
     estimated_ms: int = 0
+    #: Semantic reaction sound (closed set, see SFX_NAMES) or None. Played by the frontend as
+    #: audio event `sfx_<name>` when the segment's first page appears.
+    sfx: str | None = None
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -46,6 +49,7 @@ class Segment:
             "intensity": round(self.intensity, 3),
             "reaction": self.reaction,
             "gesture": self.gesture,
+            "sfx": self.sfx,
             "estimatedMs": self.estimated_ms,
         }
 
@@ -116,7 +120,8 @@ class CharacterDirector:
 
         resolved = [self._resolve(beat, profile, notes, i) for i, beat in enumerate(beats)]
         segments = self._merge(resolved, profile, hold_scale, notes)
-        state = self._apply_reactions(segments, profile, state, now_ms, notes)
+        state, suppressed = self._apply_reactions(segments, profile, state, now_ms, notes)
+        self._apply_sfx(segments, profile, suppressed, notes)
         settle_emotion, settle_animation = self._settle(reply, segments, profile, notes)
         return PerformanceTimeline(profile.id, segments, settle_emotion, settle_animation, notes), state
 
@@ -213,12 +218,13 @@ class CharacterDirector:
         state: DirectorState,
         now_ms: float,
         notes: list[str],
-    ) -> DirectorState:
+    ) -> tuple[DirectorState, set[int]]:
         cfg = profile.director
         threshold = min(1.0, max(0.0, cfg.reaction_min_intensity + (0.5 - cfg.expressiveness) * 0.4))
         cooldown = cfg.reaction_cooldown_ms * (1.5 - cfg.expressiveness)
         last = state.last_reaction_at_ms
         used = 0
+        suppressed: set[int] = set()
         clock = now_ms
         for i, segment in enumerate(segments):
             if segment.reaction:
@@ -232,11 +238,39 @@ class CharacterDirector:
                 if reason:
                     notes.append(f"segment {i}: reaction '{segment.reaction}' suppressed: {reason}")
                     segment.reaction = None
+                    suppressed.add(i)
                 else:
                     used += 1
                     last = clock
             clock += segment.estimated_ms
-        return DirectorState(last_reaction_at_ms=last)
+        return DirectorState(last_reaction_at_ms=last), suppressed
+
+    # ---- semantic reaction sounds ------------------------------------------------------------
+
+    def _apply_sfx(
+        self, segments: list[Segment], profile: CharacterProfile, suppressed: set[int], notes: list[str]
+    ) -> None:
+        """At most `maxPerReply` sounds, one per segment, never for a suppressed reaction.
+
+        A surviving reaction earns its mapped sound; otherwise a beat needs a mapped emotion at
+        `minIntensity` or more. Ordinary replies stay silent. No randomness.
+        """
+        cfg = profile.sfx
+        used = 0
+        for i, segment in enumerate(segments):
+            if used >= cfg.max_per_reply:
+                break
+            if i in suppressed:
+                continue  # the reaction was held back, so its sound must be too
+            name = None
+            if segment.reaction:
+                name = cfg.reactions.get(segment.reaction)
+            if name is None and segment.intensity >= cfg.min_intensity:
+                name = cfg.emotions.get(segment.emotion)
+            if name:
+                segment.sfx = name
+                used += 1
+                notes.append(f"segment {i}: sfx '{name}'")
 
     # ---- end state -----------------------------------------------------------------------
 

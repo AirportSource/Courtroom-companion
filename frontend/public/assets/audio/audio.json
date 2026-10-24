@@ -16,6 +16,14 @@
     "fx_stab": { "category": "effect", "src": "dialogue/shock/stab2.wav" },
     "fx_whack": { "category": "effect", "src": "dialogue/shock/whack.wav" },
 
+    "fx_surprise": { "category": "effect", "src": "effects/shock.wav" },
+    "fx_shock": { "category": "effect", "src": "effects/supershock.wav" },
+    "fx_comic": { "category": "effect", "src": "effects/badum.wav" },
+    "fx_emphasis": { "category": "effect", "src": "effects/deskslam.wav" },
+    "fx_tension": { "category": "effect", "src": "effects/dramapound.wav" },
+    "fx_notification": { "category": "effect", "src": "effects/phonebeep.wav" },
+    "fx_soft_transition": { "category": "effect", "src": "effects/swoop.wav" },
+
     "ui_cancel": { "category": "ui", "src": "menu_ui/cancel.wav" },
     "ui_evidence": { "category": "ui", "src": "menu_ui/evidenceshoop.wav" },
     "ui_save": { "category": "ui", "src": "menu_ui/saveblip.wav" },
@@ -34,6 +42,17 @@
     "menu_open": "ui_scroll",
     "menu_page": "ui_page",
     "menu_save": "ui_save",
-    "menu_start": "ui_jingle"
+    "menu_start": "ui_jingle",
+
+    "user_typing": "blip_male",
+
+    "sfx_surprise": "fx_surprise",
+    "sfx_shock": "fx_shock",
+    "sfx_realization": "sfx_realization",
+    "sfx_comic": "fx_comic",
+    "sfx_emphasis": "fx_emphasis",
+    "sfx_tension": "fx_tension",
+    "sfx_notification": "fx_notification",
+    "sfx_soft_transition": "fx_soft_transition"
   }
 }

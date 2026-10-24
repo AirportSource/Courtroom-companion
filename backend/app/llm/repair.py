@@ -54,7 +54,7 @@ def _intensity(value: Any, warnings: list[str], index: int) -> float:
     return min(1.0, max(0.0, number))
 
 
-def _decode(content: str, warnings: list[str]) -> Any:
+def decode_reply_content(content: str, warnings: list[str]) -> Any:
     text = _FENCE.sub("", content.strip())
     try:
         return json.loads(text)
@@ -75,7 +75,7 @@ def parse_reply(content: str | dict[str, Any] | None) -> RepairResult:
     warnings: list[str] = []
     if content is None:
         return RepairResult(None, ["empty provider response"])
-    data: Any = _decode(content, warnings) if isinstance(content, str) else content
+    data: Any = decode_reply_content(content, warnings) if isinstance(content, str) else content
     if not isinstance(data, dict):
         return RepairResult(None, warnings + ["reply is not an object"])
 

@@ -1,6 +1,7 @@
 """HTTP API. Model output is returned only as validated, logical data."""
 
 from typing import Any, Literal
+import hashlib
 
 from fastapi import APIRouter, HTTPException, Query, Request
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
@@ -14,6 +15,8 @@ from ..llm.config import DEFAULT_OLLAMA_BASE_URL, ProviderConfig
 from ..llm.gateway import LLMGateway
 from ..llm.providers.ollama import OllamaProvider
 from ..llm.schemas import ChatMessage
+from ..artifacts.turns import TurnCancelled, TurnConflict, request_fingerprint
+from ..artifacts.store import ArtifactNotFound
 
 router = APIRouter(prefix="/api")
 
@@ -36,6 +39,8 @@ class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=2000)
     session_id: str = Field(default="default", alias="sessionId", pattern=r"^[A-Za-z0-9_-]{1,64}$")
     provider: ProviderSelection | None = None
+    request_id: str | None = Field(default=None, alias="requestId",
+        pattern=r"^(?:[a-f0-9]{32}|[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})$")
 
 
 class OllamaConnectionRequest(BaseModel):
@@ -244,17 +249,47 @@ async def chat(body: ChatRequest, request: Request) -> dict[str, Any]:
     service = _service(request)
     if body.provider is not None:
         raise HTTPException(status_code=409, detail="Select a saved provider profile before chatting.")
-    profiles = request.app.state.provider_profiles
-    config = await run_in_threadpool(profiles.resolve, profiles.store.get())
-    gateway = _gateway(service, config)
+    task = None
+    async def perform(turn=None):
+        profiles = request.app.state.provider_profiles
+        config = await run_in_threadpool(profiles.resolve, profiles.store.get())
+        gateway = _gateway(service, config)
+        options = {}
+        if turn is not None:
+            options = {"artifact_store": request.app.state.artifact_store,
+                "operation_key": hashlib.sha256(f"{body.session_id}:{body.character}:{turn.id}".encode()).hexdigest(),
+                "fingerprint": request_fingerprint(body.character, body.message.strip(), body.session_id),
+                "on_artifact_working": turn.artifact_working}
+        return await service.chat(body.character, body.message.strip(), body.session_id, gateway=gateway, **options)
     try:
-        result = await service.chat(body.character, body.message.strip(), body.session_id, gateway=gateway)
+        if body.request_id:
+            # Legacy dialogue-only requests retain their contract. Artifact-capable turns require
+            # the same local/same-origin boundary used by profile and music configuration.
+            from .profile_routes import local_configuration_request
+            local_configuration_request(request)
+            result, task = await request.app.state.artifact_turns.run(body.request_id,
+                request_fingerprint(body.character, body.message.strip(), body.session_id), perform)
+            for artifact in result.artifacts:
+                try:
+                    available = request.app.state.artifact_store.get(artifact["id"])["status"] == "ready"
+                except ArtifactNotFound:
+                    available = False
+                if not available:
+                    request.app.state.artifact_turns.invalidate_artifact(artifact["id"])
+                    raise TurnConflict()
+        else:
+            result = await perform()
     except CharacterNotFoundError:
         raise HTTPException(status_code=404, detail="unknown character") from None
+    except TurnConflict:
+        raise HTTPException(status_code=409, detail="Request ID already used or too many running turns.") from None
+    except TurnCancelled:
+        raise HTTPException(status_code=409, detail="This turn was cancelled.") from None
     return {
         # Raw semantic reply (validated), separate from the director's resolved performance.
         "reply": result.reply.model_dump(by_alias=True) if result.reply else None,
         "performance": result.performance,
         "provider": result.provider,
         "warnings": result.warnings,
+        **({"task": task, "artifacts": result.artifacts} if task else {}),
     }

@@ -1,0 +1,11 @@
+.artifacts-panel { box-sizing: border-box; width: min(100%, 760px); margin: 12px auto; padding: 12px; color: #eee; background: #1c1c28; border: 1px solid #4a4a66; font: 14px/1.4 system-ui, sans-serif; }
+.artifacts-panel__heading, .artifacts-panel__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.artifacts-panel__heading { justify-content: space-between; }
+.artifacts-panel ul { max-height: 180px; overflow: auto; padding: 0; list-style: none; }
+.artifacts-panel li button { display: block; width: 100%; text-align: left; overflow-wrap: anywhere; }
+.artifacts-panel button, .artifacts-panel a { padding: 5px 8px; font: inherit; color: #eee; background: #34345a; border: 1px solid #6a6a99; }
+.artifacts-panel button { cursor: pointer; }
+.artifacts-panel button:disabled { opacity: .5; cursor: default; }
+.artifacts-panel button[aria-pressed='true'] { border-color: #ffd54a; }
+.artifacts-panel span, .artifacts-panel__detail p { overflow-wrap: anywhere; }
+.artifacts-panel pre { max-height: 240px; overflow: auto; padding: 8px; background: #101018; white-space: pre; user-select: text; }

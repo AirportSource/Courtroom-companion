@@ -1,0 +1,568 @@
+{
+  "version": 1,
+  "profiles": {
+    "maya_fey": {
+      "defaultTrack": "maya_fey_turnabout_sisters_2001",
+      "alternatives": [
+        "initial_investigation_2001"
+      ]
+    },
+    "default": {
+      "defaultTrack": "maya_fey_turnabout_sisters_2001",
+      "alternatives": [
+        "initial_investigation_2001"
+      ]
+    }
+  },
+  "tracks": {
+    "phoenix_wright_ace_attorney_opening": {
+      "number": 1,
+      "title": "Phoenix Wright: Ace Attorney - Opening",
+      "category": "excluded",
+      "tags": [
+        "title"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "defendant_lobby_so_it_begins": {
+      "number": 2,
+      "title": "Defendant Lobby - So it Begins",
+      "src": "original/02-defendant-lobby-so-it-begins.mp3",
+      "category": "bgm",
+      "tags": [
+        "defendant-lobby",
+        "calm",
+        "pre-trial"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "court_is_now_in_session": {
+      "number": 3,
+      "title": "Phoenix Wright: Ace Attorney - Court is Now in Session",
+      "src": "original/03-court-is-now-in-session.mp3",
+      "category": "bgm",
+      "tags": [
+        "courtroom",
+        "trial",
+        "neutral"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 546840,
+        "endSample": 2664135,
+        "sampleRate": 44100,
+        "confidence": 0.79,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.86, envelope identity 0.923, seam correlation 0.9991. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "cross_examination_moderato_2001": {
+      "number": 4,
+      "title": "Cross-Examination - Moderato 2001",
+      "src": "original/04-cross-examination-moderato-2001.mp3",
+      "category": "bgm",
+      "tags": [
+        "courtroom",
+        "cross-examination",
+        "tense"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 541680,
+        "endSample": 2558119,
+        "sampleRate": 44100,
+        "confidence": 0.96,
+        "provenance": "curated-analysis",
+        "note": "Offline multi-scale OST analysis 2026-10-24 (44.1 kHz mono downmix): repeat-window coverage 0.720; post-seam 3 s envelope coverage 1.000 over 66 windows; envelope identity 0.9958; full-rate seam correlation 0.9664. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "tricks_and_deductions": {
+      "number": 5,
+      "title": "Tricks and Deductions",
+      "src": "original/05-tricks-and-deductions.mp3",
+      "category": "bgm",
+      "tags": [
+        "investigation",
+        "playful",
+        "thinking"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "objection_2001": {
+      "number": 6,
+      "title": "Phoenix Wright - Objection! 2001",
+      "src": "original/06-objection-2001.mp3",
+      "category": "contextual",
+      "tags": [
+        "objection",
+        "dramatic",
+        "courtroom"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": null
+    },
+    "cross_examination_allegro_2001": {
+      "number": 7,
+      "title": "Cross-Examination - Allegro 2001",
+      "src": "original/07-cross-examination-allegro-2001.mp3",
+      "category": "bgm",
+      "tags": [
+        "courtroom",
+        "cross-examination",
+        "urgent"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "pursuit_corner_the_culprit": {
+      "number": 8,
+      "title": "Pursuit - Corner the Culprit",
+      "src": "original/08-pursuit-corner-the-culprit.mp3",
+      "category": "contextual",
+      "tags": [
+        "pursuit",
+        "confrontation",
+        "urgent"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 370440,
+        "endSample": 2064322,
+        "sampleRate": 44100,
+        "confidence": 0.82,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.85, envelope identity 0.966, seam correlation 0.9953. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "the_truth_revealed_2001": {
+      "number": 9,
+      "title": "The Truth Revealed 2001",
+      "src": "original/09-the-truth-revealed-2001.mp3",
+      "category": "contextual",
+      "tags": [
+        "revelation",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 366030,
+        "endSample": 1836374,
+        "sampleRate": 44100,
+        "confidence": 0.74,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.8, envelope identity 0.926, seam correlation 0.9955. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "suspense": {
+      "number": 10,
+      "title": "Suspense",
+      "src": "original/10-suspense.mp3",
+      "category": "bgm",
+      "tags": [
+        "suspense",
+        "tense",
+        "uncertain"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "pursuit_corner_the_culprit_variation": {
+      "number": 11,
+      "title": "Pursuit - Corner the Culprit (Variation)",
+      "src": "original/11-pursuit-corner-the-culprit-variation.mp3",
+      "category": "contextual",
+      "tags": [
+        "pursuit",
+        "confrontation",
+        "urgent"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": null
+    },
+    "jingle_theres_no_stopping_here": {
+      "number": 12,
+      "title": "Jingle - There's No Stopping Here",
+      "category": "excluded",
+      "tags": [
+        "jingle"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "initial_investigation_2001": {
+      "number": 13,
+      "title": "Initial Investigation 2001",
+      "src": "original/13-initial-investigation-2001.mp3",
+      "category": "bgm",
+      "tags": [
+        "investigation",
+        "neutral",
+        "curious"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 101430,
+        "endSample": 2218725,
+        "sampleRate": 44100,
+        "confidence": 0.99,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.989, seam correlation 0.999. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "maya_fey_turnabout_sisters_2001": {
+      "number": 14,
+      "title": "Maya Fey - Turnabout Sisters 2001",
+      "src": "original/14-maya-fey-turnabout-sisters-2001.mp3",
+      "category": "bgm",
+      "tags": [
+        "character-theme",
+        "warm",
+        "friendly"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 3285850,
+        "endSample": 3693182,
+        "sampleRate": 44100,
+        "confidence": 0.88,
+        "provenance": "curated-analysis",
+        "note": "Offline multi-scale OST analysis 2026-10-24 (44.1 kHz mono downmix): repeat-window coverage 0.914; post-seam 3 s envelope coverage 0.931 over 130 windows; envelope identity 0.9773; full-rate seam correlation 0.9700. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "detention_center_the_security_guards_elegy": {
+      "number": 15,
+      "title": "Detention Center - The Security Guards' Elegy",
+      "src": "original/15-detention-center-the-security-guards-elegy.mp3",
+      "category": "bgm",
+      "tags": [
+        "detention-center",
+        "calm",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 17191,
+        "endSample": 2134488,
+        "sampleRate": 44100,
+        "confidence": 0.99,
+        "provenance": "curated-analysis",
+        "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9999; full-rate seam correlation 0.9902. Shorter of the equivalent phrase-length candidates. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "dick_gumshoe_thats_detective_gumshoe_pal": {
+      "number": 16,
+      "title": "Dick Gumshoe - That's \"Detective Gumshoe,\" Pal!",
+      "src": "original/16-dick-gumshoe-thats-detective-gumshoe-pal.mp3",
+      "category": "bgm",
+      "tags": [
+        "character-theme",
+        "comedic",
+        "playful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 149940,
+        "endSample": 2556020,
+        "sampleRate": 44100,
+        "confidence": 0.92,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.95, envelope identity 0.971, seam correlation 0.997. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "reminiscences_mayas_sorrow": {
+      "number": 17,
+      "title": "Reminiscences - Maya's Sorrow",
+      "src": "original/17-reminiscences-mayas-sorrow.mp3",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "sad",
+        "emotional"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 39690,
+        "endSample": 5685810,
+        "sampleRate": 44100,
+        "confidence": 0.8,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.83, envelope identity 0.967, seam correlation 0.9969. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "marvin_grossberg_reckonings_and_regrets_of_an_aged_attorney": {
+      "number": 18,
+      "title": "Marvin Grossberg - Reckonings and Regrets of an Aged Attorney",
+      "src": "original/18-marvin-grossberg-reckonings-and-regrets-of-an-aged-attorney.mp3",
+      "category": "bgm",
+      "tags": [
+        "character-theme",
+        "wistful",
+        "calm"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 17566,
+        "endSample": 1899605,
+        "sampleRate": 44100,
+        "confidence": 0.99,
+        "provenance": "curated-analysis",
+        "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9965; full-rate seam correlation 0.9916. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "simple_folk": {
+      "number": 19,
+      "title": "Simple Folk",
+      "src": "original/19-simple-folk.mp3",
+      "category": "bgm",
+      "tags": [
+        "light",
+        "playful",
+        "calm"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "reminiscences_the_two_faces_of_a_studio": {
+      "number": 20,
+      "title": "Reminiscences - The Two Faces of a Studio",
+      "src": "original/20-reminiscences-the-two-faces-of-a-studio.mp3",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "mysterious"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": null
+    },
+    "steel_samurai_warrior_of_neo_olde_tokyo": {
+      "number": 21,
+      "title": "The Steel Samurai: Warrior of Neo Olde Tokyo",
+      "category": "excluded",
+      "tags": [
+        "themed"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "reminiscences_the_dl_6_incident": {
+      "number": 22,
+      "title": "Reminiscences - The DL-6 Incident",
+      "src": "original/22-reminiscences-the-dl-6-incident.mp3",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "somber"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 39690,
+        "endSample": 2509868,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.971, seam correlation 0.9755. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "heart_of_the_investigation_2001": {
+      "number": 23,
+      "title": "Heart of the Investigation 2001",
+      "src": "original/23-heart-of-the-investigation-2001.mp3",
+      "category": "bgm",
+      "tags": [
+        "investigation",
+        "determined",
+        "hopeful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "reminiscences_the_class_trial": {
+      "number": 24,
+      "title": "Reminiscences - The Class Trial",
+      "src": "original/24-reminiscences-the-class-trial.mp3",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "nostalgic"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 15892,
+        "endSample": 1074540,
+        "sampleRate": 44100,
+        "confidence": 0.98,
+        "provenance": "curated-analysis",
+        "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9999; full-rate seam correlation 0.9797. Shorter of the equivalent phrase-length candidates. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "victory_our_first_win": {
+      "number": 25,
+      "title": "Victory! - Our First Win",
+      "category": "excluded",
+      "tags": [
+        "victory"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "phoenix_wright_ace_attorney_ending": {
+      "number": 26,
+      "title": "Phoenix Wright: Ace Attorney - Ending",
+      "category": "excluded",
+      "tags": [
+        "ending"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "the_ballad_of_turnabout_sisters": {
+      "number": 27,
+      "title": "The Ballad of Turnabout Sisters",
+      "category": "excluded",
+      "tags": [
+        "vocal"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "rise_from_the_ashes_opening": {
+      "number": 28,
+      "title": "Rise from the Ashes - Opening",
+      "category": "excluded",
+      "tags": [
+        "title"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "reminiscences_the_sl_9_incident": {
+      "number": 29,
+      "title": "Reminiscences - The SL-9 Incident",
+      "src": "original/29-reminiscences-the-sl-9-incident.mp3",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "somber"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 149940,
+        "endSample": 1991086,
+        "sampleRate": 44100,
+        "confidence": 0.99,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.99, seam correlation 0.9977. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "ema_skye_turnabout_sisters_2005": {
+      "number": 30,
+      "title": "Ema Skye - Turnabout Sisters 2005",
+      "src": "original/30-ema-skye-turnabout-sisters-2005.mp3",
+      "category": "bgm",
+      "tags": [
+        "character-theme",
+        "upbeat",
+        "energetic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 61740,
+        "endSample": 2179035,
+        "sampleRate": 44100,
+        "confidence": 0.98,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.986, seam correlation 0.9954. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "the_blue_badger_i_want_to_protect_you": {
+      "number": 31,
+      "title": "The Blue Badger - I Want to Protect You",
+      "category": "excluded",
+      "tags": [
+        "themed"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "jake_marshall_renegade_sheriff": {
+      "number": 32,
+      "title": "Jake Marshall - Renegade Sheriff",
+      "src": "original/32-jake-marshall-renegade-sheriff.mp3",
+      "category": "bgm",
+      "tags": [
+        "character-theme",
+        "western",
+        "bold"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 149940,
+        "endSample": 2097915,
+        "sampleRate": 44100,
+        "confidence": 0.83,
+        "provenance": "curated-analysis",
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.87, envelope identity 0.96, seam correlation 0.9898. Not an original DS loop point; not verified by listening."
+      }
+    },
+    "damon_gant_swimming_anyone": {
+      "number": 33,
+      "title": "Damon Gant - Swimming, Anyone.",
+      "src": "original/33-damon-gant-swimming-anyone.mp3",
+      "category": "bgm",
+      "tags": [
+        "character-theme",
+        "smooth",
+        "suspicious"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "rise_from_the_ashes_ending": {
+      "number": 34,
+      "title": "Rise from the Ashes - Ending",
+      "category": "excluded",
+      "tags": [
+        "ending"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    }
+  }
+}

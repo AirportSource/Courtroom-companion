@@ -13,12 +13,17 @@ from fastapi.responses import JSONResponse
 
 from .api.routes import router
 from .api.profile_routes import router as profile_router
+from .api.music_routes import router as music_router
+from .api.artifact_routes import router as artifact_router
+from .artifacts.store import ArtifactError, ArtifactNotFound, ArtifactStore, outputs_dir
+from .artifacts.turns import TurnRegistry
 from .characters.repository import CharacterRepository
 from .characters.service import CharacterService
 from .llm.config import ProviderConfig, load_provider_config
 from .llm.gateway import LLMGateway, ProviderFactory
 from .configuration.credentials import CredentialStore, CredentialStoreError, KeyringCredentialStore
 from .configuration.profiles import ProfileManager, ProfileNotFoundError, ProfileStore, ProfileStoreError, profile_path
+from .music.library import MusicLibrary, music_dir
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 
@@ -29,6 +34,8 @@ def create_app(
     provider_registry: dict[str, ProviderFactory] | None = None,
     profile_store: ProfileStore | None = None,
     credential_store: CredentialStore | None = None,
+    music_library: MusicLibrary | None = None,
+    artifact_store: ArtifactStore | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Courtroom Companion API", version="0.1.0")
     gateway = LLMGateway(config or load_provider_config(), registry=provider_registry)
@@ -37,6 +44,16 @@ def create_app(
         profile_store or ProfileStore(profile_path(), gateway.config),
         credential_store or KeyringCredentialStore(),
     )
+    # Imported user music lives in the ignored local config dir, never in the repository.
+    app.state.music_library = music_library or MusicLibrary(music_dir())
+    app.state.artifact_store = artifact_store or ArtifactStore(outputs_dir())
+    app.state.artifact_turns = TurnRegistry()
+
+    @app.exception_handler(ArtifactError)
+    async def artifact_failure(request: Request, error: ArtifactError):
+        return JSONResponse(status_code=404 if isinstance(error, ArtifactNotFound) else 503,
+            content={"detail": {"code": error.code, "message": str(error)}},
+            headers={"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"})
 
     @app.exception_handler(RequestValidationError)
     async def safe_profile_validation(request: Request, error: RequestValidationError):
@@ -65,6 +82,8 @@ def create_app(
 
     app.include_router(router)
     app.include_router(profile_router)
+    app.include_router(music_router)
+    app.include_router(artifact_router)
     return app
 
 

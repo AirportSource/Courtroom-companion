@@ -5,6 +5,7 @@
   "anchor": "bottom-center",
   "render": { "scale": 1, "offsetX": 0, "offsetY": 0 },
   "voice": { "blip": "blip_female" },
+  "waiting": { "emotion": "thinking", "animation": "thinking_side" },
   "defaultEmotion": "neutral",
   "fallbackEmotion": "neutral",
   "animations": {

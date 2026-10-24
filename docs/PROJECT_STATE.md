@@ -1,6 +1,6 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-24 (native Anthropic provider). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-24 (milestone 2 of 3: safe generated text artifacts). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
@@ -23,6 +23,23 @@ The text box, name plate, continue arrow and menu buttons are still CSS stand-in
 At native size and render scale 1 (D-026), Maya is 146–162 px tall on the 192 px stage, head around y=31, continuing behind the dialogue box, like the DS game. Within each pose all frames draw at a single stage position; only genuine motion (laugh head-bob, reaction recoil) moves. The canvas/offset architecture (D-022) is kept.
 
 **Menu SFX** play through logical events in `audio.json` (D-028).
+
+**Music (D-043–D-048, details in `docs/MUSIC.md`).**
+- One MusicEngine drives three sources: original OST (25 tracks, Web Audio loop regions), imported music (local backend library + Web Worker auto-loop) and YouTube radio (official visible IFrame player).
+- Settings: Music source / Track / BGM vol / Mute BGM. The out-of-stage Music dock holds status, Play/Pause, the radio player and the import library.
+- 15 built-in tracks have metric-validated loops; 10 playable tracks remain `loop: null`. Maya now has a metric-validated loop; no loop has been verified by ear. The current Lofi Girl candidate `EWrX250Zhko` is marked unavailable after official IFrame error 150.
+
+**Presentation and audio UX (D-049–D-051).**
+- While a reply is generated, Maya holds her data-driven thinking pose (`thinking_side`, animated idle).
+- Strong beats play one semantic reaction SFX (director `sfx` → audio.json `sfx_<name>`), once per beat, with their own SFX volume/mute.
+- The user's typing plays male blips (IME-safe, throttled).
+- Character BGM starts only in the conversation scene; menus are silent.
+- DotGothic16 kanji are scaled to 75% so they match Igiari kana.
+- The import panel opens by default with visible steps.
+
+**Court Record (D-047).** Data-driven evidence/profile manifest with 3 native evidence icons. Its DS view is reachable from the main menu and from a conversation overlay. Generic Talk Options sit over the original talk-option panel.
+
+**Generated text artifacts (D-052, milestone 2).** The shared conversation turn may propose one strict `create_text_artifact` action beside the unchanged CharacterReply. The backend saves inert UTF-8 `.txt` / `.md` / `.py` content under opaque IDs in ignored `backend/.local/outputs/`, then delivers the one final performance. Local metadata/text/download/delete routes, persistent receipts, bounded storage, duplicate handling and cancel/status operations support a minimal Generated files panel outside the DS stage. Python is never executed/imported/compiled. The polished phone/summon/evidence cinematic belongs to milestone 3. See `docs/ARTIFACTS.md` and `docs/MILESTONE_2_CHANGE_AUDIT.md`.
 
 **Engine tests** run with `npm test` (D-029).
 
@@ -73,6 +90,14 @@ frontend/src/
     └── DevDisplayControls.tsx    # 1×–4×/auto, canvas vs per-frame, overlay, native-size readout
 ```
 
+Added 2026-10-24 (music + Court Record):
+- `src/music/`: `types.ts` contracts, `MusicEngine`, `webAudioSource`, `bufferCache`, `loopMath`, `soundtrack`, `musicRuntime` + `useMusicSync`, `radio/` (IFrame API source + panel), `imported/` (library API, resolver, panel), `loop/` (analyser, worker, editor).
+- `src/courtRecord/`: manifest loader/validator, navigation and talk-option helpers, CSS.
+- `components/`: `MusicDock`, `CourtRecordView`, `TalkOptions`.
+- `dev/talkTopics.ts`: sample topics.
+- `App.tsx` gains an app shell (screen + Music dock) and a `court-record` screen.
+- Backend: `app/music/` + `app/api/music_routes.py`.
+
 ### Conversation data flow
 
 ```
@@ -88,7 +113,7 @@ voice = dev override ?? line.voice ?? character.voice.blip
 ## Frontend status
 
 - Igiari is the primary stage/UI font: WOFF2, 16 px, zero added letter/word spacing. Bundled DotGothic16 is the deterministic first fallback, especially for Kanji; Japanese/system sans-serif fonts are tertiary emergency fallbacks. DotGothic16 is visually compatible but is not claimed to be the original Ace Attorney Kanji font (D-037, D-038).
-- `npm run validate:assets`: pass (161). `npm run build`: pass (58 modules). `npm run lint`: pass. `npm test`: 31/31. Verified 2026-10-24.
+- Final combined-tree checks: asset validation 196 references / 0 errors; build 100 modules + analysis worker; lint clean; frontend tests 188 passed; backend tests 309 passed / 1 skipped (Windows symlink privilege). Verified 2026-10-24 (milestone 2 of 3), including the preserved milestone 1 and music/Court Record work.
 - Dimensions: stage 256×192. Maya frames are native 55–109 px wide × 100–112 px tall, drawn at native size and scaled only with the whole stage (e.g. neutral talking frame 65×111 → 390×666 CSS px at auto 6×, 260×444 at 4×). Backgrounds are 256×192 (or 512 wide, centre-cropped).
 - Verified in Chrome (dev server):
   - full menu flow;
@@ -115,7 +140,8 @@ voice = dev override ?? line.voice ?? character.voice.blip
 - **CharacterDirector:** deterministic, data-driven anti-overacting rules → `PerformanceTimeline`.
 - **Configuration:** `app/configuration/profiles.py` contains validated ProviderProfile metadata, an atomic local ProfileStore and ProfileManager resolution. Ignored `backend/.local/provider-profiles.json` holds profiles and the active ID; `COURTROOM_CONFIG_DIR` can override the directory. `credentials.py` isolates Python keyring and accepts native OS vaults only. This Windows machine uses `keyring.backends.Windows.WinVaultKeyring`; env references remain a fallback. D-041 supersedes per-request browser configuration and environment-only credential UX.
 - **API:** existing health/capabilities/chat and legacy discovery/test routes, plus local profile CRUD/activation/duplication, credential set/delete/status, profile model discovery and Test Connection. Chat uses the server's active profile; old `provider` request overrides receive 409. Test generation bypasses conversation history.
-- **Tests:** `pytest`, 192 passing. Provider transports and credential backends are mocked; normal tests require neither a real OS vault, local model nor cloud key. Tests cover secret redaction, profile lifecycle/reload, env resolution, safe writes, migration, profile-scoped discovery/testing, Anthropic native/schema/thinking behavior and active-profile chat.
+- **Artifacts/tasks:** `app/artifacts/` owns a strict action, bounded atomic ArtifactStore and in-memory TurnRegistry; `api/artifact_routes.py` reuses local/same-origin protection. Current chat includes requestId and a separate task/artifacts result. Legacy dialogue-only callers and provider connection tests cannot create files. Records/content survive restart; receipts prevent duplicate writes; incomplete/missing/corrupt storage fails safely. No general tool calling or code execution was added.
+- **Tests:** `pytest`, 309 passed / 1 skipped (real symlink creation requires Windows privilege). Provider transports and credential backends are mocked; normal tests require neither a real OS vault, local model nor cloud key. Tests also cover artifact action/storage/API validation, all four providers, no execution, atomic failure/rollback, receipts, cancellation/duplicates and normal-chat/presentation regressions.
 - **Local environment check:** `ollama` command not found and `http://localhost:11434/api/tags` did not respond. No installed models could be queried, so no real-model end-to-end smoke test was possible and no model was downloaded.
 - **Gemini environment check:** neither `COURTROOM_LLM_API_KEY`, `GEMINI_API_KEY`, nor a configured generic secret selector is present. The requested real Gemini smoke test was therefore skipped without making a cloud request.
 - **Anthropic check:** no saved Anthropic profile/credential was configured, so real Claude multilingual/personality/director/pagination generation could not be exercised. The 256×192 Settings flow was verified against the real Windows vault with a temporary synthetic key: no base URL, key save/switch/retain/replace/remove, clean missing-key test, no storage/response leakage or overlap. No cloud call was made.
@@ -146,7 +172,9 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 ## What is incomplete
 
 - **Original DS UI graphics:** the title art, pixel font and menu panels (D-031) are in. The text box, name plate, continue arrow and menu buttons are still CSS stand-ins.
-- No music, no effect SFX wiring, no exclamation bubbles or screen effects (bubble images are extracted but not used yet).
+- Music: 10 playable tracks remain `loop: null` (list in `docs/MUSIC.md`); built-in loops are not ear-verified. Lofi Girl `EWrX250Zhko` refuses embedding (error 150); users can enter another embeddable video. No MusicDirector.
+- No effect SFX wiring, no exclamation bubbles or screen effects (bubble images are extracted but not used yet).
+- Court Record has 3 evidence entries and no profiles; Talk topics are static dev samples; no case logic. Generated files currently use a minimal independent text panel; file-only Court Record, phone interaction, summon box, evidence-added cinematic and polished inspector remain milestone 3.
 - Ollama, generic OpenAI-compatible and native Anthropic providers plus local profile/credential management are implemented. No application streaming or persistent memory yet.
 - The chat UX is minimal (single input under the scene, no history view).
 - One character on screen. Wide backgrounds are centre-cropped (no panning).
@@ -167,10 +195,12 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 
 ## Current development phase
 
-**Phase 5e — native Anthropic provider implemented and validated.** The profile/OS-credential milestone is committed at `feff9df`; Anthropic work remains uncommitted.
+**Phase 5h — milestone 2 of 3 (safe generated artifacts) implemented on the preserved uncommitted milestone 1, music/Court Record and music finishing work.** The Anthropic provider is committed (`45a9797`); starting HEAD is `178fda9`. Milestone 2 ownership and validation are recorded in `MILESTONE_2_CHANGE_AUDIT.md` / `SESSION_LOG.md`. No commit, push, stash, reset or branch switch was performed.
 
 ## Immediate next objective
 
-1. Review the uncommitted Anthropic milestone.
-2. Add an Anthropic profile with a supported Claude model and real credential through Settings for a live smoke test; browser vault checks used synthetic credentials only.
-3. Application streaming remains a later generic gateway/API milestone.
+1. Milestone 3: build the final artifact delivery/summon/Court Record experience using the artifact IDs and semantic task cues, preserving the safe pipeline.
+2. Review the uncommitted music/Court Record milestone; decide whether the ~58 MB of OST MP3s go into Git normally or via LFS (D-044).
+3. Listen across loop boundaries of the curated tracks and correct the unlooped ones (start with Maya Fey).
+4. Add an Anthropic profile with a supported Claude model and real credential through Settings for a live smoke test; browser vault checks used synthetic credentials only.
+5. Application streaming remains a later generic gateway/API milestone.
