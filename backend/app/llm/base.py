@@ -36,7 +36,7 @@ class GenerationSettings(BaseModel):
 
     temperature: float = Field(default=0.7, ge=0.0, le=2.0)
     max_tokens: int = Field(default=600, ge=16, le=8192)
-    timeout_s: float = Field(default=30.0, gt=0, le=300)
+    timeout_s: float = Field(default=120.0, gt=0, le=300)
 
 
 @dataclass
@@ -54,10 +54,14 @@ class RawCompletion:
 
     content: str | dict[str, Any] | None
     model: str | None = None
+    #: Provider diagnostics (durations/token counts etc.); never part of CharacterReply.
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class ProviderError(Exception):
     """Raised by adapters for vendor/network failures (message must not contain secrets)."""
+
+    code = "provider_error"
 
 
 class LLMProvider(ABC):

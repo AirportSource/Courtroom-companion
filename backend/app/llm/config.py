@@ -7,14 +7,16 @@ the key, resolved at runtime on the server only. Nothing here is ever sent to th
 
 import os
 from collections.abc import Mapping
+from urllib.parse import urlsplit
 
-from pydantic import BaseModel, Field, SecretStr
+from pydantic import BaseModel, Field, SecretStr, field_validator, model_validator
 
 from .base import GenerationSettings
 
-#: Provider types the architecture plans for. Only "fake" is implemented in this milestone;
-#: the gateway registry decides what is actually available.
+#: Provider types recognized by configuration. The registry decides which are available;
+#: Fake and Ollama are implemented, while the remaining names reserve future adapters.
 KNOWN_PROVIDER_TYPES = ("fake", "ollama", "openai_compatible", "openai", "anthropic")
+DEFAULT_OLLAMA_BASE_URL = "http://localhost:11434"
 
 
 class ProviderConfig(BaseModel):
@@ -25,6 +27,36 @@ class ProviderConfig(BaseModel):
     #: Name of the environment variable holding the API key (never the key itself).
     api_key_env: str | None = Field(default=None, pattern=r"^[A-Z0-9_]{1,64}$")
     settings: GenerationSettings = Field(default_factory=GenerationSettings)
+
+    @field_validator("base_url")
+    @classmethod
+    def normalize_base_url(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = value.strip().rstrip("/")
+        parts = urlsplit(normalized)
+        if (
+            parts.scheme not in {"http", "https"}
+            or not parts.hostname
+            or parts.username is not None
+            or parts.password is not None
+            or parts.query
+            or parts.fragment
+        ):
+            raise ValueError("base URL must be an HTTP(S) origin without credentials, query, or fragment")
+        return normalized
+
+    @field_validator("model")
+    @classmethod
+    def normalize_model(cls, value: str | None) -> str | None:
+        value = value.strip() if value else None
+        return value or None
+
+    @model_validator(mode="after")
+    def apply_provider_defaults(self) -> "ProviderConfig":
+        if self.type == "ollama" and self.base_url is None:
+            self.base_url = DEFAULT_OLLAMA_BASE_URL
+        return self
 
     def resolve_api_key(self, env: Mapping[str, str] | None = None) -> SecretStr | None:
         if not self.api_key_env:
@@ -43,7 +75,7 @@ def load_provider_config(env: Mapping[str, str] | None = None) -> ProviderConfig
     settings = GenerationSettings(
         temperature=float(env.get("COURTROOM_LLM_TEMPERATURE", 0.7)),
         max_tokens=int(env.get("COURTROOM_LLM_MAX_TOKENS", 600)),
-        timeout_s=float(env.get("COURTROOM_LLM_TIMEOUT_S", 30)),
+        timeout_s=float(env.get("COURTROOM_LLM_TIMEOUT_S", 120)),
     )
     return ProviderConfig(
         type=env.get("COURTROOM_LLM_PROVIDER", "fake"),

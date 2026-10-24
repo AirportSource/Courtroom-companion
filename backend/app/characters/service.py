@@ -50,12 +50,19 @@ class CharacterService:
         self.clock_ms = clock_ms
         self._sessions: dict[tuple[str, str], _Session] = {}
 
-    async def chat(self, character_id: str, message: str, session_id: str = "default") -> ChatResult:
+    async def chat(
+        self,
+        character_id: str,
+        message: str,
+        session_id: str = "default",
+        gateway: LLMGateway | None = None,
+    ) -> ChatResult:
         profile = self.repository.get(character_id)  # raises CharacterNotFoundError
         session = self._sessions.setdefault((session_id, character_id), _Session())
         messages = [*session.history, ChatMessage(role="user", content=message)]
 
-        result = await self.gateway.generate_reply(build_system_prompt(profile), messages, reply_schema(profile))
+        active_gateway = gateway or self.gateway
+        result = await active_gateway.generate_reply(build_system_prompt(profile), messages, reply_schema(profile))
         timeline, session.director_state = self.director.direct(
             result.reply, profile, session.director_state, now_ms=self.clock_ms()
         )
@@ -68,4 +75,4 @@ class CharacterService:
         warnings = list(result.warnings)
         if result.error:
             warnings.append(f"provider failure: {result.error}")
-        return ChatResult(result.reply, timeline.to_json(), self.gateway.info(), warnings)
+        return ChatResult(result.reply, timeline.to_json(), active_gateway.info(), warnings)

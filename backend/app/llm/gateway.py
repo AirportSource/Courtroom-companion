@@ -10,9 +10,10 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from .base import GenerationRequest, LLMProvider
-from .config import ProviderConfig
+from .base import GenerationRequest, LLMProvider, ProviderError
+from .config import DEFAULT_OLLAMA_BASE_URL, ProviderConfig
 from .providers.fake import FakeProvider
+from .providers.ollama import OllamaProvider
 from .repair import parse_reply
 from .schemas import CharacterReply, ChatMessage
 
@@ -23,6 +24,7 @@ ProviderFactory = Callable[[ProviderConfig], LLMProvider]
 #: Provider type -> factory. Adding a provider = writing an adapter + registering it here.
 DEFAULT_REGISTRY: dict[str, ProviderFactory] = {
     "fake": lambda config: FakeProvider(model=config.model),
+    "ollama": lambda config: OllamaProvider(base_url=config.base_url or DEFAULT_OLLAMA_BASE_URL, model=config.model),
 }
 
 
@@ -47,6 +49,7 @@ class LLMGateway:
                 f"unknown LLM provider '{config.type}' (available: {', '.join(sorted(registry))})"
             )
         self.config = config
+        self.registry = registry
         self.provider = factory(config)
 
     def info(self) -> dict[str, Any]:
@@ -71,6 +74,9 @@ class LLMGateway:
         except TimeoutError:
             logger.warning("LLM provider %s timed out", self.config.type)
             return GatewayResult(None, ["provider timed out"], error="timeout")
+        except ProviderError as error:
+            logger.warning("LLM provider %s failed: %s", self.config.type, error)
+            return GatewayResult(None, [str(error)], error=error.code)
         except Exception:  # isolate any adapter/vendor failure from the app
             logger.exception("LLM provider %s failed", self.config.type)
             return GatewayResult(None, ["provider failed"], error="provider_error")

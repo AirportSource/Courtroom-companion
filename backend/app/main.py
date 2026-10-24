@@ -12,14 +12,18 @@ from .api.routes import router
 from .characters.repository import CharacterRepository
 from .characters.service import CharacterService
 from .llm.config import ProviderConfig, load_provider_config
-from .llm.gateway import LLMGateway
+from .llm.gateway import LLMGateway, ProviderFactory
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 
 
-def create_app(config: ProviderConfig | None = None, repository: CharacterRepository | None = None) -> FastAPI:
+def create_app(
+    config: ProviderConfig | None = None,
+    repository: CharacterRepository | None = None,
+    provider_registry: dict[str, ProviderFactory] | None = None,
+) -> FastAPI:
     app = FastAPI(title="Courtroom Companion API", version="0.1.0")
-    gateway = LLMGateway(config or load_provider_config())
+    gateway = LLMGateway(config or load_provider_config(), registry=provider_registry)
     app.state.character_service = CharacterService(repository or CharacterRepository(), gateway)
     app.include_router(router)
     return app

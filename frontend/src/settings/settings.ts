@@ -6,12 +6,18 @@ export interface Settings {
   /** Dialogue blip volume, 0–1. */
   blipVolume: number
   blipsMuted: boolean
+  aiProvider: 'fake' | 'ollama'
+  ollamaBaseUrl: string
+  ollamaModel: string
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   textSpeed: 1,
   blipVolume: 0.6,
   blipsMuted: false,
+  aiProvider: 'fake',
+  ollamaBaseUrl: 'http://localhost:11434',
+  ollamaModel: '',
 }
 
 export const TEXT_SPEEDS = [
@@ -45,6 +51,10 @@ export function readStoredSettings(): Settings {
       textSpeed: typeof stored.textSpeed === 'number' ? stored.textSpeed : DEFAULT_SETTINGS.textSpeed,
       blipVolume: typeof stored.blipVolume === 'number' ? stored.blipVolume : DEFAULT_SETTINGS.blipVolume,
       blipsMuted: typeof stored.blipsMuted === 'boolean' ? stored.blipsMuted : DEFAULT_SETTINGS.blipsMuted,
+      aiProvider: stored.aiProvider === 'ollama' ? 'ollama' : 'fake',
+      ollamaBaseUrl:
+        typeof stored.ollamaBaseUrl === 'string' ? stored.ollamaBaseUrl : DEFAULT_SETTINGS.ollamaBaseUrl,
+      ollamaModel: typeof stored.ollamaModel === 'string' ? stored.ollamaModel : DEFAULT_SETTINGS.ollamaModel,
     }
   } catch {
     return DEFAULT_SETTINGS

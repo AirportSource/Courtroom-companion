@@ -570,3 +570,25 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - `npm.cmd run lint`: pass.
 - `git diff --check`: pass.
 - No backend behavior, gateway/director/provider code, Maya assets or performance rules changed.
+
+---
+
+## 2026-10-24 — OllamaProvider, discovery and provider Settings
+
+**Architecture**
+- Added `backend/app/llm/providers/ollama.py` and registered `ollama` beside unchanged FakeProvider behavior. Qwen/Gemma/Llama/Mistral remain model strings inside Ollama.
+- Native `POST /api/chat` sends shared system/history messages, configured model, `stream: false`, `think: false`, temperature/`num_predict`, and the exact existing per-character schema through `format`. The adapter extracts only final `message.content`; shared gateway repair and CharacterDirector remain unchanged.
+- Provider errors have safe machine codes. No failure silently switches to FakeProvider. Optional Ollama duration/token metadata stays on `RawCompletion`, outside CharacterReply and presentation.
+- Provider configuration validates/normalizes HTTP(S) base URLs, defaults Ollama to `http://localhost:11434`, requires no key, and uses a 120-second generic generation timeout for cold starts.
+
+**Discovery, connection test and UI**
+- Added backend-proxied `GET /api/providers/ollama/models` (`GET /api/tags`) and `POST /api/providers/ollama/test`. The latter performs tags discovery plus one provider-independent, schema-constrained greeting without touching CharacterService session history.
+- `/api/chat` accepts explicit Fake/Ollama user configuration for the turn. CharacterService still owns the single history/prompt/director flow; model output cannot change configuration.
+- Settings minimally adds Fake/Ollama, server, installed-model dropdown, Refresh Models and Test Connection. It distinguishes unreachable, reachable/list-loaded, selected-model-missing, generation failure and success. Normal controls remain unchanged in the scrollable 256×192 panel.
+- Chromium verified Fake as the default, Ollama controls, default URL, clean unreachable message, and that the browser requested only `/api/providers/ollama/models` through Vite—never `localhost:11434` directly.
+
+**Tests and local environment**
+- Added mocked tests for registration/capabilities, chat translation, model/messages/`stream`/`think`/schema/options, custom URL, no auth, tags metadata, connection refusal, timeout, missing model, non-200, malformed/missing/empty output, thinking exclusion, gateway→Ollama→shared validation, history-free test endpoint, per-chat override and Fake regression.
+- `ollama` executable was not found and the local API did not respond. No installed models were discoverable, no model was downloaded, and the optional real-model end-to-end test stopped there.
+- Final validation: backend 79/79 tests (with one harmless pytest cache-path warning), frontend 28/28 tests, asset validation 161 referenced files / 0 errors, production build 56 modules, lint pass, and `git diff --check` pass.
+- No Maya data/assets, CharacterDirector rules, paginator behavior or dialogue typography changed.

@@ -400,6 +400,7 @@
   align-items: stretch;
   gap: 4px;
   line-height: 15px;
+  overflow-y: auto;
 }
 
 .settings-screen .menu-heading {
@@ -420,6 +421,31 @@
 .settings-options {
   display: flex;
   gap: 2px;
+}
+
+.settings-provider {
+  display: grid;
+  gap: 4px;
+}
+
+.settings-row-field input,
+.settings-row-field select {
+  width: 142px;
+  min-width: 0;
+  font: inherit;
+}
+
+.settings-provider-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 3px;
+}
+
+.settings-provider-status {
+  margin: 0;
+  padding: 2px 4px;
+  line-height: 15px;
+  background: rgb(0 0 0 / 0.6);
 }
 
 .settings-screen button {

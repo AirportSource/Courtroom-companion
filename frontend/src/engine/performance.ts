@@ -288,10 +288,14 @@ export function timelineToLines(timeline: PerformanceTimeline, layout: TextLayou
 
 export class ChatError extends Error {}
 
+export type ChatProviderSelection =
+  | { type: 'fake' }
+  | { type: 'ollama'; baseUrl: string; model: string }
+
 /** POST /api/chat (proxied to the backend by Vite in development). */
 export async function sendChat(
-  request: { character: string; message: string; sessionId: string },
-  timeoutMs = 45_000,
+  request: { character: string; message: string; sessionId: string; provider?: ChatProviderSelection },
+  timeoutMs = 135_000,
 ): Promise<ChatResponse> {
   const controller = new AbortController()
   const timer = window.setTimeout(() => controller.abort(), timeoutMs)

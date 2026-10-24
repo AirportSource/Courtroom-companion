@@ -1,6 +1,6 @@
 # LLM Architecture — Courtroom Companion
 
-_Provider-agnostic conversation layer (milestone 2026-10-24). See also `docs/CHARACTER_DIRECTOR.md`._
+_Provider-agnostic conversation layer, now with FakeProvider and OllamaProvider (milestones 2026-10-24). See also `docs/CHARACTER_DIRECTOR.md`._
 
 ## Responsibilities (four layers)
 
@@ -32,7 +32,7 @@ CharacterService  backend/app/characters/service.py
 LLMGateway  backend/app/llm/gateway.py
   │  registry → provider adapter; timeout; exception isolation
   ▼
-Provider adapter  backend/app/llm/providers/*.py   (only place with vendor code)
+Provider adapter  backend/app/llm/providers/*.py   (FakeProvider or OllamaProvider; only place with vendor code)
   ▼
 RawCompletion (untrusted JSON/text)
   ▼
@@ -60,7 +60,8 @@ class LLMProvider(ABC):
 - `GenerationRequest`: `system_prompt`, `messages` (user/assistant turns), `response_schema`
   (JSON schema with this character's allowed IDs as enums), `settings` (temperature,
   max_tokens, timeout_s).
-- `RawCompletion.content`: a JSON string, plain text, or an already-parsed dict.
+- `RawCompletion.content`: a JSON string, plain text, or an already-parsed dict. Optional
+  transport timing/token metadata stays separate and is never part of `CharacterReply`.
 - Adapters **must not** parse or validate, must not add personality rules, and must not
   include secrets in exceptions or logs. Raise `ProviderError` for vendor failures.
 - The gateway (`LLMGateway.generate_reply`) is the conceptual
@@ -85,10 +86,10 @@ class LLMProvider(ABC):
 3. Add adapter tests with a mocked HTTP transport (no real network in tests).
 4. Nothing else changes: service, director, prompt, frontend and character packs stay as they are.
 
-Recommended order: **Ollama** (local, no secrets, HTTP JSON; `format` supports JSON-schema
-output), then **OpenAI-compatible** (one adapter covers OpenAI, Qwen/DashScope, Kimi/Moonshot,
-LM Studio, vLLM, OpenRouter via `base_url`), then **Anthropic** (separate request shape;
-JSON-instructed or tool-based structured output).
+Implemented first: **Ollama** (local, no secrets, native HTTP JSON and JSON Schema through
+`format`). Next: **OpenAI-compatible** (one adapter covers OpenAI, Qwen/DashScope,
+Kimi/Moonshot, LM Studio, vLLM and OpenRouter via `base_url`), then **Anthropic** (separate
+request shape; JSON-instructed or tool-based structured output).
 
 ## CharacterReply schema (`app/llm/schemas.py`)
 
@@ -139,10 +140,17 @@ GPT, Qwen or Kimi + Maya all use the same Maya layer.
 |---|---|---|
 | GET | `/api/health` | `{status, provider: {type, model, capabilities}, characters}` |
 | GET | `/api/characters/{id}/capabilities` | emotions, fallback, reactions, gestures |
+| GET | `/api/providers/ollama/models?baseUrl=…` | Backend-proxied `/api/tags`; installed model metadata |
+| POST | `/api/providers/ollama/test` | Tags + schema-constrained generation test, with no conversation history |
 | POST | `/api/chat` | `{character, message (1–2000), sessionId?}` → `{reply, performance, provider, warnings}` |
 
 `reply` is the validated semantic reply (or null on provider failure). `performance` is the
 director's resolved timeline. No credentials or base URLs are ever returned.
+
+`/api/chat` may also carry a user-selected provider object (`fake`, or `ollama` with `baseUrl`
+and `model`). It chooses a gateway for that turn while reusing the same CharacterService
+prompt, history, repair and director path. Provider configuration comes only from server
+environment or explicit UI input, never from model output.
 
 ## Provider configuration and secrets (`app/llm/config.py`)
 
@@ -153,7 +161,7 @@ Environment variables (server only):
 
 | Variable | Example |
 |---|---|
-| `COURTROOM_LLM_PROVIDER` | `fake` (default) / later `ollama`, `openai_compatible`, `openai`, `anthropic` |
+| `COURTROOM_LLM_PROVIDER` | `fake` (default) / `ollama`; later `openai_compatible`, `openai`, `anthropic` |
 | `COURTROOM_LLM_BASE_URL` | `http://localhost:11434` |
 | `COURTROOM_LLM_MODEL` | `qwen2.5:7b` |
 | `COURTROOM_LLM_API_KEY_ENV` | `OPENAI_API_KEY` (the backend reads the key from that variable) |
@@ -170,9 +178,40 @@ Secret handling:
   backend endpoint that stores it there. Keys are never kept in browser storage or
   committed config.
 
+Base URLs are trimmed and trailing slashes removed; only HTTP(S) URLs without embedded
+credentials, query strings or fragments are accepted. Ollama defaults to
+`http://localhost:11434`. It requires no API key.
+
+## OllamaProvider
+
+`backend/app/llm/providers/ollama.py` uses Ollama's native API:
+
+- `POST /api/chat`: system prompt plus shared history, configured model, `stream: false`,
+  `think: false`, generic temperature/token options, and the exact per-character
+  `reply_schema(profile)` object in `format`.
+- `GET /api/tags`: installed-model discovery. Courtroom Companion returns name/model,
+  parameter size, quantization level and byte size when Ollama provides them. It lists models
+  without claiming every installed model is suitable for chat or structured output.
+- Only `message.content` becomes `RawCompletion.content`. `message.thinking` is ignored and is
+  never validated, stored in conversation memory or rendered. Ollama duration/token fields may
+  be retained as adapter metadata, separate from `CharacterReply`.
+
+Ollama transport failures are typed and sanitized: unreachable server, timeout, missing model,
+non-success HTTP, malformed JSON, missing `message.content`, and empty output. The gateway never
+falls back to FakeProvider. Normal chat uses the existing character error-line performance on a
+provider failure; discovery/test endpoints return bounded status information without Python
+tracebacks or upstream response bodies.
+
+The Settings screen persists `Fake` / `Ollama`, server URL and selected model in browser settings.
+The browser calls only the Courtroom Companion backend. Refresh distinguishes reachability and
+model-list loading; Test Connection distinguishes a missing selected model, structured generation
+failure and success. Its generated reply goes through the shared schema/repair path but bypasses
+CharacterService sessions, so it cannot pollute normal history.
+
 ## Streaming (design only)
 
-Not implemented. A future streaming mode would:
+Not implemented at application level. Ollama advertises streaming capability, but its adapter
+always sends `stream: false` in this milestone. A future provider-generic streaming mode would:
 
 1. Ask the model for metadata first (beats' emotion/intensity/reaction), validate it, and
    start the reaction/pose.
@@ -212,6 +251,40 @@ cd backend
 cd frontend
 npm run dev        # proxies /api → http://127.0.0.1:8000
 ```
+
+### Local Ollama startup (Windows PowerShell)
+
+```powershell
+# Install Ollama separately, then start it if the desktop/service is not already running.
+ollama serve
+
+# In another terminal, inspect locally installed models.
+ollama list
+
+# Only when the user explicitly chooses to download one:
+ollama pull <model-name>
+
+# Start Courtroom Companion's backend (defaults to FakeProvider).
+cd backend
+.venv\Scripts\python -m uvicorn app.main:app --reload --port 8000
+
+# Start the frontend in another terminal, then choose Ollama in Settings,
+# refresh models, select one, and test the connection.
+cd frontend
+npm run dev
+```
+
+Alternatively make Ollama the server default before starting Uvicorn:
+
+```powershell
+$env:COURTROOM_LLM_PROVIDER = 'ollama'
+$env:COURTROOM_LLM_BASE_URL = 'http://localhost:11434'
+$env:COURTROOM_LLM_MODEL = '<installed-model-name>'
+$env:COURTROOM_LLM_TIMEOUT_S = '120'
+```
+
+The app never downloads a model automatically. Cold starts use a 120-second backend generation
+timeout and a slightly longer frontend wait, while model discovery keeps a short timeout.
 
 Python 3.12+. On Python 3.15, install `uvicorn` without the `[standard]` extra (its
 PyYAML dependency has no 3.15 wheel yet).

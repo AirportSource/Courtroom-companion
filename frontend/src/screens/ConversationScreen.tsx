@@ -92,8 +92,15 @@ export function ConversationScreen({ character, background, testScript, onExit, 
       setChatError(null)
       setPhase('waiting')
       try {
+        if (settings.aiProvider === 'ollama' && !settings.ollamaModel) {
+          throw new Error('select an Ollama model in Settings first')
+        }
+        const provider =
+          settings.aiProvider === 'ollama'
+            ? { type: 'ollama' as const, baseUrl: settings.ollamaBaseUrl, model: settings.ollamaModel }
+            : { type: 'fake' as const }
         const [response, layout] = await Promise.all([
-          sendChat({ character: character.id, message, sessionId }),
+          sendChat({ character: character.id, message, sessionId, provider }),
           dialogueTextLayout(),
         ])
         setLastResponse(response)
@@ -103,7 +110,7 @@ export function ConversationScreen({ character, background, testScript, onExit, 
         setPhase('input')
       }
     },
-    [character.id, sessionId, play],
+    [character.id, sessionId, play, settings.aiProvider, settings.ollamaBaseUrl, settings.ollamaModel],
   )
 
   const advance = useCallback(() => {

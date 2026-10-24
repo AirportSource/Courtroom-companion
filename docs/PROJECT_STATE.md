@@ -1,6 +1,6 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-24 (Igiari + deterministic DotGothic16 fallback integration on the committed LLM architecture milestone). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-24 (OllamaProvider milestone on the committed LLM/typography architecture). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
@@ -8,7 +8,7 @@ Courtroom Companion is an Ace Attorney-style conversational interface with a com
 
 title → main menu → character select → location select → conversation scene
 
-In the scene, the React client sends a message to the FastAPI backend. Its provider-agnostic gateway currently uses the deterministic `FakeProvider`; validated semantic beats pass through the data-driven Character Director and measured paginator before the existing typewriter, reaction, animation and blip engines play them. The temporary test script remains available from the dev panel.
+In the scene, the React client sends a message to the FastAPI backend. Its provider-agnostic gateway supports deterministic `FakeProvider` and the native-HTTP `OllamaProvider`; validated semantic beats pass through the same data-driven Character Director and measured paginator before the existing typewriter, reaction, animation and blip engines play them. The temporary test script remains available from the dev panel.
 
 **Original UI assets, partly in.** The owner manually supplied:
 - the original title-screen sheet (now the "press start" art);
@@ -104,16 +104,18 @@ voice = dev override ?? line.voice ?? character.voice.blip
 - Launch: `cd frontend` then `npm run dev`.
 - Browser font/pagination checks: Igiari WOFF2 and DotGothic16 TTF both loaded before measurement; kana metrics matched Igiari and Kanji-only metrics matched DotGothic16. English, French, kana, mixed Kanji and longer Japanese samples fit without clipping, overlap or hidden lines; hyphen, ellipsis and accented Latin remain in Igiari. Pagination is identical at 3×, 4× and auto 5×. The existing 15 px line height remains valid.
 - `npm test`: 28 engine tests (node:test, no dependencies), all passing.
+- Settings now selects Fake or Ollama. Ollama controls provide an editable server URL, backend-proxied installed-model dropdown, Refresh Models and a history-free schema-constrained Test Connection. Browser verification confirmed the unreachable state is handled without a crash and no direct browser request reaches port 11434.
 
 ## Backend status
 
 `backend/` (FastAPI, Python 3.12+; developed on 3.15.1 in `backend/.venv`):
 - **LLM gateway:** a provider-agnostic adapter contract, a registry, timeouts and exception isolation. The shared parse/validate/repair step produces a strict `CharacterReply`.
-- **Provider:** only **FakeProvider** (deterministic, offline) is implemented.
+- **Providers:** **FakeProvider** (deterministic, offline) and **OllamaProvider** (native `/api/chat`, local/no key, JSON Schema via `format`). Qwen, Gemma, Llama, Mistral, etc. are model names selected inside Ollama, not providers.
 - **CharacterRepository:** reads capabilities from the frontend character packs (`character.json` + new `performance.json` + `personality.md`).
 - **CharacterDirector:** deterministic, data-driven anti-overacting rules → `PerformanceTimeline`.
-- **API:** `GET /api/health`, `GET /api/characters/{id}/capabilities`, `POST /api/chat`.
-- **Tests:** `pytest`, 59 passing.
+- **API:** existing health/capabilities/chat plus backend-only Ollama proxy routes `GET /api/providers/ollama/models` and `POST /api/providers/ollama/test`.
+- **Tests:** `pytest`, 79 passing. Ollama transport is fully mocked; normal tests do not require Ollama.
+- **Local environment check:** `ollama` command not found and `http://localhost:11434/api/tags` did not respond. No installed models could be queried, so no real-model end-to-end smoke test was possible and no model was downloaded.
 
 See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd backend; .venv/Scripts/python -m uvicorn app.main:app --reload --port 8000`. The Vite dev server proxies `/api`.
 
@@ -142,7 +144,7 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 
 - **Original DS UI graphics:** the title art, pixel font and menu panels (D-031) are in. The text box, name plate, continue arrow and menu buttons are still CSS stand-ins.
 - No music, no effect SFX wiring, no exclamation bubbles or screen effects (bubble images are extracted but not used yet).
-- No real LLM provider yet (FakeProvider only); no streaming; no persistent memory; no bring-your-own-key UI.
+- Ollama is the first real provider. No OpenAI-compatible/Anthropic adapter yet; no application streaming; no persistent memory; no bring-your-own-key UI.
 - The chat UX is minimal (single input under the scene, no history view).
 - One character on screen. Wide backgrounds are centre-cropped (no panning).
 - Sheet rows 14–17 (Maya side poses) are not extracted yet.
@@ -162,10 +164,10 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 
 ## Current development phase
 
-**Phase 5a — LLM architecture (FakeProvider) and Igiari + DotGothic16 stage/UI typography implemented and validated.** The LLM milestone is committed at `54fe287`; the typography milestone is uncommitted.
+**Phase 5b — first real provider (Ollama), provider settings and model discovery implemented and validated.** The provider-agnostic architecture and typography milestones are committed; the Ollama milestone is uncommitted.
 
 ## Immediate next objective
 
-1. Owner reviews the Igiari + DotGothic16 stage/UI presentation.
-2. Commit this typography milestone after approval.
-3. Next: an Ollama provider adapter (local model, no secrets), then OpenAI-compatible; an authentic Ace Attorney Kanji font remains a separate future research item.
+1. Install/start Ollama and choose an installed chat-capable model when a real local smoke test is desired.
+2. Review and commit the Ollama milestone after approval.
+3. Next provider: OpenAI-compatible, then Anthropic. Application streaming remains a later generic gateway/API milestone.

@@ -398,3 +398,18 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - DotGothic16 is a deterministic, visually compatible fallback, not a claim about the original Ace Attorney Kanji font.
 - **Metadata basis:** the supplied TTF embeds family `DotGothic16`, Regular/Normal style, version 1.101, copyright 2020 The DotGothic16 Project Authors, and SIL Open Font License 1.1. No separate local readme/licence was supplied, so no additional provenance is asserted.
 - **Rationale:** bundling the first Kanji fallback makes rendering and canvas pagination deterministic across machines while retaining system fonts as a safety net.
+
+## D-039 — Ollama is the first real provider; selection is per request
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Extends:** D-033. The provider contract, shared repair, CharacterService, CharacterDirector and paginator remain authoritative.
+- **Decision:**
+  - `OllamaProvider` is one thin native-HTTP adapter registered as `ollama`; Qwen, Gemma, Llama, Mistral and other installed names are models selected inside it, never separate providers.
+  - Generation uses `POST /api/chat` with the configured model, shared messages, `stream: false`, `think: false`, generic options and the exact existing per-character JSON Schema in `format`. Only final `message.content` enters shared repair; thinking is discarded.
+  - Discovery uses `GET /api/tags` through `GET /api/providers/ollama/models`. Test Connection uses a separate backend route and the same prompt/schema/gateway validation but never CharacterService session history.
+  - The Settings screen persists provider, Ollama server and selected model. `/api/chat` accepts that explicit user selection and constructs a gateway for the turn while reusing the one service/history/director pipeline. Model output can never alter provider configuration.
+  - Default Ollama URL is `http://localhost:11434`; trailing slashes are normalized. No API key exists for local Ollama. Browser code never contacts Ollama directly and backend responses never expose the configured base URL.
+  - Ollama supports streaming, but application streaming remains disabled and the adapter always requests `stream: false`. Any future streaming API must extend the generic provider contract rather than add an Ollama-only presentation path.
+  - Provider failures never silently switch to FakeProvider. Normal chat takes the existing character error-line path; Settings distinguishes unreachable, reachable/list-loaded, selected-model-missing, generation-failed and generation-succeeded states.
+  - Generic generation timeout is 120 seconds for local cold starts; model discovery remains 10 seconds and the frontend waits slightly longer than backend generation.
+- **Rationale:** per-request selection supports browser-local settings without global server mutation or duplicated services, while the adapter remains vendor-only transport code and every model receives identical character context and validation.

@@ -62,7 +62,8 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [x] Provider-agnostic LLM gateway + adapter contract + FakeProvider — 2026-10-24 (D-033)
 - [x] Character Director → PerformanceTimeline driving the existing dialogue/animation engines — 2026-10-24 (D-034)
 - [x] Minimal chat UX in the conversation scene (input → waiting → performance → settle) — 2026-10-24
-- [ ] First real provider adapter: Ollama (local), then OpenAI-compatible (covers OpenAI/Qwen/Kimi/…), then Anthropic
+- [x] First real provider adapter: Ollama native HTTP API, JSON-Schema output, backend model discovery and Settings controls — 2026-10-24 (D-039)
+- [ ] Next providers: OpenAI-compatible (covers OpenAI/Qwen/Kimi/…), then Anthropic
 - [ ] Bring-your-own-key settings with OS credential storage (design in LLM_ARCHITECTURE.md)
 - [ ] Streaming (metadata first, then text) — design only so far
 - [ ] Conversation memory (in-memory 12-message history only so far)

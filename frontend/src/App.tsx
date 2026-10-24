@@ -194,6 +194,7 @@ function App() {
       return (
         <SettingsScreen
           previewBlip={audioEngine.getSounds('blip')[0]?.id ?? null}
+          testCharacterId={catalog.characters[0]?.id ?? null}
           onBack={toTitle}
           backdrop={catalog.ui.images.menu_bottom_screen ?? null}
         />
