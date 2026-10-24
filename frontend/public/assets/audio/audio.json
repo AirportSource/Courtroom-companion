@@ -1,31 +1,28 @@
 {
-  "blips": {
-    "female": "blips/female.wav",
-    "male": "blips/male.wav"
-  },
+  "schemaVersion": 1,
+  "categories": ["blip", "dialogue", "effect", "ui"],
 
-  "dialogue": {
-    "assertive": "dialogue/assertive/objection.wav",
-    "cute": "dialogue/cute/meow.wav",
-    "idea": "dialogue/idea/lightbulb.wav",
-    "realization": "dialogue/realization/realization.wav"
-  },
+  "sounds": {
+    "blip_female": { "category": "blip", "src": "blips/blip_female/blipfemale.wav" },
+    "blip_male": { "category": "blip", "src": "blips/blip_male/blipmale.wav" },
 
-  "shock": {
-    "damage": "dialogue/shock/damage2.wav",
-    "smack": "dialogue/shock/smack.wav",
-    "stab": "dialogue/shock/stab2.wav",
-    "whack": "dialogue/shock/whack.wav"
-  },
+    "sfx_assertive": { "category": "dialogue", "src": "dialogue/assertive/objection.wav" },
+    "sfx_cute": { "category": "dialogue", "src": "dialogue/cute/meow.wav" },
+    "sfx_idea": { "category": "dialogue", "src": "dialogue/idea/lightbulb.wav" },
+    "sfx_realization": { "category": "dialogue", "src": "dialogue/realization/realization.wav" },
 
-  "ui": {
-    "cancel": "menu_ui/cancel.wav",
-    "evidence": "menu_ui/evidenceshoop.wav",
-    "save": "menu_ui/saveblip.wav",
-    "scroll": "menu_ui/scroll.wav",
-    "select": "menu_ui/selectblip.wav",
-    "selectAlt": "menu_ui/selectblip2.wav",
-    "jingle": "menu_ui/selectjingle.wav",
-    "typewriter": "menu_ui/typwriter.wav"
+    "fx_damage": { "category": "effect", "src": "dialogue/shock/damage2.wav" },
+    "fx_smack": { "category": "effect", "src": "dialogue/shock/smack.wav" },
+    "fx_stab": { "category": "effect", "src": "dialogue/shock/stab2.wav" },
+    "fx_whack": { "category": "effect", "src": "dialogue/shock/whack.wav" },
+
+    "ui_cancel": { "category": "ui", "src": "menu_ui/cancel.wav" },
+    "ui_evidence": { "category": "ui", "src": "menu_ui/evidenceshoop.wav" },
+    "ui_save": { "category": "ui", "src": "menu_ui/saveblip.wav" },
+    "ui_scroll": { "category": "ui", "src": "menu_ui/scroll.wav" },
+    "ui_select": { "category": "ui", "src": "menu_ui/selectblip.wav" },
+    "ui_select_alt": { "category": "ui", "src": "menu_ui/selectblip2.wav" },
+    "ui_jingle": { "category": "ui", "src": "menu_ui/selectjingle.wav" },
+    "ui_typewriter": { "category": "ui", "src": "menu_ui/typwriter.wav" }
   }
 }

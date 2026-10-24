@@ -75,3 +75,54 @@ Stabilize Maya's character assets: propose a rename/fix mapping for the issues a
 
 **Recommended next task**
 Unchanged: stabilize Maya's character assets (resolve D-008 first).
+
+---
+
+## 2026-10-24 — Runtime asset stabilization & manifests
+
+**Inspected**
+- Docs, `CLAUDE.md`, skills (repo-inspector, asset-pipeline, character-engine, audio-engine, git-safety, testing).
+- All files under `frontend/public/`. Searched `frontend/` code for asset path references and found none outside the manifests themselves.
+- Built contact sheets of every Maya frame and all backgrounds (stdlib PNG decoder in the scratchpad) to resolve ambiguous groups visually.
+
+**Changed**
+- Moved `frontend/public/characters/` → `frontend/public/assets/characters/` and `frontend/public/backgrounds/` → `frontend/public/assets/backgrounds/` (`git mv`; D-010).
+- Maya sprite fixes, all via `git mv` (D-013):
+  - `netural_front` → `neutral_front`.
+  - `smile_front/talking/idle/*` → `smile_front/idle/`.
+  - `thinking_side/talking/047–050` → `thinking_side/idle/`.
+  - `arms_open/idle/021` → `arms_open/talking/`.
+  - `arms_open/talking/024` → `_unassigned/`.
+  - `clasped_hands_happy/talking/066–069` → `clasped_hands_happy/talking_laugh/`.
+  - `bow_polite/001–004` → `idle/` and `005–008` → `talking/`.
+  - `shocked_panicked/*` → `shocked_panicked/reaction/`.
+  - Stripped `" (1)"`/`" (2)"` from all 97 frame filenames.
+- Rewrote `characters/maya/character.json` (schema v1, D-011) and `audio/audio.json` (schema v1, D-012).
+- Created `characters/index.json`, `backgrounds/backgrounds.json`, `music/.gitkeep`, `ui/.gitkeep`.
+- Removed `frontend/public/assets/hero.png` (`git rm`). It was byte-identical to the Vite scaffold blob `02251f4`, unreferenced, and is recoverable from history.
+- Added `frontend/scripts/validate-assets.mjs` and the npm script `validate:assets` (D-014).
+- Docs: rewrote PROJECT_STATE and ASSET_INVENTORY; updated ROADMAP; DECISIONS D-008 marked superseded, D-003 annotated, D-010 to D-014 added.
+
+**Correction to the earlier entry**
+- The initialization entry/inventory said 132 Maya frames. The actual count is 97 (verified at HEAD `8bf0937`).
+
+**Process note**
+- The first move attempt failed: Windows refused to rename `characters/` because a shell's cwd was inside it. Subsequent commands ran from `frontend/public/` and created empty stray folders there. Those were removed with `rmdir` (empty-only), and the moves were re-run with absolute paths. No files were lost; final state verified by count (97 frames + manifests).
+
+**Validation**
+- `npm run validate:assets`: **pass**, 144 referenced files, 0 errors.
+- Negative test on a scratch copy with 4 injected faults (missing frame, bad emotion target, wrong bg width, stray file): all detected, exit 1.
+- `npm run build`: **pass** (exit 0; 17 modules; `public/assets/**` copied into `dist/assets/`).
+- `npm run lint`: **pass** (exit 0, no diagnostics).
+
+**Unresolved / ambiguous**
+- D-013 visual splits need confirmation in the renderer.
+- Frame 024's true pose is unknown. `017` may really be `018`. Frames 063–065 are missing.
+- `surprised` settles to neutral; there's no shocked hold loop.
+- Talking fps hasn't been tuned.
+- bg_18 has characters baked in. Background descriptions are guesses.
+- No music, UI graphics or visual effects exist.
+- Vite's `dist/assets/` is shared between bundles and public assets (no collision today).
+
+**Recommended next task**
+Phase 2: a typed manifest loader, then a minimal scene renderer (background + Maya idle/talking loop driven by logical emotion) to confirm the inferred splits by eye.

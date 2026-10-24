@@ -1,117 +1,111 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-24 (build fix: obsolete Vite demo imports removed). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-24 (runtime asset stabilization & manifests). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
-Courtroom Companion is an Ace Attorney-style conversational interface. As of this audit the repository contains **a raw asset library and an unmodified Vite + React + TypeScript scaffold**. No game feature is implemented yet.
+Courtroom Companion is an Ace Attorney-style conversational interface. The repository now contains **a normalized runtime asset library with validated manifests** and the Vite + React + TypeScript starter page (build/lint green). No game feature (renderer, animation, dialogue, audio playback) is implemented yet.
 
 ## Current architecture
 
 ```
 Courtroom-companion/
-├── CLAUDE.md                 # project rules for Claude Code (untracked)
-├── .claude/skills/           # 11 project skills (untracked)
+├── CLAUDE.md                 # project rules for Claude Code
+├── .claude/skills/           # 11 project skills
 ├── .gitignore                # Vite default ignore rules (root-level only)
-├── README.md                 # empty (0 bytes)
-├── LICENSE                   # empty (0 bytes)
+├── README.md, LICENSE        # empty (0 bytes)
 ├── docs/                     # persistent project memory (this folder)
 ├── tests/                    # empty (.gitkeep only)
 └── frontend/                 # Vite + React 19 + TypeScript 6 app
     ├── index.html            # scaffold; title "frontend"; links missing /favicon.svg
-    ├── package.json          # scripts: dev, build (tsc -b && vite build), lint (oxlint), preview
-    ├── vite.config.ts        # default: react() plugin only
-    ├── tsconfig*.json        # project references (app + node)
-    ├── .oxlintrc.json        # react, typescript, oxc plugins
+    ├── package.json          # scripts: dev, build, lint, validate:assets, preview
+    ├── scripts/
+    │   └── validate-assets.mjs   # manifest ↔ filesystem validator (Node, no deps)
     ├── src/
-    │   ├── main.tsx          # StrictMode root → App
-    │   ├── App.tsx           # Vite starter page, minus obsolete demo-asset imports
-    │   ├── App.css, index.css# starter styles
+    │   ├── main.tsx, App.tsx # Vite starter page (to be replaced by the scene UI)
+    │   ├── App.css, index.css
     │   └── components/       # 4 placeholder files, all 0 bytes
-    │       ├── CharacterSprite.tsx
-    │       ├── DialogueBox.tsx
-    │       ├── GameScene.tsx
-    │       └── TypewriterText.tsx
     └── public/
-        ├── assets/
-        │   ├── hero.png      # Vite scaffold image, not a game asset
-        │   └── audio/        # blips, dialogue SFX, UI SFX + audio.json manifest
-        ├── backgrounds/      # 29 PNG backgrounds
-        └── characters/
-            └── maya/         # character.json + sprites/<pose>/{idle,talking}/
+        └── assets/           # ALL runtime assets (decision D-010)
+            ├── characters/
+            │   ├── index.json            # character id → manifest path
+            │   └── maya/
+            │       ├── character.json    # schema v1 character pack
+            │       └── sprites/<pose>/{idle,talking,reaction,...}/maya_frame_NNN.png
+            ├── backgrounds/
+            │   ├── backgrounds.json      # bg_NN → file + dimensions
+            │   └── background_NN_WxH.png
+            ├── audio/
+            │   ├── audio.json            # sound id → category + file
+            │   └── {blips,dialogue,menu_ui}/...
+            ├── music/                    # empty (.gitkeep), no music exists yet
+            └── ui/                       # empty (.gitkeep), no UI graphics exist yet
 ```
+
+Runtime URL of any asset = `/assets/<folder>/<manifest-relative path>`. Paths inside a manifest are relative to that manifest's directory.
 
 Planned layers (not yet present): scene renderer, animation controller, typewriter + blip engine, central audio/music manager, LLM contract, FastAPI backend, Ollama/Qwen.
 
+## Manifests (all validated by `npm run validate:assets`)
+
+| Manifest | Exposes |
+|---|---|
+| `assets/characters/index.json` | `characters: { <characterId>: <manifest path> }` |
+| `assets/characters/maya/character.json` | `emotions` → `animations` (each with `idle` + `talking` frame lists) and optional one-shot `reactions`; `voice.blip` → audio sound id; `defaultEmotion`, `fallbackEmotion`, `anchor`, `unassignedFrames` |
+| `assets/backgrounds/backgrounds.json` | `backgrounds: { bg_NN: { src, width, height, description, notes? } }` |
+| `assets/audio/audio.json` | `categories` (`blip`, `dialogue`, `effect`, `ui`); `sounds: { <id>: { category, src } }` |
+
+No music manifest (no music assets). No UI manifest (no UI graphics).
+
+The future renderer consumes logical IDs only (emotion, animation, sound id, background id). Physical filenames exist only inside manifests.
+
 ## Frontend status
 
-- Toolchain declared: React `^19.2.8`, Vite `^8.2.2`, TypeScript `~6.0.2`, `@vitejs/plugin-react ^6.1.0`, oxlint `^1.79.0`.
-- Node.js v24.22.1 / npm 11.19.1 are installed at `C:\Program Files\nodejs`. On this machine that directory may be missing from a shell's `PATH`; prepend it if `node` isn't found.
-- `node_modules` is installed. `package-lock.json` has uncommitted changes from that `npm install` (transitive version bumps, not made by any code change).
-- **`npm run build` passes** (tsc + vite; 17 modules; `dist/` is git-ignored). **`npm run lint` (oxlint) passes** with no diagnostics. Verified 2026-10-24.
-- Earlier build failure (fixed): `App.tsx` imported `./assets/hero.png`, `react.svg` and `vite.svg`, which were deleted in commit `2c3e957`. They were Vite demo assets only, so the imports and the JSX that used them were removed. No placeholder files were created.
-- Remaining scaffold leftovers that don't break the build: `index.html` links `/favicon.svg` and `App.tsx` uses `/icons.svg#…`. Neither file exists, so both give runtime 404s only. `App.css` still holds `.hero` styles that nothing uses. `frontend/public/assets/hero.png` is an unused copy of the demo image. All of this goes away when the starter page is replaced by the scene UI.
+- Node.js v24.22.1 / npm 11.19.1 at `C:\Program Files\nodejs`. It may need prepending to a shell's `PATH` on this machine.
+- `npm run build`: **pass**. `npm run lint`: **pass**. `npm run validate:assets`: **pass** (144 referenced files, 0 errors). Verified 2026-10-24.
+- Scaffold leftovers that don't break the build: `/favicon.svg` and `/icons.svg` are referenced but don't exist (runtime 404s), and the `.hero` CSS is unused.
 - The four component files exist but are empty.
 
 ## Backend status
 
-No backend code exists. FastAPI/Ollama is out of scope until explicitly requested (see `CLAUDE.md`).
+No backend code exists. FastAPI/Ollama is out of scope until explicitly requested.
 
 ## What already works
 
-- Frontend toolchain baseline: `npm run build` and `npm run lint` both pass (the starter page renders; no game features yet).
-- Asset files are committed and tracked in Git (168 tracked files; tracked set == on-disk set, excluding `.claude/` and `CLAUDE.md`). Collaborators can pull them (commit `69d03ab`).
-- 16 of 18 `audio.json` entries resolve to real files.
-- Maya has a draft character manifest with a logical `emotionMap` (11 emotions) → animation IDs, with per-animation `fps` and `loop` — the intended data-driven direction.
-- 9 of Maya's 12 sprite groups have a complete `idle/` + `talking/` split.
+- Build, lint and asset validation all pass.
+- Every runtime asset lives under `frontend/public/assets/` and is referenced by exactly one manifest category. The validator fails on unreferenced media.
+- Maya: 12 conversational animations (all with idle + talking), 1 one-shot reaction (`shocked`), 13 logical emotions.
+- 18 sounds in 4 categories, 29 backgrounds with verified dimensions.
+- No filenames contain spaces.
 
 ## What is incomplete
 
-- No working UI: scene, character renderer, dialogue box, typewriter, blips, audio manager are all unimplemented.
-- Character manifest does not model the `idle/` / `talking/` sub-structure; `folder` points to the pose root, so frame lists cannot be resolved as written.
-- No music assets at all.
-- No UI image assets (dialogue box, nameplate, arrow, fonts).
-- No visual effect assets (flash, shake overlays, "Objection!" bubbles) — only SFX.
-- No background manifest.
-- No tests, no test runner configured.
+- No working UI: scene, character renderer, dialogue box, typewriter, blips and audio manager are all unimplemented.
+- No music assets, no UI graphics, no visual-effect graphics.
+- No TypeScript types for the manifests yet. Those belong with the loader/renderer work.
+- No unit tests or test runner (validation is a script only).
 - README and LICENSE are empty.
 
-## Current asset organization
+## Known problems / ambiguities
 
-See `docs/ASSET_INVENTORY.md` for the full verified list.
-
-- Audio: `frontend/public/assets/audio/{blips,dialogue,menu_ui}/` with manifest `audio.json`.
-- Backgrounds: `frontend/public/backgrounds/` (**not** under `assets/`).
-- Characters: `frontend/public/characters/<id>/` (**not** under `assets/`), with `character.json` and `sprites/<pose>/{idle,talking}/maya_frame_NNN (1).png`.
-
-## Known problems
-
-Manifest/path errors:
-1. `character.json` `neutral_idle.folder = "sprites/neutral_front"` but the folder on disk is **`netural_front`** (typo). The default animation therefore points to a missing folder.
-2. `character.json` defines `side_idle` and `side_praying`; **no such folders exist**.
-3. `audio.json` blips point to `blips/female.wav` and `blips/male.wav`; actual files are `blips/blip_female/blipfemale.wav` and `blips/blip_male/blipmale.wav`.
-
-Sprite structure problems:
-4. `smile_front` idle frames are nested at `smile_front/talking/idle/` instead of `smile_front/idle/`.
-5. `thinking_side` has only `talking/` (8 frames, 047–054); no `idle/`.
-6. `bow_polite` (8 frames) and `shocked_panicked` (6 frames) are flat (no idle/talking split) — consistent with their `loop: false` one-shot role, but this needs to be an explicit convention.
-7. `arms_open/talking/maya_frame_024 (1).png` is 63×111 while all other `arms_open` frames are 94–95×107 → likely a misplaced frame from another pose. Needs visual check.
-8. Frame-number gaps: `018` missing (arms_open has `017 (2)`), `063–065` missing (clasped_hands_happy talking jumps 062 → 066). `clasped_hands_happy/talking` has 8 frames vs 4 elsewhere — may contain two sequences.
-9. Filenames contain spaces and parentheses (`maya_frame_009 (1).png`) — require URL encoding and are fragile.
-10. Frame dimensions vary slightly within a pose (e.g. 65 vs 66 px wide), so rendering must anchor frames (e.g. bottom-centre) rather than assume identical sizes.
-
-Other:
-11. Asset location convention is split: audio under `public/assets/`, backgrounds and characters directly under `public/`. `CLAUDE.md` expects `frontend/public/assets/`.
-12. `audio.json` groups `shock` as a top-level category while the files live under `dialogue/shock/`; dialogue SFX vs effect SFX categories are not yet distinguished as the audio-engine skill recommends.
-13. Typo in filename `menu_ui/typwriter.wav` (manifest references it consistently, so it works).
-14. Three backgrounds have off-by-one dimensions: `background_19_512x193`, `background_22_255x192`, `background_24_256x191`.
-15. Backgrounds are numbered only; no semantic names/IDs.
-16. `.claude/` and `CLAUDE.md` are untracked.
+1. **Visually inferred frame splits** (D-013). `thinking_side`, `bow_polite` and `arms_open` frame 021 were assigned to idle/talking by mouth shape plus the consistent 4-idle + 4-talking numbering pattern. Confirm by eye in the running renderer.
+2. **Frame 024** (`sprites/_unassigned/maya_frame_024.png`) is a front-facing, arms-down frame that doesn't match `arms_open`. Listed in `unassignedFrames`; not used by any animation.
+3. **`arms_open` has only 3 idle + 3 talking frames.** Frame 018 is missing; `maya_frame_017` was originally named `017 (2)`, so it may actually be 018.
+4. **Frames 063–065 are missing.** `clasped_hands_laugh` reuses `clasped_hands_happy` idle frames (055–058, eyes-closed smile) as its idle.
+5. **`surprised`** plays the `shocked` reaction (025–030) and then settles to `neutral_front`. There is no shocked talking/idle loop. Frames 027–030 could serve as a "shocked hold" if wanted later.
+6. **`bow_polite`** is a steady leaning pose with idle/talking frames, not an animated bow. It was formerly modelled as a one-shot.
+7. **Talking fps** copies each pose's previous single fps value. It hasn't been tuned.
+8. Frame sizes vary slightly within a pose, so the renderer must anchor frames (`anchor: "bottom-center"`).
+9. `background_18` has characters baked in. Backgrounds 19, 22 and 24 are 1 px off the standard size.
+10. Audio filenames keep source typos (`typwriter.wav`) and the `dialogue/shock/` folder holds `effect`-category sounds. Logical IDs hide both from the engine.
+11. Background `description` fields are visual guesses from thumbnails.
+12. Vite emits its hashed bundles into `dist/assets/`, the same folder `public/assets/` is copied into. There is no collision today; `build.assetsDir` could be changed if one ever appears.
+13. README/LICENSE empty; `index.html` title is "frontend".
 
 ## Current development phase
 
-**Phase 0 complete; entering Phase 1 (asset stabilization).** Docs are in place and the build/lint baseline is green. No features implemented yet.
+**Phase 1 — Asset stabilization.** Character, background and SFX assets are stable and have manifests. Music and UI assets don't exist yet.
 
 ## Immediate next objective
 
-Stabilize Maya's character assets and manifest (roadmap item "stabilize character assets"): propose a rename/fix mapping for problems 1–10, get approval, apply minimal changes, and make every `character.json` entry resolve to real idle/talking frame lists. See `docs/ROADMAP.md`.
+Start Phase 2 with a typed manifest loader (TypeScript types + fetch/validate for `characters/index.json`, `character.json`, `backgrounds.json`, `audio.json`). Then build a minimal scene renderer that shows a background and Maya's idle loop, which also lets the inferred frame splits be checked by eye.

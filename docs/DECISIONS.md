@@ -24,7 +24,7 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Note:** The interim "do not track `frontend/public`" approach (commit `662e89e`) is considered superseded by this decision.
 
 ## D-003 — Character packs are data-driven
-- **Status:** Accepted (pre-existing direction; manifest format still draft)
+- **Status:** Accepted (pre-existing direction). The draft manifest *format* described below is superseded by D-011; the principle stands.
 - **Date recorded:** 2026-10-24
 - **Context:** `frontend/public/characters/maya/character.json` defines `id`, `displayName`, `defaultAnimation`, `animations{folder,fps,loop}`, `emotionMap`.
 - **Decision:** Each character is a pack (folder + manifest). Application logic uses logical emotions; the pack maps emotion → animation. Generic renderer/audio/animation code must never hard-code Maya.
@@ -55,7 +55,7 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Rationale:** Presentation layer (rendering, animation, dialogue, audio) is the critical path and must be solid before integrating a model.
 
 ## D-008 — Runtime asset location convention
-- **Status:** Open
+- **Status:** Superseded by D-010 (2026-10-24). The owner chose option (a).
 - **Date recorded:** 2026-10-24
 - **Context:** `CLAUDE.md` and the asset-pipeline skill prefer `frontend/public/assets/`. On disk, audio is under `public/assets/audio/`, but backgrounds (`public/backgrounds/`) and characters (`public/characters/`) are directly under `public/`.
 - **Options:** (a) move backgrounds and characters under `public/assets/`; (b) accept the current split and document it as the convention.
@@ -66,3 +66,64 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Date recorded:** 2026-10-24
 - **Decision:** `docs/PROJECT_STATE.md`, `ROADMAP.md`, `DECISIONS.md`, `ASSET_INVENTORY.md` and the append-only `SESSION_LOG.md` hold project-critical facts. They are updated at the end of every substantial task.
 - **Rationale:** Work spans sessions and machines; conversation memory is not durable.
+
+## D-010 — All runtime assets live under `frontend/public/assets/`
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** D-008
+- **Decision:** Runtime assets live in `frontend/public/assets/{characters,backgrounds,audio,music,ui}/`. Backgrounds and characters were moved there with `git mv` (history preserved). Empty `music/` and `ui/` are held by `.gitkeep`.
+- **Rationale:** The project owner chose this layout. It gives one predictable root (`/assets/...`) for every runtime URL and matches `CLAUDE.md` and the asset-pipeline skill.
+
+## D-011 — Character pack manifest schema v1
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** the draft `character.json` format (`animations{folder,fps,loop}` + `emotionMap`) referenced in D-003.
+- **Decision:**
+  - `characters/index.json` maps character id → manifest path.
+  - `character.json`: `schemaVersion`, `id`, `displayName`, `anchor`, `voice.blip` (audio sound id), `defaultEmotion`, `fallbackEmotion`.
+  - `animations.<id>` holds conversational loops and must have both `idle` and `talking`, each with `{fps, loop, frames[]}`.
+  - `reactions.<id>` holds one-shots `{fps, loop:false, frames[]}`.
+  - `emotions.<emotion>` is `{ animation, reaction? }`. If a reaction is present it plays first, then the animation takes over.
+  - `unassignedFrames[]` lists real files that are deliberately unused.
+  - All paths are relative to the manifest's directory.
+- **Rationale:**
+  - Browsers can't list directories, so frames must be enumerated explicitly.
+  - The old `folder` pointers couldn't express idle/talking.
+  - Looping conversation poses and one-shot reactions need different lifecycles (D-004).
+  - The renderer consumes only logical IDs, and nothing in the schema is Maya-specific.
+
+## D-012 — Audio manifest schema v1
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** the original nested `audio.json` (`blips/dialogue/shock/ui` with camelCase keys and broken blip paths).
+- **Decision:** `audio.json` has `categories` (`blip`, `dialogue`, `effect`, `ui`) and a flat `sounds.<snake_case_id> = {category, src}`. Shock/impact sounds are category `effect`, even though they physically sit in `dialogue/shock/`. Audio files were not renamed. Music gets its own manifest once music assets exist.
+- **Rationale:**
+  - The audio-engine skill separates blip, UI, effect and music.
+  - Flat logical IDs decouple the engine from folder layout and source-file typos.
+  - Not moving the WAVs kept the change minimal.
+
+## D-013 — Visually inferred idle/talking splits for unsplit sprite groups
+- **Status:** Accepted (provisional; confirm by eye in the renderer)
+- **Date:** 2026-10-24
+- **Context:** Several groups were unsplit or misfiled: `thinking_side` (all 8 frames in `talking/`), `bow_polite` (8 flat frames), `arms_open` frame 021 (filed as idle), frames 066–069 (mixed into `clasped_hands_happy/talking`), and frame 024 (a different pose inside `arms_open/talking`).
+- **Decision:**
+  - Frames were re-filed based on contact-sheet inspection (mouth closed vs moving, eyes open vs closed). Every other pose follows a sequential "4 idle then 4 talking" numbering pattern, and these splits follow it too.
+  - 066–069 (eyes-closed laughing) became `clasped_hands_laugh`.
+  - 024 moved to `sprites/_unassigned/`.
+  - `bow_polite` is now a conversational pose rather than a one-shot.
+  - Shocked frames moved to `shocked_panicked/reaction/`.
+  - `" (1)"`/`" (2)"` suffixes were stripped from all filenames. Original frame numbers were kept.
+- **Rationale:** Every pose now has usable idle and talking loops, and every file is URL-safe. All moves are `git mv`, so this is reversible if the visual judgement proves wrong.
+
+## D-014 — Manifest validation script
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:** `frontend/scripts/validate-assets.mjs` (`npm run validate:assets`, plain Node, no dependencies) fails on any of the following:
+  - a missing file;
+  - whitespace in a path;
+  - an unknown emotion, animation, reaction or blip reference;
+  - a background with the wrong declared dimensions;
+  - an unreferenced media file under `public/assets/`.
+
+  Run it after any asset change.
+- **Rationale:** The asset-pipeline skill requires every manifest path to be validated. The unreferenced-file check keeps manifests and the inventory honest.
