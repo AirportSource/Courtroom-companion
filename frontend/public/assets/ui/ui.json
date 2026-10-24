@@ -2,11 +2,17 @@
   "schemaVersion": 1,
   "fonts": {
     "dialogue": {
-      "src": "fonts/ace_attorney.ttf",
-      "family": "Ace Attorney",
+      "src": "fonts/Igiari.woff2",
+      "family": "Igiari",
+      "fallbacks": [
+        {
+          "src": "fonts/DotGothic16-Regular.ttf",
+          "family": "DotGothic16"
+        }
+      ],
       "pixelSize": 16,
-      "letterSpacing": -0.1875,
-      "wordSpacing": 3
+      "letterSpacing": 0,
+      "wordSpacing": 0
     }
   },
   "images": {

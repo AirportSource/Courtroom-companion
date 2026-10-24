@@ -17,6 +17,18 @@ const readJson = (path: string) => JSON.parse(readFileSync(new URL(path, assets)
 
 const manifest: CharacterManifest = readJson('characters/maya/character.json')
 
+test('dialogue font manifest bundles Igiari with deterministic DotGothic16 fallback', () => {
+  const dialogueFont = readJson('ui/ui.json').fonts.dialogue
+  assert.deepEqual(dialogueFont, {
+    src: 'fonts/Igiari.woff2',
+    family: 'Igiari',
+    fallbacks: [{ src: 'fonts/DotGothic16-Regular.ttf', family: 'DotGothic16' }],
+    pixelSize: 16,
+    letterSpacing: 0,
+    wordSpacing: 0,
+  })
+})
+
 function toClip(key: string, raw: ClipManifest, canvas: { width: number; height: number }): AnimationClip {
   return {
     key,
@@ -201,7 +213,15 @@ test('chat response parsing is defensive', () => {
 
 // ---- Dialogue pagination (beat != page) ------------------------------------------------------
 
-const layout: TextLayout = { measure: gridMeasure(), lineWidths: dialogueLineWidths(), locale: 'en' }
+// A compact synthetic grid keeps pagination expectations easy to reason about. The browser
+// path uses Igiari's real canvas metrics; gridMeasure's defaults are its conservative fallback.
+const layout: TextLayout = { measure: gridMeasure(8, 5), lineWidths: dialogueLineWidths(), locale: 'en' }
+
+test('font-metric fallback is conservative for 16px Igiari', () => {
+  const measure = gridMeasure()
+  assert.equal(measure('W'), 18)
+  assert.equal(measure(' '), 8)
+})
 
 /** Every page must physically fit: <= max lines, each line within its measured width. */
 function assertFits(pages: string[], l: TextLayout = layout) {

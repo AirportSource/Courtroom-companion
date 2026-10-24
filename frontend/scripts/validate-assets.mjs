@@ -137,6 +137,15 @@ if (ui) {
   for (const [id, font] of Object.entries(ui.fonts ?? {})) {
     checkFile(uiDir, font.src, `ui.json fonts.${id}`)
     if (typeof font.family !== 'string' || font.family.length === 0) errors.push(`ui.json fonts.${id}: missing family`)
+    const fallbacks = Array.isArray(font.fallbacks) ? font.fallbacks : []
+    if (font.fallbacks !== undefined && !Array.isArray(font.fallbacks)) {
+      errors.push(`ui.json fonts.${id}.fallbacks: expected an array`)
+    }
+    for (const [fallbackIndex, fallback] of fallbacks.entries()) {
+      const where = `ui.json fonts.${id}.fallbacks[${fallbackIndex}]`
+      checkFile(uiDir, fallback?.src, where)
+      if (typeof fallback?.family !== 'string' || fallback.family.length === 0) errors.push(`${where}: missing family`)
+    }
   }
   for (const [id, image] of Object.entries(ui.images ?? {})) {
     const where = `ui.json images.${id}`

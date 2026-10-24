@@ -1,12 +1,12 @@
 # Asset Inventory — Courtroom Companion
 
-_Regenerated 2026-10-24 after runtime asset stabilization, from files that actually exist on disk (PNG dimensions and WAV headers read from the files). Nothing here is hypothetical. Regenerate whenever assets are added, removed, renamed or reorganized, and run `npm run validate:assets`._
+_Updated 2026-10-24 after the Igiari + DotGothic16 stage/UI font integration, from files that actually exist on disk. Nothing here is hypothetical. Regenerate whenever assets are added, removed, renamed or reorganized, and run `npm run validate:assets`._
 
 > **Correction:** the 2026-10-24 initialization version of this file said "132 Maya sprite frames". The real count was, and is, **97** (verified against `git ls-tree HEAD` at `8bf0937`). No frames were lost.
 
 All paths are relative to `frontend/public/assets/`. Browser URL = `/assets/` + path. No path contains spaces.
 
-Totals: 97 Maya sprite frames (96 used + 1 unassigned) · 29 backgrounds · 2 blips · 4 dialogue SFX · 4 effect SFX · 8 UI SFX · 0 music · 0 UI graphics · 0 visual effects · 4 manifests. No byte-identical duplicate media files.
+Current totals: 102 Maya sprite frames (101 assigned + 1 unassigned) · 29 backgrounds · 2 blips · 4 dialogue SFX · 4 effect SFX · 9 UI SFX · 2 runtime fonts · 9 UI images · 0 music · 5 manifests. `npm run validate:assets` reports 161 referenced files.
 
 ---
 
@@ -196,6 +196,8 @@ Runtime usage of existing assets:
 
 ### New UI assets (`frontend/public/assets/ui/`, manifest `ui/ui.json`)
 
+> **Font row superseded 2026-10-24:** the original presentation pass used `ace_attorney.ttf`; the current Igiari runtime font is recorded at the end of this inventory.
+
 | ID | File | Size | Notes |
 |---|---|---|---|
 | `title_screen` | `title/title_screen.png` | 256×192 | Original DS title art (crop of the owner-supplied Spriters Resource sheet, 208 colours) |
@@ -283,8 +285,21 @@ Source: `docs/references/DS _ DSi - Phoenix Wright_ Ace Attorney - Backgrounds -
 | `menu_cross_examination_start` | `cross-examination-start.png` | 860 | 14 | (registered, unused; future effects) |
 | `menu_talk_option` | `talk-option.png` | 1139 | 15 | Character select |
 
-Filenames use kebab-case as specified by the owner (other assets use snake_case). Total referenced runtime files: **160**.
+Filenames use kebab-case as specified by the owner (other assets use snake_case). Total referenced runtime files: **161**.
 
 ### Character pack data (2026-10-24, LLM milestone)
 
 `characters/maya/performance.json` (director settings, 7 gestures, intensity variants for happy/excited/laughing, aliases, error line) and `characters/maya/personality.md` (character bible). They're data, not media, so they aren't counted by the unreferenced-media check. The backend validates every reference against `character.json` and a test asserts zero warnings.
+
+### Igiari + DotGothic16 stage/UI stack (2026-10-24, current)
+
+| ui.json id | Runtime file | Size | Configuration | Coverage note |
+|---|---|---:|---|---|
+| `dialogue` | `ui/fonts/Igiari.woff2` | 57,724 bytes | `Igiari`, 16 px, letter spacing 0, word spacing 0 | Latin, kana and Japanese punctuation; no Kanji |
+| `dialogue.fallbacks[0]` | `ui/fonts/DotGothic16-Regular.ttf` | 2,069,236 bytes | `DotGothic16`, Regular; first bundled fallback | 8,231 mapped code points; 6,714 CJK Unified Ideographs; all milestone test glyphs present |
+
+The runtime Igiari WOFF2 SHA-256 is `02C1EFFCD76F86721EE266E51BECF006950B199EDDE61BDE1A6C703A8EDB92C3`, identical to `docs/references/igiari/Igiari.woff2`. The complete nine-file source distribution remains unmodified under `docs/references/igiari/`.
+
+The runtime DotGothic16 TTF SHA-256 is `155DA8F318553C11D9DFFC2AFFBC7C2114C6A46F9740BCF639ED5568AF92BE71`, identical to `docs/references/dotgothic16/DotGothic16-Regular.ttf`. Embedded metadata reports family `DotGothic16` (`ドットゴシック16` in Japanese), face/style `Regular` / `Normal`, version 1.101, and SIL Open Font License 1.1. No separate licence or readme was supplied in that reference folder.
+
+The former runtime `ui/fonts/ace_attorney.ttf` was removed so the asset validator has no orphaned media. Its byte-identical source remains at `docs/references/Ace-Attorney.ttf` (SHA-256 `04DF2EEABE29CB5EB1B7537A0E1288FE6BEC8B9524BF6BCE50C03104C8B8DCBC`). The effective stack is Igiari → bundled DotGothic16 → Japanese/system sans-serif emergency fallbacks.

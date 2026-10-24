@@ -213,7 +213,7 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Rationale:** This is the "explicit offsets in animation metadata" option, the smallest change that keeps source pixels intact and gives a stable logical anchor.
 
 ## D-023 — Pixel font rendered on its native grid
-- **Status:** Accepted
+- **Status:** Superseded by D-037 for the runtime font choice; the native-grid and manifest-metric principles remain accepted
 - **Date:** 2026-10-24
 - **Decision:**
   - Stage text uses the owner-supplied "Ace Attorney" FontStruct font (non-commercial licence), declared in `ui/ui.json` and loaded through the `FontFace` API, so no path appears in CSS.
@@ -371,3 +371,30 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - Locale handling: no-break spaces, no line-initial closing punctuation, CJK grapheme breaks.
   - Reactions only on a segment's first page.
 - **Rationale:** text must physically fit the DS box at every display scale, and page breaks should read like an Ace Attorney conversation rather than a character counter.
+
+## D-037 — Igiari is the primary stage/UI font; Kanji uses a temporary system fallback
+- **Status:** Partially superseded by D-038 for the Kanji fallback; the Igiari choice remains accepted
+- **Date:** 2026-10-24
+- **Supersedes:** D-023's choice of the David Fens "Ace Attorney" font. D-023's native-grid and manifest-driven metric principles remain in force.
+- **Decision:**
+  - The unmodified `docs/references/igiari/Igiari.woff2` is copied byte-for-byte to `frontend/public/assets/ui/fonts/Igiari.woff2` and registered as `fonts.dialogue` in `ui.json`.
+  - The single stage/UI font configuration is `family: Igiari`, `pixelSize: 16`, `letterSpacing: 0`, `wordSpacing: 0`; it continues to flow through the existing `--stage-font*` variables.
+  - Igiari supplies Latin, kana and Japanese punctuation but no Kanji. The temporary fallback chain is `Yu Gothic`, `YuGothic`, `Meiryo`, `Noto Sans JP`, `Noto Sans CJK JP`, then the existing general UI fallbacks. This provides readable Kanji but is not presented as authentic Ace Attorney Japanese typography.
+  - The complete original distribution (readme, licence and all supplied formats) stays unmodified under `docs/references/igiari/`. The former runtime `ace_attorney.ttf` is removed; its byte-identical source remains at `docs/references/Ace-Attorney.ttf`.
+  - Measured pagination remains unchanged: the loaded effective CSS stack is read after `document.fonts`, measured with canvas, and paired with the shared three-line geometry. The fixed-grid fallback uses conservative 16px Igiari bounds (18px non-space, 8px space).
+  - The existing 15px dialogue line height remains: browser measurements found a maximum 15px ink height and no clipping, overlap, overflow or hidden fourth line in the required Latin/kana/Kanji samples.
+- **Rationale:** Igiari has broader relevant glyph coverage (including `-`, `…`, accented Latin and kana), ships in an efficient WOFF2 format, and can replace the stage font without redesigning the manifest loader or paginator. Explicitly documenting the Kanji limitation avoids overstating authenticity.
+
+## D-038 — DotGothic16 is the bundled deterministic Kanji fallback
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** D-037's temporary system-first Kanji fallback only. Igiari remains the primary font and D-036's paginator architecture is unchanged.
+- **Decision:**
+  - Preserve the supplied source unchanged at `docs/references/dotgothic16/DotGothic16-Regular.ttf` and copy it byte-for-byte to `frontend/public/assets/ui/fonts/DotGothic16-Regular.ttf`.
+  - Declare DotGothic16 as `fonts.dialogue.fallbacks[0]` in `ui.json`. The existing loader loads Igiari and every bundled fallback together through `FontFace`; only after all loads resolve are the faces registered and the single `--stage-font*` configuration applied.
+  - The effective stack is `Igiari`, `DotGothic16`, then `Yu Gothic`, `YuGothic`, `Meiryo`, `Noto Sans JP`, `Noto Sans CJK JP`, Verdana, `Segoe UI`, `system-ui`, sans-serif. System Japanese fonts are tertiary emergency fallbacks, not the primary Kanji path.
+  - The existing canvas paginator reads and measures that exact computed stack. There is no second paginator, character-count path or Kanji width special case; the shared 256×192 geometry and three-line limit remain unchanged.
+  - Keep the 16px stage size and 15px shared dialogue line height: browser stress checks showed clean baseline alignment, three visible lines, no clipping or overlap, and scale-independent pagination.
+  - DotGothic16 is a deterministic, visually compatible fallback, not a claim about the original Ace Attorney Kanji font.
+- **Metadata basis:** the supplied TTF embeds family `DotGothic16`, Regular/Normal style, version 1.101, copyright 2020 The DotGothic16 Project Authors, and SIL Open Font License 1.1. No separate local readme/licence was supplied, so no additional provenance is asserted.
+- **Rationale:** bundling the first Kanji fallback makes rendering and canvas pagination deterministic across machines while retaining system fonts as a safety net.

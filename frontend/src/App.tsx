@@ -54,7 +54,8 @@ async function loadAndApplyUi(): Promise<LoadedUi> {
     const font = ui.fonts.dialogue
     if (font) {
       const root = document.documentElement.style
-      root.setProperty('--stage-font', `'${font.family}', var(--stage-font-fallback)`)
+      const bundledStack = [font.family, ...font.fallbackFamilies].map((family) => JSON.stringify(family)).join(', ')
+      root.setProperty('--stage-font', `${bundledStack}, var(--stage-font-fallback)`)
       root.setProperty('--stage-font-size', `${font.pixelSize}px`)
       root.setProperty('--stage-letter-spacing', `${font.letterSpacing}px`)
       root.setProperty('--stage-word-spacing', `${font.wordSpacing}px`)

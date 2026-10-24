@@ -1,21 +1,22 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-24 (LLM architecture milestone: FastAPI backend, provider-agnostic gateway, FakeProvider, Character Director, chat UX). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-24 (Igiari + deterministic DotGothic16 fallback integration on the committed LLM architecture milestone). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
-Courtroom Companion is an Ace Attorney-style conversational interface. It now has a complete scripted presentation loop:
+Courtroom Companion is an Ace Attorney-style conversational interface with a complete presentation and local chat loop:
 
 title → main menu → character select → location select → conversation scene
 
-In the scene, a typewriter dialogue engine drives the existing character animation engine: TALKING while text reveals, then IDLE. Reactions play before text. Throttled dialogue blips come from the character's manifest voice. Settings cover text speed, blip volume and mute. There's no LLM yet; dialogue comes from a temporary test script.
+In the scene, the React client sends a message to the FastAPI backend. Its provider-agnostic gateway currently uses the deterministic `FakeProvider`; validated semantic beats pass through the data-driven Character Director and measured paginator before the existing typewriter, reaction, animation and blip engines play them. The temporary test script remains available from the dev panel.
 
 **Original UI assets, partly in.** The owner manually supplied:
 - the original title-screen sheet (now the "press start" art);
 - the exclamation bubbles (extracted, not yet used);
-- the "Ace Attorney" pixel font (now the stage font, on its native 16 px grid).
+- the complete Igiari distribution by Caveras (now the primary stage/UI font via its WOFF2 build at 16 px);
+- DotGothic16 Regular (now the bundled deterministic fallback for Kanji).
 
-The text box, name plate, continue arrow and menu buttons are still CSS stand-ins. The five-panel miscellaneous background sheet hasn't been supplied yet. Details are in `docs/ASSET_SOURCES.md`.
+The text box, name plate, continue arrow and menu buttons are still CSS stand-ins. Original DS menu panels are in use. Details are in `docs/ASSET_SOURCES.md`.
 
 **Maya now uses native DS sprites** (D-027). All 102 frames are re-extracted 1:1 from the authoritative sheet `docs/references/maya fey.png` (15-colour palette). The old frames were proven to be 0.69× resampled copies, which caused the muddy look, the per-frame width rounding (the real jitter source) and the "too small" composition.
 
@@ -42,6 +43,8 @@ frontend/src/
 │   ├── useBlips.ts               # per-character blip callback: voiced chars only, 60 ms throttle
 │   ├── audioEngine.ts            # one AudioContext, decode-once buffers, unlock on gesture
 │   ├── dialogueTypes.ts          # DialogueLine { speaker?, emotion, text, voice? }
+│   ├── dialogueLayout.ts         # shared dialogue geometry + live browser font measurer
+│   ├── performance.ts            # API contract validation + natural measured pagination
 │   ├── stage.ts                  # 256×192 logical stage constants
 │   └── useStageScale.ts          # integer scaling via ResizeObserver
 ├── settings/
@@ -84,7 +87,8 @@ voice = dev override ?? line.voice ?? character.voice.blip
 
 ## Frontend status
 
-- `npm run validate:assets`: pass (149: +3 exclamations, +1 font, +1 title art). `npm run build`: pass (47 modules). `npm run lint`: pass. Verified 2026-10-24.
+- Igiari is the primary stage/UI font: WOFF2, 16 px, zero added letter/word spacing. Bundled DotGothic16 is the deterministic first fallback, especially for Kanji; Japanese/system sans-serif fonts are tertiary emergency fallbacks. DotGothic16 is visually compatible but is not claimed to be the original Ace Attorney Kanji font (D-037, D-038).
+- `npm run validate:assets`: pass (161). `npm run build`: pass (55 modules). `npm run lint`: pass. `npm test`: 28/28. Verified 2026-10-24.
 - Dimensions: stage 256×192. Maya frames are native 55–109 px wide × 100–112 px tall, drawn at native size and scaled only with the whole stage (e.g. neutral talking frame 65×111 → 390×666 CSS px at auto 6×, 260×444 at 4×). Backgrounds are 256×192 (or 512 wide, centre-cropped).
 - Verified in Chrome (dev server):
   - full menu flow;
@@ -98,7 +102,8 @@ voice = dev override ?? line.voice ?? character.voice.blip
   - no console errors, no failed requests or broken images.
 - Dev-only UI (Asset/Animation Test entry, conversation dev panel) is hidden when `import.meta.env.DEV` is false. The code is still bundled but unreachable. The `window.__ccAudio` debug hook is stripped in production.
 - Launch: `cd frontend` then `npm run dev`.
-- `npm test`: 8 engine tests (node:test, no dependencies), all passing.
+- Browser font/pagination checks: Igiari WOFF2 and DotGothic16 TTF both loaded before measurement; kana metrics matched Igiari and Kanji-only metrics matched DotGothic16. English, French, kana, mixed Kanji and longer Japanese samples fit without clipping, overlap or hidden lines; hyphen, ellipsis and accented Latin remain in Igiari. Pagination is identical at 3×, 4× and auto 5×. The existing 15 px line height remains valid.
+- `npm test`: 28 engine tests (node:test, no dependencies), all passing.
 
 ## Backend status
 
@@ -146,7 +151,7 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 
 1. **Shocked reaction order** (arms-wide then fists) is kept from the old rip and is uncertain. Frame 025 (standing, worried) is unassigned. Confirm by eye.
 2. **Laugh clip:** `clasped_hands_laugh` talking is now the full 7-frame row-9 laugh (was 4). Confirm it reads well as "laughing while talking".
-3. **Missing font glyphs:** `-` and `…` render in the fallback font.
+3. **Japanese font authenticity caveat:** Igiari has kana and Japanese punctuation but no Kanji. Bundled DotGothic16 now provides deterministic Kanji coverage before the tertiary system fallbacks, but it is not claimed to be the original Ace Attorney Kanji font.
 4. Talking fps is untuned. `surprised` settles to neutral (no shocked hold loop).
 5. bg_18 has characters baked in. Three backgrounds are 1 px off-size. Descriptions are guesses.
 6. Vite `dist/assets/` is shared between bundles and public assets (no collision today).
@@ -157,10 +162,10 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 
 ## Current development phase
 
-**Phase 5a — LLM architecture (FakeProvider) implemented and validated** on top of the committed Phase 2B (`f208bf6`). Uncommitted, awaiting owner approval.
+**Phase 5a — LLM architecture (FakeProvider) and Igiari + DotGothic16 stage/UI typography implemented and validated.** The LLM milestone is committed at `54fe287`; the typography milestone is uncommitted.
 
 ## Immediate next objective
 
-1. Owner reviews the chat flow and the director's performance choices (dev panel → "Last AI reply").
-2. Commit this milestone after approval.
-3. Next: an Ollama provider adapter (local model, no secrets), then OpenAI-compatible.
+1. Owner reviews the Igiari + DotGothic16 stage/UI presentation.
+2. Commit this typography milestone after approval.
+3. Next: an Ollama provider adapter (local model, no secrets), then OpenAI-compatible; an authentic Ace Attorney Kanji font remains a separate future research item.

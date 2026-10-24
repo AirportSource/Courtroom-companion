@@ -354,10 +354,18 @@ export async function loadUi(): Promise<LoadedUi> {
   for (const [id, font] of Object.entries(isRecord(raw.fonts) ? raw.fonts : {})) {
     if (!isRecord(font) || typeof font.src !== 'string' || typeof font.family !== 'string') continue
     try {
-      const face = new FontFace(font.family, `url(${new URL(font.src, manifestUrl).href})`)
-      document.fonts.add(await face.load())
+      const bundledFallbacks = (Array.isArray(font.fallbacks) ? font.fallbacks : []).filter(
+        (fallback): fallback is { src: string; family: string } =>
+          isRecord(fallback) && typeof fallback.src === 'string' && typeof fallback.family === 'string',
+      )
+      const fontSources = [{ src: font.src, family: font.family }, ...bundledFallbacks]
+      const faces = await Promise.all(
+        fontSources.map(({ src, family }) => new FontFace(family, `url(${new URL(src, manifestUrl).href})`).load()),
+      )
+      faces.forEach((face) => document.fonts.add(face))
       ui.fonts[id] = {
         family: font.family,
+        fallbackFamilies: bundledFallbacks.map(({ family }) => family),
         pixelSize: typeof font.pixelSize === 'number' ? font.pixelSize : 16,
         letterSpacing: typeof font.letterSpacing === 'number' ? font.letterSpacing : 0,
         wordSpacing: typeof font.wordSpacing === 'number' ? font.wordSpacing : 0,

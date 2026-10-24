@@ -515,3 +515,58 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - **Japanese:** first run exposed a "の。" orphan page. The rhythm rules were added, and the re-run gave 3 natural pages (break after 「…んだけど、」).
 - **Scale:** identical pagination at 3× and auto (5×).
 - **Console:** no errors.
+
+---
+
+## 2026-10-24 — Igiari stage/UI font integration
+
+**Assets and configuration**
+- Copied `docs/references/igiari/Igiari.woff2` unchanged to `frontend/public/assets/ui/fonts/Igiari.woff2`; SHA-256 matches: `02C1EFFCD76F86721EE266E51BECF006950B199EDDE61BDE1A6C703A8EDB92C3`.
+- `ui.json` `fonts.dialogue`: family `Igiari`, 16 px, letter spacing 0, word spacing 0. It continues through the existing `--stage-font*` variables for dialogue, menus, nameplates, title fallback text and chat UI.
+- Removed the superseded runtime `ace_attorney.ttf` after confirming its byte-identical source remains at `docs/references/Ace-Attorney.ttf`.
+- Preserved the complete supplied Igiari distribution unmodified under `docs/references/igiari/` (EOT, OTF, SVG, TTF, WOFF, WOFF2, CSS, readme, licence).
+- Temporary Kanji stack: `Yu Gothic`, `YuGothic`, `Meiryo`, `Noto Sans JP`, `Noto Sans CJK JP`, then general UI fallbacks. No Kanji font asset was added and no claim of authentic Japanese Kanji typography is made.
+
+**Pagination and layout**
+- The live path is unchanged: await `document.fonts`, read the effective stage font from CSS, measure it with canvas, and use the shared 242 px / three-line geometry.
+- `gridMeasure` is now font-neutral and conservatively defaults to 18 px per non-space and 8 px per space, covering Igiari's widest encoded 16 px advance. Tests use an explicit compact synthetic grid where needed.
+- Chrome loaded only `Igiari.woff2`; computed font was `16px Igiari, Yu Gothic, YuGothic, Meiryo, Noto Sans JP, Noto Sans CJK JP, Verdana, Segoe UI, system-ui, sans-serif`.
+- Required English, French, kana, mixed Kanji and longer Japanese samples preserved every character, inserted no spaces, and produced no horizontal/vertical overflow or hidden fourth line. The long sample formed one natural three-line page.
+- Hyphen, Unicode ellipsis and accented Latin measured from Igiari. Kana measured from Igiari; Kanji used the 16 px Japanese fallback.
+- Maximum measured ink height was 15 px. The existing 15 px line height remains unchanged; screenshots showed no clipping or line overlap.
+- The longer Japanese sample produced byte-identical page/line output at 3×, 4× and auto 5×. Menu items retained their 17 logical px height; long dev text remained clipped/marquee-managed inside its button.
+
+**Validation**
+- `npm.cmd run validate:assets`: pass, 160 referenced files.
+- `npm.cmd test`: 27/27 pass (new conservative font-fallback test included).
+- `npm.cmd run build`: pass, 55 modules.
+- `npm.cmd run lint`: pass.
+- No backend functionality, LLM provider/director behavior, Maya data or Maya sprites changed.
+
+---
+
+## 2026-10-24 — Deterministic DotGothic16 Kanji fallback
+
+**Source, metadata and runtime asset**
+- Preserved `docs/references/dotgothic16/DotGothic16-Regular.ttf` unchanged and copied it byte-for-byte to `frontend/public/assets/ui/fonts/DotGothic16-Regular.ttf`; both are 2,069,236 bytes with SHA-256 `155DA8F318553C11D9DFFC2AFFBC7C2114C6A46F9740BCF639ED5568AF92BE71`.
+- Embedded metadata: family `DotGothic16` (`ドットゴシック16`), face Regular, style/weight Normal, version 1.101, SIL Open Font License 1.1, designer/manufacturer Fontworks Inc., copyright 2020 The DotGothic16 Project Authors. The supplied folder has no separate readme or licence file; no additional provenance is inferred.
+- Inspected cmap: 8,231 mapped code points, including 95/95 printable ASCII, 96/96 Latin-1, 90/96 Hiragana, 94/96 Katakana and 6,714/20,992 CJK Unified Ideographs. Every glyph in the required Japanese samples is present.
+
+**Loading, stack and measurement**
+- Added DotGothic16 as the first bundled fallback inside the existing `ui.json` `fonts.dialogue` entry. Asset validation now checks nested font fallbacks.
+- `loadUi()` loads Igiari and DotGothic16 together through `FontFace` and registers them only after both loads resolve. `App` then applies the one authoritative `--stage-font*` configuration; the existing paginator cannot run from the ready UI before both bundled faces are available.
+- Effective stack: `Igiari, DotGothic16, "Yu Gothic", YuGothic, Meiryo, "Noto Sans JP", "Noto Sans CJK JP", Verdana, "Segoe UI", system-ui, sans-serif`. System Japanese fonts remain tertiary emergency fallbacks.
+- Chromium canvas measurement with the computed stack matched Igiari exactly for kana and DotGothic16 exactly for a Kanji-only run. The mixed sentence `「今日は証拠を調べよう。」` therefore uses the intended per-glyph fallback while remaining one measured string.
+
+**Browser and regression checks**
+- Required kana-only, mixed, Kanji-heavy, long and dense Japanese samples preserved all characters, inserted no spaces, avoided line-initial punctuation, and had no horizontal/vertical overflow or hidden fourth line. The longest sample formed one natural three-line page.
+- A three-line repeated-Kanji stress probe showed no clipping or visible overlap. Baselines and perceived height were compatible at the unchanged 16px font size and 15px shared line height.
+- Pagination was identical at 3×, 4× and auto 5×. English stayed on one line; the French sample wrapped naturally to two lines with all words/accents intact. Menus remained visually coherent.
+
+**Validation**
+- `npm.cmd run validate:assets`: pass, 161 referenced files.
+- `npm.cmd test`: 28/28 pass.
+- `npm.cmd run build`: pass, 55 modules.
+- `npm.cmd run lint`: pass.
+- `git diff --check`: pass.
+- No backend behavior, gateway/director/provider code, Maya assets or performance rules changed.

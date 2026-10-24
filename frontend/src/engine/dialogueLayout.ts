@@ -35,11 +35,11 @@ export function dialogueLineWidths(): number[] {
 }
 
 /**
- * Fixed-advance measurer (the Ace Attorney font is an 8px grid for most glyphs after its
- * letter-spacing correction). Used for tests and as a conservative fallback when canvas
- * measurement isn't available.
+ * Fixed-advance measurer used for tests and as a conservative fallback when canvas
+ * measurement isn't available. The defaults cover Igiari's widest encoded advance at 16px;
+ * browser pagination normally uses the real canvas metrics instead.
  */
-export function gridMeasure(charWidth = 8, spaceWidth = 5): MeasureText {
+export function gridMeasure(charWidth = 18, spaceWidth = 8): MeasureText {
   return (text) => [...text].reduce((w, ch) => w + (/\s/.test(ch) ? spaceWidth : charWidth), 0)
 }
 
@@ -85,8 +85,9 @@ function canvasMeasure(spec: FontSpec): MeasureText | null {
 }
 
 /**
- * Layout for the dialogue box using real font metrics. Waits for the stage font so the
- * metrics are those of the pixel font, not a fallback.
+ * Layout for the dialogue box using real font metrics. The UI loader has already loaded every
+ * bundled face in the stage stack; this final Font Loading API wait guards the effective CSS
+ * request before canvas measurement.
  */
 export async function dialogueTextLayout(locale = document.documentElement.lang || 'en'): Promise<TextLayout> {
   const spec = stageFontSpec()

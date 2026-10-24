@@ -19,10 +19,12 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [ ] Prepare loopable music
   - No music files exist. `assets/music/` folder reserved.
 - [~] Prepare UI assets
-  - 2026-10-24: Spriters Resource is blocked for automated access (Cloudflare challenge). Manual-download checklist is in ASSET_SOURCES.md. CSS stand-ins are in use for the dialogue box, name plate, arrow, title and menus.
-  - [~] Owner downloads the source sheets: title sheet, exclamations and font received 2026-10-24. **Missing:** the miscellaneous background sheet (Title/Discussion, Bottom Screen, Top Screen, Cross Examination, Talk Option) and a text box / name plate / arrow source.
+  - 2026-10-24: CSS stand-ins remain for the dialogue box, name plate, arrow and menu buttons; original title and menu-panel art are in use.
+  - [~] Owner-supplied sources received: title sheet, exclamations, Igiari distribution, DotGothic16 source and miscellaneous background sheet. **Missing:** a text box / name plate / arrow source.
   - [x] `ui.json` manifest + validator coverage; title art, exclamations and font extracted — 2026-10-24
-  - [x] Pixel font in use on its native 16 px grid — 2026-10-24
+  - [x] Igiari WOFF2 is the primary stage/UI font at 16 px, measured by the live paginator — 2026-10-24 (D-037)
+  - [x] Deterministic Japanese fallback — bundled DotGothic16 supplies Kanji after Igiari; system Japanese fonts are tertiary only — 2026-10-24 (D-038)
+  - [~] Authentic Japanese typography — DotGothic16 is visually compatible but is not claimed to be the original Ace Attorney Kanji font
   - [x] Menu panels from the miscellaneous sheet → `ui/menu/`, used as menu backgrounds — 2026-10-24 (D-031)
   - [ ] Replace the remaining CSS stand-ins (text box, name plate, arrow, menu buttons)
 - [x] Decide and apply runtime asset location convention — 2026-10-24, everything under `frontend/public/assets/` (D-010)

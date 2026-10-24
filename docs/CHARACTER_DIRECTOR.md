@@ -113,8 +113,9 @@ The director decides *how* a beat is performed. The paginator only decides how i
 divided into DS textboxes. It never changes emotion or pose and never re-runs the director.
 
 **Physical fit.** Lines are measured in **logical stage px** with the real stage font. A
-canvas measurer reads the CSS-applied font (Ace Attorney, 16px, letter/word spacing from
-`ui.json`) after `document.fonts.load`. Geometry comes from `engine/dialogueLayout.ts`, which
+canvas measurer reads the CSS-applied 16px Igiari → DotGothic16 stack and the metrics from
+`ui.json` after both bundled fonts load; system Japanese fonts are tertiary fallbacks. Geometry
+comes from `engine/dialogueLayout.ts`, which
 `DialogueBox` also applies:
 - 242px text width, 3 lines of 15px, 1px top padding;
 - the last line keeps 8px free for the continue arrow;

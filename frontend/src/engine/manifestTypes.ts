@@ -156,6 +156,8 @@ export interface LoadedCharacter {
 
 export interface UiFont {
   family: string
+  /** Bundled fallback families, already loaded and registered in stack order. */
+  fallbackFamilies: string[]
   /** Size (CSS px, i.e. stage px) at which one font pixel = one stage pixel. */
   pixelSize: number
   /** Letter spacing (px at pixelSize) that keeps glyph advances on whole pixels. */

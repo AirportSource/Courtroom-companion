@@ -15,8 +15,9 @@
   --nameplate-bg: #626496;
   --nameplate-edge: #4a4ca8;
   --title-gold: #f4c542;
-  /* The pixel font comes from ui/ui.json (applied by App); these are the fallbacks. */
-  --stage-font-fallback: Verdana, 'Segoe UI', system-ui, sans-serif;
+  /* Bundled stage fonts come from ui/ui.json (applied by App). These system fonts are
+     tertiary emergency fallbacks after Igiari and DotGothic16. */
+  --stage-font-fallback: 'Yu Gothic', YuGothic, Meiryo, 'Noto Sans JP', 'Noto Sans CJK JP', Verdana, 'Segoe UI', system-ui, sans-serif;
   --stage-font: var(--stage-font-fallback);
   --stage-font-size: 10px;
   --stage-letter-spacing: 0px;
