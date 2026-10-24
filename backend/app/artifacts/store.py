@@ -12,6 +12,7 @@ from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from ..runtime import paths as runtime_paths
 from .contracts import CreateTextArtifact, ArtifactFormat, MAX_ARTIFACT_BYTES, MIME_TYPES, display_filename
 
 ARTIFACT_ID = re.compile(r"^[a-f0-9]{32}$")
@@ -49,8 +50,7 @@ class ArtifactConflict(ArtifactError):
 
 
 def outputs_dir() -> Path:
-    base = os.environ.get("COURTROOM_CONFIG_DIR", Path(__file__).resolve().parents[2] / ".local")
-    return Path(os.environ.get("COURTROOM_OUTPUTS_DIR", Path(base) / "outputs"))
+    return runtime_paths.outputs_dir()
 
 
 class GeneratedArtifact(BaseModel):

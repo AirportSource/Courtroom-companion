@@ -11,14 +11,14 @@ dropped with a warning, so bad data can never reach the director as a valid capa
 
 import json
 import logging
-import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from ..runtime import paths as runtime_paths
+
 logger = logging.getLogger(__name__)
 
-DEFAULT_ASSETS_DIR = Path(__file__).resolve().parents[3] / "frontend" / "public" / "assets"
 
 
 @dataclass(frozen=True)
@@ -181,7 +181,7 @@ def _clamp01(value: Any, default: float) -> float:
 
 class CharacterRepository:
     def __init__(self, assets_dir: Path | None = None) -> None:
-        self.assets_dir = Path(assets_dir or os.environ.get("COURTROOM_ASSETS_DIR") or DEFAULT_ASSETS_DIR)
+        self.assets_dir = Path(assets_dir or runtime_paths.assets_dir())
         self._cache: dict[str, CharacterProfile] = {}
 
     def _index(self) -> dict[str, str]:

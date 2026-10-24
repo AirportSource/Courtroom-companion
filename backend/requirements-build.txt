@@ -1,0 +1,3 @@
+# Build-only dependencies for the Windows desktop executable (see scripts/build_windows.py)
+-r requirements.txt
+pyinstaller==6.22.3

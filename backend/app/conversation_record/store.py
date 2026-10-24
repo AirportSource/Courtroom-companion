@@ -23,6 +23,8 @@ from pathlib import Path
 from threading import RLock
 from uuid import uuid4
 
+from ..runtime import paths as runtime_paths
+
 log = logging.getLogger(__name__)
 
 VERSION = 1
@@ -44,11 +46,7 @@ class RecordNotFound(ConversationRecordError):
 
 
 def record_dir() -> Path:
-    override = os.environ.get("COURTROOM_CONVERSATION_RECORD_DIR")
-    if override:
-        return Path(override)
-    base = Path(os.environ.get("COURTROOM_CONFIG_DIR", Path(__file__).resolve().parents[2] / ".local"))
-    return base / "conversation-record"
+    return runtime_paths.conversation_record_dir()
 
 
 def _receipt(request_id: str) -> str:

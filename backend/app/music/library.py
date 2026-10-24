@@ -17,6 +17,7 @@ from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, model_validator
 
+from ..runtime import paths as runtime_paths
 from .sniff import DEFAULT_TITLE, FORMATS, SNIFF_BYTES, AudioFormat, sanitize_title, sniff_audio
 
 TRACK_ID_PATTERN = r"^[a-f0-9]{32}$"
@@ -47,11 +48,7 @@ class LibraryFullError(ValueError):
 
 
 def music_dir() -> Path:
-    explicit = os.environ.get("COURTROOM_MUSIC_DIR")
-    if explicit:
-        return Path(explicit)
-    base = os.environ.get("COURTROOM_CONFIG_DIR", Path(__file__).resolve().parents[2] / ".local")
-    return Path(base) / "music"
+    return runtime_paths.music_dir()
 
 
 class LoopInput(BaseModel):
