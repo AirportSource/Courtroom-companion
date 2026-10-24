@@ -55,10 +55,16 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [ ] Music manager and crossfade (single active track, no restart of same track)
 
 ## Phase 5 — Conversation intelligence
-- [ ] Structured LLM contract (strict schema, enumerated emotions/effects/music moods, validation)
-- [ ] FastAPI backend _(out of scope until explicitly requested)_
-- [ ] Ollama/Qwen integration _(out of scope until explicitly requested)_
-- [ ] Conversation memory
+- [x] Structured LLM contract — 2026-10-24: CharacterReply (multi-beat: text / emotion / intensity / reaction / gesture + settleEmotion), shared parse+validate+repair (D-033)
+- [x] FastAPI backend — 2026-10-24: `/api/health`, `/api/characters/{id}/capabilities`, `/api/chat`; CharacterService; in-memory sessions
+- [x] Provider-agnostic LLM gateway + adapter contract + FakeProvider — 2026-10-24 (D-033)
+- [x] Character Director → PerformanceTimeline driving the existing dialogue/animation engines — 2026-10-24 (D-034)
+- [x] Minimal chat UX in the conversation scene (input → waiting → performance → settle) — 2026-10-24
+- [ ] First real provider adapter: Ollama (local), then OpenAI-compatible (covers OpenAI/Qwen/Kimi/…), then Anthropic
+- [ ] Bring-your-own-key settings with OS credential storage (design in LLM_ARCHITECTURE.md)
+- [ ] Streaming (metadata first, then text) — design only so far
+- [ ] Conversation memory (in-memory 12-message history only so far)
+- [ ] Effects/music intent in the contract (exclamations, music moods)
 
 ## Phase 6 — Voice input
 - [ ] Microphone / Whisper

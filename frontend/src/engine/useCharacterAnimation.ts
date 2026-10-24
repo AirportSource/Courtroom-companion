@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { resolveClip, resolveEmotion, type ResolvedClip } from './characterResolver.ts'
+import { resolveClip, resolveReactionId, type PerformanceOverride, type ResolvedClip } from './characterResolver.ts'
 import type { EmotionId, LoadedCharacter, SpriteFrame, TalkMode } from './manifestTypes.ts'
 import { useClipPlayback } from './useClipPlayback.ts'
 
@@ -25,10 +25,10 @@ export function useReactionGate(
   character: LoadedCharacter,
   emotion: EmotionId,
   playKey: string,
+  override?: PerformanceOverride,
 ): ReactionGate {
   const [doneKey, setDoneKey] = useState<string | null>(null)
-  const binding = character.emotions[resolveEmotion(character, emotion)]
-  const hasReaction = Boolean(binding?.reaction && character.reactions[binding.reaction])
+  const hasReaction = resolveReactionId(character, emotion, override) !== null
   return {
     pending: hasReaction && doneKey !== playKey,
     playKey,
@@ -45,8 +45,9 @@ export function useCharacterPlayback(
   emotion: EmotionId,
   mode: TalkMode,
   gate: ReactionGate,
+  override?: PerformanceOverride,
 ): CharacterAnimationState {
-  const resolved = resolveClip(character, emotion, mode, gate.pending)
+  const resolved = resolveClip(character, emotion, mode, gate.pending, override)
   const clip = resolved?.clip ?? null
   // Reactions restart on every new play; stable loops keep running across replays.
   const restartKey = resolved?.variant === 'reaction' ? gate.playKey : ''

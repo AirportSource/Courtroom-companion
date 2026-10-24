@@ -435,3 +435,83 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
   - **Console:** no errors.
 - **Results:** `build`, `lint`, `npm test` 9/9 and `validate:assets` (160) all pass.
 - **Not done:** no unit test for the hook (it needs a DOM, and there's no jsdom; it was verified in the browser instead).
+
+---
+
+## 2026-10-24 — LLM architecture: FastAPI backend, provider-agnostic gateway, Character Director
+
+**Starting point:** commit `f208bf6` (owner-committed Phase 2B). Clean tree apart from the untracked `docs/sfx general/`.
+
+**Environment**
+- Python 3.15.1 only. Created `backend/.venv`.
+- FastAPI 0.162, Pydantic 2.14, Uvicorn 0.54, pytest 9.1, httpx 0.28.
+- `uvicorn[standard]` failed: its PyYAML has no 3.15 wheel. Plain uvicorn is used instead (documented in requirements.txt).
+
+**Added**
+- Backend:
+  - `backend/app/{main.py, api/routes.py, llm/{schemas,base,config,repair,gateway}.py, llm/providers/fake.py, characters/{repository,prompt,service}.py, director/director.py}`;
+  - tests `backend/tests/{conftest,test_director,test_llm,test_api}.py`;
+  - `requirements*.txt`, `pyproject.toml` (pytest config), `README.md`.
+- Character data: `frontend/public/assets/characters/maya/{performance.json, personality.md}`.
+- Frontend:
+  - `engine/performance.ts` (types, defensive parser, pagination, timeline → DialogueLine, `sendChat`);
+  - `components/ChatBar.tsx`;
+  - `ConversationScreen` rewritten around the input → waiting → performing → settle phases (same engines);
+  - `resolveClip`/`useReactionGate`/`useCharacterPlayback` gained an optional `PerformanceOverride` (`resolveReactionId`);
+  - `DialogueLine.animation`/`reaction`;
+  - dev panel "Last AI reply", "Play test script" and trigger list;
+  - Vite `/api` proxy;
+  - 3 new frontend tests.
+- Docs: `LLM_ARCHITECTURE.md`, `CHARACTER_DIRECTOR.md`, D-033 to D-035, ROADMAP, PROJECT_STATE, ASSET_INVENTORY note.
+- `.gitignore`: venv, caches, `.env*`.
+
+**Validation**
+- Backend `pytest`: **59 passed**. Covers:
+  - director rules on real Maya data and on a stoic mock character;
+  - repair;
+  - FakeProvider;
+  - gateway (selection, unknown provider, exception, timeout, custom provider);
+  - config secrets;
+  - prompt/schema;
+  - API integration.
+- Frontend: `validate:assets` pass (160) · `build` pass · `lint` pass · `npm test` 12/12.
+- Live (uvicorn :8000 + Vite :5199 proxy, Chrome, real typing):
+  - **Message 1:** "Guess what happened today!" → thinking (`thinking_side` talk → idle) → surprised (`shocked` reaction once, then `neutral_front` talk → idle) → happy (`clasped_hands_happy`) → settled happy. 15 female blips; input re-enabled and focused.
+  - **Message 2** (same session): thinking → excited + `arms_open` gesture → playful (`hand_mouth_giggle`).
+  - **`#messy`:** unknown emotion, reaction and gesture handled; 5 notes; no crash.
+  - **`#error`:** Maya's error line in her anxious pose.
+  - No browser console errors. The backend log shows only the intended `#error` traceback; all requests returned 200.
+
+**Recommended next task:** an Ollama provider adapter (local, no secrets; supports JSON-schema output), with mocked-HTTP adapter tests.
+
+---
+
+## 2026-10-24 — Dialogue pagination refinement (before committing the LLM milestone)
+
+**Before:**
+- `paginate(text, maxChars = 84)`: fixed character budget.
+- Sentence break only for ASCII `". " "! " "? "` past a third of the window, otherwise the last space, otherwise a hard cut.
+- No line wrapping or font metrics: the browser wrapped, so wide text could reach a hidden 4th line.
+- No locale handling: Japanese was hard-cut at 84 characters.
+- Already correct and kept: reaction on the first page only, pose and emotion preserved per page.
+
+**After** (same functions, improved in place):
+- `engine/dialogueLayout.ts`: shared geometry, canvas measurer from the real stage font, `gridMeasure` for tests.
+- `wrapLines` and `paginate` use measured widths and emit explicit `\n`.
+- Natural break priority: sentence → clause → comma → word → grapheme, with rhythm rules (half fill, or a third if the rest then fits one page; no < 6-grapheme orphans).
+- `Intl.Segmenter` (cached). French no-break spaces respected. Japanese breaks between graphemes, with no line-initial `。、` and no spaces inserted.
+- `DialogueBox` applies the same geometry constants.
+- Performance: monotonic early exit and segmenter cache.
+- FakeProvider gained `story`, `#french` and `#japanese` long replies.
+- Dev-only `window.__ccPaginate`.
+
+**Tests:**
+- Frontend: 26 (14 pagination tests). Cases: geometry, short, exact fit / just over, sentences kept together, sentence boundaries, comma preference, early-comma rejection, word fallback, unbroken token, measurer influence, French, Japanese exact pages, no orphan, scale purity, and a beat spanning pages with reaction-once / pose / settle.
+- Backend: 62 (3 new FakeProvider patterns validated).
+
+**Browser** (FakeProvider via the live backend):
+- **Story:** 3 beats → 6 pages, each a whole sentence or ending on a comma. The rendered line counts (via DOM ranges) equal the paginator's lines, with no X/Y overflow. `shocked` played once (page 4 of the 2-page anxious beat). Pose stable across a beat's pages. Click while revealing → page completed; click → next page. Settled in happy (`smile_front`).
+- **French:** 2 pages, `!`/`?` kept attached.
+- **Japanese:** first run exposed a "の。" orphan page. The rhythm rules were added, and the re-run gave 3 natural pages (break after 「…んだけど、」).
+- **Scale:** identical pagination at 3× and auto (5×).
+- **Console:** no errors.

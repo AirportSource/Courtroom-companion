@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "director": {
+    "expressiveness": 0.85,
+    "maxBeatsPerReply": 3,
+    "maxReactionsPerReply": 1,
+    "reactionCooldownMs": 8000,
+    "reactionMinIntensity": 0.6,
+    "minPoseHoldMs": 1200,
+    "strongChangeIntensity": 0.65,
+    "msPerChar": 40
+  },
+  "gestures": {
+    "arms_open": { "animation": "arms_open", "emotions": ["explaining", "excited", "happy", "neutral"] },
+    "clasped_hands": { "animation": "clasped_hands_happy", "emotions": ["grateful", "happy", "polite", "excited"] },
+    "hand_mouth": { "animation": "hand_mouth_giggle", "emotions": ["playful", "happy", "laughing"] },
+    "hand_on_chin": { "animation": "thinking_side", "emotions": ["thinking", "neutral"] },
+    "necklace_grip": { "animation": "necklace_anxious", "emotions": ["anxious", "sad", "thinking"] },
+    "bow": { "animation": "bow_polite", "emotions": ["polite", "grateful", "sad", "neutral"] },
+    "turn_aside": { "animation": "three_quarter", "emotions": ["relaxed", "neutral", "thinking", "sad"] }
+  },
+  "intensityVariants": {
+    "happy": [
+      { "maxIntensity": 0.45, "animation": "smile_front" },
+      { "maxIntensity": 0.8, "animation": "clasped_hands_happy" },
+      { "maxIntensity": 1, "animation": "excited_front" }
+    ],
+    "excited": [
+      { "maxIntensity": 0.4, "animation": "smile_front" },
+      { "maxIntensity": 1, "animation": "excited_front" }
+    ],
+    "laughing": [
+      { "maxIntensity": 0.5, "animation": "hand_mouth_giggle" },
+      { "maxIntensity": 1, "animation": "clasped_hands_laugh" }
+    ]
+  },
+  "emotionAliases": {
+    "joy": "happy",
+    "joyful": "happy",
+    "cheerful": "happy",
+    "worried": "anxious",
+    "nervous": "anxious",
+    "scared": "anxious",
+    "afraid": "anxious",
+    "curious": "thinking",
+    "pondering": "thinking",
+    "shocked": "surprised",
+    "astonished": "surprised",
+    "teasing": "playful",
+    "mischievous": "playful",
+    "thankful": "grateful",
+    "amused": "laughing",
+    "calm": "relaxed",
+    "upset": "sad",
+    "unhappy": "sad"
+  },
+  "reactionAliases": {
+    "shock": "shocked",
+    "surprise": "shocked",
+    "startle": "shocked",
+    "gasp": "shocked"
+  },
+  "errorLine": {
+    "text": "Huh? Sorry, I totally spaced out for a second... could you say that again?",
+    "emotion": "anxious"
+  }
+}

@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Python backend
+backend/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets: never commit API keys or local provider config
+.env
+.env.*
+!.env.example

@@ -325,3 +325,49 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - Overflowing labels always carry `title` = full text, and the full text stays in the DOM.
   - Applied once in `MenuList` (main menu, character select, location select and any future list). Dialogue text is unaffected.
 - **Rationale:** keeps DS proportions while making every label readable without blur (no fractional transforms).
+
+## D-033 — Provider-agnostic LLM gateway with a strict multi-beat CharacterReply
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes/extends:** D-006 (principle kept; the concrete schema is now defined), D-007 (backend now in scope).
+- **Decision:**
+  - The Python FastAPI backend lives in `backend/app/`.
+  - Vendor code exists only in provider adapters (`app/llm/providers/`), implementing `LLMProvider.generate(GenerationRequest) -> RawCompletion`.
+  - `LLMGateway` selects the adapter from a registry using `ProviderConfig` (type / base_url / model / `api_key_env` / settings), applies a timeout, isolates exceptions, then runs one shared parse/validate/repair step (`repair.py`) into `CharacterReply` (1–8 beats: text, emotion, intensity 0–1, optional reaction, optional gesture; optional settleEmotion).
+  - Only `FakeProvider` (deterministic, offline, with test triggers) is implemented.
+  - Secrets are referenced by env-var name, resolved server-side as `SecretStr`, and never returned or logged; `.env*` is git-ignored.
+- **Rationale:**
+  - Users can bring any model without touching the service, director, frontend or character packs.
+  - Validation is identical for every provider, whatever its structured-output capability.
+
+## D-034 — Character Director between the model and the presentation engine
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - A deterministic `CharacterDirector` turns `CharacterReply` into a logical `PerformanceTimeline`: segments of text, emotion, animation ID, intensity, reaction, gesture and estimated duration, plus a settle pose and notes.
+  - Inputs come only from character data: `character.json` plus a new optional `performance.json` (director settings scaled by expressiveness, gestures with compatible emotions, intensity variants, aliases, error line) and `personality.md` (prompt only). The director contains no character names.
+  - Rules: fallbacks for unknown IDs; gesture compatibility; intensity variants; merging redundant beats; minimum pose hold; reaction threshold, per-reply cap and cross-reply cooldown; settle resolution; the error line when there's no usable reply.
+  - The frontend plays segments as `DialogueLine`s with `animation`/`reaction` overrides through the **existing** resolver, reaction gate, typewriter and blips (`resolveClip(..., override)`), paginating long text to the 3-line box.
+- **Rationale:** the LLM expresses intent, while the character's data decides a valid, natural performance. The renderer stays unaware of models.
+
+## D-035 — Vite proxy for the API; chat UX outside the pixel stage
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - The Vite dev/preview server proxies `/api` to the backend (`COURTROOM_API_URL`, default `http://127.0.0.1:8000`), so there's no CORS and no backend URL in the bundle.
+  - The chat input is a plain HTML form under the scene (pixel font at 2× grid). Its phases are input → waiting → performing → settle.
+  - The conversation's keyboard handler ignores form controls.
+  - The scripted test conversation remains available from the dev panel.
+- **Rationale:** a minimal, reliable prototype UX that keeps the DS stage itself free of web-form chrome.
+
+## D-036 — Measured, natural dialogue pagination (beat ≠ page)
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** the first paginator in `performance.ts` (fixed 84-character pages, ASCII sentence/space search, browser-side wrapping).
+- **Decision:**
+  - `paginate`/`wrapLines` (same module, improved in place) measure every line in logical stage px with the real stage font (canvas measurer built from the CSS-applied font after it loads). They use the shared dialogue geometry in `engine/dialogueLayout.ts`, which `DialogueBox` also applies: 242px width, 3 × 15px lines, last line reduced by 8px for the continue arrow, 1px safety.
+  - Pages carry explicit line breaks.
+  - Break preference: sentence (`Intl.Segmenter`) → clause → comma (with rhythm thresholds) → word (no small orphans) → grapheme.
+  - Locale handling: no-break spaces, no line-initial closing punctuation, CJK grapheme breaks.
+  - Reactions only on a segment's first page.
+- **Rationale:** text must physically fit the DS box at every display scale, and page breaks should read like an Ace Attorney conversation rather than a character counter.

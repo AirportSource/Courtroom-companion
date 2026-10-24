@@ -1,6 +1,6 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-24 (Maya native re-extraction, render profile, menu SFX, engine tests). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-24 (LLM architecture milestone: FastAPI backend, provider-agnostic gateway, FakeProvider, Character Director, chat UX). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
@@ -102,13 +102,22 @@ voice = dev override ?? line.voice ?? character.voice.blip
 
 ## Backend status
 
-No backend code exists. FastAPI/Ollama/LLM are out of scope until explicitly requested.
+`backend/` (FastAPI, Python 3.12+; developed on 3.15.1 in `backend/.venv`):
+- **LLM gateway:** a provider-agnostic adapter contract, a registry, timeouts and exception isolation. The shared parse/validate/repair step produces a strict `CharacterReply`.
+- **Provider:** only **FakeProvider** (deterministic, offline) is implemented.
+- **CharacterRepository:** reads capabilities from the frontend character packs (`character.json` + new `performance.json` + `personality.md`).
+- **CharacterDirector:** deterministic, data-driven anti-overacting rules → `PerformanceTimeline`.
+- **API:** `GET /api/health`, `GET /api/characters/{id}/capabilities`, `POST /api/chat`.
+- **Tests:** `pytest`, 59 passing.
+
+See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd backend; .venv/Scripts/python -m uvicorn app.main:app --reload --port 8000`. The Vite dev server proxies `/api`.
 
 ## What already works
 
 - Phase 2A, intact: typed manifest loading, emotion resolver with fallbacks, idle/talking loops, one-shot reactions, pixel-perfect integer scaling, asset validation.
 - Screen flow with keyboard (↑/↓, Enter/Space/Z, Esc/Backspace/X) and mouse.
 - Character and location menus are generated from manifests; any character added to `characters/index.json` appears automatically.
+- AI dialogue is paginated into DS textboxes with real font metrics and natural sentence/clause breaks, locale-aware (EN/FR/JA tested); beat != page (D-036).
 - Long menu labels stay inside fixed DS-width buttons and scroll horizontally (whole-pixel steps) when selected or hovered; reduced motion uses a static reveal (D-032).
 - Typewriter:
   - reveal speed from settings;
@@ -128,7 +137,8 @@ No backend code exists. FastAPI/Ollama/LLM are out of scope until explicitly req
 
 - **Original DS UI graphics:** the title art, pixel font and menu panels (D-031) are in. The text box, name plate, continue arrow and menu buttons are still CSS stand-ins.
 - No music, no effect SFX wiring, no exclamation bubbles or screen effects (bubble images are extracted but not used yet).
-- The script is a hard-coded test array; there's no dialogue source abstraction or LLM yet.
+- No real LLM provider yet (FakeProvider only); no streaming; no persistent memory; no bring-your-own-key UI.
+- The chat UX is minimal (single input under the scene, no history view).
 - One character on screen. Wide backgrounds are centre-cropped (no panning).
 - Sheet rows 14–17 (Maya side poses) are not extracted yet.
 
@@ -147,10 +157,10 @@ No backend code exists. FastAPI/Ollama/LLM are out of scope until explicitly req
 
 ## Current development phase
 
-**Phase 2B — DS presentation, scripted dialogue, native Maya, menu SFX, original menu panels: implemented and validated.** Uncommitted, awaiting owner approval.
+**Phase 5a — LLM architecture (FakeProvider) implemented and validated** on top of the committed Phase 2B (`f208bf6`). Uncommitted, awaiting owner approval.
 
 ## Immediate next objective
 
-1. Owner reviews the menu panel assignments (main menu / character select / settings).
-2. Owner visually confirms the native Maya composition, the shocked order, and the 7-frame laugh.
-3. Commit the milestone after approval.
+1. Owner reviews the chat flow and the director's performance choices (dev panel → "Last AI reply").
+2. Commit this milestone after approval.
+3. Next: an Ollama provider adapter (local model, no secrets), then OpenAI-compatible.

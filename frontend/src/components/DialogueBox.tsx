@@ -1,3 +1,4 @@
+import { DIALOGUE_TEXT, DIALOGUE_TEXT_HEIGHT } from '../engine/dialogueLayout.ts'
 import { TypewriterText } from './TypewriterText.tsx'
 
 interface DialogueBoxProps {
@@ -18,7 +19,16 @@ export function DialogueBox({ speakerName, text, visibleCount, showContinue }: D
     <div className="dialogue" aria-live="polite">
       {speakerName && <div className="dialogue-nameplate">{speakerName}</div>}
       <div className="dialogue-box">
-        <p className="dialogue-text">
+        {/* Geometry shared with the paginator (dialogueLayout.ts): pages arrive pre-wrapped. */}
+        <p
+          className="dialogue-text"
+          style={{
+            width: DIALOGUE_TEXT.width + 2 * DIALOGUE_TEXT.paddingX,
+            height: DIALOGUE_TEXT_HEIGHT,
+            padding: `${DIALOGUE_TEXT.paddingTop}px ${DIALOGUE_TEXT.paddingX}px 0`,
+            lineHeight: `${DIALOGUE_TEXT.lineHeight}px`,
+          }}
+        >
           <TypewriterText text={text} visibleCount={visibleCount} />
         </p>
         {showContinue && <div className="dialogue-continue" aria-label="Continue" />}

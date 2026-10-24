@@ -284,3 +284,7 @@ Source: `docs/references/DS _ DSi - Phoenix Wright_ Ace Attorney - Backgrounds -
 | `menu_talk_option` | `talk-option.png` | 1139 | 15 | Character select |
 
 Filenames use kebab-case as specified by the owner (other assets use snake_case). Total referenced runtime files: **160**.
+
+### Character pack data (2026-10-24, LLM milestone)
+
+`characters/maya/performance.json` (director settings, 7 gestures, intensity variants for happy/excited/laughing, aliases, error line) and `characters/maya/personality.md` (character bible). They're data, not media, so they aren't counted by the unreferenced-media check. The backend validates every reference against `character.json` and a test asserts zero warnings.

@@ -1,0 +1,14 @@
+[project]
+name = "courtroom-companion-backend"
+version = "0.1.0"
+description = "Courtroom Companion character service: provider-agnostic LLM gateway + Character Director"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = [
+    # Starlette's TestClient nags about httpx2; irrelevant for these tests.
+    "ignore::DeprecationWarning:fastapi.testclient",
+    "ignore:Using `httpx` with `starlette.testclient`",
+]

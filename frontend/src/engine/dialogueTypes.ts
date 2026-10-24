@@ -1,4 +1,4 @@
-import type { CharacterId, EmotionId, SoundId } from './manifestTypes.ts'
+import type { AnimationId, CharacterId, EmotionId, ReactionId, SoundId } from './manifestTypes.ts'
 
 /** One line of scripted (later: LLM-produced) dialogue. Purely logical IDs, no asset paths. */
 export interface DialogueLine {
@@ -8,4 +8,8 @@ export interface DialogueLine {
   text: string
   /** Optional blip override for this line (a sound id from audio.json). */
   voice?: SoundId
+  /** Optional explicit stable pose (logical animation id), e.g. chosen by the Character Director. */
+  animation?: AnimationId
+  /** Optional explicit one-shot reaction; null = none. Omitted = the emotion's own binding. */
+  reaction?: ReactionId | null
 }

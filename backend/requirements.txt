@@ -1,0 +1,6 @@
+# Runtime dependencies (keep minimal). Python 3.12+.
+# Note: uvicorn is installed WITHOUT the [standard] extra (its optional PyYAML has no wheel
+# for Python 3.15 yet); the plain server is sufficient for local development.
+fastapi>=0.115
+uvicorn>=0.30
+pydantic>=2.7

@@ -2,6 +2,7 @@
 import { audioEngine } from '../engine/audioEngine.ts'
 import type { DialogueLine } from '../engine/dialogueTypes.ts'
 import type { Background, CharacterRender, SoundId } from '../engine/manifestTypes.ts'
+import type { ChatResponse } from '../engine/performance.ts'
 import type { CharacterAnimationState } from '../engine/useCharacterAnimation.ts'
 import type { TypewriterState } from '../engine/useTypewriter.ts'
 import { DevDisplayControls } from './DevDisplayControls.tsx'
@@ -10,6 +11,7 @@ interface ConversationDevPanelProps {
   lineNumber: number
   lineCount: number
   line: DialogueLine
+  phase: string
   typewriterState: TypewriterState
   animation: CharacterAnimationState
   background: Background | null
@@ -17,7 +19,9 @@ interface ConversationDevPanelProps {
   voice: SoundId | null
   voiceOverride: SoundId | null
   onVoiceOverrideChange: (voice: SoundId | null) => void
-  onRestart: () => void
+  /** Last backend reply, for inspecting the director's decisions. */
+  lastResponse: ChatResponse | null
+  onPlayTestScript: () => void
   /** Restart the current line, optionally forcing a voice (null = script/character). */
   onReplayLine: (voice: SoundId | null) => void
   onExit: () => void
@@ -27,6 +31,7 @@ export function ConversationDevPanel({
   lineNumber,
   lineCount,
   line,
+  phase,
   typewriterState,
   animation,
   background,
@@ -34,7 +39,8 @@ export function ConversationDevPanel({
   voice,
   voiceOverride,
   onVoiceOverrideChange,
-  onRestart,
+  lastResponse,
+  onPlayTestScript,
   onReplayLine,
   onExit,
 }: ConversationDevPanelProps) {
@@ -70,6 +76,8 @@ export function ConversationDevPanel({
       <section>
         <h3>Now playing</h3>
         <dl className="dev-readout">
+          <dt>phase</dt>
+          <dd>{phase}</dd>
           <dt>line</dt>
           <dd>
             {lineNumber}/{lineCount}
@@ -91,6 +99,35 @@ export function ConversationDevPanel({
         </dl>
       </section>
 
+      <section>
+        <h3>Last AI reply</h3>
+        {lastResponse ? (
+          <>
+            <p className="dev-hint">
+              provider: {lastResponse.provider.type}
+              {lastResponse.provider.model ? ` (${lastResponse.provider.model})` : ''} · settle:{' '}
+              {lastResponse.performance.settle.emotion} / {lastResponse.performance.settle.animation}
+            </p>
+            <ol className="dev-readout dev-segments">
+              {lastResponse.performance.segments.map((s, i) => (
+                <li key={i}>
+                  {s.emotion} → {s.animation} · {s.intensity.toFixed(2)}
+                  {s.reaction ? ` · ⚡${s.reaction}` : ''}
+                  {s.gesture ? ` · ✋${s.gesture}` : ''}
+                </li>
+              ))}
+            </ol>
+            {[...lastResponse.performance.notes, ...lastResponse.warnings].map((note) => (
+              <p key={note} className="dev-warning">
+                {note}
+              </p>
+            ))}
+          </>
+        ) : (
+          <p className="dev-hint">No reply yet. Type a message under the scene.</p>
+        )}
+      </section>
+
       <DevDisplayControls
         frame={animation.frame}
         clip={resolved?.clip ?? null}
@@ -107,14 +144,17 @@ export function ConversationDevPanel({
           <button type="button" onClick={() => onReplayLine(maleBlip)}>
             Replay line with male blip
           </button>
-          <button type="button" onClick={onRestart}>
-            Restart script
+          <button type="button" onClick={onPlayTestScript}>
+            Play test script
           </button>
           <button type="button" onClick={onExit}>
             Back to menu
           </button>
         </div>
-        <p className="dev-hint">Click scene / Enter / Space: skip text, then advance. Esc: menu.</p>
+        <p className="dev-hint">
+          Click scene / Enter / Space: skip text, then advance. Esc: menu. FakeProvider triggers: #messy, #error,
+          #malformed, #empty, #text, #timeout.
+        </p>
       </section>
     </aside>
   )

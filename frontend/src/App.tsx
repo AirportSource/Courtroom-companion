@@ -203,7 +203,7 @@ function App() {
           key={c.id}
           character={c}
           background={background}
-          script={TEST_CONVERSATION}
+          testScript={TEST_CONVERSATION}
           onExit={toTitle}
           devTools={DEV_TOOLS}
         />

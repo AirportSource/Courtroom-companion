@@ -1,0 +1,81 @@
+"""LLM Gateway: the single entry point the application uses to talk to any model.
+
+Owns the provider registry, timeouts, exception isolation and response validation/repair.
+Callers only see CharacterReply (or a failure they must degrade gracefully from).
+"""
+
+import asyncio
+import logging
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from typing import Any
+
+from .base import GenerationRequest, LLMProvider
+from .config import ProviderConfig
+from .providers.fake import FakeProvider
+from .repair import parse_reply
+from .schemas import CharacterReply, ChatMessage
+
+logger = logging.getLogger(__name__)
+
+ProviderFactory = Callable[[ProviderConfig], LLMProvider]
+
+#: Provider type -> factory. Adding a provider = writing an adapter + registering it here.
+DEFAULT_REGISTRY: dict[str, ProviderFactory] = {
+    "fake": lambda config: FakeProvider(model=config.model),
+}
+
+
+class UnknownProviderError(ValueError):
+    pass
+
+
+@dataclass
+class GatewayResult:
+    reply: CharacterReply | None
+    warnings: list[str] = field(default_factory=list)
+    #: Short machine-readable failure reason ("timeout", "provider_error", "invalid_reply").
+    error: str | None = None
+
+
+class LLMGateway:
+    def __init__(self, config: ProviderConfig, registry: dict[str, ProviderFactory] | None = None) -> None:
+        registry = registry if registry is not None else DEFAULT_REGISTRY
+        factory = registry.get(config.type)
+        if factory is None:
+            raise UnknownProviderError(
+                f"unknown LLM provider '{config.type}' (available: {', '.join(sorted(registry))})"
+            )
+        self.config = config
+        self.provider = factory(config)
+
+    def info(self) -> dict[str, Any]:
+        """Public, secret-free description of the active provider."""
+        caps = self.provider.capabilities
+        return {
+            **self.config.public_info(),
+            "model": self.provider.model,
+            "capabilities": {
+                "structuredOutput": caps.structured_output.value,
+                "streaming": caps.streaming,
+                "toolCalling": caps.tool_calling,
+            },
+        }
+
+    async def generate_reply(
+        self, system_prompt: str, messages: list[ChatMessage], response_schema: dict[str, Any]
+    ) -> GatewayResult:
+        request = GenerationRequest(system_prompt, messages, response_schema, self.config.settings)
+        try:
+            raw = await asyncio.wait_for(self.provider.generate(request), timeout=self.config.settings.timeout_s)
+        except TimeoutError:
+            logger.warning("LLM provider %s timed out", self.config.type)
+            return GatewayResult(None, ["provider timed out"], error="timeout")
+        except Exception:  # isolate any adapter/vendor failure from the app
+            logger.exception("LLM provider %s failed", self.config.type)
+            return GatewayResult(None, ["provider failed"], error="provider_error")
+
+        repaired = parse_reply(raw.content)
+        if repaired.reply is None:
+            return GatewayResult(None, repaired.warnings, error="invalid_reply")
+        return GatewayResult(repaired.reply, repaired.warnings)
