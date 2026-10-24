@@ -407,6 +407,11 @@
   align-self: center;
 }
 
+/* Scroll the form instead of shrinking its flex children below their contents. */
+.settings-screen > * {
+  flex-shrink: 0;
+}
+
 .settings-row {
   display: flex;
   align-items: center;
@@ -423,26 +428,81 @@
   gap: 2px;
 }
 
+.settings-profile-toolbar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  min-width: 0;
+}
+
+.settings-profile-toolbar button {
+  min-height: 20px;
+}
+
 .settings-provider {
   display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.settings-row-field,
+.settings-provider .settings-provider-status-row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
   gap: 4px;
+  justify-content: initial;
+  min-height: 22px;
+  height: auto;
+  padding: 2px 4px 2px 6px;
+  min-width: 0;
+}
+
+.settings-row-field > span,
+.settings-provider-status-row > span:first-child {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .settings-row-field input,
 .settings-row-field select {
-  width: 142px;
+  width: 100%;
   min-width: 0;
+  max-width: 100%;
   font: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.settings-row-field input {
+  text-overflow: ellipsis;
+}
+
+.settings-row-field input:focus {
+  text-overflow: clip;
+}
+
+.settings-provider-status-row > span:last-child,
+.settings-provider-status {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .settings-provider-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 3px;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 4px;
+  min-width: 0;
+  margin-left: 7px;
+}
+
+.settings-provider-actions button {
+  grid-column: 2;
+  min-height: 20px;
 }
 
 .settings-provider-status {
-  margin: 0;
+  margin: 0 0 0 75px;
   padding: 2px 4px;
   line-height: 15px;
   background: rgb(0 0 0 / 0.6);
@@ -458,6 +518,10 @@
   border-radius: 2px;
   padding: 0 3px;
   cursor: pointer;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .settings-screen button[aria-pressed='true'] {
@@ -479,7 +543,7 @@
 .settings-footer {
   display: flex;
   justify-content: space-between;
-  margin-top: auto;
+  margin-top: 0;
 }
 
 /* ---- Dev panels (temporary, outside the stage) ---- */

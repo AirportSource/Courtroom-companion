@@ -15,6 +15,24 @@ export interface OllamaConnectionResult {
   models: OllamaModel[]
 }
 
+export type OpenAICompatibleConnectionStatus =
+  | 'auth_not_configured'
+  | 'auth_failed'
+  | 'rate_limited'
+  | 'model_error'
+  | 'structured_output_failed'
+  | 'timeout'
+  | 'unreachable'
+  | 'generation_failed'
+  | 'generation_succeeded'
+
+export interface OpenAICompatibleConnectionResult {
+  status: OpenAICompatibleConnectionStatus
+  apiKeyConfigured: boolean
+  generationSucceeded: boolean
+  error?: string
+}
+
 export class ProviderApiError extends Error {
   readonly code: string | null
 
@@ -39,7 +57,7 @@ function parseModel(raw: unknown): OllamaModel | null {
   }
 }
 
-async function backendJson(path: string, init: RequestInit, timeoutMs: number): Promise<Record<string, unknown>> {
+export async function backendJson(path: string, init: RequestInit, timeoutMs: number): Promise<Record<string, unknown>> {
   const controller = new AbortController()
   const timer = window.setTimeout(() => controller.abort(), timeoutMs)
   try {
@@ -67,7 +85,7 @@ async function backendJson(path: string, init: RequestInit, timeoutMs: number): 
   }
 }
 
-function modelsFrom(raw: Record<string, unknown>): OllamaModel[] {
+export function modelsFrom(raw: Record<string, unknown>): OllamaModel[] {
   return (Array.isArray(raw.models) ? raw.models : []).flatMap((model) => {
     const parsed = parseModel(model)
     return parsed ? [parsed] : []
@@ -105,5 +123,47 @@ export async function testOllamaConnection(
     generationSucceeded: body.generationSucceeded === true,
     error: typeof body.error === 'string' ? body.error : undefined,
     models: modelsFrom(body),
+  }
+}
+
+export async function fetchOpenAICompatibleStatus(): Promise<boolean> {
+  const body = await backendJson('/api/providers/openai-compatible/status', {}, 15_000)
+  return body.apiKeyConfigured === true
+}
+
+export async function testOpenAICompatibleConnection(
+  baseUrl: string,
+  model: string,
+  character: string,
+): Promise<OpenAICompatibleConnectionResult> {
+  const body = await backendJson(
+    '/api/providers/openai-compatible/test',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ baseUrl, model, character }),
+    },
+    135_000,
+  )
+  const statuses: OpenAICompatibleConnectionStatus[] = [
+    'auth_not_configured',
+    'auth_failed',
+    'rate_limited',
+    'model_error',
+    'structured_output_failed',
+    'timeout',
+    'unreachable',
+    'generation_failed',
+    'generation_succeeded',
+  ]
+  const status = String(body.status)
+  if (!statuses.includes(status as OpenAICompatibleConnectionStatus)) {
+    throw new ProviderApiError('the server returned an invalid connection-test result')
+  }
+  return {
+    status: status as OpenAICompatibleConnectionStatus,
+    apiKeyConfigured: body.apiKeyConfigured === true,
+    generationSucceeded: body.generationSucceeded === true,
+    error: typeof body.error === 'string' ? body.error : undefined,
   }
 }

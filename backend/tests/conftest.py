@@ -1,4 +1,15 @@
 import pytest
+from unittest.mock import Mock
+from app.configuration.credentials import KeyringCredentialStore
+
+
+@pytest.fixture(autouse=True)
+def isolated_profile_directory(tmp_path, monkeypatch):
+    """Normal tests never touch user profiles or the real OS credential store."""
+    monkeypatch.setenv("COURTROOM_CONFIG_DIR", str(tmp_path / "configuration"))
+    backend = Mock()
+    backend.get_password.return_value = None
+    monkeypatch.setattr("app.main.KeyringCredentialStore", lambda: KeyringCredentialStore(backend))
 
 from app.characters.repository import (
     CharacterProfile,

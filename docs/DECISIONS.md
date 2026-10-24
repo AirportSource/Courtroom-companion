@@ -400,7 +400,7 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Rationale:** bundling the first Kanji fallback makes rendering and canvas pagination deterministic across machines while retaining system fonts as a safety net.
 
 ## D-039 — Ollama is the first real provider; selection is per request
-- **Status:** Accepted
+- **Status:** Partially superseded by D-041 for provider selection/persistence; the Ollama adapter and shared pipeline remain accepted
 - **Date:** 2026-10-24
 - **Extends:** D-033. The provider contract, shared repair, CharacterService, CharacterDirector and paginator remain authoritative.
 - **Decision:**
@@ -413,3 +413,31 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - Provider failures never silently switch to FakeProvider. Normal chat takes the existing character error-line path; Settings distinguishes unreachable, reachable/list-loaded, selected-model-missing, generation-failed and generation-succeeded states.
   - Generic generation timeout is 120 seconds for local cold starts; model discovery remains 10 seconds and the frontend waits slightly longer than backend generation.
 - **Rationale:** per-request selection supports browser-local settings without global server mutation or duplicated services, while the adapter remains vendor-only transport code and every model receives identical character context and validation.
+
+## D-040 — One generic OpenAI-compatible adapter with backend-only secrets
+- **Status:** Partially superseded by D-041 for environment-only credential handling and browser key entry; the generic adapter remains accepted
+- **Date:** 2026-10-24
+- **Extends:** D-033 and D-039. The gateway, shared repair, CharacterService, CharacterDirector and paginator remain authoritative.
+- **Decision:**
+  - `OpenAICompatibleProvider` is one thin Chat Completions adapter registered as `openai_compatible`. Gemini, OpenAI, Qwen/DashScope, Kimi/Moonshot, LM Studio, vLLM, OpenRouter and future compatible endpoints are configurations, not provider subclasses.
+  - Generation uses `POST {baseUrl}/chat/completions` with shared system/history messages, configured model, `stream: false`, generic temperature/token settings, and the exact existing per-character schema in `response_format.json_schema` with strict mode. Only `choices[0].message.content` enters shared repair.
+  - The adapter does not retry without native structured output. Rejection is a typed safe failure; a later compatibility fallback must remain generic and keep the same shared schema/validation pipeline.
+  - API keys are resolved server-side as `SecretStr`. `COURTROOM_LLM_API_KEY` is the default secret variable; `COURTROOM_LLM_API_KEY_ENV` may name another backend variable. Keys are never accepted from the browser, persisted in `localStorage`, logged or returned. Settings receives only a configured/not-configured boolean.
+  - The history-free Test Connection distinguishes invalid URL, missing/auth-failed secret, rate limiting, model/request rejection, structured-output failure, timeout/unreachable endpoint, generic generation failure and success.
+  - The editable Settings defaults are the requested Gemini configuration (`https://generativelanguage.googleapis.com/v1beta/openai/`, `gemini-3.8-flash`), but neither adapter logic nor character prompts special-case Gemini or Maya.
+- **Rationale:** a single standards-shaped adapter supports multiple hosted services while keeping secrets and transport differences behind the existing provider boundary.
+
+## D-041 — Backend provider profiles and a generic OS CredentialStore
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** D-039's per-request browser provider selection and D-040's environment-only secret UX. Gateway semantics, adapters, shared repair, CharacterService, CharacterReply, CharacterDirector, pagination and presentation remain authoritative.
+- **Decision:**
+  - A ProviderProfile holds a generated ID, name, provider type, validated URL/model, optional environment reference, generic generation settings and a backend-owned credential reference. It never contains a secret value.
+  - One server-authoritative active profile is persisted with metadata at ignored `backend/.local/provider-profiles.json` (`COURTROOM_CONFIG_DIR` override). Safe writes use temporary files, fsync and atomic replace. One local backend process owns this file; thread mutations are locked.
+  - CredentialStore exposes get/set/delete/exists. Python keyring maps it to native Windows Credential Manager, macOS Keychain or Linux Secret Service/KWallet; insecure/plaintext file backends are rejected. OS-specific code stays inside this adapter.
+  - Resolve OS profile credential, then a configured environment variable, then missing. A transient private SecretStr is bound to the existing ProviderConfig; adapters retain their current interface. Environment-only deployments can seed a new profile directory from COURTROOM_LLM_*.
+  - A local configuration API exposes CRUD, activation, duplication, credential set/replace/delete/status, model discovery and history-free Test Connection. Credential GET returns status only. Responses are not cached; validation errors never echo submitted values. Remote/cross-origin configuration access is rejected; Vite's local same-origin proxy is supported.
+  - Settings uses a compact scrollable profile form. Password entry is transient, sent once to the backend, and cleared after save/cancel/switch. No secret or active-profile configuration is persisted in browser storage. Complete legacy endpoint/model metadata is imported once; incomplete migration snapshots are retained for recovery.
+  - Duplicate profiles have independent credential references and copies made only inside the backend. Deletion removes the profile's OS entry; at least one profile must remain. Removing an OS key does not remove a separately configured environment fallback.
+  - Adding Anthropic later requires its adapter/registry entry and profile type/credential-using type/form fields; it reuses the same credential mechanism. No Anthropic implementation is included here.
+- **Rationale:** users can save several local/cloud configurations and switch or replace credentials without PowerShell edits or a backend restart, while retaining deterministic profile metadata, backend secret ownership and the existing conversation pipeline.

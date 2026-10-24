@@ -1,31 +1,34 @@
 """Provider configuration.
 
 Separates: provider type / endpoint / model / credentials / generation settings.
-Credentials are NEVER stored in config: `api_key_env` names an environment variable that holds
-the key, resolved at runtime on the server only. Nothing here is ever sent to the frontend.
+Persisted config contains only an environment reference. Profile resolution may bind a
+transient SecretStr in a private attribute; it is excluded from serialization and repr.
+Nothing here is ever sent to the frontend.
 """
 
 import os
 from collections.abc import Mapping
 from urllib.parse import urlsplit
 
-from pydantic import BaseModel, Field, SecretStr, field_validator, model_validator
+from pydantic import BaseModel, Field, PrivateAttr, SecretStr, field_validator, model_validator
 
 from .base import GenerationSettings
 
 #: Provider types recognized by configuration. The registry decides which are available;
-#: Fake and Ollama are implemented, while the remaining names reserve future adapters.
+#: Fake, Ollama and OpenAI-compatible are implemented; the remaining names reserve future adapters.
 KNOWN_PROVIDER_TYPES = ("fake", "ollama", "openai_compatible", "openai", "anthropic")
 DEFAULT_OLLAMA_BASE_URL = "http://localhost:11434"
+DEFAULT_API_KEY_ENV = "COURTROOM_LLM_API_KEY"
 
 
 class ProviderConfig(BaseModel):
+    _profile_credential: SecretStr | None = PrivateAttr(default=None)
     type: str = Field(default="fake", pattern=r"^[a-z0-9_]{1,40}$")
     #: e.g. http://localhost:11434 for Ollama, or an OpenAI-compatible endpoint.
     base_url: str | None = None
     model: str | None = None
     #: Name of the environment variable holding the API key (never the key itself).
-    api_key_env: str | None = Field(default=None, pattern=r"^[A-Z0-9_]{1,64}$")
+    api_key_env: str | None = Field(default=DEFAULT_API_KEY_ENV, pattern=r"^[A-Z0-9_]{1,64}$")
     settings: GenerationSettings = Field(default_factory=GenerationSettings)
 
     @field_validator("base_url")
@@ -35,15 +38,18 @@ class ProviderConfig(BaseModel):
             return None
         normalized = value.strip().rstrip("/")
         parts = urlsplit(normalized)
+        parts.port  # Validate numeric ports and their range before HTTP transport.
         if (
             parts.scheme not in {"http", "https"}
             or not parts.hostname
+            or any(character.isspace() for character in normalized)
+            or "\\" in normalized
             or parts.username is not None
             or parts.password is not None
             or parts.query
             or parts.fragment
         ):
-            raise ValueError("base URL must be an HTTP(S) origin without credentials, query, or fragment")
+            raise ValueError("base URL must use HTTP(S) and have no credentials, query, or fragment")
         return normalized
 
     @field_validator("model")
@@ -59,10 +65,16 @@ class ProviderConfig(BaseModel):
         return self
 
     def resolve_api_key(self, env: Mapping[str, str] | None = None) -> SecretStr | None:
+        if self._profile_credential is not None:
+            return self._profile_credential
         if not self.api_key_env:
             return None
         value = (env if env is not None else os.environ).get(self.api_key_env)
         return SecretStr(value) if value else None
+
+    def bind_credential(self, secret: SecretStr | None) -> None:
+        """Attach an ephemeral resolved credential; never serialized or persisted."""
+        self._profile_credential = secret
 
     def public_info(self) -> dict[str, str | None]:
         """Safe to expose: no base URL credentials, no key, no env var values."""
@@ -81,6 +93,6 @@ def load_provider_config(env: Mapping[str, str] | None = None) -> ProviderConfig
         type=env.get("COURTROOM_LLM_PROVIDER", "fake"),
         base_url=env.get("COURTROOM_LLM_BASE_URL") or None,
         model=env.get("COURTROOM_LLM_MODEL") or None,
-        api_key_env=env.get("COURTROOM_LLM_API_KEY_ENV") or None,
+        api_key_env=env.get("COURTROOM_LLM_API_KEY_ENV") or DEFAULT_API_KEY_ENV,
         settings=settings,
     )

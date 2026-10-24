@@ -4,6 +4,7 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Query, Request
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from starlette.concurrency import run_in_threadpool
 
 from ..characters.prompt import build_system_prompt, reply_schema
 from ..characters.repository import CharacterNotFoundError
@@ -17,12 +18,13 @@ from ..llm.schemas import ChatMessage
 router = APIRouter(prefix="/api")
 
 ID_PATTERN = r"^[a-z0-9_]{1,64}$"
+ProviderType = Literal["fake", "ollama", "openai_compatible"]
 
 
 class ProviderSelection(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    type: Literal["fake", "ollama"]
+    type: ProviderType
     base_url: str | None = Field(default=None, alias="baseUrl", max_length=2048)
     model: str | None = Field(default=None, max_length=200)
 
@@ -44,13 +46,21 @@ class OllamaConnectionRequest(BaseModel):
     character: str = Field(pattern=ID_PATTERN)
 
 
+class OpenAICompatibleConnectionRequest(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    base_url: str = Field(alias="baseUrl", min_length=1, max_length=2048)
+    model: str = Field(min_length=1, max_length=200)
+    character: str = Field(pattern=ID_PATTERN)
+
+
 def _service(request: Request) -> CharacterService:
     return request.app.state.character_service
 
 
 def _config(
     service: CharacterService,
-    provider_type: Literal["fake", "ollama"],
+    provider_type: ProviderType,
     base_url: str | None = None,
     model: str | None = None,
 ) -> ProviderConfig:
@@ -59,13 +69,18 @@ def _config(
             type=provider_type,
             base_url=base_url,
             model=model,
+            api_key_env=service.gateway.config.api_key_env,
             settings=service.gateway.config.settings,
         )
     except ValidationError as error:
+        provider_label = {
+            "ollama": "Ollama server",
+            "openai_compatible": "OpenAI-compatible base",
+        }.get(provider_type, "Provider")
         detail = {
-            "code": "invalid_base_url" if provider_type == "ollama" else "invalid_provider_configuration",
-            "message": "Invalid Ollama server URL."
-            if provider_type == "ollama"
+            "code": "invalid_base_url" if provider_type != "fake" else "invalid_provider_configuration",
+            "message": f"Invalid {provider_label} URL."
+            if provider_type != "fake"
             else "Invalid provider configuration.",
         }
         raise HTTPException(status_code=422, detail=detail) from error
@@ -94,7 +109,9 @@ def _raise_provider_http(error: ProviderError) -> None:
 @router.get("/health")
 def health(request: Request) -> dict[str, Any]:
     service = _service(request)
-    return {"status": "ok", "provider": service.gateway.info(), "characters": service.repository.ids()}
+    profiles = request.app.state.provider_profiles
+    active = _gateway(service, profiles.configuration(profiles.store.get()))
+    return {"status": "ok", "provider": active.info(), "characters": service.repository.ids()}
 
 
 @router.get("/characters/{character_id}/capabilities")
@@ -166,17 +183,70 @@ async def test_ollama_connection(body: OllamaConnectionRequest, request: Request
     }
 
 
+@router.get("/providers/openai-compatible/status")
+def openai_compatible_status(request: Request) -> dict[str, bool]:
+    """Expose only whether the backend-managed generic API key is currently available."""
+    configured = _service(request).gateway.config.resolve_api_key() is not None
+    return {"apiKeyConfigured": configured}
+
+
+@router.post("/providers/openai-compatible/test")
+async def test_openai_compatible_connection(
+    body: OpenAICompatibleConnectionRequest,
+    request: Request,
+) -> dict[str, Any]:
+    """Run shared schema-constrained generation without touching conversation history."""
+    service = _service(request)
+    try:
+        profile = service.repository.get(body.character)
+    except CharacterNotFoundError:
+        raise HTTPException(status_code=404, detail="unknown character") from None
+
+    gateway = _gateway(
+        service,
+        _config(service, "openai_compatible", body.base_url, body.model),
+    )
+    api_key_configured = gateway.config.resolve_api_key() is not None
+    result = await gateway.generate_reply(
+        build_system_prompt(profile),
+        [ChatMessage(role="user", content="Reply with one short, friendly greeting for a connection test.")],
+        reply_schema(profile),
+    )
+    if result.reply is not None:
+        return {
+            "status": "generation_succeeded",
+            "apiKeyConfigured": api_key_configured,
+            "generationSucceeded": True,
+        }
+
+    status = {
+        "auth_not_configured": "auth_not_configured",
+        "auth_failed": "auth_failed",
+        "rate_limited": "rate_limited",
+        "model_error": "model_error",
+        "structured_output_unsupported": "structured_output_failed",
+        "invalid_reply": "structured_output_failed",
+        "timeout": "timeout",
+        "openai_compatible_unreachable": "unreachable",
+    }.get(result.error, "generation_failed")
+    return {
+        "status": status,
+        "apiKeyConfigured": api_key_configured,
+        "generationSucceeded": False,
+        "error": result.error,
+    }
+
+
 @router.post("/chat")
 async def chat(body: ChatRequest, request: Request) -> dict[str, Any]:
     if not body.message.strip():
         raise HTTPException(status_code=422, detail="message is empty")
     service = _service(request)
-    gateway = None
     if body.provider is not None:
-        if body.provider.type == "ollama" and not body.provider.model:
-            raise HTTPException(status_code=422, detail="an Ollama model must be selected")
-        config = _config(service, body.provider.type, body.provider.base_url, body.provider.model)
-        gateway = _gateway(service, config)
+        raise HTTPException(status_code=409, detail="Select a saved provider profile before chatting.")
+    profiles = request.app.state.provider_profiles
+    config = await run_in_threadpool(profiles.resolve, profiles.store.get())
+    gateway = _gateway(service, config)
     try:
         result = await service.chat(body.character, body.message.strip(), body.session_id, gateway=gateway)
     except CharacterNotFoundError:

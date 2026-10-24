@@ -14,6 +14,7 @@ from .base import GenerationRequest, LLMProvider, ProviderError
 from .config import DEFAULT_OLLAMA_BASE_URL, ProviderConfig
 from .providers.fake import FakeProvider
 from .providers.ollama import OllamaProvider
+from .providers.openai_compatible import OpenAICompatibleProvider
 from .repair import parse_reply
 from .schemas import CharacterReply, ChatMessage
 
@@ -25,6 +26,11 @@ ProviderFactory = Callable[[ProviderConfig], LLMProvider]
 DEFAULT_REGISTRY: dict[str, ProviderFactory] = {
     "fake": lambda config: FakeProvider(model=config.model),
     "ollama": lambda config: OllamaProvider(base_url=config.base_url or DEFAULT_OLLAMA_BASE_URL, model=config.model),
+    "openai_compatible": lambda config: OpenAICompatibleProvider(
+        base_url=config.base_url,
+        model=config.model,
+        api_key=config.resolve_api_key(),
+    ),
 }
 
 

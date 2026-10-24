@@ -592,3 +592,47 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - `ollama` executable was not found and the local API did not respond. No installed models were discoverable, no model was downloaded, and the optional real-model end-to-end test stopped there.
 - Final validation: backend 79/79 tests (with one harmless pytest cache-path warning), frontend 28/28 tests, asset validation 161 referenced files / 0 errors, production build 56 modules, lint pass, and `git diff --check` pass.
 - No Maya data/assets, CharacterDirector rules, paginator behavior or dialogue typography changed.
+
+---
+
+## 2026-10-24 — Generic OpenAI-compatible provider
+
+**Architecture and secrets**
+- Added one `OpenAICompatibleProvider` using `POST {baseUrl}/chat/completions`; Gemini and other compatible services remain configuration, not vendor-specific classes.
+- Requests contain the shared system/history messages, configured model, `stream: false`, temperature/`max_tokens`, and the exact existing CharacterReply schema through strict `response_format.json_schema`. Only final `choices[0].message.content` enters shared validation/repair.
+- Registered `openai_compatible` beside unchanged Fake and Ollama adapters. CharacterService, CharacterReply, CharacterDirector, measured paginator and presentation were not changed.
+- Backend secrets use `SecretStr`; `COURTROOM_LLM_API_KEY` is the default variable and `COURTROOM_LLM_API_KEY_ENV` can name another. No key field or value crosses the frontend API or enters localStorage/logs/responses.
+
+**API, Settings and failures**
+- Added `GET /api/providers/openai-compatible/status` (boolean secret state only) and history-free `POST /api/providers/openai-compatible/test`.
+- Test Connection distinguishes invalid URL, unconfigured/failed authentication, rate limit, model/request rejection, native-structured-output rejection or invalid output, timeout/unreachable, generic failure and success.
+- Settings now offers Fake, Ollama and OpenAI Compatible. Compatible fields are editable base URL/model plus backend API-key status and Test Connection; defaults are the requested Gemini URL and `gemini-3.8-flash` without special-casing the adapter.
+- Chromium verified the new panel, editable target values, backend-key-not-configured state, clean connection-test message, scrollable 256×192 layout, no console errors and no direct request to the configured cloud endpoint.
+
+**Tests and environment**
+- Added mocked tests for registration/capabilities; Bearer auth; custom path URL; model/messages/options/`stream`/exact schema; assistant extraction; metadata; missing secret; 401/403; 429; model/structured-output distinction; timeout/unreachable/non-200; malformed/missing/empty output; gateway shared validation; history-free API testing; secret redaction; and Fake/Ollama registry regressions.
+- No `COURTROOM_LLM_API_KEY`, `GEMINI_API_KEY` or configured generic secret selector exists in this environment. No cloud call was made, and the optional real Gemini English/French/Japanese/personality/director/pagination smoke test was skipped cleanly.
+- Final validation: backend 106/106 tests pass (one harmless pytest cache-path warning), frontend 28/28 tests pass, asset validation reports 161 referenced files / 0 errors, production build passes with 56 modules, lint passes cleanly, and `git diff --check` passes.
+
+---
+
+## 2026-10-24 — Provider profiles and OS credential management
+
+**Implementation**
+- Added `app/configuration/`: validated ProviderProfile metadata, atomic/locked local ProfileStore, ProfileManager resolution, and the provider-independent CredentialStore interface with a native-only Python keyring adapter. Installed keyring 25.7.0 and its runtime dependencies in the backend virtual environment.
+- Metadata/active selection live in ignored `backend/.local/provider-profiles.json` (`COURTROOM_CONFIG_DIR` override); keys live in the OS vault or a referenced backend environment variable. Profile OS keys take precedence. Private transient SecretStr binding extends ProviderConfig without teaching adapters about persistence.
+- Added local profile CRUD/activation/duplication, credential set/replace/delete/status, profile discovery and history-free Test Connection endpoints. Profile IDs/credential references are backend-generated. Duplicates have independent key entries; deletion retires the key. JSON errors never echo submitted values, responses are no-store, and configuration routes check local/same-origin access including Vite proxy forwarding.
+- Chat now resolves the server's active profile for each turn. Stale per-request provider overrides receive 409. CharacterService/history, LLMGateway semantics, shared schema/repair, adapters, director, paginator, typography and Maya assets/rules were preserved. Blocking vault resolution runs in the backend thread pool.
+- Settings now offers AI Profile, Add/Edit/Duplicate/Delete, relevant fields, Ollama discovery, password-based set/replace/removal and profile Test Connection. A fixed label/control grid and non-shrinking flex children retain normal scrolling without the earlier provider-row overlap. Complete legacy browser configuration is imported once and removed from browser storage; incomplete snapshots are retained for recovery. Environment-only initialization remains supported.
+- Updated architecture/state/roadmap/setup docs and added D-041, marking only the relevant D-039/D-040 policies superseded. No Anthropic adapter was added; it will reuse this credential layer with an adapter/registry entry and profile type/form fields.
+
+**OS and browser validation**
+- Detected `keyring.backends.Windows.WinVaultKeyring`. A sandboxed write returned Windows error 1312 (no logon session); the approved normal-session probe successfully wrote/read/deleted a generated synthetic credential. No plaintext fallback was used.
+- Browser-tested the real UI against a temporary backend and real Windows vault: create Gemini configuration, password entry/save, Configured state with input cleared, switch to Ollama and back with key retained, duplicate/delete with independent credentials, replace, remove, and clean missing-key Test Connection failure. Only synthetic temporary keys were used; no cloud generation was requested.
+- Inspected 256×192 screenshots including configured key actions, edit fields and the scrolled Speed/Volume/Mute/Display/Test blip section. No row overlap or horizontal overflow. Logical row geometry was identical at 3×, 4× and auto 5×. No browser exceptions. Neither synthetic key appeared in local/session storage or any API response; write requests were the only key-bearing browser API calls.
+- Temporary profiles/credentials and browser-check artifacts were cleaned up. Existing untracked `docs/sfx general/` and prior uncommitted provider work were preserved. No commit/push.
+
+**Final checks**
+- Backend: **137 passed** (`pytest -q -p no:cacheprovider`; cache disabled to avoid the pre-existing Windows cache-path warning). New deterministic tests use an injected in-memory keyring and mocked provider HTTP, including profile-scoped Ollama discovery/test and vault-unavailable API behavior.
+- Frontend: **30 passed** (28 existing engine/font/pagination tests plus migration/storage/API coverage).
+- `validate:assets`: **161 references, 0 errors**; build: **58 modules**, pass; lint: pass; `git diff --check`: pass.

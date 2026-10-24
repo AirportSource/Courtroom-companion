@@ -63,8 +63,9 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [x] Character Director → PerformanceTimeline driving the existing dialogue/animation engines — 2026-10-24 (D-034)
 - [x] Minimal chat UX in the conversation scene (input → waiting → performance → settle) — 2026-10-24
 - [x] First real provider adapter: Ollama native HTTP API, JSON-Schema output, backend model discovery and Settings controls — 2026-10-24 (D-039)
-- [ ] Next providers: OpenAI-compatible (covers OpenAI/Qwen/Kimi/…), then Anthropic
-- [ ] Bring-your-own-key settings with OS credential storage (design in LLM_ARCHITECTURE.md)
+- [x] Generic OpenAI-compatible provider: Chat Completions, native JSON Schema, backend-only secret state and Settings test flow — 2026-10-24 (D-040)
+- [x] Persistent backend provider profiles, active selection, OS credential storage and environment fallback — 2026-10-24 (D-041); Windows-vault browser lifecycle verified with synthetic credentials
+- [ ] Next provider: Anthropic — reuse profiles/CredentialStore; adapter + registration + profile type/form fields
 - [ ] Streaming (metadata first, then text) — design only so far
 - [ ] Conversation memory (in-memory 12-message history only so far)
 - [ ] Effects/music intent in the contract (exclamations, music moods)

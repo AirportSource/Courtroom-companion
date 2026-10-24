@@ -1,6 +1,6 @@
 # LLM Architecture — Courtroom Companion
 
-_Provider-agnostic conversation layer, now with FakeProvider and OllamaProvider (milestones 2026-10-24). See also `docs/CHARACTER_DIRECTOR.md`._
+_Provider-agnostic conversation layer with FakeProvider, OllamaProvider, OpenAICompatibleProvider and local provider profiles / OS credentials (2026-10-24). See also `docs/CHARACTER_DIRECTOR.md`._
 
 ## Responsibilities (four layers)
 
@@ -23,6 +23,8 @@ React (ConversationScreen + ChatBar)
   │  POST /api/chat {character, message, sessionId}      (Vite dev proxy → :8000)
   ▼
 FastAPI  backend/app/api/routes.py
+  │  ProfileManager → active ProviderProfile + CredentialStore → existing ProviderConfig
+  │  new gateway for this turn, using the existing registry
   ▼
 CharacterService  backend/app/characters/service.py
   │  CharacterRepository → CharacterProfile (character.json + performance.json + personality.md)
@@ -32,7 +34,7 @@ CharacterService  backend/app/characters/service.py
 LLMGateway  backend/app/llm/gateway.py
   │  registry → provider adapter; timeout; exception isolation
   ▼
-Provider adapter  backend/app/llm/providers/*.py   (FakeProvider or OllamaProvider; only place with vendor code)
+Provider adapter  backend/app/llm/providers/*.py   (Fake, Ollama or OpenAI-compatible; only place with vendor code)
   ▼
 RawCompletion (untrusted JSON/text)
   ▼
@@ -81,15 +83,18 @@ class LLMProvider(ABC):
 
 1. Write `app/llm/providers/<name>.py` with an `LLMProvider` subclass that maps
    `GenerationRequest` → vendor call → `RawCompletion` (use `httpx.AsyncClient`; read the key
-   via `config.resolve_api_key()`).
+   via `config.resolve_api_key()`, which already handles a resolved profile credential or env fallback).
 2. Register a factory in `DEFAULT_REGISTRY` (`gateway.py`).
 3. Add adapter tests with a mocked HTTP transport (no real network in tests).
-4. Nothing else changes: service, director, prompt, frontend and character packs stay as they are.
+4. For a new native provider, extend the profile provider type, credential-using type set and
+   relevant Settings form fields. Reuse CredentialStore; no provider gets its own key storage.
+   Service, director, prompts, paginator and character packs require no changes.
 
-Implemented first: **Ollama** (local, no secrets, native HTTP JSON and JSON Schema through
-`format`). Next: **OpenAI-compatible** (one adapter covers OpenAI, Qwen/DashScope,
-Kimi/Moonshot, LM Studio, vLLM and OpenRouter via `base_url`), then **Anthropic** (separate
-request shape; JSON-instructed or tool-based structured output).
+Implemented providers: **Ollama** (local, no secrets, native HTTP JSON and JSON Schema through
+`format`) and one generic **OpenAI-compatible** adapter (Chat Completions plus
+`response_format.json_schema`). Gemini, OpenAI, Qwen/DashScope, Kimi/Moonshot, LM Studio,
+vLLM and OpenRouter are configurations of that adapter, not new provider classes. Next:
+**Anthropic** (separate request shape; JSON-instructed or tool-based structured output).
 
 ## CharacterReply schema (`app/llm/schemas.py`)
 
@@ -142,45 +147,112 @@ GPT, Qwen or Kimi + Maya all use the same Maya layer.
 | GET | `/api/characters/{id}/capabilities` | emotions, fallback, reactions, gestures |
 | GET | `/api/providers/ollama/models?baseUrl=…` | Backend-proxied `/api/tags`; installed model metadata |
 | POST | `/api/providers/ollama/test` | Tags + schema-constrained generation test, with no conversation history |
+| GET | `/api/providers/openai-compatible/status` | Boolean backend API-key configuration state; never the key or env name |
+| POST | `/api/providers/openai-compatible/test` | Schema-constrained Chat Completions test, with no conversation history |
 | POST | `/api/chat` | `{character, message (1–2000), sessionId?}` → `{reply, performance, provider, warnings}` |
+| GET / POST | `/api/provider-profiles` | List metadata/status or create a profile |
+| PUT / DELETE | `/api/provider-profiles/{id}` | Edit metadata or delete profile and its stored key |
+| POST | `/api/provider-profiles/{id}/activate` | Persist the one server-authoritative active profile |
+| POST | `/api/provider-profiles/{id}/duplicate` | Independent profile and OS credential reference |
+| GET / PUT / DELETE | `/api/provider-profiles/{id}/credential` | Boolean status / set-or-replace / remove; GET never returns a key |
+| GET | `/api/provider-profiles/{id}/models` | Ollama discovery for this saved profile |
+| POST | `/api/provider-profiles/{id}/test` | Shared schema generation using profile configuration/credential, with no history |
+| POST | `/api/provider-profiles/import-legacy` | Idempotent import of old non-secret browser settings |
 
 `reply` is the validated semantic reply (or null on provider failure). `performance` is the
-director's resolved timeline. No credentials or base URLs are ever returned.
+director's resolved timeline. Chat never returns credentials or endpoint URLs. Profile management
+returns editable, validated endpoint metadata and credential references/status, never key values.
 
-`/api/chat` may also carry a user-selected provider object (`fake`, or `ollama` with `baseUrl`
-and `model`). It chooses a gateway for that turn while reusing the same CharacterService
-prompt, history, repair and director path. Provider configuration comes only from server
-environment or explicit UI input, never from model output.
+`/api/chat` uses the backend's active saved profile. The old per-request `provider` object is
+rejected with HTTP 409 so a stale client cannot override the active selection. The profile is
+resolved once for the turn; switching affects the next turn without replacing CharacterService
+or its history/director state. Provider configuration never comes from model output.
+
+The older Ollama and compatible-provider discovery/test routes remain for compatibility with
+existing integrations. Settings now uses profile-scoped testing and discovery.
+
+## Provider profiles and credentials (`app/configuration/`)
+
+`ProfileDraft` / `ProviderProfile` contain `id` (server-generated UUID hex), `name`,
+`providerType`, optional `baseUrl` / `model`, optional backend-owned `credentialRef`, optional
+`apiKeyEnv` (environment variable name only), and `generationSettings` (the existing generic
+temperature, token and timeout settings). Network profiles require a valid URL and model.
+Fake has no network/credential configuration; local Ollama needs no key. Unknown/extra input
+fields and unsupported provider types are rejected. Credential references are scoped to their
+profile, e.g. `courtroom:profile:<uuid>`, never accepted as arbitrary browser input.
+
+`ProfileStore` persists versioned metadata, the active profile ID and a one-time migration flag
+at **`backend/.local/provider-profiles.json`**. `COURTROOM_CONFIG_DIR` overrides the directory.
+`backend/.local/` is git-ignored. Writes use a same-directory temporary file, flush/fsync and
+atomic replace; failed writes preserve the previous in-memory and on-disk catalog. Corrupt
+existing data is reported and never silently overwritten. A thread lock serializes mutations;
+run one local backend worker (cross-process concurrent writers are not supported).
+
+`CredentialStore` exposes `get`, `set`, `delete` and `exists`. `KeyringCredentialStore` uses
+Python `keyring` under service name `Courtroom Companion`, selecting only native Windows
+Credential Manager (`keyring.backends.Windows.WinVaultKeyring`), macOS Keychain, Linux Secret
+Service or KWallet implementations. Plaintext/third-party file fallbacks are rejected. Missing,
+locked or unavailable OS storage produces a sanitized error; there is no local plaintext key
+file. Tests inject an in-memory keyring backend and never access a real user vault.
+
+Resolution is **profile OS credential → configured environment reference → missing key**. If
+the OS vault is unavailable, an available env secret still works. `ProfileManager.resolve`
+binds a transient `SecretStr` to a private, non-serialized `ProviderConfig` attribute; adapters
+still call `resolve_api_key()` and know nothing about profiles, persistence or UI.
+
+Duplication copies a stored key inside the backend to a new independent reference. Removing
+or replacing that key cannot alter the source profile. Profile deletion removes its OS entry;
+the last profile cannot be deleted. Removing an OS key leaves an explicitly configured env
+fallback usable, and Settings shows when that fallback supplies the configured state.
+
+Settings offers a profile dropdown and Add/Edit/Duplicate/Delete, using a scrollable fixed-label
+form inside the unchanged 256×192 stage. Password entry exists only as transient component state;
+one PUT sends the new key to the local backend, then success clears/removes the input. Switching,
+cancelling and unmounting also discard the entry. Existing keys are never redisplayed. JSON
+validation responses omit submitted values so invalid requests cannot echo a secret. Profile
+responses use `Cache-Control: no-store`; the local configuration API rejects remote hosts and
+cross-origin browser access while supporting the same-origin Vite proxy. Normal access logs
+contain method/path/status, never request bodies or Authorization values.
+
+First use seeds a profile from a valid `COURTROOM_LLM_*` configuration (Fake by default). The
+frontend imports complete legacy Ollama/compatible settings once and preserves a non-Fake
+environment default. It then removes migrated AI metadata from browser storage; only display/
+audio preferences and a migration marker remain. Incomplete legacy entries remain available
+as migration snapshots, with a warning, until corrected; a saved Ollama recovery uses the old
+server as the editor default. Saved profiles are authoritative afterward. For independent CI/
+headless configuration, use a separate `COURTROOM_CONFIG_DIR`; env-only secrets still work.
 
 ## Provider configuration and secrets (`app/llm/config.py`)
 
 `ProviderConfig` separates **type**, **base_url**, **model**, **credentials**
-(`api_key_env`: the *name* of an environment variable, never the key) and **settings**.
+(`api_key_env` plus an optional private resolved credential) and **settings**. It is a transient
+adapter configuration, not the persisted profile or a browser response model.
 
 Environment variables (server only):
 
 | Variable | Example |
 |---|---|
-| `COURTROOM_LLM_PROVIDER` | `fake` (default) / `ollama`; later `openai_compatible`, `openai`, `anthropic` |
-| `COURTROOM_LLM_BASE_URL` | `http://localhost:11434` |
-| `COURTROOM_LLM_MODEL` | `qwen2.5:7b` |
-| `COURTROOM_LLM_API_KEY_ENV` | `OPENAI_API_KEY` (the backend reads the key from that variable) |
+| `COURTROOM_LLM_PROVIDER` | `fake` (default), `ollama`, or `openai_compatible`; later `anthropic` |
+| `COURTROOM_LLM_BASE_URL` | `http://localhost:11434` or an OpenAI-compatible API prefix |
+| `COURTROOM_LLM_MODEL` | installed/hosted model ID |
+| `COURTROOM_LLM_API_KEY` | default backend-only secret used by `openai_compatible` |
+| `COURTROOM_LLM_API_KEY_ENV` | optional override naming another server environment variable, e.g. `GEMINI_API_KEY` |
 | `COURTROOM_LLM_TEMPERATURE` / `_MAX_TOKENS` / `_TIMEOUT_S` | generation settings |
 | `COURTROOM_ASSETS_DIR` | override the character-pack root |
+| `COURTROOM_CONFIG_DIR` | local profile metadata directory; default `backend/.local` |
 
 Secret handling:
-- Keys live only in the backend process environment, are resolved at call time into
-  `SecretStr`, and never appear in responses, logs or the frontend bundle.
+- Keys live in the OS vault or backend environment, are resolved at call time into
+  `SecretStr`, and never appear in responses, logs, profile files or the frontend bundle.
 - `.env` / `.env.*` are git-ignored (`.env.example` allowed for documentation).
-- **Future:** a per-user "bring your own key" settings screen should store keys in the OS
-  credential store (Windows Credential Manager / macOS Keychain via `keyring`) or, for
-  hosted deployments, a secrets manager. The frontend would send a key once to a
-  backend endpoint that stores it there. Keys are never kept in browser storage or
-  committed config.
+- The local Settings credential endpoint writes through CredentialStore. A hosted secrets
+  manager can later implement that same interface without changing adapters.
 
 Base URLs are trimmed and trailing slashes removed; only HTTP(S) URLs without embedded
 credentials, query strings or fragments are accepted. Ollama defaults to
-`http://localhost:11434`. It requires no API key.
+`http://localhost:11434`. It requires no API key. OpenAI-compatible requests resolve
+`COURTROOM_LLM_API_KEY` by default; `COURTROOM_LLM_API_KEY_ENV` can name a different backend
+environment variable without exposing its value.
 
 ## OllamaProvider
 
@@ -202,16 +274,54 @@ falls back to FakeProvider. Normal chat uses the existing character error-line p
 provider failure; discovery/test endpoints return bounded status information without Python
 tracebacks or upstream response bodies.
 
-The Settings screen persists `Fake` / `Ollama`, server URL and selected model in browser settings.
+The Settings screen edits backend provider profiles with server URL and selected model.
 The browser calls only the Courtroom Companion backend. Refresh distinguishes reachability and
 model-list loading; Test Connection distinguishes a missing selected model, structured generation
 failure and success. Its generated reply goes through the shared schema/repair path but bypasses
 CharacterService sessions, so it cannot pollute normal history.
 
+## OpenAICompatibleProvider
+
+`backend/app/llm/providers/openai_compatible.py` uses the standard non-streaming Chat
+Completions request at `POST {baseUrl}/chat/completions`:
+
+- `Authorization: Bearer <backend secret>`; `SecretStr` comes from profile credential
+  resolution on the server (OS vault first, configured environment reference second).
+- Shared system prompt and history, configured model, `stream: false`, temperature and
+  `max_tokens`.
+- The exact existing per-character schema as
+  `response_format: {type: "json_schema", json_schema: {name, strict: true, schema}}`.
+- Only `choices[0].message.content` becomes `RawCompletion.content`; usage and finish reason
+  remain optional provider metadata outside `CharacterReply`.
+
+The adapter never changes or retries the schema. An endpoint that rejects native structured
+output fails with `structured_output_unsupported`; a schema-shaped response that still fails
+shared validation becomes `invalid_reply`. A later compatibility fallback can be added at the
+generic provider layer without changing CharacterReply, CharacterService or the director.
+
+Typed, sanitized failures distinguish missing backend secret, 401/403 authentication, 429 rate
+limit, model/request rejection, structured-output rejection, timeout/unreachable server,
+non-success HTTP, malformed response and empty content. No upstream body, key or traceback is
+returned to the browser. Normal chat keeps the established character error-line behavior and
+never falls back to FakeProvider.
+
+Settings persists profile metadata on the backend. It displays Configured / Not configured,
+allows password-based set/replace and removal, and runs a history-free profile Test Connection
+through the shared prompt, schema and gateway repair. No key enters `localStorage`.
+
+Gemini is the requested target configuration, not adapter logic:
+
+```text
+base URL = https://generativelanguage.googleapis.com/v1beta/openai/
+model    = gemini-3.8-flash
+secret   = COURTROOM_LLM_API_KEY (or COURTROOM_LLM_API_KEY_ENV=GEMINI_API_KEY)
+```
+
 ## Streaming (design only)
 
-Not implemented at application level. Ollama advertises streaming capability, but its adapter
-always sends `stream: false` in this milestone. A future provider-generic streaming mode would:
+Not implemented at application level. Ollama and OpenAI-compatible endpoints advertise streaming
+capability, but both adapters always send `stream: false`. A future provider-generic streaming
+mode would:
 
 1. Ask the model for metadata first (beats' emotion/intensity/reaction), validate it, and
    start the reaction/pose.
@@ -286,5 +396,45 @@ $env:COURTROOM_LLM_TIMEOUT_S = '120'
 The app never downloads a model automatically. Cold starts use a 120-second backend generation
 timeout and a slightly longer frontend wait, while model discovery keeps a short timeout.
 
+### OpenAI-compatible / Gemini configuration (Windows PowerShell)
+
+Preferred local workflow: start the backend and frontend with the Setup commands above, open
+Settings → Add → OpenAI Compatible, enter a name/base URL/model, and Save Profile. Choose Set
+API Key, enter it in the password field, and Save API Key. Test Connection and select profiles
+from the dropdown. No environment edits or backend restart are needed for profile/key changes.
+
+For environment-only usage instead, start the backend with a backend-only secret:
+
+```powershell
+$env:COURTROOM_LLM_API_KEY = '<api-key>'
+cd backend
+.venv\Scripts\python -m uvicorn app.main:app --reload --port 8000
+```
+
+Then choose OpenAI Compatible in Settings. The supplied starter configuration is
+`https://generativelanguage.googleapis.com/v1beta/openai/` with `gemini-3.8-flash`, and both
+fields remain editable for other compatible services.
+
+To reuse a vendor-specific environment variable without copying its value:
+
+```powershell
+$env:COURTROOM_LLM_API_KEY_ENV = 'GEMINI_API_KEY'
+```
+
+To seed the compatible provider as the initial profile in a new config directory:
+
+```powershell
+$env:COURTROOM_LLM_PROVIDER = 'openai_compatible'
+$env:COURTROOM_LLM_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/openai/'
+$env:COURTROOM_LLM_MODEL = 'gemini-3.8-flash'
+$env:COURTROOM_LLM_API_KEY = '<api-key>'
+```
+
 Python 3.12+. On Python 3.15, install `uvicorn` without the `[standard]` extra (its
 PyYAML dependency has no 3.15 wheel yet).
+
+On Windows run the backend in the normal logged-in user session to access Credential Manager.
+An isolated sandbox may return OS error 1312 (no logon session); this is not a reason to use
+plaintext storage. Use env fallback for headless/sandbox operation. The milestone's real vault
+probe and browser lifecycle succeeded in the normal Windows session with synthetic credentials;
+normal tests require no OS vault, Ollama instance or cloud key.

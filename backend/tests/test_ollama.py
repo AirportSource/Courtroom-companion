@@ -204,7 +204,7 @@ def test_fake_provider_regression_still_uses_shared_gateway():
     assert result.error is None and result.reply.beats
 
 
-def test_backend_discovery_connection_test_and_chat_override(maya):
+def test_backend_discovery_connection_test_and_active_profile(maya):
     calls = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -245,13 +245,17 @@ def test_backend_discovery_connection_test_and_chat_override(maya):
     assert tested.json()["status"] == "generation_succeeded"
     assert app.state.character_service._sessions == {}  # provider test never touches conversation memory
 
+    from app.configuration.profiles import ProfileDraft
+    selected = app.state.provider_profiles.store.create(ProfileDraft(
+        name="Local", provider_type="ollama", base_url="http://custom:11434/", model="qwen:test",
+    ))
+    app.state.provider_profiles.store.activate(selected.id)
     chat = client.post(
         "/api/chat",
         json={
             "character": maya.id,
             "message": "hello",
             "sessionId": "ollama-test",
-            "provider": {"type": "ollama", "baseUrl": "http://custom:11434/", "model": "qwen:test"},
         },
     )
     assert chat.status_code == 200

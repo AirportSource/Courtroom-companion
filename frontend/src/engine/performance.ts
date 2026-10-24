@@ -3,6 +3,7 @@
 // dialogue engine's DialogueLine format. No rendering, no provider knowledge.
 import type { TextLayout } from './dialogueLayout.ts'
 import type { DialogueLine } from './dialogueTypes.ts'
+import { initializeProviderProfiles } from '../settings/providerProfiles.ts'
 
 export interface PerformanceSegment {
   text: string
@@ -288,15 +289,12 @@ export function timelineToLines(timeline: PerformanceTimeline, layout: TextLayou
 
 export class ChatError extends Error {}
 
-export type ChatProviderSelection =
-  | { type: 'fake' }
-  | { type: 'ollama'; baseUrl: string; model: string }
-
 /** POST /api/chat (proxied to the backend by Vite in development). */
 export async function sendChat(
-  request: { character: string; message: string; sessionId: string; provider?: ChatProviderSelection },
+  request: { character: string; message: string; sessionId: string },
   timeoutMs = 135_000,
 ): Promise<ChatResponse> {
+  await initializeProviderProfiles()
   const controller = new AbortController()
   const timer = window.setTimeout(() => controller.abort(), timeoutMs)
   try {
