@@ -10,7 +10,8 @@ import { DIALOGUE_TEXT, dialogueLineWidths, gridMeasure, type TextLayout } from 
 import { paginate, parseChatResponse, timelineToLines, type PerformanceTimeline } from '../src/engine/performance.ts'
 import { frameDurationMs } from '../src/engine/useClipPlayback.ts'
 import { isBlipChar } from '../src/engine/useBlips.ts'
-import { pauseAfter, typewriterStateOf } from '../src/engine/useTypewriter.ts'
+import { lengthSpeedFactor, pauseAfter, typewriterStateOf } from '../src/engine/useTypewriter.ts'
+import { stageScaleFor } from '../src/engine/useStageScale.ts'
 
 const assets = new URL('../public/assets/', import.meta.url)
 const readJson = (path: string) => JSON.parse(readFileSync(new URL(path, assets), 'utf8'))
@@ -139,6 +140,24 @@ test('punctuation pauses only at word ends', () => {
   assert.deepEqual(pauses('that?! No'), [0, 0, 0, 0, 0, 350, 0, 0, 0])
   assert.deepEqual(pauses('Aw, ok'), [0, 0, 180, 0, 0, 0])
   assert.equal(pauseAfter('W-Wait', 1), 0)
+})
+
+test('stage scale: whole factors in pixel mode, filling factors in fit mode', () => {
+  assert.equal(stageScaleFor(1000, 700, 256, 192, 'pixel'), 3)
+  assert.equal(stageScaleFor(1000, 700, 256, 192, 'fit'), 933 / 256) // 933px wide, whole pixels
+  assert.equal(stageScaleFor(1200, 2000, 256, 192, 'fit') * 256, 1200)
+  assert.equal(stageScaleFor(128, 96, 256, 192, 'pixel'), 0.5)
+  assert.equal(stageScaleFor(128, 96, 256, 192, 'fit'), 0.5)
+  assert.equal(stageScaleFor(10, 10, 256, 192, 'fit'), 0.25)
+})
+
+test('long replies type faster, short ones keep the chosen speed', () => {
+  assert.equal(lengthSpeedFactor(0), 1)
+  assert.equal(lengthSpeedFactor(120), 1)
+  assert.equal(lengthSpeedFactor(270), 1.5)
+  assert.equal(lengthSpeedFactor(480), 2)
+  assert.equal(lengthSpeedFactor(5000), 2)
+  assert.ok(lengthSpeedFactor(200) > 1 && lengthSpeedFactor(200) < lengthSpeedFactor(300))
 })
 
 test('blips: letters only, never whitespace or punctuation', () => {

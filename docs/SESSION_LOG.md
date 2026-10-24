@@ -897,3 +897,81 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - Scratch configs and launchers were deleted.
 - `backend/.local/outputs` holds two files from 20:15 that were not created by this session (likely the user's own server); they were left untouched.
 - No commit or push.
+
+## 2026-10-24 — Fresh clone setup, scaling, dropdown lists, typing pace (D-062)
+
+- Fresh clone on a new machine at `D:\Projets\Courtroom_companion\Courtroom-companion`. Backend `.venv` created with `requirements-dev.txt`; frontend `npm ci`. Backend on :8000, Vite on :5173.
+- **Music "could not be decoded":** `frontend/public/assets/music/original/` (25 OST MP3s) was never committed (D-044 open item), so Vite answered with `index.html`. The owner's Downloads only held the general SFX zip (110 WAVs, no music), so no track could be restored. Fetches that return HTML now report "Audio file … is missing".
+- Settings → Scale (`Pixel` / `Fit`, default Fit); native dropdown lists use the system font; typing speed scales with reply length (×1 to ×2).
+- **Checks:** frontend 243 passed, 1 failed (`every runtime src exists on disk`: the 25 MP3s are absent; it also fails without these changes). `tsc -b`, lint and build pass. In the browser pane: Pixel = ×3 and Fit = ×3.80 for the same viewport; the Scale row renders. The pane draws native popups at half size, so the dropdown list's new font was confirmed in computed styles, not by eye. Typing pace was not timed in the browser.
+- No commit or push.
+
+## 2026-10-24 — OST MP3s restored on the fresh clone
+
+- Source: owner-supplied `ace-attorney-original-soundtrack.zip` (88 MB, 38 entries). The 25 runtime tracks were matched by OST number to the `soundtrack.json` `src` names and copied into `frontend/public/assets/music/original/`; none missing, no ambiguous duplicates.
+- **Checks:** `validate:assets` 205 / 0 errors (loop regions fit the files). Frontend 244 passed, 0 failed. In the browser, three tracks decoded at 44.1 kHz (14: 161.1 s, 03: 108.9 s, 33: 124.1 s), and entering a conversation made the music dock show "Maya Fey - Turnabout Sisters 2001" playing. Not heard by ear.
+- The folder is untracked; no commit or push.
+
+## 2026-10-24 — Themed dropdowns and conversation buttons (D-063)
+
+- New `components/StageSelect.tsx`; 7 stage `<select>`s replaced (SettingsScreen, ProviderProfilesPanel). The dev panel's select (outside the stage) is unchanged. The D-062 `option` font rule was removed.
+- Talk / Court Record / Record restyled like the chat bar.
+- Looked for original button/list graphics: none in `docs/references` or `frontend/public/assets/ui`. spriters-resource.com returned a bot check in the browser pane and 403 to a direct fetch, so nothing was downloaded.
+- **Checks:** frontend 244 passed, 0 failed; lint 0 warnings; build OK; `validate:assets` 205 / 0 errors. In the browser pane: Settings pickers render DS-styled; Soundtrack track opened inside the stage; ↓ + Enter changed the track and refocused the trigger; Enter reopened; Escape closed the panel and stayed in Settings. The owner's track choice was changed by the test and restored. Conversation buttons render in the DS frame with a blue hover.
+- No commit or push.
+
+## 2026-10-24 — Dick Gumshoe and Mia Fey (D-064)
+
+- Extracted both owner-supplied sheets with the D-027 method (82 Gumshoe frames, 59 Mia frames), built packs under `frontend/public/assets/characters/{gumshoe,mia}/` (character.json, performance.json, personality.md, sprites, stand-in portrait), registered them in `characters/index.json` and added soundtrack profiles. Source sheets copied to `docs/references/`.
+- Character select: fixed list height for preview entries (`MenuList.rowHeight`).
+- **Checks:** `validate:assets` 348 / 0 errors. Backend loads all three characters without warnings; 406 passed. Frontend 244 passed; `tsc`, lint 0, build OK. The real `CharacterDirector` with sample replies: Gumshoe embarrassed → `head_scratch` + `worried` + comic SFX, determined → `fired_up`; Mia surprised → `surprised` + surprise SFX, gesture `hand_on_chin` honoured, serious SFX suppressed below 0.85. Browser: all three in the character select with previews; Mia's conversation scene renders her idle pose. Head-scratch frames composited on their canvas keep the body fixed.
+- **Not done:** no live model conversation (the active profile is a real external provider, so no message was sent); poses and blink orders were judged from contact sheets, not watched in motion for every pose.
+- No commit or push.
+
+## 2026-10-24 — "Present evidence" v1 (D-065)
+
+- Backend: `app/llm/attachments.py` (validation, prompt text, vendor formatting), `ChatMessage.attachments`, evidence through `CharacterService.chat` and `/api/chat`, `attachment_unsupported` mapping in the Anthropic / OpenAI-compatible / Ollama adapters, offline Fake reply. Tests: `tests/test_evidence.py` (20).
+- Frontend: `src/evidence/` (evidence.ts, EvidenceViews.tsx, evidence.css), drop zone + Present button + pending chip + in-stage presented box in `ConversationScreen`, `ChatBar` `allowEmpty`/`submitLabel`, readable 422 messages in `sendChat`, `attachment_unsupported` message. Tests: `tests/evidence.test.ts` (5).
+- **Checks:** backend 426 passed; frontend 249 passed; `tsc`, lint 0, build OK; `validate:assets` 348 / 0. End to end on an isolated pair (backend :8001 with `COURTROOM_CONFIG_DIR` in the scratchpad and the Fake provider, Vite :5174), so the owner's active profile was untouched: dropped text file → chip, "Present!", Mia's thinking pose, box slid in, reply named the file; PNG → thumbnail chip and the photo in the evidence frame during thinking (held with `#timeout`, then cancelled cleanly); `.zip` refused before sending; binary bytes named `.txt` refused by the server with its reason.
+- **Not done:** no real provider was called, so actual image/PDF reading by Claude, GPT or Gemini is unverified; the evidence sound was not heard.
+- No commit or push.
+
+## 2026-10-24 — Interface languages (D-066)
+
+- Frontend: i18n module, `language` setting (+ `<html lang>`), translated player-facing screens, localized names (`names` in character.json), localized talk topics, evidence/model-failure messages, `ChatError.code` for translated evidence rejections, conversation buttons kept on one line (Japanese line breaks).
+- Backend: `language` on `/api/chat`, prompt language section, `GenerationRequest.language`, translated Fake texts and keywords, translated error lines in the director, profile `names` / `error_texts`.
+- Character data: names for all languages, it/es acknowledgements, `errorLine.translations`; Gumshoe's French acknowledgement now says "Tektiv". Maya's manifest was edited textually (5 lines) to keep its hand formatting.
+- **Checks:** backend 436 passed (10 new in `test_i18n.py`); frontend 254 passed (5 new in `i18n.test.ts`); `tsc`, lint 0, build OK; `validate:assets` 348 / 0. Browser (main instance, no message sent): language picker lists the 5 languages in their own scripts; switching to 日本語 translated Settings, the music dock, the main menu, the character select (綾里真宵 / 糸鋸圭介) and the conversation controls; the pane was reset to English afterwards.
+- **Not done:** no real model call in another language; French/Italian/Spanish screens were not each inspected visually (covered by the completeness test).
+- No commit or push.
+
+## 2026-10-25 — Agents and events (D-067) and voiced shouts (D-068)
+
+- Wrote `docs/AGENTS_AND_EVENTS.md` (handoff plan + status) before implementing; roadmap Phase 7.
+- Implemented the event inbox, exclamation bubbles, Claude Code hook + installer, tool framework with reminders, authorized folders and web search, Settings → Tools, voiced shouts and the title intro.
+- Voices: the owner supplied `3DS - Phoenix Wright_ Ace Attorney Trilogy - Miscellaneous - Sound Effects.zip` (113 WAVs named by archive offset). Candidates were found by duration/pitch and transcribed offline (faster-whisper "small", scratchpad venv); the owner labelled speakers on a local audition page. 12 clips installed (see D-068).
+- **Checks:** backend 449 passed (test_events 5, test_tools 8 new); frontend 259 passed; `tsc`, lint 0, build OK; `validate:assets` 360 / 0. End to end: hook payload piped into the script → Mia's "Objection!" bubble + 「異議あり！テストが失敗しているわ…」 in the main instance; isolated Fake instance (:8001/:5174): Settings → Tools panel, `#folder`, `#read notes.txt`, `#remind` → phone + reminder line one minute later; title intro shows the bubble and preloads the shout voices.
+- **Not done:** hook not installed in `~/.claude/settings.json` (owner consent); no real web search key; voices not heard by me; Phoenix JA objection unidentified.
+- No commit or push.
+
+## 2026-10-25 — Title shout was silent; Claude Code hook installed
+
+- **Bug:** the title shout never played. The click is the first gesture: `audioEngine.unlock()` creates a suspended context and only then starts decoding, so the immediate `play()` returned false silently (reproduced: 0 plays, context running and 5 voices decoded two seconds later).
+- **Fix:** `audioEngine.playWhenReady(id, volume, maxWaitMs = 800)` / `playEventWhenReady` wait for the resume and decode, then play (dropped if later than 800 ms). Used by the title intro and event exclamations. Verified on a fresh load: first click → `voice_ja_edgeworth_objection` played once.
+- **Claude Code hook installed** in `~/.claude/settings.json` with the owner's consent: 5 async groups added next to the 12 existing hooks, all other settings unchanged (checked by computation before and after), backup `settings.json.bak-2026-10-24T23-03-23-641Z`. Live check: a test command in this session produced a `tests_passed` event from project `frontend`.
+
+## 2026-10-25 — Wider title draw (D-069)
+
+- The owner kept hearing the same shouts: with "Shouts: Japanese" only Mia and Edgeworth were installed. On request: title draws from all objection voices in both languages, no immediate repeat; installed Mia's 2nd English take, five "other" voices and Phoenix's Japanese objection (identified by the owner on a 4-clip page: 0xB29A0).
+- **Checks:** `validate:assets` 367 / 0; frontend 260 passed (title draw test); three fresh loads played three different voices (`voice_en_mia_take2_objection`, `voice_en_edgeworth_objection`, `voice_en_mia_objection`).
+
+## 2026-10-25 — Japanese bubbles mechanism (D-070)
+
+- Bubble choice follows the voice language (`events/exclamations.ts` `bubbleFor`, `isJapaneseVoice`); title and conversation wired; test added (frontend 261 passed). Waiting for the owner's 「異議あり！」 image file.
+
+- 2026-10-25: Japanese 「異議あり！」 bubble added from the owner's `igiari.jpeg` (converted to the DS bubble format). Browser: 4 title draws — Japanese voices showed `objection_ja.png`, English voices `objection.png`.
+
+## 2026-10-25 — Prepare the push to AirportSource (D-071)
+
+- Owner on a friend's PC wants everything on their own GitHub (AirportSource, public repo), directly on `main`, commits as `Adriano. P <122989996+AirportSource@users.noreply.github.com>` (repo-local config). The `gh` CLI on this PC is signed in to the friend's account (read-only on the repo), so the owner signs in for the push and the access is removed afterwards.
+- OST excluded (`.gitignore`), `scripts/install_ost.py` + download link (README, MUSIC.md); validator/test tolerate a clone without the OST (simulated by moving the folder out: validate 343 / 0 with a notice, music tests 38 passed). Root README written (setup, OST, AI profiles, Claude Code hook, checks, credits).

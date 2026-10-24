@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { audioEngine } from '../engine/audioEngine.ts'
 import { createTypingBlipper, type TypingBlipConfig } from '../engine/typingBlips.ts'
+import { useT } from '../i18n/useT.ts'
 
 interface ChatBarProps {
   placeholder: string
@@ -11,12 +12,18 @@ interface ChatBarProps {
   onSubmit: (message: string) => void
   /** Optional blip while the player types (volume/mute come from the blip settings). */
   typingBlip?: TypingBlipConfig
+  /** Allow sending an empty message (e.g. evidence presented without a question). */
+  allowEmpty?: boolean
+  /** Submit button text (default "Send"). */
+  submitLabel?: string
 }
 
 const MAX_MESSAGE = 2000
 
 /** Minimal message input under the scene. Focuses itself whenever it becomes available. */
-export function ChatBar({ placeholder, disabled, waiting, waitingLabel, error, onSubmit, typingBlip }: ChatBarProps) {
+export function ChatBar({ placeholder, disabled, waiting, waitingLabel, error, onSubmit, typingBlip, allowEmpty = false,
+  submitLabel }: ChatBarProps) {
+  const t = useT()
   const [text, setText] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const blipper = useMemo(() => createTypingBlipper((volume) => audioEngine.playEvent('user_typing', volume)), [])
@@ -28,7 +35,7 @@ export function ChatBar({ placeholder, disabled, waiting, waitingLabel, error, o
   const submit = (event: FormEvent) => {
     event.preventDefault()
     const message = text.trim()
-    if (!message || disabled) return
+    if ((!message && !allowEmpty) || disabled) return
     setText('')
     onSubmit(message)
   }
@@ -52,12 +59,12 @@ export function ChatBar({ placeholder, disabled, waiting, waitingLabel, error, o
         }}
         aria-label={placeholder}
       />
-      <button className="chat-send" type="submit" disabled={disabled || !text.trim()}>
-        Send
+      <button className="chat-send" type="submit" disabled={disabled || (!allowEmpty && !text.trim())}>
+        {submitLabel ?? t('chat.send')}
       </button>
       {error && (
         <p className="chat-error" role="alert">
-          Couldn&apos;t get a reply: {error}
+          {t('chat.replyError', { error })}
         </p>
       )}
     </form>

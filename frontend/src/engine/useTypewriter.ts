@@ -19,6 +19,21 @@ export function pauseAfter(text: string, index: number): number {
   return 0
 }
 
+/** Replies up to this many characters (about two pages) type at the chosen speed. */
+const LENGTH_SPEEDUP_FROM = 120
+/** Upper bound of the length speed-up, so long replies stay readable. */
+const LENGTH_SPEEDUP_MAX = 2
+
+/**
+ * Reveal-speed multiplier for a whole reply of `chars` characters: 1 for short replies,
+ * growing with the square root of the length beyond that, capped at LENGTH_SPEEDUP_MAX.
+ * Long answers therefore take less time per character without short ones feeling rushed.
+ */
+export function lengthSpeedFactor(chars: number): number {
+  if (chars <= LENGTH_SPEEDUP_FROM) return 1
+  return Math.min(LENGTH_SPEEDUP_MAX, Math.sqrt(chars / LENGTH_SPEEDUP_FROM))
+}
+
 /** State of a line given how many characters are revealed and whether reveal may run. */
 export function typewriterStateOf(count: number, length: number, active: boolean): TypewriterState {
   if (count >= length) return 'complete'

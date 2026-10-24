@@ -1,0 +1,859 @@
+{
+  "schemaVersion": 1,
+  "id": "dick_gumshoe",
+  "displayName": "Dick Gumshoe",
+  "names": {
+    "en": "Dick Gumshoe",
+    "fr": "Dick Tektiv",
+    "ja": "糸鋸圭介",
+    "it": "Dick Gumshoe",
+    "es": "Dick Gumshoe"
+  },
+  "anchor": "bottom-center",
+  "render": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  "voice": {
+    "blip": "blip_male"
+  },
+  "courtRecordPortrait": {
+    "src": "portraits/court_record.png",
+    "width": 64,
+    "height": 64
+  },
+  "waiting": {
+    "emotion": "thinking",
+    "animation": "thinking_aside"
+  },
+  "taskAcknowledgements": {
+    "artifact": {
+      "emotion": "excited",
+      "lines": {
+        "en": [
+          "Leave it to me, pal!",
+          "Roger that! I'm on the case!",
+          "Gimme a sec, I'll whip something up!",
+          "Detective Gumshoe, on it!"
+        ],
+        "fr": [
+          "Compte sur moi, mon vieux !",
+          "Bien reçu ! Je m'occupe de l'affaire !",
+          "Une seconde, je te prépare ça !",
+          "L'inspecteur Tektiv s'en charge !"
+        ],
+        "ja": [
+          "任せるッス！",
+          "了解ッス！すぐ取りかかるッス！",
+          "ちょっと待つッス、作ってみるッス！",
+          "イトノコ刑事、出動ッス！"
+        ],
+        "it": [
+          "Lascia fare a me, amico!",
+          "Ricevuto! Mi metto sul caso!",
+          "Dammi un attimo, ti preparo qualcosa!",
+          "Il detective Gumshoe è in azione!"
+        ],
+        "es": [
+          "¡Déjamelo a mí, colega!",
+          "¡Recibido! ¡Me pongo con el caso!",
+          "¡Dame un segundo, te preparo algo!",
+          "¡El detective Gumshoe, en acción!"
+        ]
+      }
+    }
+  },
+  "defaultEmotion": "neutral",
+  "fallbackEmotion": "neutral",
+  "animations": {
+    "neutral_front": {
+      "canvas": {
+        "width": 161,
+        "height": 180
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/neutral_front/idle/gumshoe_frame_001.png",
+          "sprites/neutral_front/idle/gumshoe_frame_002.png",
+          "sprites/neutral_front/idle/gumshoe_frame_003.png",
+          "sprites/neutral_front/idle/gumshoe_frame_004.png"
+        ],
+        "offsets": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 8,
+        "loop": true,
+        "frames": [
+          "sprites/neutral_front/talking/gumshoe_frame_007.png",
+          "sprites/neutral_front/talking/gumshoe_frame_008.png",
+          "sprites/neutral_front/talking/gumshoe_frame_009.png",
+          "sprites/neutral_front/talking/gumshoe_frame_010.png",
+          "sprites/neutral_front/talking/gumshoe_frame_011.png",
+          "sprites/neutral_front/talking/gumshoe_frame_012.png",
+          "sprites/neutral_front/talking/gumshoe_frame_013.png",
+          "sprites/neutral_front/talking/gumshoe_frame_014.png"
+        ],
+        "offsets": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "worried": {
+      "canvas": {
+        "width": 158,
+        "height": 180
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/worried/idle/gumshoe_frame_015.png",
+          "sprites/worried/idle/gumshoe_frame_016.png",
+          "sprites/worried/idle/gumshoe_frame_017.png",
+          "sprites/worried/idle/gumshoe_frame_018.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 7,
+        "loop": true,
+        "frames": [
+          "sprites/worried/talking/gumshoe_frame_019.png",
+          "sprites/worried/talking/gumshoe_frame_020.png",
+          "sprites/worried/talking/gumshoe_frame_021.png",
+          "sprites/worried/talking/gumshoe_frame_022.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "happy_grin": {
+      "canvas": {
+        "width": 158,
+        "height": 180
+      },
+      "idle": {
+        "fps": 7,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/happy_grin/idle/gumshoe_frame_023.png",
+          "sprites/happy_grin/idle/gumshoe_frame_024.png",
+          "sprites/happy_grin/idle/gumshoe_frame_025.png",
+          "sprites/happy_grin/idle/gumshoe_frame_026.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 8,
+        "loop": true,
+        "frames": [
+          "sprites/happy_grin/talking/gumshoe_frame_027.png",
+          "sprites/happy_grin/talking/gumshoe_frame_028.png",
+          "sprites/happy_grin/talking/gumshoe_frame_029.png",
+          "sprites/happy_grin/talking/gumshoe_frame_030.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "thinking_aside": {
+      "canvas": {
+        "width": 158,
+        "height": 180
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/thinking_aside/idle/gumshoe_frame_031.png",
+          "sprites/thinking_aside/idle/gumshoe_frame_032.png",
+          "sprites/thinking_aside/idle/gumshoe_frame_033.png",
+          "sprites/thinking_aside/idle/gumshoe_frame_034.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/thinking_aside/talking/gumshoe_frame_038.png",
+          "sprites/thinking_aside/talking/gumshoe_frame_039.png",
+          "sprites/thinking_aside/talking/gumshoe_frame_040.png",
+          "sprites/thinking_aside/talking/gumshoe_frame_041.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "confused": {
+      "canvas": {
+        "width": 158,
+        "height": 180
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/confused/idle/gumshoe_frame_036.png",
+          "sprites/confused/idle/gumshoe_frame_035.png",
+          "sprites/confused/idle/gumshoe_frame_037.png",
+          "sprites/confused/idle/gumshoe_frame_035.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/confused/talking/gumshoe_frame_042.png",
+          "sprites/confused/talking/gumshoe_frame_043.png",
+          "sprites/confused/talking/gumshoe_frame_044.png",
+          "sprites/confused/talking/gumshoe_frame_045.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "fired_up": {
+      "canvas": {
+        "width": 155,
+        "height": 172
+      },
+      "idle": {
+        "fps": 8,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/fired_up/idle/gumshoe_frame_046.png",
+          "sprites/fired_up/idle/gumshoe_frame_047.png",
+          "sprites/fired_up/idle/gumshoe_frame_048.png",
+          "sprites/fired_up/idle/gumshoe_frame_049.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 9,
+        "loop": true,
+        "frames": [
+          "sprites/fired_up/talking/gumshoe_frame_050.png",
+          "sprites/fired_up/talking/gumshoe_frame_051.png",
+          "sprites/fired_up/talking/gumshoe_frame_052.png",
+          "sprites/fired_up/talking/gumshoe_frame_053.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "sad_down": {
+      "canvas": {
+        "width": 155,
+        "height": 169
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/sad_down/idle/gumshoe_frame_059.png",
+          "sprites/sad_down/idle/gumshoe_frame_060.png",
+          "sprites/sad_down/idle/gumshoe_frame_061.png",
+          "sprites/sad_down/idle/gumshoe_frame_062.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/sad_down/talking/gumshoe_frame_063.png",
+          "sprites/sad_down/talking/gumshoe_frame_064.png",
+          "sprites/sad_down/talking/gumshoe_frame_065.png",
+          "sprites/sad_down/talking/gumshoe_frame_066.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "side_profile": {
+      "canvas": {
+        "width": 158,
+        "height": 178
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/side_profile/idle/gumshoe_frame_067.png",
+          "sprites/side_profile/idle/gumshoe_frame_068.png",
+          "sprites/side_profile/idle/gumshoe_frame_069.png",
+          "sprites/side_profile/idle/gumshoe_frame_070.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/side_profile/talking/gumshoe_frame_071.png",
+          "sprites/side_profile/talking/gumshoe_frame_072.png",
+          "sprites/side_profile/talking/gumshoe_frame_073.png",
+          "sprites/side_profile/talking/gumshoe_frame_074.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "laughing": {
+      "canvas": {
+        "width": 158,
+        "height": 180
+      },
+      "idle": {
+        "fps": 8,
+        "loop": true,
+        "frames": [
+          "sprites/laughing/idle/gumshoe_frame_075.png",
+          "sprites/laughing/idle/gumshoe_frame_076.png",
+          "sprites/laughing/idle/gumshoe_frame_075.png",
+          "sprites/laughing/idle/gumshoe_frame_076.png",
+          "sprites/laughing/idle/gumshoe_frame_075.png",
+          "sprites/laughing/idle/gumshoe_frame_076.png",
+          "sprites/laughing/idle/gumshoe_frame_077.png",
+          "sprites/laughing/idle/gumshoe_frame_078.png",
+          "sprites/laughing/idle/gumshoe_frame_077.png",
+          "sprites/laughing/idle/gumshoe_frame_078.png",
+          "sprites/laughing/idle/gumshoe_frame_077.png",
+          "sprites/laughing/idle/gumshoe_frame_078.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 9,
+        "loop": true,
+        "frames": [
+          "sprites/laughing/talking/gumshoe_frame_079.png",
+          "sprites/laughing/talking/gumshoe_frame_080.png",
+          "sprites/laughing/talking/gumshoe_frame_081.png",
+          "sprites/laughing/talking/gumshoe_frame_082.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "reactions": {
+    "head_scratch": {
+      "canvas": {
+        "width": 271,
+        "height": 172
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/head_scratch/reaction/gumshoe_frame_054.png",
+        "sprites/head_scratch/reaction/gumshoe_frame_055.png",
+        "sprites/head_scratch/reaction/gumshoe_frame_056.png",
+        "sprites/head_scratch/reaction/gumshoe_frame_057.png",
+        "sprites/head_scratch/reaction/gumshoe_frame_056.png",
+        "sprites/head_scratch/reaction/gumshoe_frame_057.png",
+        "sprites/head_scratch/reaction/gumshoe_frame_056.png",
+        "sprites/head_scratch/reaction/gumshoe_frame_057.png",
+        "sprites/head_scratch/reaction/gumshoe_frame_058.png"
+      ],
+      "offsets": [
+        [
+          58,
+          2
+        ],
+        [
+          9,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          9,
+          2
+        ]
+      ]
+    }
+  },
+  "emotions": {
+    "neutral": {
+      "animation": "neutral_front"
+    },
+    "happy": {
+      "animation": "happy_grin"
+    },
+    "excited": {
+      "animation": "fired_up"
+    },
+    "thinking": {
+      "animation": "thinking_aside"
+    },
+    "surprised": {
+      "animation": "confused"
+    },
+    "sad": {
+      "animation": "sad_down"
+    },
+    "anxious": {
+      "animation": "worried"
+    },
+    "playful": {
+      "animation": "happy_grin"
+    },
+    "grateful": {
+      "animation": "happy_grin"
+    },
+    "laughing": {
+      "animation": "laughing"
+    },
+    "explaining": {
+      "animation": "neutral_front"
+    },
+    "polite": {
+      "animation": "neutral_front"
+    },
+    "relaxed": {
+      "animation": "side_profile"
+    },
+    "embarrassed": {
+      "reaction": "head_scratch",
+      "animation": "worried"
+    },
+    "determined": {
+      "animation": "fired_up"
+    },
+    "suspicious": {
+      "animation": "side_profile"
+    }
+  },
+  "unassignedFrames": [
+    "sprites/_unassigned/gumshoe_frame_005.png",
+    "sprites/_unassigned/gumshoe_frame_006.png"
+  ]
+}

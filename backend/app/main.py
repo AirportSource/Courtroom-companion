@@ -4,7 +4,9 @@ Run from backend/:  .venv/Scripts/python -m uvicorn app.main:app --reload --port
 The Vite dev server proxies /api to this port, so the browser never needs CORS or secrets.
 """
 
+import asyncio
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -15,11 +17,15 @@ from .api.routes import router
 from .api.profile_routes import router as profile_router
 from .api.music_routes import router as music_router
 from .api.artifact_routes import router as artifact_router
+from .api.event_routes import router as event_router
+from .api.tool_routes import router as tool_router
 from .conversation_record import ConversationRecordStore, install_conversation_record
 from .artifacts.store import ArtifactError, ArtifactNotFound, ArtifactStore, outputs_dir
 from .artifacts.turns import TurnRegistry
 from .characters.repository import CharacterRepository
 from .characters.service import CharacterService
+from .events.inbox import EventInbox, EventRejected
+from .tools.registry import ToolContext
 from .llm.config import ProviderConfig, load_provider_config
 from .llm.gateway import LLMGateway, ProviderFactory
 from .configuration.credentials import CredentialStore, CredentialStoreError, KeyringCredentialStore
@@ -27,6 +33,30 @@ from .configuration.profiles import ProfileManager, ProfileNotFoundError, Profil
 from .music.library import MusicLibrary, music_dir
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+logger = logging.getLogger(__name__)
+REMINDER_CHECK_S = 5
+
+
+async def deliver_due_reminders(app: FastAPI) -> None:
+    """Move due reminders into the event inbox (D-067); the character on screen announces them."""
+    while True:
+        await asyncio.sleep(REMINDER_CHECK_S)
+        try:
+            for reminder in app.state.tools.reminders.pop_due():
+                app.state.event_inbox.push("reminder_due", "reminders", text=reminder["text"])
+        except EventRejected:
+            pass
+        except Exception:
+            logger.exception("Reminder delivery failed")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(deliver_due_reminders(app))
+    try:
+        yield
+    finally:
+        task.cancel()
 
 
 def create_app(
@@ -38,8 +68,9 @@ def create_app(
     music_library: MusicLibrary | None = None,
     conversation_record: ConversationRecordStore | None = None,
     artifact_store: ArtifactStore | None = None,
+    tool_context: ToolContext | None = None,
 ) -> FastAPI:
-    app = FastAPI(title="Courtroom Companion API", version="0.1.0")
+    app = FastAPI(title="Courtroom Companion API", version="0.1.0", lifespan=lifespan)
     gateway = LLMGateway(config or load_provider_config(), registry=provider_registry)
     app.state.character_service = CharacterService(repository or CharacterRepository(), gateway)
     app.state.provider_profiles = ProfileManager(
@@ -50,6 +81,10 @@ def create_app(
     app.state.music_library = music_library or MusicLibrary(music_dir())
     app.state.artifact_store = artifact_store or ArtifactStore(outputs_dir())
     app.state.artifact_turns = TurnRegistry()
+    # Things a character may comment on without a user message (D-067).
+    app.state.event_inbox = EventInbox()
+    # Character tools: reminders, authorized folders, web search (D-067).
+    app.state.tools = tool_context or ToolContext.default(app.state.provider_profiles.credentials)
 
     @app.exception_handler(ArtifactError)
     async def artifact_failure(request: Request, error: ArtifactError):
@@ -86,6 +121,8 @@ def create_app(
     app.include_router(profile_router)
     app.include_router(music_router)
     app.include_router(artifact_router)
+    app.include_router(event_router)
+    app.include_router(tool_router)
     # User-facing archive of completed turns (D-058); never part of provider context.
     install_conversation_record(app, conversation_record)
     return app

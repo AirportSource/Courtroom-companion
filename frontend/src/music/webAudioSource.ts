@@ -193,6 +193,10 @@ export function createWebAudioSource(kind: 'original' | 'imported', resolver: Tr
       }
       if (response.status === 404) throw new SourceFailure('missing_file', `Audio file for "${track.title}" is missing`)
       if (!response.ok) throw new SourceFailure('network', `Fetching "${track.title}" failed (HTTP ${response.status})`)
+      // A dev server answers an absent file with its HTML page (SPA fallback), not a 404.
+      if (response.headers?.get('content-type')?.startsWith('text/html')) {
+        throw new SourceFailure('missing_file', `Audio file for "${track.title}" is missing`)
+      }
       let bytes: ArrayBuffer
       try {
         bytes = await response.arrayBuffer()

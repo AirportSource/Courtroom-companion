@@ -7,6 +7,7 @@ from typing import Any
 import httpx
 from pydantic import SecretStr
 
+from ..attachments import ATTACHMENT_HINTS, AttachmentUnsupported, anthropic_message, has_attachments
 from ..errors import CONTEXT_HINTS, QUOTA_HINTS
 from ..base import GenerationRequest, LLMProvider, ProviderCapabilities, ProviderError, RawCompletion, StructuredOutputMode
 
@@ -85,7 +86,7 @@ class AnthropicProvider(LLMProvider):
         super().__init__(model)
         self._api_key, self._transport = api_key, transport
 
-    def _raise_for_status(self, response: httpx.Response) -> None:
+    def _raise_for_status(self, response: httpx.Response, attachments: bool = False) -> None:
         if response.is_success:
             return
         status = response.status_code
@@ -106,9 +107,13 @@ class AnthropicProvider(LLMProvider):
             raise AnthropicError("provider_limit", "Anthropic account usage or billing limit reached")
         if status in (400, 422) and any(marker in hints for marker in ("output_config", "json_schema", "schema", "structured output")):
             raise AnthropicError("structured_output_unsupported", "Anthropic rejected native structured output")
+        if attachments and status in (400, 422) and any(marker in hints for marker in ATTACHMENT_HINTS):
+            raise AttachmentUnsupported("Anthropic could not read the presented file with this model")
         if status == 404 or (status in (400, 422) and "model" in hints):
             raise AnthropicError("model_error", "Anthropic model is unavailable or was rejected")
         if status in (400, 422):
+            if attachments:
+                raise AttachmentUnsupported("Anthropic rejected the presented file")
             raise AnthropicError("invalid_provider_configuration", "Anthropic request configuration was rejected")
         raise AnthropicError("provider_http_error", f"Anthropic returned HTTP {status}")
 
@@ -120,7 +125,7 @@ class AnthropicProvider(LLMProvider):
         payload = {
             "model": self.model,
             "system": request.system_prompt,
-            "messages": [message.model_dump() for message in request.messages],
+            "messages": [anthropic_message(message) for message in request.messages],
             "max_tokens": request.settings.max_tokens,
             "stream": False,
             "output_config": {"format": {"type": "json_schema", "schema": native_output_schema(request.response_schema)}},
@@ -140,7 +145,7 @@ class AnthropicProvider(LLMProvider):
             raise AnthropicError("anthropic_unreachable", "Anthropic is unreachable") from None
         except (UnicodeError, ValueError):
             raise AnthropicError("invalid_provider_configuration", "Anthropic request configuration is invalid") from None
-        self._raise_for_status(response)
+        self._raise_for_status(response, has_attachments(request.messages))
         try:
             body = response.json()
         except ValueError:

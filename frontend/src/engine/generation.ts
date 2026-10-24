@@ -1,4 +1,6 @@
 // Safe generation diagnostics, separate from character intent and presentation.
+import { translator, type Language } from '../i18n/i18n.ts'
+
 export interface GenerationDiagnostics {
   workload: 'dialogue' | 'text_artifact'
   maxOutputTokens: number
@@ -24,24 +26,27 @@ export function parseGeneration(raw: unknown): GenerationDiagnostics | null {
       ? { failureClass: d.failureClass as FailureClass } : {}) }
 }
 
-export function generationFailureMessage(error: string | null | undefined, diagnostics?: GenerationDiagnostics): string | null {
+export function generationFailureMessage(error: string | null | undefined, diagnostics?: GenerationDiagnostics,
+  language: Language = 'en'): string | null {
+  const t = translator(language)
   const artifact = diagnostics?.workload === 'text_artifact'
-  const saved = artifact ? ' No partial file was saved.' : ''
+  const saved = artifact ? t('generation.noPartialFile') : ''
   switch (error) {
     case 'output_token_limit': {
-      const budget = diagnostics ? ` (${diagnostics.maxOutputTokens} tokens)` : ''
-      const what = artifact ? 'file' : 'reply'
-      return `The model reached its output limit${budget} before finishing the ${what}. Incomplete output was discarded.${saved}`
+      const budget = diagnostics ? t('generation.budget', { tokens: diagnostics.maxOutputTokens }) : ''
+      return t(artifact ? 'generation.outputLimitFile' : 'generation.outputLimit', { budget })
     }
     case 'context_window_exceeded':
-      return `The conversation is too large for this model's context window. Shorten the conversation or input; increasing the output budget alone will not fix this.${saved}`
+      return t('generation.contextWindow', { saved })
     case 'artifact_too_large':
-      return 'The generated file is larger than the 64 KiB limit. Ask for a smaller file or split it. No file was saved.'
+      return t('generation.artifactTooLarge')
     case 'provider_limit':
     case 'rate_limited':
-      return `The provider's rate, quota or request-size limit was reached. Wait a moment or check the account, then try again.${saved}`
+      return t('generation.providerLimit', { saved })
     case 'provider_refused':
-      return `The provider declined the generation request.${saved}`
+      return t('generation.refused', { saved })
+    case 'attachment_unsupported':
+      return t('generation.attachmentUnsupported')
     default:
       return null
   }

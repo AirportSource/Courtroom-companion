@@ -74,8 +74,285 @@
     "startle": "shocked",
     "gasp": "shocked"
   },
+  "eventLines": {
+    "task_finished": {
+      "en": [
+        {
+          "text": "Ta-da! That task is all done!",
+          "emotion": "happy",
+          "intensity": 0.6
+        }
+      ],
+      "fr": [
+        {
+          "text": "Et voilà ! Cette tâche est terminée !",
+          "emotion": "happy",
+          "intensity": 0.6
+        }
+      ],
+      "ja": [
+        {
+          "text": "じゃーん！作業、終わったよ！",
+          "emotion": "happy",
+          "intensity": 0.6
+        }
+      ],
+      "it": [
+        {
+          "text": "Ecco fatto! Il lavoro è finito!",
+          "emotion": "happy",
+          "intensity": 0.6
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Tachán! ¡Esa tarea ya está lista!",
+          "emotion": "happy",
+          "intensity": 0.6
+        }
+      ]
+    },
+    "needs_attention": {
+      "en": [
+        {
+          "text": "Hey! Claude Code is waiting for you!",
+          "emotion": "anxious",
+          "intensity": 0.7
+        }
+      ],
+      "fr": [
+        {
+          "text": "Hé ! Claude Code t'attend !",
+          "emotion": "anxious",
+          "intensity": 0.7
+        }
+      ],
+      "ja": [
+        {
+          "text": "ねえ！Claude Codeが待ってるよ！",
+          "emotion": "anxious",
+          "intensity": 0.7
+        }
+      ],
+      "it": [
+        {
+          "text": "Ehi! Claude Code ti sta aspettando!",
+          "emotion": "anxious",
+          "intensity": 0.7
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Oye! ¡Claude Code te está esperando!",
+          "emotion": "anxious",
+          "intensity": 0.7
+        }
+      ]
+    },
+    "tests_passed": {
+      "en": [
+        {
+          "text": "The tests passed! Woohoo!",
+          "emotion": "excited",
+          "intensity": 0.8
+        }
+      ],
+      "fr": [
+        {
+          "text": "Les tests sont passés ! Youpi !",
+          "emotion": "excited",
+          "intensity": 0.8
+        }
+      ],
+      "ja": [
+        {
+          "text": "テスト、全部通ったよ！やったね！",
+          "emotion": "excited",
+          "intensity": 0.8
+        }
+      ],
+      "it": [
+        {
+          "text": "I test sono passati! Evviva!",
+          "emotion": "excited",
+          "intensity": 0.8
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Los tests han pasado! ¡Bien!",
+          "emotion": "excited",
+          "intensity": 0.8
+        }
+      ]
+    },
+    "tests_failed": {
+      "en": [
+        {
+          "text": "Whoa! Some tests failed...",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "reaction": "shocked"
+        }
+      ],
+      "fr": [
+        {
+          "text": "Oh non ! Des tests ont échoué...",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "reaction": "shocked"
+        }
+      ],
+      "ja": [
+        {
+          "text": "ええっ！テストが失敗しちゃった…",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "reaction": "shocked"
+        }
+      ],
+      "it": [
+        {
+          "text": "Oh no! Alcuni test sono falliti...",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "reaction": "shocked"
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Oh, no! Algunos tests han fallado...",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "reaction": "shocked"
+        }
+      ]
+    },
+    "build_failed": {
+      "en": [
+        {
+          "text": "Hold it! The build failed!",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ],
+      "fr": [
+        {
+          "text": "Un instant ! La compilation a échoué !",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ],
+      "ja": [
+        {
+          "text": "待った！ビルドが失敗したよ！",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ],
+      "it": [
+        {
+          "text": "Un momento! La compilazione è fallita!",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Un momento! ¡La compilación ha fallado!",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ]
+    },
+    "session_started": {
+      "en": [
+        {
+          "text": "Oh, a new Claude Code session! Let's go!",
+          "emotion": "happy",
+          "intensity": 0.5
+        }
+      ],
+      "fr": [
+        {
+          "text": "Oh, une nouvelle session Claude Code ! C'est parti !",
+          "emotion": "happy",
+          "intensity": 0.5
+        }
+      ],
+      "ja": [
+        {
+          "text": "Claude Codeの新しいセッションだ！がんばろう！",
+          "emotion": "happy",
+          "intensity": 0.5
+        }
+      ],
+      "it": [
+        {
+          "text": "Oh, una nuova sessione di Claude Code! Si parte!",
+          "emotion": "happy",
+          "intensity": 0.5
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Oh, una nueva sesión de Claude Code! ¡Vamos!",
+          "emotion": "happy",
+          "intensity": 0.5
+        }
+      ]
+    },
+    "reminder_due": {
+      "en": [
+        {
+          "text": "Ring ring! Don't forget: {text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ],
+      "fr": [
+        {
+          "text": "Dring dring ! N'oublie pas : {text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ],
+      "ja": [
+        {
+          "text": "リンリン！忘れないで：{text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ],
+      "it": [
+        {
+          "text": "Driiin! Non dimenticare: {text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Ring, ring! No lo olvides: {text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ]
+    }
+  },
   "errorLine": {
     "text": "Huh? Sorry, I totally spaced out for a second... could you say that again?",
-    "emotion": "anxious"
+    "emotion": "anxious",
+    "translations": {
+      "fr": "Hein ? Désolée, j'étais complètement dans la lune... tu peux répéter ?",
+      "ja": "えっ？ごめん、ちょっとぼーっとしてた…もう一回言って？",
+      "it": "Eh? Scusa, mi sono distratta un attimo... puoi ripetere?",
+      "es": "¿Eh? Perdona, me distraje un momento... ¿puedes repetirlo?"
+    }
   }
 }

@@ -374,3 +374,26 @@ Source rights and limits are recorded in `docs/ASSET_SOURCES.md`; source archive
 - `audio/effects/wellington_ringtone.mp3` and `godot_ringtone.mp3`: sounds `fx_phone_ring_wellington` / `fx_phone_ring_godot`; `audio.json` `ringtones` (default `phoenix`).
 - The validator now also checks record portraits (square, matching size) and ringtone presets.
 - `npm run validate:assets`: **205 referenced files, 0 errors**.
+
+## Update 2026-10-24 (OST restored on a fresh clone)
+
+- `music/original/`: the 25 runtime MP3s were copied from the owner-supplied `ace-attorney-original-soundtrack.zip` (38 entries, 34 distinct tracks; the same set as `docs/references/music/pwaa-original-soundtrack.zip`). Each file was matched by its OST number to the `src` names in `soundtrack.json`; duplicate name variants in the zip are byte-identical. Total 59.8 MB (57 MiB). Excluded tracks (01, 12, 21, 25–28, 31, 34) were not copied.
+- The folder is still untracked in Git (D-044 open). `validate:assets`: 205 referenced files, 0 errors.
+
+## Update 2026-10-24 (Dick Gumshoe and Mia Fey, D-064)
+
+- `characters/index.json`: `dick_gumshoe` → `gumshoe/character.json`, `mia_fey` → `mia/character.json`.
+- `characters/gumshoe/`: 82 sprite frames (9 animations + reaction `head_scratch`; frames 005–006 in `sprites/_unassigned/`), `performance.json`, `personality.md`, stand-in `portraits/court_record.png`.
+- `characters/mia/`: 59 sprite frames (8 animations, no reactions), `performance.json`, `personality.md`, stand-in portrait.
+- `music/soundtrack.json`: profiles `dick_gumshoe` and `mia_fey`.
+- `docs/references/`: `dick gumshoe.png`, `mia fey.png` (source sheets). `validate:assets`: 348 referenced files, 0 errors.
+
+## Update 2026-10-25 (voiced shouts, events, D-067/D-068)
+
+- `audio/voices/en/`: phoenix_{objection,hold_it,take_that}, mia_{objection,hold_it,take_that}, edgeworth_{objection,hold_it}.
+- `audio/voices/ja/`: mia_{objection,hold_it}, phoenix_hold_it, edgeworth_objection.
+- `audio.json`: 12 `voice_*` sounds, `voices` map, events `exclamation_objection|hold_it|take_that`.
+- `performance.json` (all three characters): `eventLines` for 7 event types × 5 languages; Mia `character.json` `voice.shout: "mia"`.
+- `validate:assets`: 360 referenced files, 0 errors.
+
+- 2026-10-25: `ui/exclamations/objection_ja.png` registered as `exclamation_objection_ja` (D-070); `validate:assets` 368 / 0.

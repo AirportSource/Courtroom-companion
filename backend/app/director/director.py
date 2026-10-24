@@ -105,6 +105,7 @@ class CharacterDirector:
         profile: CharacterProfile,
         state: DirectorState | None = None,
         now_ms: float = 0.0,
+        language: str = "en",
     ) -> tuple[PerformanceTimeline, DirectorState]:
         state = state or DirectorState()
         notes: list[str] = []
@@ -114,7 +115,7 @@ class CharacterDirector:
         if reply is None or not reply.beats:
             emotion = profile.error_emotion or profile.fallback_emotion
             notes.append("no usable reply: using the character's error line")
-            reply = CharacterReply(beats=[Beat(text=profile.error_text, emotion=emotion, intensity=0.4)])
+            reply = CharacterReply(beats=[Beat(text=profile.error_text_for(language), emotion=emotion, intensity=0.4)])
 
         beats = list(reply.beats)
         if len(beats) > cfg.max_beats_per_reply:

@@ -9,6 +9,7 @@ from typing import Any
 import httpx
 from pydantic import SecretStr
 
+from ..attachments import ATTACHMENT_HINTS, AttachmentUnsupported, has_attachments, openai_message
 from ..errors import CONTEXT_HINTS, QUOTA_HINTS, normalize_stop_reason
 from ..base import (
     GenerationRequest,
@@ -112,7 +113,7 @@ class OpenAICompatibleProvider(LLMProvider):
     def api_key_configured(self) -> bool:
         return self._api_key is not None and bool(self._api_key.get_secret_value())
 
-    def _raise_for_status(self, response: httpx.Response) -> None:
+    def _raise_for_status(self, response: httpx.Response, attachments: bool = False) -> None:
         if response.is_success:
             return
         if response.status_code in {401, 403}:
@@ -137,6 +138,11 @@ class OpenAICompatibleProvider(LLMProvider):
             raise OpenAICompatibleStructuredOutputError(
                 "OpenAI-compatible endpoint rejected native structured output"
             )
+        # A model without vision/file input rejects the content part, often without a clear hint.
+        if attachments and response.status_code in {400, 422} and (
+            any(marker in hints for marker in ATTACHMENT_HINTS) or "model" not in hints
+        ):
+            raise AttachmentUnsupported("OpenAI-compatible model could not read the presented file")
         if response.status_code in {400, 404, 422}:
             raise OpenAICompatibleModelError("OpenAI-compatible model or request was rejected")
         raise OpenAICompatibleHTTPError(
@@ -154,7 +160,7 @@ class OpenAICompatibleProvider(LLMProvider):
             )
 
         messages = [{"role": "system", "content": request.system_prompt}]
-        messages.extend(message.model_dump() for message in request.messages)
+        messages.extend(openai_message(message) for message in request.messages)
         payload = {
             "model": self.model,
             "messages": messages,
@@ -188,7 +194,7 @@ class OpenAICompatibleProvider(LLMProvider):
                 "OpenAI-compatible endpoint is unreachable"
             ) from error
 
-        self._raise_for_status(response)
+        self._raise_for_status(response, has_attachments(request.messages))
         try:
             data = response.json()
         except ValueError as error:

@@ -9,24 +9,26 @@ import type { SoundtrackManifest } from '../music/soundtrack.ts'
 import type { MusicEngineState } from '../music/types.ts'
 import { useMusicState } from '../music/useMusicSync.ts'
 import { useSettings } from '../settings/settings.ts'
+import type { Translate } from '../i18n/i18n.ts'
+import { useT } from '../i18n/useT.ts'
 
-const SOURCE_LABELS = { original: 'Game music', imported: 'Imported', radio: 'Radio' } as const
+const SOURCE_LABELS = { original: 'music.game', imported: 'music.imported', radio: 'music.radio' } as const
 
-function statusLine(state: MusicEngineState, soundtrack: SoundtrackManifest | null, trackId: string | null): string {
+function statusLine(state: MusicEngineState, soundtrack: SoundtrackManifest | null, trackId: string | null, t: Translate): string {
   const title = state.title ?? (trackId && soundtrack?.tracks[trackId]?.title) ?? trackId ?? ''
   switch (state.status) {
     case 'idle':
-      return state.source ? 'Nothing selected' : 'Music off'
+      return t(state.source ? 'music.nothingSelected' : 'music.musicOff')
     case 'loading':
-      return `Loading ${title}…`
+      return t('music.loading', { title })
     case 'playing':
       return title
     case 'paused':
-      return `Paused: ${title}`
+      return t('music.paused', { title })
     case 'blocked':
-      return 'Autoplay blocked: press Play'
+      return t('music.autoplayBlocked')
     case 'error':
-      return state.error?.message ?? 'Music unavailable'
+      return state.error?.message ?? t('music.unavailable')
   }
 }
 
@@ -45,6 +47,7 @@ interface MusicDockProps {
  */
 export function MusicDock({ soundtrack, importPanel, onAudition }: MusicDockProps) {
   const { settings, update } = useSettings()
+  const t = useT()
   const state = useMusicState()
   const { engine, radio } = musicRuntime()
   const source = settings.musicSource
@@ -68,10 +71,10 @@ export function MusicDock({ soundtrack, importPanel, onAudition }: MusicDockProp
   return (
     <aside className="music-dock" aria-label="Music">
       <div className="music-dock-bar">
-        <span className="music-dock-source">♪ {source === 'off' ? 'Off' : SOURCE_LABELS[source]}</span>
-        <span className="music-dock-status" role="status">{statusLine(state, soundtrack, state.trackId)}</span>
-        {canPlay && source !== 'off' && <button type="button" onClick={play}>Play</button>}
-        {state.status === 'playing' && <button type="button" onClick={() => engine.pause()}>Pause</button>}
+        <span className="music-dock-source">♪ {t(source === 'off' ? 'music.off' : SOURCE_LABELS[source])}</span>
+        <span className="music-dock-status" role="status">{statusLine(state, soundtrack, state.trackId, t)}</span>
+        {canPlay && source !== 'off' && <button type="button" onClick={play}>{t('music.play')}</button>}
+        {state.status === 'playing' && <button type="button" onClick={() => engine.pause()}>{t('music.pause')}</button>}
       </div>
       {/* Always mounted (the engine stops it when Radio is not the active source). */}
       <div className="music-dock-panel" hidden={source !== 'radio'}>

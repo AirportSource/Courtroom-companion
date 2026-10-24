@@ -510,7 +510,7 @@ function makeTrack(patch: Partial<MusicTrack> = {}): MusicTrack {
   }
 }
 
-function webSource(options: { track?: MusicTrack | null; status?: number; fetchThrows?: boolean } = {}) {
+function webSource(options: { track?: MusicTrack | null; status?: number; fetchThrows?: boolean; contentType?: string } = {}) {
   const context = new FakeContext()
   let fetches = 0
   const cache = createBufferCache<DecodedTrack>(() => 1)
@@ -520,7 +520,8 @@ function webSource(options: { track?: MusicTrack | null; status?: number; fetchT
     fetches++
     if (options.fetchThrows) return Promise.reject(new TypeError('offline'))
     const status = options.status ?? 200
-    return Promise.resolve({ ok: status < 400, status, arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)) })
+    const headers = new Headers(options.contentType ? { 'content-type': options.contentType } : {})
+    return Promise.resolve({ ok: status < 400, status, headers, arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)) })
   }) as unknown as typeof fetch
   const source = createWebAudioSource('original', resolver, {
     getContext: () => context as unknown as AudioContext,
@@ -646,6 +647,9 @@ test('file, network and decode failures map to error codes', async () => {
   const missing = webSource({ status: 404 })
   await missing.source.start('t', startOptions())
   assert.equal(missing.source.getState().error?.code, 'missing_file')
+  const spaFallback = webSource({ contentType: 'text/html' })
+  await spaFallback.source.start('t', startOptions())
+  assert.equal(spaFallback.source.getState().error?.code, 'missing_file')
   const server = webSource({ status: 500 })
   await server.source.start('t', startOptions())
   assert.equal(server.source.getState().error?.code, 'network')
@@ -768,9 +772,11 @@ test('bgm pool excludes contextual and excluded tracks', () => {
 })
 
 test('every runtime src exists on disk with a clean lowercase name', () => {
+  // The OST is local-only (scripts/install_ost.py): without any installed track, only names are checked.
+  const installed = Object.values(soundtrack.tracks).some((track) => track.src && existsSync(new URL(track.src, musicRoot)))
   for (const [id, track] of Object.entries(soundtrack.tracks)) {
     if (!track.src) continue
-    assert.ok(existsSync(new URL(track.src, musicRoot)), `${id}: ${track.src} missing`)
+    if (installed) assert.ok(existsSync(new URL(track.src, musicRoot)), `${id}: ${track.src} missing`)
     assert.match(track.src, /^original\/[0-9]{2}-[a-z0-9-]+\.mp3$/)
   }
 })

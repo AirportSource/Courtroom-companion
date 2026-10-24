@@ -41,8 +41,21 @@ class CharacterReply(BaseModel):
     settle_emotion: str | None = Field(default=None, alias="settleEmotion", max_length=ID_MAX)
 
 
+class Attachment(BaseModel):
+    """A binary file the user presented (see llm/attachments.py), already validated server-side."""
+
+    kind: Literal["image", "pdf"]
+    name: str
+    media_type: str
+    #: Base64 file bytes.
+    data: str
+
+
 class ChatMessage(BaseModel):
     """A conversation turn passed to providers (system prompt is passed separately)."""
 
     role: Literal["user", "assistant"]
     content: str
+    #: Native attachments of this turn. Excluded from model_dump(): every adapter formats them
+    #: explicitly for its vendor (or refuses them), so none can be forwarded by accident.
+    attachments: list[Attachment] = Field(default_factory=list, exclude=True)

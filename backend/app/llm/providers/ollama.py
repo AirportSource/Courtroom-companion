@@ -17,6 +17,7 @@ from ..base import (
     StructuredOutputMode,
 )
 from ..config import DEFAULT_OLLAMA_BASE_URL
+from ..attachments import AttachmentUnsupported, has_attachments, ollama_message
 from ..errors import CONTEXT_HINTS, normalize_stop_reason
 
 
@@ -76,6 +77,7 @@ class OllamaProvider(LLMProvider):
         *,
         timeout_s: float,
         json: dict[str, Any] | None = None,
+        attachments: bool = False,
     ) -> dict[str, Any]:
         try:
             async with httpx.AsyncClient(
@@ -102,6 +104,8 @@ class OllamaProvider(LLMProvider):
                     "Ollama context window exceeded; shorten the conversation or input. Increasing num_predict alone will not fix this",
                     stop_reason="model_context_window_exceeded",
                 )
+        if attachments and response.status_code in (400, 500) and path == "/api/chat":
+            raise AttachmentUnsupported("This Ollama model cannot read images; choose a vision model")
         if not response.is_success:
             raise OllamaHTTPError(f"Ollama returned HTTP {response.status_code}")
         try:
@@ -116,7 +120,7 @@ class OllamaProvider(LLMProvider):
         if not self.model:
             raise OllamaModelNotFoundError("no Ollama model is selected")
         messages = [{"role": "system", "content": request.system_prompt}]
-        messages.extend(message.model_dump() for message in request.messages)
+        messages.extend(ollama_message(message) for message in request.messages)
         payload = {
             "model": self.model,
             "messages": messages,
@@ -133,6 +137,7 @@ class OllamaProvider(LLMProvider):
             "/api/chat",
             timeout_s=request.settings.timeout_s,
             json=payload,
+            attachments=has_attachments(request.messages),
         )
         message = data.get("message")
         if not isinstance(message, dict) or not isinstance(message.get("content"), str):

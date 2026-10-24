@@ -1,9 +1,19 @@
 import { createContext, useContext } from 'react'
+import { detectLanguage, isLanguage, type Language } from '../i18n/i18n.ts'
 import type { MusicSourceSetting } from '../music/types.ts'
 
+/** 'pixel': largest whole factor that fits (crisp pixel art); 'fit': fill the space, fractional. */
+export type StageScaling = 'pixel' | 'fit'
+
 export interface Settings {
+  /** Interface and reply language (D-066). */
+  language: Language
+  /** Language of voiced shouts ("Igiari!" / "Objection!"), independent of the interface (D-068). */
+  shoutLanguage: 'ja' | 'en'
   /** Text reveal speed multiplier (1 = normal). */
   textSpeed: number
+  /** How the 256×192 stage is scaled to the window (layout stays DS resolution either way). */
+  stageScaling: StageScaling
   /** Dialogue blip volume, 0–1. */
   blipVolume: number
   blipsMuted: boolean
@@ -34,7 +44,10 @@ export interface Settings {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
+  language: detectLanguage(),
+  shoutLanguage: 'ja',
   textSpeed: 1,
+  stageScaling: 'fit',
   blipVolume: 0.6,
   blipsMuted: false,
   sfxVolume: 0.6,
@@ -113,7 +126,11 @@ export function readStoredSettings(): Settings {
     if (!raw) return DEFAULT_SETTINGS
     const stored = JSON.parse(raw) as Partial<Settings>
     return {
+      language: isLanguage(stored.language) ? stored.language : DEFAULT_SETTINGS.language,
+      shoutLanguage: stored.shoutLanguage === 'en' ? 'en' : 'ja',
       textSpeed: typeof stored.textSpeed === 'number' ? stored.textSpeed : DEFAULT_SETTINGS.textSpeed,
+      stageScaling: stored.stageScaling === 'pixel' || stored.stageScaling === 'fit'
+        ? stored.stageScaling : DEFAULT_SETTINGS.stageScaling,
       blipVolume: typeof stored.blipVolume === 'number' ? stored.blipVolume : DEFAULT_SETTINGS.blipVolume,
       blipsMuted: typeof stored.blipsMuted === 'boolean' ? stored.blipsMuted : DEFAULT_SETTINGS.blipsMuted,
       sfxVolume: unitInterval(stored.sfxVolume, DEFAULT_SETTINGS.sfxVolume),
@@ -151,7 +168,7 @@ export function writeStoredSettings(settings: Settings): void {
     }
     // Explicit allow-list: neither transient profile forms nor credentials can enter storage.
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      textSpeed: settings.textSpeed, blipVolume: settings.blipVolume, blipsMuted: settings.blipsMuted,
+      language: settings.language, shoutLanguage: settings.shoutLanguage, textSpeed: settings.textSpeed, stageScaling: settings.stageScaling, blipVolume: settings.blipVolume, blipsMuted: settings.blipsMuted,
       sfxVolume: settings.sfxVolume, sfxMuted: settings.sfxMuted, ringtoneId: settings.ringtoneId,
       expandedPanels: settings.expandedPanels, ...musicSnapshot(settings), ...legacy, providerProfilesMigrated: Boolean(previous.providerProfilesMigrated),
     }))
@@ -164,7 +181,7 @@ export function completeProviderMigration(): void {
   try {
     const settings = readStoredSettings()
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      textSpeed: settings.textSpeed, blipVolume: settings.blipVolume, blipsMuted: settings.blipsMuted,
+      language: settings.language, shoutLanguage: settings.shoutLanguage, textSpeed: settings.textSpeed, stageScaling: settings.stageScaling, blipVolume: settings.blipVolume, blipsMuted: settings.blipsMuted,
       sfxVolume: settings.sfxVolume, sfxMuted: settings.sfxMuted, ringtoneId: settings.ringtoneId,
       expandedPanels: settings.expandedPanels, ...musicSnapshot(settings), providerProfilesMigrated: true,
     }))

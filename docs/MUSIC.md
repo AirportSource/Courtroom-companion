@@ -28,7 +28,7 @@ While the delivery phone rings, the scoped factor is **0.12** with **220 ms** at
 
 ## Original soundtrack
 
-The source is `docs/references/music/pwaa-original-soundtrack.zip`, extracted unchanged in `docs/original_tracks/` (untracked). The 25 runtime copies are byte-identical, MPEG-1 Layer III, 44.1 kHz, 128 kbps, in `frontend/public/assets/music/original/`. Manifest: `assets/music/soundtrack.json`.
+The source is the VBR MP3 ZIP of https://archive.org/details/pwaa-original-soundtrack (38 files, ~84 MB). **The MP3s are not in Git** (D-071): install them with `python scripts/install_ost.py <zip>`, which copies each runtime track by its OST number. A clone without them is valid (validator notice, no error). The 25 runtime copies are byte-identical, MPEG-1 Layer III, 44.1 kHz, 128 kbps, in `frontend/public/assets/music/original/`. Manifest: `assets/music/soundtrack.json`.
 
 - **bgm (16):** 02, 03, 04, 05, 07, 10, 13, 14, 15, 16, 18, 19, 23, 30, 32, 33.
 - **contextual (9):** 06, 08, 09, 11, 17, 20, 22, 24, 29. Never in the BGM pool.

@@ -13,6 +13,7 @@ import {
   DETAIL_LINE_HEIGHT, DETAIL_VISIBLE_LINES, RECORD_PAGE_SIZE, entryLabel, mapFileAvailability, maxScrollTop,
   orderedEntries, recordPageCount, recordPageOf, scrollByLines, selectionAfterDelete, wheelLines,
 } from './conversationRecord.ts'
+import { useT } from '../i18n/useT.ts'
 import './conversation-record.css'
 
 export interface ConversationRecordViewProps {
@@ -35,11 +36,11 @@ type FileView = { id: string; name: string | null; state: 'loading' | 'ready' | 
 
 const NAV_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End']
 const BACK_KEYS = ['Escape', 'Backspace', 'x', 'X']
-const GONE = 'File no longer available'
 
 /** In-stage (256×192) Conversation Record: one portrait slot per saved exchange. */
 export function ConversationRecordView({ onClose, evidenceFrame = null, portraitFor, nameFor,
   loadArtifacts = listArtifacts, onEntriesChanged }: ConversationRecordViewProps) {
+  const t = useT()
   const [entries, setEntries] = useState<ConversationRecordEntry[]>([])
   const [load, setLoad] = useState<Load>({ status: 'loading' })
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -95,7 +96,7 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
     void getConversationRecord(id).then((result) => {
       if (!alive.current) return
       if (result.ok) setEntries((previous) => previous.map((entry) => (entry.id === id ? result.value : entry)))
-      else if (result.error === 'missing') { setEntries((previous) => previous.filter((entry) => entry.id !== id)); setMode('list'); setNotice('This entry no longer exists.') }
+      else if (result.error === 'missing') { setEntries((previous) => previous.filter((entry) => entry.id !== id)); setMode('list'); setNotice(t('record.entryGone')) }
     })
   }
 
@@ -129,7 +130,7 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
     const result = await deleteConversationRecord(id)
     if (!alive.current) return
     setBusy(false)
-    if (!result.ok) { setNotice('Could not delete this entry. Try again.'); setConfirming(false); return }
+    if (!result.ok) { setNotice(t('record.deleteFailed')); setConfirming(false); return }
     const nextIndex = selectionAfterDelete(selectedIndex, entries.length)
     const remaining = entries.filter((entry) => entry.id !== id)
     setEntries(remaining)
@@ -161,20 +162,20 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
   }
 
   const availability = selected ? mapFileAvailability(selected.artifactIds, artifacts) : []
-  const heading = mode === 'list' ? 'Record' : mode === 'file' ? 'File' : 'Conversation'
-  const emptyText = load.status === 'loading' ? 'Loading record…' : load.status === 'error'
-    ? 'Record unavailable. Try Refresh.' : 'No saved conversations.'
+  const heading = t(mode === 'list' ? 'record.heading' : mode === 'file' ? 'record.file' : 'record.conversation')
+  const emptyText = t(load.status === 'loading' ? 'record.loading' : load.status === 'error'
+    ? 'record.unavailable' : 'record.empty')
 
   return (
-    <div className="rec-view" role="dialog" aria-label="Conversation Record" tabIndex={-1} ref={root}
+    <div className="rec-view" role="dialog" aria-label={t('record.title')} tabIndex={-1} ref={root}
       onKeyDown={onKey} onClick={(event) => event.stopPropagation()}>
       <header className="rec-heading">
         <strong>{heading}</strong>
-        <button type="button" onClick={back}>{mode === 'list' ? 'Close' : 'Back'}</button>
+        <button type="button" onClick={back}>{t(mode === 'list' ? 'common.close' : 'common.back')}</button>
       </header>
 
       {mode === 'list' && <>
-        <div className="rec-grid" role="listbox" aria-label="Saved conversations" ref={grid} tabIndex={0}
+        <div className="rec-grid" role="listbox" aria-label={t('record.saved')} ref={grid} tabIndex={0}
           aria-activedescendant={selected ? `rec-${selected.id}` : undefined}>
           {Array.from({ length: RECORD_PAGE_SIZE }, (_, slot) => {
             const index = page * RECORD_PAGE_SIZE + slot
@@ -199,19 +200,19 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
         </div>
         <footer className="rec-footer">
           <div className="rec-current" title={selected ? entryLabel(selected) : undefined}>
-            {selected ? entryLabel(selected) : 'Conversation record'}</div>
+            {selected ? entryLabel(selected) : t('record.current')}</div>
           <div className="rec-paging">
-            <button type="button" aria-label="Previous page" disabled={page === 0} onClick={() => choose((page - 1) * RECORD_PAGE_SIZE)}>‹</button>
+            <button type="button" aria-label={t('common.previousPage')} disabled={page === 0} onClick={() => choose((page - 1) * RECORD_PAGE_SIZE)}>‹</button>
             <span>{page + 1}/{pages}</span>
-            <button type="button" aria-label="Next page" disabled={page + 1 >= pages} onClick={() => choose((page + 1) * RECORD_PAGE_SIZE)}>›</button>
-            <button type="button" disabled={!selected} onClick={open}>Open</button>
-            <button type="button" disabled={load.status === 'loading'} onClick={() => { feedback.confirm(); refresh() }}>Refresh</button>
+            <button type="button" aria-label={t('common.nextPage')} disabled={page + 1 >= pages} onClick={() => choose((page + 1) * RECORD_PAGE_SIZE)}>›</button>
+            <button type="button" disabled={!selected} onClick={open}>{t('common.open')}</button>
+            <button type="button" disabled={load.status === 'loading'} onClick={() => { feedback.confirm(); refresh() }}>{t('common.refresh')}</button>
           </div>
         </footer>
       </>}
 
-      {mode !== 'list' && selected && <section className="rec-detail" aria-label="Saved conversation">
-        <p className="rec-character">{mode === 'file' ? (file?.name ?? 'Generated file') : `Character: ${name(selected.characterId)}`}</p>
+      {mode !== 'list' && selected && <section className="rec-detail" aria-label={t('record.savedOne')}>
+        <p className="rec-character">{mode === 'file' ? (file?.name ?? t('record.generatedFile')) : t('record.character', { name: name(selected.characterId) })}</p>
         <div className="rec-body" ref={body} tabIndex={-1}
           onWheel={(event) => scroll(wheelLines(event.deltaY))}
           onScroll={(event) => {
@@ -220,16 +221,16 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
             if (snapped !== el.scrollTop) el.scrollTop = snapped
           }}>
           {mode === 'detail' ? <>
-            <p className="rec-label">YOU:</p>
+            <p className="rec-label">{t('record.you')}</p>
             <p className="rec-text">{selected.userText}</p>
             <p className="rec-label">{name(selected.characterId).toUpperCase()}:</p>
             <p className="rec-text">{selected.assistantText}</p>
-            <p className="rec-label">FILES:</p>
+            <p className="rec-label">{t('record.files')}</p>
             {availability.length === 0 && <p className="rec-text">None.</p>}
             {availability.map((item) => (item.available && !gone.includes(item.id)
               ? <button key={item.id} type="button" className="rec-file" onClick={() => openFile(item.id, item.name)}>
                 {item.name ?? 'Generated file'}</button>
-              : <p key={item.id} className="rec-text rec-gone">{GONE}</p>))}
+              : <p key={item.id} className="rec-text rec-gone">{t('record.gone')}</p>))}
           </> : <pre className="rec-text rec-file-text">{file?.state === 'loading' ? 'Reading…'
             : file?.state === 'error' ? 'Could not read this file.' : file?.text}</pre>}
         </div>

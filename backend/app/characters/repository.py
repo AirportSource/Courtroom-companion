@@ -77,6 +77,45 @@ class EmotionBinding:
     reaction: str | None = None
 
 
+def _text_map(raw: Any) -> dict[str, str]:
+    """Language code -> non-empty text; anything else is ignored."""
+    if not isinstance(raw, dict):
+        return {}
+    return {k: v.strip() for k, v in raw.items()
+            if isinstance(k, str) and len(k) == 2 and k.isalpha() and isinstance(v, str) and v.strip()}
+
+
+def _event_lines(raw: Any, emotions: dict, reactions: frozenset[str], warnings: list[str]) -> dict:
+    """performance.json `eventLines`; invalid variants are dropped, unknown IDs neutralised."""
+    out: dict[str, dict[str, list[dict[str, Any]]]] = {}
+    if not isinstance(raw, dict):
+        return out
+    for event_type, by_language in raw.items():
+        if not isinstance(by_language, dict):
+            continue
+        for language, variants in by_language.items():
+            if not (isinstance(language, str) and len(language) == 2 and isinstance(variants, list)):
+                continue
+            kept = []
+            for variant in variants:
+                if not isinstance(variant, dict) or not isinstance(variant.get("text"), str) or not variant["text"].strip():
+                    warnings.append(f"eventLines.{event_type}.{language}: variant without text dropped")
+                    continue
+                line: dict[str, Any] = {"text": variant["text"].strip()[:600]}
+                if variant.get("emotion") in emotions:
+                    line["emotion"] = variant["emotion"]
+                if isinstance(variant.get("intensity"), (int, float)) and 0 <= variant["intensity"] <= 1:
+                    line["intensity"] = float(variant["intensity"])
+                if variant.get("reaction") in reactions:
+                    line["reaction"] = variant["reaction"]
+                if variant.get("exclamation") in ("objection", "hold_it", "take_that"):
+                    line["exclamation"] = variant["exclamation"]
+                kept.append(line)
+            if kept:
+                out.setdefault(str(event_type), {})[language] = kept
+    return out
+
+
 @dataclass
 class CharacterProfile:
     id: str
@@ -96,6 +135,21 @@ class CharacterProfile:
     error_emotion: str | None = None
     personality: str = ""
     warnings: list[str] = field(default_factory=list)
+    #: Name per interface language (character.json `names`, D-066); display_name otherwise.
+    names: dict[str, str] = field(default_factory=dict)
+    #: Error line per language (performance.json `errorLine.translations`); error_text otherwise.
+    error_texts: dict[str, str] = field(default_factory=dict)
+    #: Lines for inbox events (D-067): event type -> language -> variants
+    #: ({text, emotion, intensity?, reaction?, exclamation?}), already validated.
+    event_lines: dict[str, dict[str, list[dict[str, Any]]]] = field(default_factory=dict)
+    #: Tool groups this character may use (performance.json `tools`); None = every available group.
+    tools: list[str] | None = None
+
+    def name_for(self, language: str) -> str:
+        return self.names.get(language) or self.display_name
+
+    def error_text_for(self, language: str) -> str:
+        return self.error_texts.get(language) or self.error_text
 
     def capabilities(self) -> dict[str, Any]:
         """Public capability summary (logical IDs only)."""
@@ -234,6 +288,10 @@ class CharacterRepository:
             error_emotion=error.get("emotion") if error.get("emotion") in emotions else None,
             personality=personality_path.read_text(encoding="utf-8") if personality_path.exists() else "",
             warnings=warnings,
+            names=_text_map(manifest.get("names")),
+            error_texts=_text_map(error.get("translations")),
+            event_lines=_event_lines(perf.get("eventLines"), emotions, reactions, warnings),
+            tools=[t for t in perf["tools"] if t in ("reminders", "folders", "web_search")] if isinstance(perf.get("tools"), list) else None,
         )
 
     @staticmethod

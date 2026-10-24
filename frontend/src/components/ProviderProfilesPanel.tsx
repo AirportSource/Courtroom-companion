@@ -6,6 +6,7 @@ import {
   type ProfileCatalog, type ProfileDraft, type ProviderType,
 } from '../settings/providerProfiles.ts'
 import { readStoredSettings } from '../settings/settings.ts'
+import { StageSelect } from './StageSelect.tsx'
 import { generationFailureMessage } from '../engine/generation.ts'
 
 const PROVIDERS: Record<ProviderType, string> = {
@@ -100,12 +101,9 @@ export function ProviderProfilesPanel({ characterId }: { characterId: string | n
 
   return <section className="settings-provider" aria-label="AI profiles">
     {catalog && <Field label="AI Profile">
-      <select aria-label="AI Profile" value={catalog.activeProfileId} disabled={busy || Boolean(draft)} onChange={(event) => {
-        const id = event.target.value
-        void run(async () => { setCatalog(await activateProfile(id)); clearTransient() })
-      }}>
-        {catalog.profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}
-      </select>
+      <StageSelect label="AI Profile" value={catalog.activeProfileId} disabled={busy || Boolean(draft)}
+        options={catalog.profiles.map((profile) => ({ value: profile.id, label: profile.name }))}
+        onChange={(id) => void run(async () => { setCatalog(await activateProfile(id)); clearTransient() })} />
     </Field>}
 
     {catalog && !draft && <div className="settings-profile-toolbar">
@@ -130,9 +128,9 @@ export function ProviderProfilesPanel({ characterId }: { characterId: string | n
       <Field label="Name"><input aria-label="Profile name" value={fields.name} readOnly={!draft} disabled={busy} maxLength={80}
         onChange={(event) => change({ name: event.target.value })} /></Field>
       <Field label="Provider">
-        {draft ? <select aria-label="Provider type" value={fields.providerType} disabled={busy} onChange={(event) => changeType(event.target.value as ProviderType)}>
-          {Object.entries(PROVIDERS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-        </select> : <input aria-label="Provider type" readOnly value={PROVIDERS[fields.providerType]} />}
+        {draft ? <StageSelect label="Provider type" value={fields.providerType} disabled={busy}
+          options={Object.entries(PROVIDERS).map(([value, label]) => ({ value, label }))}
+          onChange={(value) => changeType(value as ProviderType)} /> : <input aria-label="Provider type" readOnly value={PROVIDERS[fields.providerType]} />}
       </Field>
       {fields.providerType !== 'fake' && <>
         {fields.providerType !== 'anthropic' && <Field label={fields.providerType === 'ollama' ? 'Server' : 'Base URL'}>
@@ -140,14 +138,13 @@ export function ProviderProfilesPanel({ characterId }: { characterId: string | n
             onChange={(event) => change({ baseUrl: event.target.value })} />
         </Field>}
         <Field label="Model">
-          {draft && models.length ? <select aria-label="Profile model" value={fields.model ?? ''} disabled={busy}
-            onChange={(event) => change({ model: event.target.value })}>
-            <option value="">Select model</option>
-            {fields.model && !models.some((model) => model.model === fields.model) && <option value={fields.model}>{fields.model}</option>}
-            {models.map((model) => <option key={model.model} value={model.model}>
-              {model.name}{model.parameterSize ? ` (${model.parameterSize})` : ''}
-            </option>)}
-          </select> : <input aria-label="Profile model" value={fields.model ?? ''} readOnly={!draft} disabled={busy}
+          {draft && models.length ? <StageSelect label="Profile model" value={fields.model ?? ''} disabled={busy}
+            onChange={(value) => change({ model: value })}
+            options={[
+              { value: '', label: 'Select model' },
+              ...(fields.model && !models.some((model) => model.model === fields.model) ? [{ value: fields.model, label: fields.model }] : []),
+              ...models.map((model) => ({ value: model.model, label: `${model.name}${model.parameterSize ? ` (${model.parameterSize})` : ''}` })),
+            ]} /> : <input aria-label="Profile model" value={fields.model ?? ''} readOnly={!draft} disabled={busy}
             onChange={(event) => change({ model: event.target.value })} />}
         </Field>
       </>}

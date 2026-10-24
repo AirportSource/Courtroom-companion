@@ -1,3 +1,4 @@
+import { useT } from '../i18n/useT.ts'
 import { useState } from 'react'
 import { BackgroundRenderer } from '../components/BackgroundRenderer.tsx'
 import { MenuList } from '../components/MenuList.tsx'
@@ -19,6 +20,7 @@ function label(background: Background): string {
 
 /** Lists backgrounds.json; the highlighted location is previewed behind the menu. */
 export function LocationSelectScreen({ backgrounds, selectedId, onSelect, onBack }: LocationSelectScreenProps) {
+  const t = useT()
   const [previewId, setPreviewId] = useState<BackgroundId | null>(selectedId ?? backgrounds[0]?.id ?? null)
   const preview = backgrounds.find((bg) => bg.id === previewId) ?? null
 
@@ -26,7 +28,7 @@ export function LocationSelectScreen({ backgrounds, selectedId, onSelect, onBack
     <PixelStage>
       <BackgroundRenderer background={preview} stageWidth={STAGE_WIDTH} stageHeight={STAGE_HEIGHT} />
       <div className="menu-screen menu-screen-overlay">
-        <h1 className="menu-heading">Choose a location</h1>
+        <h1 className="menu-heading">{t('select.location')}</h1>
         <MenuList
           items={backgrounds.map((bg) => ({ id: bg.id, label: label(bg), sound: 'menu_start' as const }))}
           initialId={selectedId ?? undefined}
@@ -35,7 +37,7 @@ export function LocationSelectScreen({ backgrounds, selectedId, onSelect, onBack
           onHighlight={setPreviewId}
           visibleRows={5}
         />
-        <p className="menu-hint">PgUp/PgDn: page, Esc: back</p>
+        <p className="menu-hint">{t('select.pageEscBack')}</p>
       </div>
     </PixelStage>
   )

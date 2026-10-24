@@ -61,3 +61,22 @@ send `#artifact-py`, `#artifact-md` or `#artifact-txt`. The Generated files pane
 downloads and deletes text. Chat sends one `requestId`; `/api/chat/turns/{id}` provides status
 and cancellation. All artifact routes require local/same-origin access. Full persistence,
 security and duplicate/cancellation behavior: `docs/ARTIFACTS.md`.
+
+## Presented evidence (D-065)
+
+`POST /api/chat` accepts an optional `evidence: {"name", "data"}` (base64); `message` may then be
+empty. The kind is detected from the bytes: text/code ≤ 100,000 characters (inlined, every
+provider), PNG/JPEG/GIF/WebP ≤ 5 MB and PDF ≤ 10 MB (native attachments: Anthropic image/document
+blocks, OpenAI-compatible `image_url`/`file`, Ollama `images`; Ollama refuses PDFs). Invalid files
+return HTTP 422 with `detail.code`; a model that rejects the file yields `attachment_unsupported`.
+With the Fake provider, a presented file gets an offline acknowledgement that names it.
+
+## Events, Claude Code hook and character tools (D-067)
+
+- `POST /api/events` / `GET /api/events` (local only): see `docs/AGENTS_AND_EVENTS.md`.
+- Claude Code: `node scripts/install-claude-code-hook.mjs --dry-run` shows the hooks it would add to
+  `~/.claude/settings.json`; run without `--dry-run` to install (backup written), `--uninstall` to remove.
+  Debug a hook with `COURTROOM_HOOK_DEBUG=1`.
+- Tools: reminders (`<config>/reminders.json`), authorized folders (`<config>/folders.json`), web search
+  (`<config>/tools.json` provider + key in the OS vault). Configure them in Settings → Tools or via `/api/tools`.
+  Offline test commands with the Fake provider: `#remind`, `#reminders`, `#folder`, `#read <path>`, `#search <q>`.

@@ -10,6 +10,7 @@ from starlette.concurrency import run_in_threadpool
 from ..characters.prompt import build_system_prompt, reply_schema
 from ..characters.repository import CharacterNotFoundError
 from ..characters.service import CharacterService
+from ..llm.attachments import MAX_BASE64_CHARS, EvidenceError, parse_evidence, record_text
 from ..llm.base import ProviderError
 from ..llm.config import DEFAULT_OLLAMA_BASE_URL, ProviderConfig
 from ..llm.gateway import LLMGateway
@@ -33,11 +34,22 @@ class ProviderSelection(BaseModel):
     model: str | None = Field(default=None, max_length=200)
 
 
+class EvidenceUpload(BaseModel):
+    """A file presented as evidence; its kind is decided server-side from the bytes."""
+
+    name: str = Field(min_length=1, max_length=255)
+    data: str = Field(min_length=1, max_length=MAX_BASE64_CHARS)
+
+
 class ChatRequest(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     character: str = Field(pattern=ID_PATTERN)
-    message: str = Field(min_length=1, max_length=2000)
+    #: May be empty only when evidence is presented without a question.
+    message: str = Field(default="", max_length=2000)
+    evidence: EvidenceUpload | None = None
+    #: Interface language (D-066): the character replies in it.
+    language: Literal["en", "fr", "ja", "it", "es"] = "en"
     session_id: str = Field(default="default", alias="sessionId", pattern=r"^[A-Za-z0-9_-]{1,64}$")
     provider: ProviderSelection | None = None
     request_id: str | None = Field(default=None, alias="requestId",
@@ -245,8 +257,18 @@ async def test_openai_compatible_connection(
 
 @router.post("/chat")
 async def chat(body: ChatRequest, request: Request) -> dict[str, Any]:
-    if not body.message.strip():
+    message = body.message.strip()
+    if not message and body.evidence is None:
         raise HTTPException(status_code=422, detail="message is empty")
+    evidence = None
+    if body.evidence is not None:
+        try:
+            evidence = parse_evidence(body.evidence.name, body.evidence.data)
+        except EvidenceError as error:
+            raise HTTPException(status_code=422, detail={"code": error.code, "message": str(error)}) from None
+    # Replays of one request id must present the same file too.
+    fingerprint_text = f"{message} [evidence sha256 {evidence.sha256}]" if evidence else message
+    user_record = record_text(evidence, message) if evidence else message
     service = _service(request)
     if body.provider is not None:
         raise HTTPException(status_code=409, detail="Select a saved provider profile before chatting.")
@@ -259,11 +281,13 @@ async def chat(body: ChatRequest, request: Request) -> dict[str, Any]:
         if turn is not None:
             options = {"artifact_store": request.app.state.artifact_store,
                 "operation_key": hashlib.sha256(f"{body.session_id}:{body.character}:{turn.id}".encode()).hexdigest(),
-                "fingerprint": request_fingerprint(body.character, body.message.strip(), body.session_id),
+                "fingerprint": request_fingerprint(body.character, fingerprint_text, body.session_id),
                 "on_artifact_working": turn.artifact_working,
                 "on_expected_workload": turn.set_expected_workload}
-        result = await service.chat(body.character, body.message.strip(), body.session_id, gateway=gateway, **options)
-        capture_turn(request.app, body.character, body.message.strip(), result, turn.id if turn else None)
+        result = await service.chat(body.character, message, body.session_id, gateway=gateway,
+                                    evidence=evidence, language=body.language,
+                                    tool_context=request.app.state.tools, **options)
+        capture_turn(request.app, body.character, user_record, result, turn.id if turn else None)
         return result
     try:
         if body.request_id:
@@ -272,7 +296,7 @@ async def chat(body: ChatRequest, request: Request) -> dict[str, Any]:
             from .profile_routes import local_configuration_request
             local_configuration_request(request)
             result, task = await request.app.state.artifact_turns.run(body.request_id,
-                request_fingerprint(body.character, body.message.strip(), body.session_id), perform)
+                request_fingerprint(body.character, fingerprint_text, body.session_id), perform)
             for artifact in result.artifacts:
                 try:
                     available = request.app.state.artifact_store.get(artifact["id"])["status"] == "ready"
@@ -296,5 +320,6 @@ async def chat(body: ChatRequest, request: Request) -> dict[str, Any]:
         "provider": result.provider,
         "warnings": result.warnings,
         "generation": result.generation,
+        "tool": result.tool,
         **({"task": task, "artifacts": result.artifacts} if task else {}),
     }

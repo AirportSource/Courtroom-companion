@@ -9,6 +9,8 @@ import { PixelStage } from './components/PixelStage.tsx'
 import { loadCourtRecord, type LoadedCourtRecord } from './courtRecord/courtRecord.ts'
 import { TEST_CONVERSATION } from './dev/testConversation.ts'
 import { audioEngine } from './engine/audioEngine.ts'
+import { localizedName } from './i18n/i18n.ts'
+import { useT } from './i18n/useT.ts'
 import {
   loadBackgrounds,
   loadCharacter,
@@ -146,7 +148,8 @@ function App() {
     [screen, characterId, audition],
   )
   useMusicSync(soundtrack, musicContext)
-  const { update: updateSettings } = useSettings()
+  const { settings: appSettings, update: updateSettings } = useSettings()
+  const t = useT()
   const pausedForPreview = useRef(false)
   const music = useMusicState()
   const { engine, importApi, importedResolver } = musicRuntime()
@@ -228,21 +231,23 @@ function App() {
     }
   }, [catalog, screen])
 
-  if (catalog.status === 'loading') return <StageMessage text="Loading…" />
-  if (catalog.status === 'error') return <StageMessage text={`Failed to load assets: ${catalog.message}`} error />
+  if (catalog.status === 'loading') return <StageMessage text={t('common.loading')} />
+  if (catalog.status === 'error') return <StageMessage text={t('app.assetsFailed', { error: catalog.message })} error />
 
   const toTitle = () => setScreen('title')
   const evidenceFrame = catalog.ui.images.evidence_frame ?? null
   // Generic per-character lookups for the Conversation Record (no character is hard-coded).
   const portraitFor = (id: CharacterId) => loaded[id]?.courtRecordPortrait ?? null
-  const nameFor = (id: CharacterId) =>
-    loaded[id]?.displayName ?? catalog.characters.find((summary) => summary.id === id)?.displayName ?? null
+  const nameFor = (id: CharacterId) => {
+    const known = loaded[id] ?? catalog.characters.find((summary) => summary.id === id)
+    return known ? localizedName(known, appSettings.language) : null
+  }
   const character = characterId ? loaded[characterId] : undefined
   const background = catalog.backgrounds.find((bg) => bg.id === backgroundId) ?? null
 
   const requireCharacter = (render: (c: LoadedCharacter) => ReactNode) => {
-    if (loadError) return <StageMessage text={`Failed to load character: ${loadError}`} error />
-    return character ? render(character) : <StageMessage text="Loading character…" />
+    if (loadError) return <StageMessage text={t('app.characterFailed', { error: loadError })} error />
+    return character ? render(character) : <StageMessage text={t('app.loadingCharacter')} />
   }
 
   return (
@@ -287,6 +292,8 @@ function App() {
         <TitleScreen
           titleImage={catalog.ui.images.title_screen ?? null}
           menuBackground={catalog.ui.images.menu_title_discussion ?? null}
+          objectionImage={catalog.ui.images.exclamation_objection ?? null}
+          objectionImageJa={catalog.ui.images.exclamation_objection_ja ?? null}
           started={titleStarted}
           onPressStart={() => setTitleStarted(true)}
           onStart={() => setScreen('characters')}
@@ -359,6 +366,16 @@ function App() {
           devTools={DEV_TOOLS}
           onTaskChange={setArtifactTask}
           evidenceFrame={evidenceFrame}
+          exclamations={{
+            ...(catalog.ui.images.exclamation_objection ? { objection: catalog.ui.images.exclamation_objection } : {}),
+            ...(catalog.ui.images.exclamation_hold_it ? { hold_it: catalog.ui.images.exclamation_hold_it } : {}),
+            ...(catalog.ui.images.exclamation_take_that ? { take_that: catalog.ui.images.exclamation_take_that } : {}),
+            // Japanese bubbles (D-070), used for Japanese shouts when present in ui.json.
+            ...Object.fromEntries((['objection', 'hold_it', 'take_that'] as const).flatMap((kind) => {
+              const image = catalog.ui.images[`exclamation_${kind}_ja`]
+              return image ? [[`${kind}_ja`, image]] : []
+            })),
+          }}
           portraitFor={portraitFor}
           nameFor={nameFor}
         />

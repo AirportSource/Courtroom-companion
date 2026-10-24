@@ -689,3 +689,105 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - Lazily loaded ringtone events are not preloaded at startup.
   - The validator checks that the default exists and that items reference real sounds.
 - **Evidence:** ringtone tests, plus a Chrome run in which Godot was selected and the real artifact phone flow played the Godot loop (2.000–38.001 s) as one source with BGM ducked to 0.12. Answering stopped it and restored 1.0 without a track restart. Loops were measured offline and not auditioned.
+
+## D-062 — Stage scaling choice, native dropdown lists, length-aware typing speed
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Amends:** D-017 (integer scaling is now one of two modes, no longer the only one). The 256×192 logical layout, `image-rendering: pixelated` and pagination are unchanged.
+- **Decision:**
+  - Settings → Scale: `Pixel` (largest whole factor, the old behaviour) or `Fit` (largest fractional factor that fits, frame width snapped to whole CSS pixels). Stored as `stageScaling`; default `fit`. The dev panel's fixed 1×–4× overrides still win over both.
+  - Native `<select>` lists inside the stage are drawn by the browser in screen pixels, outside the stage transform, so they rendered with the logical stage font. `option`/`optgroup` inside `.scene-stage` now use the system UI font at 14 px. The closed control keeps the stage look.
+  - Typing speed per reply = Settings speed × `lengthSpeedFactor(total reply characters)`: 1 up to 120 characters, then √(chars / 120), capped at 2. Every page of one reply uses the same pace.
+  - A music fetch that returns `text/html` (the dev server's SPA fallback for an absent file) is reported as `missing_file` instead of `decode_failed`.
+- **Rationale:** the owner asked for a larger, scalable stage that stays faithful to the DS composition, readable dropdown lists, and dialogue pacing that follows reply length. `Pixel` remains available for the sharpest pixel art: in `Fit` the sprite pixels are slightly uneven in width.
+
+## D-063 — DS stage picker replaces native selects; themed conversation actions
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** the native-dropdown bullet of D-062 (system font on `option`).
+- **Decision:**
+  - Every `<select>` inside the stage (Settings: music source, soundtrack track, imported track, ringtone; AI profiles: profile, provider type, model) is a `StageSelect`. The closed control is a DS-framed button with the value (ellipsis) and a downward triangle. Opening it portals a panel into `.scene-stage`: dimmed stage, name-plate heading, and a `MenuList` with the same frames, keyboard, sounds and label marquee as the menus.
+  - Escape/Backspace/X close only the panel (window capture-phase listener), so Settings' Escape-to-back does not fire. A 400 ms guard stops Space's keyup from reopening the panel after a Space selection.
+  - The soundtrack list is flattened: Default, then background tracks, then event tracks (the "Background music"/"Event music" group headings are gone).
+  - Talk / Court Record / Record use the chat bar's DS frame and 2× stage font; hover/focus uses the selected-menu-entry colours.
+  - Still CSS stand-ins: no original DS button or list graphics are in the repository. The Spriters Resource pages are behind a bot check and could not be fetched automatically.
+- **Rationale:** the owner asked for the dropdowns and the conversation buttons to match the other DS assets. A native popup cannot be themed and is drawn outside the scaled stage.
+
+## D-064 — Dick Gumshoe and Mia Fey character packs
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Extends:** D-027 (extraction method), D-022 (canvas/offsets), D-048/D-049 (director, waiting pose, semantic SFX). No engine code is character-specific; both packs are data only.
+- **Sources:** `docs/references/dick gumshoe.png` (1336×2310, 43 colours) and `docs/references/mia fey.png` (1068×3273, 36 colours), owner-supplied DS sheets, both "Ripped by Shoda. Credit appreciated". Same background (181,165,213) as Maya's sheet.
+- **Extraction (D-027 method):** 8-connected components of non-background pixels, exact bounding-box crop, background and neighbouring sprites transparent, no other pixel change. Frames named `<prefix>_frame_NNN` in sheet reading order. Gumshoe: all 82 sprites (11 rows). Mia: rows 1–8 only (59 sprites, y < 1645); rows 9–16 show Mia channelled through Maya's body and are not used.
+- **Grouping:** idle = columns 1–4, talking = columns 5–8, per the ripper's "x Talk" brackets; idle clips use Maya's blink timing (2600/70/90/70 ms, 1800 ms jitter).
+  - Gumshoe: `neutral_front` (idle 1–4, talk 7–14), `worried`, `happy_grin`, `thinking_aside` (row 5 idle + row 6 talk), `confused` (idle 36/35/37/35, uncertain blink order; talk 42–45), `fired_up`, `sad_down`, `side_profile`, `laughing` (75–76 ×3, 77–78 ×3 per sheet; talk 79–82); reaction `head_scratch` (54, 55, 56–57 ×3 per sheet, 58). Frames 5–6 (row 1 "x2") are unassigned. The sheet has no shocked pose, so `surprised` maps to `confused` without a reaction.
+  - Mia: `arms_crossed`, `hand_on_chin`, `confident_smile`, `amused_laugh` (row 4 has no talk frames; it talks with the row-3 frames of the same tilted pose), `turn_aside`, `serious_front`, `surprised`, `sad_worried`. No reaction one-shots.
+- **Placement:** each pose's frames are registered against its first frame by the best horizontal shift of the lower-body silhouette (bottom 40 %, bottoms aligned); the canvas is the union. Results are 0–3 px except the head scratch, whose raised-arm frames place the body at x=58. Its canvas is widened to 271 px so the body is centred, as in Maya's shocked reaction, avoiding a jump into and out of the reaction.
+- **Data per character** (same schema as Maya): the 13 shared emotions (so providers and the fake provider stay compatible) plus Gumshoe `embarrassed` (head scratch + worried), `determined`, `suspicious` and Mia `serious`, `determined`; own gestures, intensity variants, aliases, SFX thresholds, waiting pose, error line, EN/FR/JA artifact acknowledgements, voice (Gumshoe `blip_male`, Mia `blip_female`) and `personality.md`. Director: Gumshoe expressiveness 0.95 (quick pose changes, lower reaction threshold), Mia 0.5 (longer holds, fewer sounds).
+- **Music profiles:** `dick_gumshoe` → track 16 (his theme); `mia_fey` → "Turnabout Sisters 2001" (the Fey sisters' theme). An explicit track chosen in Settings still overrides profiles.
+- **Portraits:** stand-ins, 64×64 crops of each character's first neutral frame on Maya's portrait grey (120,120,120). The official profile sheet (`docs/references/court-record/evidences_profiles_full.png`) is not on this machine; replace them with its 1:1 tiles when available.
+- **Also:** `MenuList` gained `rowHeight`; the character select shows 2 entries of 48 px (40 px preview) and scrolls, instead of clipping at 4 × 19 px.
+
+## D-065 — "Present evidence": user files analysed by the character (v1)
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - `POST /api/chat` accepts an optional `evidence: {name, data}` (base64). `message` may then be empty; without evidence an empty message is still rejected.
+  - The server decides the kind from the bytes, never from the name or MIME type (`backend/app/llm/attachments.py`): PNG/JPEG/GIF/WebP by signature (≤ 5 MB), PDF by `%PDF-` (≤ 10 MB), otherwise UTF-8 (BOM allowed) or Windows-1252 text without binary control characters (≤ 100,000 characters / 400 KB). Anything else → HTTP 422 `{code: evidence_invalid | evidence_too_large | evidence_unsupported, message}`. File names are reduced to a printable basename (≤ 120 chars).
+  - **Text** is inlined in the user message between `<<<EVIDENCE name` / `EVIDENCE>>>` markers (an end marker inside the file is neutralised), after a header telling the model the content is material to examine, not instructions. Every provider, including Fake and Ollama, can read it.
+  - **Images/PDFs** become `ChatMessage.attachments` (excluded from `model_dump()`, so no adapter can forward them unformatted). Anthropic: `image` / `document` blocks. OpenAI-compatible: `image_url` data URL / `file` part. Ollama: `images`; PDFs refused before the call. A 4xx file rejection (Ollama: 400/500) while attachments are present maps to the new code `attachment_unsupported`; the frontend explains which models can read which files. Without attachments, existing error codes are unchanged.
+  - History: text evidence stays in history (bounded by the existing `fit_history` clipping) so follow-up questions can refer to it; images/PDFs are sent once, later turns only see a one-line summary. The Conversation Record stores `question` + `[Evidence: name]`. Replays of a request id include the file hash in the fingerprint.
+  - Fake provider: acknowledges evidence by name, explicitly without analysing it (offline test mode).
+  - Frontend: drop a file on the conversation column or press **Present** (file picker); a chip shows the pending file (thumbnail or type badge, size, remove); the chat field becomes an optional question and the button reads **Present!**. Sending plays `evidence_reveal` (SFX volume/mute) and shows the file in the native evidence frame at the stage's top-left, sliding in, while the character thinks; it leaves when the reply starts. Client-side checks mirror the server limits; pre-send rejections are shown separately from reply errors.
+- **Rationale:** the owner asked for a module where a dropped file is analysed by the active model through the character. The Court Record "present" metaphor fits the game; server-side sniffing and explicit per-vendor formatting keep untrusted files from reaching providers in an unexpected shape.
+- **Not in v1:** Word/Excel, PDF text extraction for non-Claude providers, several files at once, presenting files from the generated-file Court Record.
+
+## D-066 — Interface languages: English, French, Japanese, Italian, Spanish
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - Settings → Language (`language`: en/fr/ja/it/es), default = first supported browser language, else English. It sets `<html lang>`, which the dialogue paginator (Intl.Segmenter) and task acknowledgements already use.
+  - `frontend/src/i18n/`: `strings.ts` (English reference + 4 translations), `i18n.ts` (`translate`, `localizedName`, `detectLanguage`), `useT.ts`. A test requires every language to define every key with identical `{placeholders}`.
+  - Translated: title and main menu, character/location select, Settings labels, music dock, conversation buttons/placeholders/errors, evidence UI and messages, model-failure messages (`generationFailureMessage(…, language)`), artifact delivery, Conversation Record, generated-file Court Record, the sample Talk topics. Not translated: developer panels, the AI-profile configuration block, background descriptions, OST track titles.
+  - Character names: optional `names` in character.json (frontend loader and backend profile). Maya 綾里真宵, Mia 綾里千尋, Gumshoe 糸鋸圭介 (ja) and Dick Tektiv (fr, his French localization name); Italian and Spanish keep the English names (no localized names are recorded for those languages).
+  - `POST /api/chat` takes `language` (default en). The system prompt gains a `## Language` section: always reply in that language unless the user explicitly asks otherwise, plus the character's name in that language when it differs.
+  - Offline Fake provider: `fake_i18n.py` translates the beat texts of the standard patterns and the evidence acknowledgement (same emotions/reactions/gestures), with a few keywords per language. Error lines: `performance.json` `errorLine.translations`; the director picks them by language. Acknowledgement lines gain it/es for all three characters.
+- **Rationale:** the owner asked for the five languages with matching placeholder texts and character names in each language.
+
+## D-067 — Agents and events: inbox, Claude Code companion, character tools
+- **Status:** Accepted (implemented 2026-10-25; plan, status and next ideas in `docs/AGENTS_AND_EVENTS.md`)
+- **Decision:**
+  - Event inbox: `POST /api/events` / `GET /api/events?after&character&language` (local only), in-memory ring buffer (100, 60/min), event types `task_finished`, `needs_attention`, `tests_passed`, `tests_failed`, `build_failed`, `session_started`, `reminder_due`. Lines are character data (`performance.json` `eventLines[type][lang]`, optional `exclamation`), performed through the normal director; no model call. `after=0` returns only the cursor (plus reminders due in the last 15 min). The frontend polls every 2 s and plays events when the conversation is idle; attention events ring the phone first.
+  - Claude Code companion: `scripts/claude-code-hook.mjs` (async command hook, exec form `node <script>`, silent, exit 0, 1.5 s timeout) maps `SessionStart`, `Stop`, `Notification` (permission/idle/input), `PostToolUse`/`PostToolUseFailure` on Bash (test/build commands) to events. `scripts/install-claude-code-hook.mjs` merges into `~/.claude/settings.json` with a backup, idempotent, `--dry-run`/`--uninstall`; not run without the owner's consent.
+  - Tools: optional `toolRequest {tool, arguments}` in the structured reply (all providers), one call per turn, server-side validation, result returned as delimited data for a second tool-free generation. Groups: reminders (always), folders (if any folder is authorized), web_search (if a provider and key exist); `performance.json` `tools` may restrict groups. Response field `tool: {name, ok}`.
+  - Settings → Tools: authorize/remove folders, choose Brave/Tavily and set/remove the key (vault), list/cancel reminders.
+- **Rationale:** the owner asked for both the Claude Code companion and real character tools, with an allow-list and in-game confirmation for sensitive actions; the folder allow-list is that confirmation.
+- **Limits:** reminders fire only while the backend and a tab are open; tool output is not kept in history; web search uses snippets only.
+
+## D-068 — Voiced shouts and the title intro
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:**
+  - `audio.json` `voices[phrase][language][speaker]` → sound id; clips in `audio/voices/<lang>/<speaker>_<phrase>.wav` (category `dialogue`). Installed (owner-labelled): EN Phoenix/Mia/Edgeworth objection + hold_it, Phoenix/Mia take_that; JA Mia/Edgeworth objection, Phoenix/Mia hold_it. Source archive has no French voices.
+  - Settings → Shouts: Japanese (default) or English, independent of the interface language.
+  - Title: after "press start", a random `objection` shout from Phoenix/Mia/Edgeworth in the shout language (falls back to the other language, then to the generic SFX), the original Objection bubble, a 1 s freeze, a 450 ms fade to black, then the menu fades in. Bubbles and voices are preloaded.
+  - Characters may declare `voice.shout` (Mia = `mia`); event exclamations then use that voice, else the generic `exclamation_*` SFX (`exclamation_objection` → the existing objection.wav, hold_it/take_that → `fx_emphasis`).
+- **Open:** Phoenix's Japanese 「異議あり！」 is one of the unlabelled clips `0x8D0E0`, `0xB29A0`, `0x4F840`, `0xA3040` of the 3DS archive; until identified, the Japanese title shout is Mia or Edgeworth.
+
+## D-069 — Title draw uses every objection voice
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Amends:** D-068 (title speakers limited to Phoenix/Mia/Edgeworth in the shout language).
+- **Decision:** at the owner's request the title draws from every installed `objection` voice in every language (12: EN Phoenix, Mia, Mia take 2, Edgeworth, guest_m1–m3; JA Phoenix, Mia, Edgeworth, guest_f1, guest_m4) and never repeats the previous title shout (`localStorage` `courtroom-companion.last-title-shout`). The Shouts setting still chooses the language of character exclamations. `guest_*` are clips the owner labelled "other man/woman" (characters not identified). Phoenix's Japanese objection is `0xB29A0`, identified by the owner. Resolves the D-068 open item.
+
+## D-070 — Japanese exclamation bubbles for Japanese shouts
+- **Status:** Accepted (objection asset added 2026-10-25; hold_it/take_that Japanese bubbles still absent)
+- **Date:** 2026-10-25
+- **Decision:** optional `ui.json` images `exclamation_objection_ja` (「異議あり！」), `exclamation_hold_it_ja` (「待った！」), `exclamation_take_that_ja` (「くらえ！」). The title shows the Japanese objection bubble when the drawn voice is `voice_ja_*`; conversation exclamations use the Japanese bubble when the character's voice is Japanese, or, for characters without a voice, when the interface language is Japanese. Missing Japanese images fall back to the English bubble.
+- **Asset:** `ui/exclamations/objection_ja.png` from the owner's `igiari.jpeg` (kept in `docs/references/`): exterior black flood-filled to transparent, cropped, scaled to fit 256×192 (230×192, centred), colours snapped to the English bubble's palette.
+
+## D-071 — The OST stays out of Git; installer script and download link
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Resolves:** the D-044 open item (normal Git vs LFS).
+- **Decision:** the repository is public, so the owner chose not to redistribute the Capcom OST. `frontend/public/assets/music/original/*.mp3` is git-ignored; the README and `docs/MUSIC.md` point to https://archive.org/details/pwaa-original-soundtrack (VBR MP3 ZIP) and `scripts/install_ost.py` (stdlib only) installs the 25 runtime tracks by OST number. `validate:assets` and the music test accept a clone with no OST installed (notice only) but still require every track once any is present. Other Capcom assets (sprites, SFX, voices, bubbles) stay in the repository as before.

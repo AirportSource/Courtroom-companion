@@ -6,6 +6,7 @@ import { tileGeometry, tileSlotOrigin } from './evidenceTile.ts'
 import { GENERATED_GRID, generatedMove, generatedPageCount, orderedGeneratedFiles } from './generatedFiles.ts'
 import { playMenuSound } from '../engine/menuSounds.ts'
 import { createCourtRecordFeedback } from './courtRecordFeedback.ts'
+import { useT } from '../i18n/useT.ts'
 import './generated-files-court-record.css'
 
 export interface GeneratedFilesCourtRecordProps {
@@ -23,6 +24,7 @@ export interface GeneratedFilesCourtRecordProps {
 /** A generated-files-only 256 × 192 surface, mounted inside the existing PixelStage. */
 export function GeneratedFilesCourtRecord({ artifacts, onClose, onArtifactsChanged, onRefresh,
   loading = false, error = null, fileIcon = null, evidenceFrame = null }: GeneratedFilesCourtRecordProps) {
+  const t = useT()
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [inspectorId, setInspectorId] = useState<string | null>(null)
   const [removed, setRemoved] = useState<string[]>([])
@@ -82,8 +84,7 @@ export function GeneratedFilesCourtRecord({ artifacts, onClose, onArtifactsChang
       if (alive.current) {
         const absent = failure instanceof Error && failure.message === 'This generated file is missing.'
         if (absent) setMissing((previous) => [...previous, id])
-        setActionError({ id, text: absent ? 'This generated file is missing. Refresh the record.'
-          : kind === 'read' ? 'Could not read this file. Try Refresh.' : 'Could not delete this file. Try Refresh.' })
+        setActionError({ id, text: t(absent ? 'files.missing' : kind === 'read' ? 'files.readFailed' : 'files.deleteFailed') })
       }
     } finally { if (alive.current) setOperation(null) }
   }
@@ -107,11 +108,11 @@ export function GeneratedFilesCourtRecord({ artifacts, onClose, onArtifactsChang
   }
 
   return (
-    <div className="gcr-view" role="dialog" aria-label="Court Record: generated files" tabIndex={-1}
+    <div className="gcr-view" role="dialog" aria-label={t('files.title')} tabIndex={-1}
       ref={root} onKeyDown={onKey} onClick={(event) => event.stopPropagation()}>
       <header className="gcr-heading">
-        <strong>{inspected ? 'File inspector' : 'Court Record'}</strong>
-        <button type="button" onClick={back}>{inspected ? 'Back' : 'Close'}</button>
+        <strong>{t(inspected ? 'files.inspector' : 'files.heading')}</strong>
+        <button type="button" onClick={back}>{t(inspected ? 'common.back' : 'common.close')}</button>
       </header>
       {inspected ? <section className="gcr-inspector" aria-label="Generated file inspector">
         <strong className="gcr-filename" title={inspected.displayName}>{inspected.displayName}</strong>
@@ -120,14 +121,14 @@ export function GeneratedFilesCourtRecord({ artifacts, onClose, onArtifactsChang
           <time dateTime={inspected.createdAt}>{new Date(inspected.createdAt).toISOString()}</time>
           <span title={inspected.mimeType}>{inspected.mimeType}</span>
         </div>
-        <p className="gcr-inert">Text only. Python is never run.</p>
-        <pre tabIndex={0} aria-label="Artifact text preview">{isMissing ? 'File text is unavailable.'
-          : content?.id === inspected.id ? content.text : inspected.contentPreview || 'No preview available. Use Read.'}</pre>
+        <p className="gcr-inert">{t('files.inert')}</p>
+        <pre tabIndex={0} aria-label="Artifact text preview">{isMissing ? t('files.textUnavailable')
+          : content?.id === inspected.id ? content.text : inspected.contentPreview || t('files.noPreview')}</pre>
         <div className="gcr-actions">
-          <button type="button" disabled={!!operation || isMissing} onClick={() => void act('read')}>{operation === 'read' ? 'Reading…' : 'Read'}</button>
-          {!isMissing && <a href={artifactDownloadUrl(inspected.id)} download={inspected.displayName} onClick={() => feedback.confirm()}>Download</a>}
-          <button type="button" disabled={!!operation} onClick={() => void act('delete')}>{operation === 'delete' ? 'Deleting…' : 'Delete'}</button>
-          <button type="button" disabled={loading || !!operation} onClick={refresh}>Refresh</button>
+          <button type="button" disabled={!!operation || isMissing} onClick={() => void act('read')}>{t(operation === 'read' ? 'common.reading' : 'common.read')}</button>
+          {!isMissing && <a href={artifactDownloadUrl(inspected.id)} download={inspected.displayName} onClick={() => feedback.confirm()}>{t('common.download')}</a>}
+          <button type="button" disabled={!!operation} onClick={() => void act('delete')}>{t(operation === 'delete' ? 'common.deleting' : 'common.delete')}</button>
+          <button type="button" disabled={loading || !!operation} onClick={refresh}>{t('common.refresh')}</button>
         </div>
         {actionError?.id === inspected.id && <p className="gcr-action-error" role="alert">{actionError.text}</p>}
       </section> : <>
@@ -153,20 +154,20 @@ export function GeneratedFilesCourtRecord({ artifacts, onClose, onArtifactsChang
               <EvidenceTile frame={evidenceFrame} empty />
             </span>
           })}
-          {records.length === 0 && <p className="gcr-empty" role="status">{loading ? 'Loading files…' : 'No generated files.'}</p>}
+          {records.length === 0 && <p className="gcr-empty" role="status">{t(loading ? 'files.loading' : 'files.empty')}</p>}
         </div>
         <footer className="gcr-footer">
-          <div className="gcr-current" title={selected?.displayName}>{selected?.displayName ?? 'Generated files only'}</div>
+          <div className="gcr-current" title={selected?.displayName}>{selected?.displayName ?? t('files.only')}</div>
           <div className="gcr-paging">
-            <button type="button" aria-label="Previous page" disabled={page === 0} onClick={() => choose((page - 1) * 6)}>‹</button>
+            <button type="button" aria-label={t('common.previousPage')} disabled={page === 0} onClick={() => choose((page - 1) * 6)}>‹</button>
             <span>{page + 1}/{pages}</span>
-            <button type="button" aria-label="Next page" disabled={page + 1 >= pages} onClick={() => choose((page + 1) * 6)}>›</button>
-            <button type="button" disabled={!selected} onClick={() => open()}>Inspect</button>
-            <button type="button" disabled={loading} onClick={refresh}>{loading ? 'Loading…' : 'Refresh'}</button>
+            <button type="button" aria-label={t('common.nextPage')} disabled={page + 1 >= pages} onClick={() => choose((page + 1) * 6)}>›</button>
+            <button type="button" disabled={!selected} onClick={() => open()}>{t('common.inspect')}</button>
+            <button type="button" disabled={loading} onClick={refresh}>{t(loading ? 'common.loading' : 'common.refresh')}</button>
           </div>
         </footer>
       </>}
-      {error && <p className="gcr-list-error" role="alert">Files unavailable. Try Refresh.</p>}
+      {error && <p className="gcr-list-error" role="alert">{t('files.unavailable')}</p>}
     </div>
   )
 }

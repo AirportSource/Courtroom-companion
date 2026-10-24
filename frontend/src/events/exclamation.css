@@ -1,0 +1,42 @@
+/* Full-stage exclamation bubble (stage pixels), shaken in whole-pixel steps like the DS. */
+.exclamation {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  animation: exclamation-shake 360ms steps(1) both;
+}
+
+.exclamation-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.exclamation-fallback {
+  padding: 4px 10px;
+  font-size: 32px;
+  color: #fff;
+  background: #c0141b;
+  border: 2px solid #fff;
+  text-shadow: 2px 2px #000;
+}
+
+@keyframes exclamation-shake {
+  0% { transform: translate(-3px, 2px); }
+  15% { transform: translate(3px, -2px); }
+  30% { transform: translate(-2px, -1px); }
+  45% { transform: translate(2px, 1px); }
+  60% { transform: translate(-1px, 1px); }
+  75%,
+  100% { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exclamation {
+    animation: none;
+  }
+}

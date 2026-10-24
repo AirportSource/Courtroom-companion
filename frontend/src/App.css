@@ -8,6 +8,7 @@
 /* ---- Scene column: stage + chat input ---- */
 
 .scene-column {
+  position: relative; /* anchors the evidence drop target */
   flex: 1;
   min-width: 0;
   display: flex;
@@ -540,6 +541,97 @@
   margin: 0;
 }
 
+/* ---- Stage picker (StageSelect): DS replacement for <select> inside the stage ---- */
+
+.settings-screen .stage-select,
+.stage-select {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  height: 17px;
+  padding: 0 4px;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: 15px;
+  text-align: left;
+  white-space: nowrap;
+  color: #fff;
+  background: var(--dialogue-bg);
+  border: 1px solid var(--frame-light);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--frame-dark);
+  cursor: pointer;
+}
+
+.settings-screen .stage-select:hover,
+.settings-screen .stage-select:focus-visible,
+.stage-select[aria-expanded='true'] {
+  background: var(--nameplate-bg);
+  box-shadow: inset 0 0 0 1px var(--nameplate-edge);
+  color: #fff8c8;
+  outline: none;
+}
+
+.settings-screen .stage-select:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.stage-select-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Same downward triangle as the dialogue continue arrow. */
+.stage-select-arrow {
+  flex: none;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+}
+
+.stage-select-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 0.55);
+}
+
+.stage-select-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 224px;
+  padding: 4px;
+  background: var(--dialogue-bg);
+  border: 1px solid var(--frame-light);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--frame-dark);
+}
+
+.stage-select-heading {
+  align-self: flex-start;
+  padding: 0 6px;
+  line-height: 15px;
+  color: #fff;
+  background: var(--nameplate-bg);
+  border: 1px solid var(--nameplate-edge);
+  border-radius: 2px;
+}
+
+.stage-select-panel .menu-list {
+  width: 100%;
+}
+
 .settings-footer {
   display: flex;
   justify-content: space-between;
@@ -725,12 +817,88 @@
   padding: 0 16px 8px;
 }
 
-/* Out-of-stage conversation actions (Talk / Court Record) beside the chat bar. */
+/* Out-of-stage conversation actions (Talk / Court Record / Record) beside the chat bar,
+   in the same DS frame and 2× pixel font as the chat input; highlighted like a selected
+   menu entry on hover/focus. */
 .conversation-actions {
   display: flex;
+  flex-wrap: wrap; /* labels never break inside a button (Japanese can break anywhere) */
   gap: 8px;
   max-width: 1024px;
   width: 100%;
   margin: 0 auto;
   padding: 0 16px 8px;
+  font-family: var(--stage-font);
+  letter-spacing: calc(var(--stage-letter-spacing) * 2);
+  word-spacing: calc(var(--stage-word-spacing) * 2);
+}
+
+.conversation-actions button {
+  white-space: nowrap;
+  font: inherit;
+  font-size: calc(var(--stage-font-size) * 2);
+  line-height: 1.2;
+  color: #fff;
+  background: var(--dialogue-bg);
+  border: 2px solid var(--frame-light);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px var(--frame-dark);
+  padding: 2px 12px;
+  cursor: pointer;
+}
+
+.conversation-actions button:hover:not(:disabled),
+.conversation-actions button:focus-visible {
+  background: var(--nameplate-bg);
+  box-shadow: inset 0 0 0 2px var(--nameplate-edge);
+  color: #fff8c8;
+  outline: none;
+}
+
+.conversation-actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Title intro (D-068): fade to black after the Objection freeze, then fade the menu in. */
+.stage-fade {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #000;
+  pointer-events: none;
+  animation-timing-function: steps(6);
+  animation-fill-mode: both;
+}
+
+.stage-fade-out {
+  animation-name: stage-fade-out;
+}
+
+.stage-fade-in {
+  animation-name: stage-fade-in;
+}
+
+@keyframes stage-fade-out {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes stage-fade-in {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Settings → Tools (D-067) */
+.settings-subheading {
+  margin: 6px 0 0;
+  font-size: inherit;
+}
+
+.tools-item-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

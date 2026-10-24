@@ -5,6 +5,7 @@ import { readFontMetrics, hasFontMetrics, fontFaceCss } from './fontMetrics.ts'
 import { readWaiting } from './presentation.ts'
 import { readTaskAcknowledgements } from './taskAcknowledgements.ts'
 import { parseRingtones, ringtoneEvents, setRingtoneCatalog, type RingtoneCatalog } from './ringtones.ts'
+import { parseVoices, setVoiceCatalog } from './voices.ts'
 import type {
   FontMetricDescriptors,
   AnimationClip,
@@ -35,6 +36,13 @@ function assetRoot(): URL {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+/** `names`: language code → non-empty name; anything else is ignored. */
+function readNames(raw: unknown): Record<string, string> {
+  if (!isRecord(raw)) return {}
+  return Object.fromEntries(Object.entries(raw).filter(
+    (entry): entry is [string, string] => /^[a-z]{2}$/.test(entry[0]) && typeof entry[1] === 'string' && entry[1].trim() !== ''))
 }
 
 async function fetchJson(url: URL): Promise<unknown> {
@@ -98,6 +106,7 @@ export async function loadCharacterSummaries(): Promise<CharacterSummary[]> {
         return {
           id,
           displayName: typeof manifest.displayName === 'string' ? manifest.displayName : id,
+          names: readNames(manifest.names),
           manifestUrl,
           previewUrl: typeof firstFrame === 'string' ? new URL(firstFrame, manifestUrl).href : null,
         }
@@ -309,9 +318,14 @@ export async function loadCharacter(manifestUrl: string): Promise<LoadedCharacte
   return {
     id: typeof manifest.id === 'string' ? manifest.id : 'unknown',
     displayName: typeof manifest.displayName === 'string' ? manifest.displayName : 'Unknown',
+    names: readNames(manifest.names),
     anchor: { horizontal: 'center', vertical: 'bottom' },
     render: readRender(manifest.render, warnings),
-    voice: { blip: typeof manifest.voice?.blip === 'string' ? manifest.voice.blip : undefined },
+    voice: {
+      blip: typeof manifest.voice?.blip === 'string' ? manifest.voice.blip : undefined,
+      // Speaker key in audio.json `voices` for this character's shouts (D-068).
+      shout: typeof manifest.voice?.shout === 'string' ? manifest.voice.shout : undefined,
+    },
     defaultEmotion,
     fallbackEmotion,
     animations,
@@ -374,6 +388,7 @@ export async function loadAudio(): Promise<{ sounds: Sound[]; events: Record<str
   const ringtones = parseRingtones(manifest.ringtones, known)
   if (ringtones) Object.assign(events, ringtoneEvents(ringtones))
   setRingtoneCatalog(ringtones)
+  setVoiceCatalog(parseVoices((raw as Record<string, unknown>).voices, known))
   return { sounds, events, ringtones }
 }
 

@@ -7,6 +7,20 @@
         "initial_investigation_2001"
       ]
     },
+    "dick_gumshoe": {
+      "defaultTrack": "dick_gumshoe_thats_detective_gumshoe_pal",
+      "alternatives": [
+        "initial_investigation_2001",
+        "heart_of_the_investigation_2001"
+      ]
+    },
+    "mia_fey": {
+      "defaultTrack": "maya_fey_turnabout_sisters_2001",
+      "alternatives": [
+        "court_is_now_in_session",
+        "cross_examination_moderato_2001"
+      ]
+    },
     "default": {
       "defaultTrack": "maya_fey_turnabout_sisters_2001",
       "alternatives": [

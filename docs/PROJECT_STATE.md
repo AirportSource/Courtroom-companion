@@ -1,6 +1,6 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-24 (Conversation Record / evidence frame / ringtones / token budgets). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-25 (agents, events, tools, voiced shouts, D-067/D-068). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
@@ -36,6 +36,12 @@ At native size and render scale 1 (D-026), Maya is 146–162 px tall on the 192 
 - Character BGM starts only in the conversation scene; menus are silent.
 - DotGothic16 kanji are scaled to 75% so they match Igiari kana.
 - The import panel opens by default with visible steps.
+
+**Agents and events (D-067, D-068).** Characters speak without a message (Claude Code hook events, due reminders) with original exclamation bubbles and voiced shouts; they can use tools (reminders, authorized folders, web search) through a validated two-phase loop; the title opens with a random voiced "Igiari!". Status and next steps: `docs/AGENTS_AND_EVENTS.md`.
+
+**Languages (D-066).** English, French, Japanese, Italian and Spanish: interface, character names (e.g. 綾里真宵, Dick Tektiv), offline replies and the model's reply language follow Settings → Language.
+
+**Present evidence (D-065).** In a conversation, drop a file on the scene or press Present: text/code (every model), images (vision models) and PDFs (Claude; OpenAI file input) go to the active model with an optional question, and the character answers in its own way. The file is shown in the DS evidence frame while the character thinks.
 
 **Court Record (D-047).** Data-driven evidence/profile manifest with 3 native evidence icons. Its DS view is reachable from the main menu and from a conversation overlay. Generic Talk Options sit over the original talk-option panel.
 
@@ -184,13 +190,14 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 
 ## What is incomplete
 
-- **Original DS UI graphics:** the title art, pixel font and menu panels (D-031) are in. The text box, name plate, continue arrow and menu buttons are still CSS stand-ins.
+- **Original DS UI graphics:** the title art, pixel font and menu panels (D-031) are in. The text box, name plate, continue arrow, menu buttons, Settings pickers and conversation action buttons are still CSS stand-ins (pickers and actions DS-themed in D-063).
+- **OST MP3s are local-only:** `music/original/` (25 files) is untracked in Git. On this machine it was restored on 2026-10-24 from the owner's `ace-attorney-original-soundtrack.zip`; a fresh clone needs the same copy until D-044 (Git vs LFS) is decided.
 - Music: 10 playable tracks remain `loop: null` (list in `docs/MUSIC.md`); built-in loops are not ear-verified. Lofi Girl `EWrX250Zhko` refuses embedding (error 150); users can enter another embeddable video. No MusicDirector.
 - Semantic reaction SFX are wired through the director and audio event manifest; the selected WAVs still await by-ear approval. Exclamation bubbles and screen effects remain unwired (bubble images are extracted but not used yet).
 - The original static Court Record retains three demo evidence entries; the generated-file Court Record is separate and contains only generated artifacts. Talk topics are static dev samples; no case logic.
 - Ollama, generic OpenAI-compatible and native Anthropic providers plus local profile/credential management are implemented. No application streaming or persistent memory yet.
 - The chat UX is minimal (single input under the scene, no history view).
-- One character on screen. Wide backgrounds are centre-cropped (no panning).
+- Three selectable characters (Maya Fey, Dick Gumshoe, Mia Fey; D-064), one on screen at a time. Gumshoe and Mia use stand-in portraits. Wide backgrounds are centre-cropped (no panning).
 - Sheet rows 14–17 (Maya side poses) are not extracted yet.
 
 ## Known problems / ambiguities
@@ -206,11 +213,15 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 9. Menu SFX play at a fixed volume of 0.5 (no UI volume setting yet).
 10. Vite's file watcher occasionally cached a half-written file during scripted edits; touching the file fixes it (dev-only).
 
+11. Settings → Scale `Fit` (default, D-062) makes sprite pixels slightly uneven in width; `Pixel` keeps them exact.
+
 ## Current development phase
 
 **Phase 5h — milestone 3 of 3 (artifact presentation and file-only Court Record) is implemented in the current uncommitted working tree.** Milestone 2 remains authoritative for artifacts and storage. The task-aware budget/truncation fix and Maya quirk-variety guidance are preserved. Current results are in `SESSION_LOG.md`. No commit or push was performed.
 
 ## Immediate next objective
+
+0. **Agents and events (Phase 7):** follow `docs/AGENTS_AND_EVENTS.md` (plan, order, safety rules, status checkboxes).
 
 1. Decide whether the ~58 MB of OST MP3s belong in Git normally or via LFS (D-044).
 2. Listen across loop boundaries of the curated tracks and correct the unlooped ones (start with Maya Fey).

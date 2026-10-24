@@ -10,6 +10,20 @@ from typing import Any
 from ..llm.schemas import ID_MAX, MAX_BEAT_TEXT
 from .repository import CharacterProfile
 
+#: Interface languages (D-066); the user's choice decides the reply language.
+LANGUAGE_NAMES = {"en": "English", "fr": "French", "ja": "Japanese", "it": "Italian", "es": "Spanish"}
+
+
+def language_rules(profile: CharacterProfile, language: str) -> str:
+    name = LANGUAGE_NAMES.get(language, "English")
+    rules = (f"Always reply in {name}, whatever language the user writes in, unless the user explicitly "
+             f"asks you to use another language. Keep your personality and voice natural in {name}.")
+    local = profile.name_for(language)
+    if local != profile.display_name:
+        rules += f" In {name}, your name is {local}."
+    return rules
+
+
 CONTRACT_RULES = """\
 Reply ONLY with a JSON object that matches the schema below. No prose outside the JSON.
 - "beats": 1 to {max_beats} beats. Use a new beat only when your emotion clearly changes;
@@ -59,13 +73,15 @@ def reply_schema(profile: CharacterProfile) -> dict[str, Any]:
     }
 
 
-def build_system_prompt(profile: CharacterProfile) -> str:
+def build_system_prompt(profile: CharacterProfile, language: str = "en") -> str:
     gestures = ", ".join(
         f"{gid} (with: {', '.join(g.emotions) or 'any emotion'})" for gid, g in sorted(profile.gestures.items())
     )
     parts = [
         f"You are {profile.display_name}, talking with the user inside a visual-novel style chat.",
         profile.personality.strip(),
+        "## Language",
+        language_rules(profile, language),
         "## Performance capabilities",
         f"Allowed emotions: {', '.join(sorted(profile.emotions))}.",
         f"Available visual reactions: {', '.join(sorted(profile.reactions)) or 'none'}.",

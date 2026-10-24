@@ -330,12 +330,22 @@ export function timelineToLines(timeline: PerformanceTimeline, layout: TextLayou
 
 export class ChatError extends Error {
   cancelled: boolean
-  constructor(message: string, cancelled = false) { super(message); this.cancelled = cancelled }
+  /** Server rejection code (e.g. "evidence_too_large"), for a translated message. */
+  code: string | null
+  constructor(message: string, cancelled = false, code: string | null = null) {
+    super(message)
+    this.cancelled = cancelled
+    this.code = code
+  }
 }
 
 /** POST /api/chat (proxied to the backend by Vite in development). */
 export async function sendChat(
-  request: { character: string; message: string; sessionId: string; requestId?: string },
+  request: { character: string; message: string; sessionId: string; requestId?: string;
+    /** A file presented as evidence (base64); the message may then be empty. */
+    evidence?: { name: string; data: string }
+    /** Interface language: the character replies in it (D-066). */
+    language?: string },
   timeoutMs = 135_000,
   options: { signal?: AbortSignal; onTask?: (task: TurnTask) => void } = {},
 ): Promise<ChatResponse> {
@@ -354,7 +364,12 @@ export async function sendChat(
       body: JSON.stringify(request),
       signal: controller.signal,
     })
-    if (!response.ok) throw new ChatError(`the server answered ${response.status}`)
+    if (!response.ok) {
+      // Rejected evidence comes back as 422 with a readable reason.
+      const detail = response.status === 422 ? await response.json().then((body) => body?.detail, () => null) : null
+      throw new ChatError(typeof detail?.message === 'string' ? detail.message : `the server answered ${response.status}`,
+        false, typeof detail?.code === 'string' ? detail.code : null)
+    }
     const parsed = parseChatResponse(await response.json())
     polling.abort()
     if (!controller.signal.aborted && parsed.task) options.onTask?.(parsed.task)

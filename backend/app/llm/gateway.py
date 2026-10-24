@@ -18,7 +18,7 @@ from .providers.fake import FakeProvider
 from .providers.ollama import OllamaProvider
 from .providers.openai_compatible import OpenAICompatibleProvider
 from .providers.anthropic import AnthropicProvider
-from .repair import parse_reply
+from .repair import parse_reply, decode_reply_content
 from .schemas import CharacterReply, ChatMessage
 from ..artifacts.contracts import CreateTextArtifact
 from ..artifacts.parsing import parse_artifact_turn
@@ -52,6 +52,8 @@ class GatewayResult:
     error: str | None = None
     artifact_action: CreateTextArtifact | None = None
     generation: dict[str, Any] = field(default_factory=dict)
+    #: The decoded structured reply (dict) when available; the service reads `toolRequest` from it.
+    raw_data: Any = None
 
 
 class LLMGateway:
@@ -81,11 +83,11 @@ class LLMGateway:
 
     async def generate_reply(
         self, system_prompt: str, messages: list[ChatMessage], response_schema: dict[str, Any],
-        *, workload: OutputWorkload = OutputWorkload.DIALOGUE,
+        *, workload: OutputWorkload = OutputWorkload.DIALOGUE, language: str = "en",
     ) -> GatewayResult:
         workload = OutputWorkload(workload)
         settings = settings_for_workload(self.config.settings, workload)
-        request = GenerationRequest(system_prompt, messages, response_schema, settings, workload)
+        request = GenerationRequest(system_prompt, messages, response_schema, settings, workload, language)
         generation = {"workload": workload.value, "maxOutputTokens": settings.max_tokens}
         def with_stop(reason):
             # Only bounded transport status, never arbitrary provider metadata or hidden text.
@@ -116,12 +118,15 @@ class LLMGateway:
             return failed([f"Output reached the requested max_tokens budget ({settings.max_tokens} tokens); incomplete output was discarded"], OUTPUT_TRUNCATED)
         if generation.get("stopReason") == "model_context_window_exceeded":
             return failed(["The model context window was exceeded; incomplete output was discarded"], CONTEXT_EXCEEDED)
+        raw_data = raw.content if isinstance(raw.content, dict) else None
+        if raw_data is None and "toolRequest" in response_schema.get("properties", {}) and isinstance(raw.content, str):
+            raw_data = decode_reply_content(raw.content, [])
         if "artifactAction" in response_schema.get("properties", {}):
             parsed = parse_artifact_turn(raw.content)
             if parsed.error and failure_class(parsed.error):
                 generation["failureClass"] = failure_class(parsed.error)
-            return GatewayResult(parsed.reply, parsed.warnings, parsed.error, parsed.action, generation)
+            return GatewayResult(parsed.reply, parsed.warnings, parsed.error, parsed.action, generation, raw_data)
         repaired = parse_reply(raw.content)
         if repaired.reply is None:
             return GatewayResult(None, repaired.warnings, error="invalid_reply", generation=generation)
-        return GatewayResult(repaired.reply, repaired.warnings, generation=generation)
+        return GatewayResult(repaired.reply, repaired.warnings, generation=generation, raw_data=raw_data)

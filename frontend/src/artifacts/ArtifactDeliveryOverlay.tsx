@@ -2,6 +2,7 @@ import { useEffect, useRef, type ReactNode } from 'react'
 import { EvidenceTile } from '../courtRecord/EvidenceTile.tsx'
 import type { UiImage } from '../engine/manifestTypes.ts'
 import type { ArtifactDeliveryState } from './artifactDelivery.ts'
+import { useT } from '../i18n/useT.ts'
 import './ArtifactDeliveryOverlay.css'
 
 export interface ArtifactDeliveryOverlayProps {
@@ -20,6 +21,7 @@ export interface ArtifactDeliveryOverlayProps {
 /** UI in the existing 256x192 stage; assets, character performance and audio belong to the caller. */
 export function ArtifactDeliveryOverlay({ state, workingIcon, phoneIcon, evidenceIcon, evidenceFrame = null, canAdvance = false,
   onPhoneAcknowledge, onSummonAdvance }: ArtifactDeliveryOverlayProps) {
+  const t = useT()
   const lastAction = useRef<string | null>(null)
   const actionRef = useRef<HTMLButtonElement>(null)
   const phase = state.phase
@@ -53,14 +55,14 @@ export function ArtifactDeliveryOverlay({ state, workingIcon, phoneIcon, evidenc
             : <div className="artifact-delivery__evidence" aria-hidden="true">{evidenceIcon}</div>}
           <div className="artifact-delivery__record">
             <div className="artifact-delivery__filename">{state.artifact?.displayName}</div>
-            <div>Added to the Court Record.</div>
+            <div>{t('artifact.added')}</div>
           </div>
         </div>
       ) : (
         <div className="artifact-delivery__prop" aria-hidden="true">{phone ? phoneIcon : workingIcon}</div>
       )}
       {!summon && <div className="artifact-delivery__message" role="status" aria-live="polite">
-        {phone ? 'Your file is ready.' : 'Creating your file…'}
+        {t(phone ? 'artifact.ready' : 'artifact.creating')}
       </div>}
       {(phone || summon) && (
         <button ref={actionRef} className="artifact-delivery__action" type="button" autoFocus disabled={summon && !canAdvance}
@@ -71,7 +73,7 @@ export function ArtifactDeliveryOverlay({ state, workingIcon, phoneIcon, evidenc
               if (!event.repeat) act()
             }
           }}>
-          {phone ? 'Answer phone' : 'Continue'}
+          {t(phone ? 'artifact.answerPhone' : 'common.continue')}
         </button>
       )}
     </div>

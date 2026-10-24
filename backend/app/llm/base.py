@@ -54,6 +54,9 @@ class GenerationRequest:
     response_schema: dict[str, Any]
     settings: GenerationSettings = field(default_factory=GenerationSettings)
     workload: OutputWorkload = OutputWorkload.DIALOGUE
+    #: Interface language (D-066). Real providers get it through the system prompt; the offline
+    #: Fake provider uses it to pick its canned texts.
+    language: str = "en"
 
 
 @dataclass

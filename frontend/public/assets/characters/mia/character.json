@@ -1,0 +1,661 @@
+{
+  "schemaVersion": 1,
+  "id": "mia_fey",
+  "displayName": "Mia Fey",
+  "names": {
+    "en": "Mia Fey",
+    "fr": "Mia Fey",
+    "ja": "綾里千尋",
+    "it": "Mia Fey",
+    "es": "Mia Fey"
+  },
+  "anchor": "bottom-center",
+  "render": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  "voice": {
+    "blip": "blip_female",
+    "shout": "mia"
+  },
+  "courtRecordPortrait": {
+    "src": "portraits/court_record.png",
+    "width": 64,
+    "height": 64
+  },
+  "waiting": {
+    "emotion": "thinking",
+    "animation": "hand_on_chin"
+  },
+  "taskAcknowledgements": {
+    "artifact": {
+      "emotion": "happy",
+      "lines": {
+        "en": [
+          "Of course. Leave it to me.",
+          "All right, I'll put something together.",
+          "Give me a moment. I'll take care of it.",
+          "Let's see what I can do."
+        ],
+        "fr": [
+          "Bien sûr. Laisse-moi faire.",
+          "D'accord, je vais te préparer ça.",
+          "Un instant, je m'en occupe.",
+          "Voyons ce que je peux faire."
+        ],
+        "ja": [
+          "もちろん。任せて。",
+          "わかったわ。用意するわね。",
+          "少し待ってね。私がやるわ。",
+          "さて、やってみましょうか。"
+        ],
+        "it": [
+          "Certo. Lascia fare a me.",
+          "D'accordo, preparo qualcosa.",
+          "Dammi un momento, me ne occupo io.",
+          "Vediamo cosa posso fare."
+        ],
+        "es": [
+          "Por supuesto. Déjamelo a mí.",
+          "De acuerdo, prepararé algo.",
+          "Dame un momento, yo me encargo.",
+          "Veamos qué puedo hacer."
+        ]
+      }
+    }
+  },
+  "defaultEmotion": "neutral",
+  "fallbackEmotion": "neutral",
+  "animations": {
+    "arms_crossed": {
+      "canvas": {
+        "width": 110,
+        "height": 167
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/arms_crossed/idle/mia_frame_001.png",
+          "sprites/arms_crossed/idle/mia_frame_002.png",
+          "sprites/arms_crossed/idle/mia_frame_003.png",
+          "sprites/arms_crossed/idle/mia_frame_004.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/arms_crossed/talking/mia_frame_005.png",
+          "sprites/arms_crossed/talking/mia_frame_006.png",
+          "sprites/arms_crossed/talking/mia_frame_007.png",
+          "sprites/arms_crossed/talking/mia_frame_008.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "hand_on_chin": {
+      "canvas": {
+        "width": 105,
+        "height": 167
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/hand_on_chin/idle/mia_frame_009.png",
+          "sprites/hand_on_chin/idle/mia_frame_010.png",
+          "sprites/hand_on_chin/idle/mia_frame_011.png",
+          "sprites/hand_on_chin/idle/mia_frame_012.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/hand_on_chin/talking/mia_frame_013.png",
+          "sprites/hand_on_chin/talking/mia_frame_014.png",
+          "sprites/hand_on_chin/talking/mia_frame_015.png",
+          "sprites/hand_on_chin/talking/mia_frame_016.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "confident_smile": {
+      "canvas": {
+        "width": 110,
+        "height": 166
+      },
+      "idle": {
+        "fps": 7,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/confident_smile/idle/mia_frame_017.png",
+          "sprites/confident_smile/idle/mia_frame_018.png",
+          "sprites/confident_smile/idle/mia_frame_019.png",
+          "sprites/confident_smile/idle/mia_frame_020.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 7,
+        "loop": true,
+        "frames": [
+          "sprites/confident_smile/talking/mia_frame_021.png",
+          "sprites/confident_smile/talking/mia_frame_022.png",
+          "sprites/confident_smile/talking/mia_frame_023.png",
+          "sprites/confident_smile/talking/mia_frame_024.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "amused_laugh": {
+      "canvas": {
+        "width": 110,
+        "height": 166
+      },
+      "idle": {
+        "fps": 5,
+        "loop": true,
+        "frames": [
+          "sprites/amused_laugh/idle/mia_frame_025.png",
+          "sprites/amused_laugh/idle/mia_frame_026.png",
+          "sprites/amused_laugh/idle/mia_frame_027.png",
+          "sprites/amused_laugh/idle/mia_frame_028.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 7,
+        "loop": true,
+        "frames": [
+          "sprites/confident_smile/talking/mia_frame_021.png",
+          "sprites/confident_smile/talking/mia_frame_022.png",
+          "sprites/confident_smile/talking/mia_frame_023.png",
+          "sprites/confident_smile/talking/mia_frame_024.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "turn_aside": {
+      "canvas": {
+        "width": 92,
+        "height": 166
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/turn_aside/idle/mia_frame_029.png",
+          "sprites/turn_aside/idle/mia_frame_030.png",
+          "sprites/turn_aside/idle/mia_frame_031.png",
+          "sprites/turn_aside/idle/mia_frame_032.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/turn_aside/talking/mia_frame_033.png",
+          "sprites/turn_aside/talking/mia_frame_034.png",
+          "sprites/turn_aside/talking/mia_frame_035.png",
+          "sprites/turn_aside/talking/mia_frame_036.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "serious_front": {
+      "canvas": {
+        "width": 73,
+        "height": 169
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/serious_front/idle/mia_frame_037.png",
+          "sprites/serious_front/idle/mia_frame_038.png",
+          "sprites/serious_front/idle/mia_frame_039.png",
+          "sprites/serious_front/idle/mia_frame_040.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 7,
+        "loop": true,
+        "frames": [
+          "sprites/serious_front/talking/mia_frame_041.png",
+          "sprites/serious_front/talking/mia_frame_042.png",
+          "sprites/serious_front/talking/mia_frame_043.png",
+          "sprites/serious_front/talking/mia_frame_044.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "surprised": {
+      "canvas": {
+        "width": 73,
+        "height": 170
+      },
+      "idle": {
+        "fps": 7,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/surprised/idle/mia_frame_045.png",
+          "sprites/surprised/idle/mia_frame_046.png",
+          "sprites/surprised/idle/mia_frame_047.png",
+          "sprites/surprised/idle/mia_frame_048.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 7,
+        "loop": true,
+        "frames": [
+          "sprites/surprised/talking/mia_frame_049.png",
+          "sprites/surprised/talking/mia_frame_050.png",
+          "sprites/surprised/talking/mia_frame_051.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "sad_worried": {
+      "canvas": {
+        "width": 73,
+        "height": 169
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/sad_worried/idle/mia_frame_052.png",
+          "sprites/sad_worried/idle/mia_frame_053.png",
+          "sprites/sad_worried/idle/mia_frame_054.png",
+          "sprites/sad_worried/idle/mia_frame_055.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/sad_worried/talking/mia_frame_056.png",
+          "sprites/sad_worried/talking/mia_frame_057.png",
+          "sprites/sad_worried/talking/mia_frame_058.png",
+          "sprites/sad_worried/talking/mia_frame_059.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "reactions": {},
+  "emotions": {
+    "neutral": {
+      "animation": "arms_crossed"
+    },
+    "happy": {
+      "animation": "confident_smile"
+    },
+    "excited": {
+      "animation": "confident_smile"
+    },
+    "thinking": {
+      "animation": "hand_on_chin"
+    },
+    "surprised": {
+      "animation": "surprised"
+    },
+    "sad": {
+      "animation": "sad_worried"
+    },
+    "anxious": {
+      "animation": "sad_worried"
+    },
+    "playful": {
+      "animation": "amused_laugh"
+    },
+    "grateful": {
+      "animation": "confident_smile"
+    },
+    "laughing": {
+      "animation": "amused_laugh"
+    },
+    "explaining": {
+      "animation": "arms_crossed"
+    },
+    "polite": {
+      "animation": "arms_crossed"
+    },
+    "relaxed": {
+      "animation": "turn_aside"
+    },
+    "serious": {
+      "animation": "serious_front"
+    },
+    "determined": {
+      "animation": "serious_front"
+    }
+  },
+  "unassignedFrames": []
+}

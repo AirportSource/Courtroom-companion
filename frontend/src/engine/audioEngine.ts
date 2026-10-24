@@ -216,6 +216,30 @@ export class AudioEngine {
     return true
   }
 
+  /**
+   * Play as soon as possible. On the very first gesture the context is still resuming and nothing
+   * is decoded yet, so `play` alone fails silently (the title shout was mute). This waits for the
+   * resume and the decode, then plays, unless that took longer than `maxWaitMs` (a late shout
+   * would no longer match its animation).
+   */
+  async playWhenReady(id: SoundId, volume = 1, maxWaitMs = 800): Promise<boolean> {
+    if (this.play(id, volume)) return true
+    const context = this.context
+    if (!context || volume <= 0 || !this.sounds.has(id)) return false
+    const started = performance.now()
+    if (!this.encoded.has(id)) this.preload([id])
+    if (context.state === 'suspended') await context.resume().catch(() => {})
+    await (this.decode(id) ?? Promise.resolve())
+    if (performance.now() - started > maxWaitMs) return false
+    return this.play(id, volume)
+  }
+
+  /** playWhenReady for the sound mapped to a logical event. */
+  async playEventWhenReady(event: string, volume = 1, maxWaitMs = 800): Promise<boolean> {
+    const id = this.events.get(event)
+    return id ? this.playWhenReady(id, volume, maxWaitMs) : false
+  }
+
   /** Play the sound mapped to a logical event, with a per-event cooldown. */
   playEvent(event: string, volume = 1): boolean {
     const id = this.events.get(event)

@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 1,
+  "director": {
+    "expressiveness": 0.95,
+    "maxBeatsPerReply": 3,
+    "maxReactionsPerReply": 1,
+    "reactionCooldownMs": 9000,
+    "reactionMinIntensity": 0.55,
+    "minPoseHoldMs": 1000,
+    "strongChangeIntensity": 0.6,
+    "msPerChar": 38
+  },
+  "sfx": {
+    "maxPerReply": 1,
+    "minIntensity": 0.7,
+    "reactions": {
+      "head_scratch": "comic",
+      "shock": "shock",
+      "surprise": "surprise",
+      "realization": "realization",
+      "comic": "comic",
+      "emphasis": "emphasis"
+    },
+    "emotions": {
+      "surprised": "surprise",
+      "excited": "emphasis",
+      "determined": "emphasis",
+      "embarrassed": "comic",
+      "laughing": "comic"
+    },
+    "emotionMinIntensities": {
+      "surprised": 0.55,
+      "excited": 0.6,
+      "determined": 0.7,
+      "embarrassed": 0.6,
+      "laughing": 0.75
+    }
+  },
+  "gestures": {
+    "fist_clench": {
+      "animation": "fired_up",
+      "emotions": [
+        "excited",
+        "determined",
+        "happy",
+        "explaining"
+      ]
+    },
+    "big_grin": {
+      "animation": "happy_grin",
+      "emotions": [
+        "happy",
+        "grateful",
+        "playful",
+        "polite"
+      ]
+    },
+    "ponder": {
+      "animation": "thinking_aside",
+      "emotions": [
+        "thinking",
+        "neutral",
+        "suspicious",
+        "explaining"
+      ]
+    },
+    "puzzled_look": {
+      "animation": "confused",
+      "emotions": [
+        "surprised",
+        "thinking",
+        "anxious",
+        "embarrassed"
+      ]
+    },
+    "look_away": {
+      "animation": "side_profile",
+      "emotions": [
+        "relaxed",
+        "suspicious",
+        "sad",
+        "embarrassed"
+      ]
+    },
+    "slump": {
+      "animation": "sad_down",
+      "emotions": [
+        "sad",
+        "anxious"
+      ]
+    },
+    "nervous_frown": {
+      "animation": "worried",
+      "emotions": [
+        "anxious",
+        "embarrassed",
+        "sad",
+        "surprised"
+      ]
+    }
+  },
+  "intensityVariants": {
+    "happy": [
+      {
+        "maxIntensity": 0.75,
+        "animation": "happy_grin"
+      },
+      {
+        "maxIntensity": 1,
+        "animation": "laughing"
+      }
+    ],
+    "excited": [
+      {
+        "maxIntensity": 0.4,
+        "animation": "happy_grin"
+      },
+      {
+        "maxIntensity": 1,
+        "animation": "fired_up"
+      }
+    ],
+    "sad": [
+      {
+        "maxIntensity": 0.45,
+        "animation": "worried"
+      },
+      {
+        "maxIntensity": 1,
+        "animation": "sad_down"
+      }
+    ]
+  },
+  "emotionAliases": {
+    "joy": "happy",
+    "joyful": "happy",
+    "cheerful": "happy",
+    "proud": "happy",
+    "worried": "anxious",
+    "nervous": "anxious",
+    "scared": "anxious",
+    "afraid": "anxious",
+    "curious": "thinking",
+    "pondering": "thinking",
+    "confused": "surprised",
+    "puzzled": "surprised",
+    "shocked": "surprised",
+    "astonished": "surprised",
+    "teasing": "playful",
+    "thankful": "grateful",
+    "amused": "laughing",
+    "calm": "relaxed",
+    "upset": "sad",
+    "unhappy": "sad",
+    "broke": "sad",
+    "sheepish": "embarrassed",
+    "awkward": "embarrassed",
+    "ashamed": "embarrassed",
+    "fired_up": "determined",
+    "angry": "determined",
+    "serious": "determined",
+    "doubtful": "suspicious"
+  },
+  "reactionAliases": {
+    "scratch": "head_scratch",
+    "scratch_head": "head_scratch",
+    "embarrassed": "head_scratch",
+    "sheepish": "head_scratch"
+  },
+  "errorLine": {
+    "text": "Uh... sorry, pal, my radio cut out for a second there. Could you run that by me again?",
+    "emotion": "embarrassed",
+    "translations": {
+      "fr": "Euh... désolé, mon vieux, ma radio a coupé une seconde. Tu peux répéter ?",
+      "ja": "あ、あれ？すまないッス、無線が一瞬切れたッス。もう一回お願いするッス！",
+      "it": "Ehm... scusa, amico, la radio si è interrotta un attimo. Puoi ripetere?",
+      "es": "Eh... perdona, colega, se me cortó la radio un segundo. ¿Me lo repites?"
+    }
+  },
+  "eventLines": {
+    "task_finished": {
+      "en": [
+        {
+          "text": "Case closed, pal! That task is done!",
+          "emotion": "determined",
+          "intensity": 0.7
+        }
+      ],
+      "fr": [
+        {
+          "text": "Affaire classée, mon vieux ! C'est terminé !",
+          "emotion": "determined",
+          "intensity": 0.7
+        }
+      ],
+      "ja": [
+        {
+          "text": "事件解決ッス！作業完了ッス！",
+          "emotion": "determined",
+          "intensity": 0.7
+        }
+      ],
+      "it": [
+        {
+          "text": "Caso chiuso, amico! Lavoro finito!",
+          "emotion": "determined",
+          "intensity": 0.7
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Caso cerrado, colega! ¡Tarea terminada!",
+          "emotion": "determined",
+          "intensity": 0.7
+        }
+      ]
+    },
+    "needs_attention": {
+      "en": [
+        {
+          "text": "Hey, pal! Claude Code needs you over here!",
+          "emotion": "excited",
+          "intensity": 0.7
+        }
+      ],
+      "fr": [
+        {
+          "text": "Hé, mon vieux ! Claude Code a besoin de toi !",
+          "emotion": "excited",
+          "intensity": 0.7
+        }
+      ],
+      "ja": [
+        {
+          "text": "大変ッス！Claude Codeが呼んでるッス！",
+          "emotion": "excited",
+          "intensity": 0.7
+        }
+      ],
+      "it": [
+        {
+          "text": "Ehi, amico! Claude Code ha bisogno di te!",
+          "emotion": "excited",
+          "intensity": 0.7
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Eh, colega! ¡Claude Code te necesita!",
+          "emotion": "excited",
+          "intensity": 0.7
+        }
+      ]
+    },
+    "tests_passed": {
+      "en": [
+        {
+          "text": "All tests passed! Even my boss couldn't complain!",
+          "emotion": "laughing",
+          "intensity": 0.8
+        }
+      ],
+      "fr": [
+        {
+          "text": "Tous les tests sont passés ! Même mon chef ne pourrait pas râler !",
+          "emotion": "laughing",
+          "intensity": 0.8
+        }
+      ],
+      "ja": [
+        {
+          "text": "テスト全部合格ッス！これなら給料も上がるかもッス！",
+          "emotion": "laughing",
+          "intensity": 0.8
+        }
+      ],
+      "it": [
+        {
+          "text": "Tutti i test superati! Neanche il mio capo potrebbe lamentarsi!",
+          "emotion": "laughing",
+          "intensity": 0.8
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Todos los tests pasan! ¡Ni mi jefe podría quejarse!",
+          "emotion": "laughing",
+          "intensity": 0.8
+        }
+      ]
+    },
+    "tests_failed": {
+      "en": [
+        {
+          "text": "Uh... some tests failed, pal. Sorry about that.",
+          "emotion": "embarrassed",
+          "intensity": 0.75,
+          "reaction": "head_scratch"
+        }
+      ],
+      "fr": [
+        {
+          "text": "Euh... des tests ont échoué, mon vieux. Désolé.",
+          "emotion": "embarrassed",
+          "intensity": 0.75,
+          "reaction": "head_scratch"
+        }
+      ],
+      "ja": [
+        {
+          "text": "あ、あれ？テストが失敗したッス…すまないッス。",
+          "emotion": "embarrassed",
+          "intensity": 0.75,
+          "reaction": "head_scratch"
+        }
+      ],
+      "it": [
+        {
+          "text": "Ehm... alcuni test sono falliti, amico. Scusa.",
+          "emotion": "embarrassed",
+          "intensity": 0.75,
+          "reaction": "head_scratch"
+        }
+      ],
+      "es": [
+        {
+          "text": "Eh... han fallado algunos tests, colega. Lo siento.",
+          "emotion": "embarrassed",
+          "intensity": 0.75,
+          "reaction": "head_scratch"
+        }
+      ]
+    },
+    "build_failed": {
+      "en": [
+        {
+          "text": "Hold it! The build just failed!",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ],
+      "fr": [
+        {
+          "text": "Un instant ! La compilation vient d'échouer !",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ],
+      "ja": [
+        {
+          "text": "待ったッス！ビルドが失敗したッス！",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ],
+      "it": [
+        {
+          "text": "Un momento! La compilazione è appena fallita!",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Un momento! ¡La compilación acaba de fallar!",
+          "emotion": "surprised",
+          "intensity": 0.85,
+          "exclamation": "hold_it"
+        }
+      ]
+    },
+    "session_started": {
+      "en": [
+        {
+          "text": "New session! Detective Gumshoe, reporting for duty!",
+          "emotion": "determined",
+          "intensity": 0.6
+        }
+      ],
+      "fr": [
+        {
+          "text": "Nouvelle session ! L'inspecteur Tektiv, au rapport !",
+          "emotion": "determined",
+          "intensity": 0.6
+        }
+      ],
+      "ja": [
+        {
+          "text": "新しいセッションッス！イトノコ刑事、出動ッス！",
+          "emotion": "determined",
+          "intensity": 0.6
+        }
+      ],
+      "it": [
+        {
+          "text": "Nuova sessione! Il detective Gumshoe è in servizio!",
+          "emotion": "determined",
+          "intensity": 0.6
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Nueva sesión! ¡El detective Gumshoe, a sus órdenes!",
+          "emotion": "determined",
+          "intensity": 0.6
+        }
+      ]
+    },
+    "reminder_due": {
+      "en": [
+        {
+          "text": "Pal! You asked me to remind you: {text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ],
+      "fr": [
+        {
+          "text": "Mon vieux ! Tu m'as demandé de te rappeler : {text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ],
+      "ja": [
+        {
+          "text": "忘れちゃダメッス：{text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ],
+      "it": [
+        {
+          "text": "Amico! Mi avevi chiesto di ricordarti: {text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Colega! Me pediste que te recordara: {text}",
+          "emotion": "excited",
+          "intensity": 0.6
+        }
+      ]
+    }
+  }
+}

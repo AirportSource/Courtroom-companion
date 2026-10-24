@@ -6,9 +6,13 @@ then keywords, then a stable hash. Same input -> same output.
 """
 
 import asyncio
+import copy
 import json
+import re
 import zlib
 
+from ..attachments import EVIDENCE_TAG
+from .fake_i18n import EVIDENCE_EN, LOCAL_KEYWORDS, TRANSLATIONS
 from ..base import GenerationRequest, LLMProvider, ProviderCapabilities, ProviderError, RawCompletion, StructuredOutputMode
 
 PATTERNS: dict[str, dict] = {
@@ -126,7 +130,7 @@ ROTATION = ["neutral", "greeting", "realization", "explain", "joke", "thanks", "
 
 def choose_pattern(message: str) -> str:
     text = f" {message.lower()} "
-    for words, pattern in KEYWORDS:
+    for words, pattern in [*KEYWORDS, *LOCAL_KEYWORDS]:
         if any(word in text for word in words):
             return pattern
     return ROTATION[zlib.crc32(message.encode("utf-8")) % len(ROTATION)]
@@ -167,6 +171,48 @@ class FakeProvider(LLMProvider):
                         "settleEmotion": "happy", "artifactAction": {"type": "create_text_artifact",
                             "filename": filename, "format": extension, "content": content},
                     }), self.model)
+        local = TRANSLATIONS.get(request.language, {})
+        # Tools (D-067), offline fixtures: answer from a tool result, or request a tool on #commands.
+        if message.startswith("[Tool result for ") or message.startswith("[Tool error for "):
+            output = message.split("\n", 1)[1].split("\n[End of tool output", 1)[0].strip()
+            return RawCompletion(json.dumps({"beats": [{"text": output[:580] or "...", "emotion": "explaining",
+                                                        "intensity": 0.4}]}), self.model)
+        tool_property = request.response_schema.get("properties", {}).get("toolRequest")
+        if tool_property:
+            allowed = tool_property["anyOf"][1]["properties"]["tool"]["enum"]
+            folder = re.search(r'Authorized folders: "([^"]+)"', request.system_prompt)
+            after = lambda word: (message.split(word, 1) + [""])[1].strip()  # noqa: E731
+            name = folder.group(1) if folder else ""
+            for keyword, tool, arguments in [
+                ("#remind", "reminder_create", lambda: {"in_minutes": 1, "text": "Test reminder"}),
+                ("#reminders", "reminder_list", lambda: {}),
+                ("#folder", "folder_list", lambda: {"folder": name}),
+                ("#read", "file_read", lambda: {"folder": name, "path": (after("#read").split(" ") + [""])[0]}),
+                ("#search", "web_search", lambda: {"query": after("#search") or "Ace Attorney"}),
+            ]:
+                if re.search(rf"{keyword}(?![a-z])", lowered) and tool in allowed:
+                    return RawCompletion(json.dumps({
+                        "beats": [{"text": "Let me check...", "emotion": "thinking", "intensity": 0.4}],
+                        "toolRequest": {"tool": tool, "arguments": arguments()},
+                    }), self.model)
+        # Presented evidence (offline): acknowledge it by name without pretending to analyse it.
+        if message.startswith(EVIDENCE_TAG):
+            found = re.search(r'named "([^"]{1,120})"', message)
+            name = found.group(1) if found else "?"
+            first, second = (text.replace("{name}", name) for text in local.get("evidence", EVIDENCE_EN))
+            return RawCompletion(json.dumps({
+                "beats": [
+                    {"text": first, "emotion": "thinking", "intensity": 0.5},
+                    {"text": second, "emotion": "explaining", "intensity": 0.4},
+                ],
+                "settleEmotion": "neutral",
+            }), self.model)
         pattern = next((p for p in ("messy", "french", "japanese") if f"#{p}" in lowered), None) or choose_pattern(message)
+        reply = PATTERNS[pattern]
+        if pattern in local:
+            # Same beats (emotions, reactions, gestures), texts in the interface language.
+            reply = copy.deepcopy(reply)
+            for beat, text in zip(reply["beats"], local[pattern]):
+                beat["text"] = text
         # Real providers return JSON text; mimic that so the shared parser is exercised.
-        return RawCompletion(json.dumps(PATTERNS[pattern]), self.model)
+        return RawCompletion(json.dumps(reply), self.model)

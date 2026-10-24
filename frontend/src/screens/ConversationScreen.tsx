@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type DragEvent } from 'react'
 import { ChatBar } from '../components/ChatBar.tsx'
 import { GeneratedFilesCourtRecord } from '../courtRecord/GeneratedFilesCourtRecord.tsx'
 import { ConversationRecordView } from '../conversationRecord/ConversationRecordView.tsx'
@@ -22,7 +22,7 @@ import { playSfx, SFX_EVENTS, type SfxName } from '../engine/sfx.ts'
 import { nextPhase, waitingOverride, waitingPerformance, type Phase } from '../engine/presentation.ts'
 import { useBlips } from '../engine/useBlips.ts'
 import { useCharacterPlayback, useReactionGate } from '../engine/useCharacterAnimation.ts'
-import { useTypewriter } from '../engine/useTypewriter.ts'
+import { lengthSpeedFactor, useTypewriter } from '../engine/useTypewriter.ts'
 import { useSettings } from '../settings/settings.ts'
 import { cancelTurn } from '../artifacts/artifacts.ts'
 import { ChatError } from '../engine/performance.ts'
@@ -37,6 +37,14 @@ import {
   initialArtifactDelivery,
 } from '../artifacts/artifactDelivery.ts'
 import type { GeneratedArtifact, TurnTask } from '../artifacts/artifacts.ts'
+import { readEvidence, releaseEvidence, type EvidenceDraft } from '../evidence/evidence.ts'
+import { PendingEvidence, PresentedEvidence } from '../evidence/EvidenceViews.tsx'
+import { localizedName, type StringKey } from '../i18n/i18n.ts'
+import { useT } from '../i18n/useT.ts'
+import { useEventInbox, type Exclamation } from '../events/eventInbox.ts'
+import { ExclamationBubble } from '../events/ExclamationBubble.tsx'
+import { bubbleFor, EXCLAMATION_MS, isJapaneseVoice, preloadExclamations, type ExclamationImages } from '../events/exclamations.ts'
+import { shoutSound } from '../engine/voices.ts'
 
 interface ConversationScreenProps {
   character: LoadedCharacter
@@ -55,6 +63,8 @@ interface ConversationScreenProps {
   onExit: () => void
   /** Native evidence frame (ui.images.evidence_frame) for file tiles, the summon and record slots. */
   evidenceFrame?: UiImage | null
+  /** Original exclamation bubbles (ui.json exclamation_*), shown before some event lines. */
+  exclamations?: ExclamationImages
   portraitFor: (characterId: string) => UiImage | null
   nameFor: (characterId: string) => string | null
   /** Show temporary developer controls. */
@@ -77,6 +87,18 @@ interface ActiveRequest {
   acknowledgement: Promise<void> | null
 }
 
+/** Server evidence rejections shown in the interface language. */
+const EVIDENCE_ERRORS: Record<string, StringKey> = {
+  evidence_unsupported: 'evidence.unsupported',
+  evidence_invalid: 'evidence.invalid',
+}
+const TOO_LARGE: Record<EvidenceDraft['kind'], StringKey> = {
+  text: 'evidence.tooLargeText', image: 'evidence.tooLargeImage', pdf: 'evidence.tooLargePdf',
+}
+const TALK_LABELS: Record<string, StringKey> = {
+  small_talk: 'talk.smallTalk', about_today: 'talk.aboutToday', the_case: 'talk.theCase', something_new: 'talk.somethingNew',
+}
+
 function overrideFor(line: DialogueLine): PerformanceOverride {
   return {
     ...(line.animation ? { animation: line.animation } : {}),
@@ -94,9 +116,11 @@ function overrideFor(line: DialogueLine): PerformanceOverride {
 export function ConversationScreen({
   character, background, testScript, talkBackdrop, generatedArtifacts, artifactsLoading, artifactsError,
   onArtifactsChanged, fileIcon, thinkerIcon, phoneIcon, onExit, devTools, onTaskChange,
-  evidenceFrame = null, portraitFor, nameFor,
+  evidenceFrame = null, portraitFor, nameFor, exclamations = {},
 }: ConversationScreenProps) {
   const { settings } = useSettings()
+  const t = useT()
+  const characterName = localizedName(character, settings.language)
   const [sessionId] = useState(() => crypto.randomUUID())
   const [phase, setPhase] = useState<Phase>('input')
   const [lines, setLines] = useState<DialogueLine[]>([])
@@ -121,6 +145,19 @@ export function ConversationScreen({
   const summonFinishStarted = useRef(new Set<string>())
   const revealTimer = useRef<number | null>(null)
   const playedSfxLineKey = useRef<string | null>(null)
+  // Evidence (D-065): the file waiting to be presented with the next message, the one on screen
+  // while the character examines it, and drag-and-drop feedback.
+  const [evidence, setEvidence] = useState<EvidenceDraft | null>(null)
+  const [presented, setPresented] = useState<EvidenceDraft | null>(null)
+  const [dragging, setDragging] = useState(false)
+  const [evidenceError, setEvidenceError] = useState<string | null>(null)
+  const evidenceInput = useRef<HTMLInputElement>(null)
+  const evidenceFiles = useRef({ evidence, presented })
+  useEffect(() => { evidenceFiles.current = { evidence, presented } })
+  useEffect(() => () => {
+    releaseEvidence(evidenceFiles.current.evidence)
+    releaseEvidence(evidenceFiles.current.presented)
+  }, [])
   const mounted = useRef(false)
   useEffect(() => { mounted.current = true; return () => { mounted.current = false } }, [])
   useEffect(() => () => {
@@ -192,7 +229,10 @@ export function ConversationScreen({
   }, [])
 
   const gate = useReactionGate(character, emotion, lineKey, override)
-  const typewriter = useTypewriter(line?.text ?? '', lineKey, Boolean(line) && !gate.pending, settings.textSpeed, onReveal)
+  // Every page of a reply types at the same pace, set by the reply's total length.
+  const replyChars = useMemo(() => lines.reduce((total, page) => total + page.text.length, 0), [lines])
+  const textSpeed = settings.textSpeed * lengthSpeedFactor(replyChars)
+  const typewriter = useTypewriter(line?.text ?? '', lineKey, Boolean(line) && !gate.pending, textSpeed, onReveal)
   const mode = line && typewriter.state === 'revealing' ? 'talking' : 'idle'
   const animation = useCharacterPlayback(character, emotion, mode, gate, override)
 
@@ -304,9 +344,16 @@ export function ConversationScreen({
       setCurrentTask(initialTask)
       audioEngine.unlock()
       setChatError(null)
+      setEvidenceError(null)
       setLastShown(null)
       setLastResponse(null)
       setPhase((current) => nextPhase(current, 'submit'))
+      const shownEvidence = evidence
+      if (shownEvidence) {
+        setEvidence(null)
+        setPresented((previous) => { releaseEvidence(previous); return shownEvidence })
+        if (!settings.sfxMuted) audioEngine.playEvent('evidence_reveal', settings.sfxVolume)
+      }
       const layoutPromise = dialogueTextLayout()
       const acknowledgeTask = (turnId: string) => {
         if (request.acknowledgement) return
@@ -335,7 +382,8 @@ export function ConversationScreen({
       }
       try {
         const [response, layout] = await Promise.all([
-          sendChat({ character: character.id, message, sessionId, requestId: request.id }, 135_000, {
+          sendChat({ character: character.id, message, sessionId, requestId: request.id, language: settings.language,
+            ...(shownEvidence ? { evidence: { name: shownEvidence.name, data: shownEvidence.data } } : {}) }, 135_000, {
             signal: request.controller.signal,
             onTask: acceptTask,
           }),
@@ -345,13 +393,13 @@ export function ConversationScreen({
         if (response.task) acceptTask(response.task)
         await request.acknowledgement
         if (activeRequest.current !== request || request.controller.signal.aborted) return
-        const generationError = generationFailureMessage(response.task?.error, response.generation)
+        const generationError = generationFailureMessage(response.task?.error, response.generation, settings.language)
         if (generationError) {
           setChatError(generationError)
         } else if (response.task?.error === 'invalid_artifact_action') {
-          setChatError('The file instruction was rejected. Use .txt, .md or .py with nonempty UTF-8 text up to 64 KiB.')
+          setChatError(t('chat.fileRejected'))
         } else if (response.task?.error?.startsWith('artifact_')) {
-          setChatError('The file could not be saved. Review generated-file storage and try again.')
+          setChatError(t('chat.fileNotSaved'))
         }
         const replyLines = timelineToLines(response.performance, layout)
         if (response.task?.state === 'artifact-ready' && response.task.artifactId) {
@@ -389,8 +437,10 @@ export function ConversationScreen({
           setPhase('input')
           return
         }
-        setChatError(error instanceof Error ? error.message : String(error))
-        const errorLines = [{ text: "I couldn't finish that request. Please try again.", emotion: character.defaultEmotion, reaction: null }]
+        const code = error instanceof ChatError ? error.code : null
+        const known = code === 'evidence_too_large' && shownEvidence ? TOO_LARGE[shownEvidence.kind] : code ? EVIDENCE_ERRORS[code] : undefined
+        setChatError(known ? t(known) : error instanceof Error ? error.message : String(error))
+        const errorLines = [{ text: t('chat.requestFailedLine'), emotion: character.defaultEmotion, reaction: null }]
         if (request.acknowledgement) {
           await request.acknowledgement
           if (activeRequest.current !== request) return
@@ -407,8 +457,85 @@ export function ConversationScreen({
       play,
       onTaskChange,
       phase,
+      evidence,
+      settings.sfxMuted,
+      settings.sfxVolume,
+      settings.language,
+      t,
     ],
   )
+
+  const attachEvidence = useCallback((file: File | undefined) => {
+    if (!file) return
+    readEvidence(file, settings.language).then((draft) => {
+      if (!mounted.current) return releaseEvidence(draft)
+      setEvidence((previous) => { releaseEvidence(previous); return draft })
+      setEvidenceError(null)
+      setChatError(null) // e.g. the server's reason for rejecting the previous file
+      playMenuSound('menu_open')
+    }, (error: unknown) => {
+      playMenuSound('menu_cancel')
+      setEvidenceError(error instanceof Error ? error.message : String(error))
+    })
+  }, [settings.language])
+  // Event inbox (D-067): Claude Code events and due reminders, performed when the character is idle.
+  const inbox = useEventInbox(character.id, settings.language)
+  const [exclamation, setExclamation] = useState<{ kind: Exclamation; japanese: boolean } | null>(null)
+  const eventBusy = useRef(false)
+  useEffect(() => preloadExclamations(Object.values(exclamations)), [exclamations])
+  const nextEvent = inbox.queue[0]
+  useEffect(() => {
+    if (!nextEvent || eventBusy.current || phase !== 'input' || overlay !== null || activeRequest.current) return
+    eventBusy.current = true
+    const timers: number[] = []
+    let stopRing: (() => void) | null = null
+    const later = (ms: number, run: () => void) => { timers.push(window.setTimeout(run, ms)) }
+    const { sfxVolume, sfxMuted } = settings
+    later(0, () => {
+      inbox.take()
+      let delay = 0
+      if (nextEvent.attention) {
+        stopRing = startPhoneRinging(audioEngine, musicRuntime().engine, sfxMuted ? 0 : sfxVolume)
+        delay = 1800
+        later(delay, () => { stopRing?.(); stopRing = null })
+      }
+      if (nextEvent.exclamation) {
+        const kind = nextEvent.exclamation
+        later(delay, () => {
+          // The character's own voiced shout when audio.json has it (D-068), else the generic SFX.
+          const voice = character.voice.shout ? shoutSound(kind, settings.shoutLanguage, character.voice.shout) : null
+          // Japanese voice (or, without one, a Japanese interface) → Japanese bubble (D-070).
+          setExclamation({ kind, japanese: voice ? isJapaneseVoice(voice) : settings.language === 'ja' })
+          if (!sfxMuted) {
+            if (voice) void audioEngine.playWhenReady(voice, sfxVolume)
+            else void audioEngine.playEventWhenReady(`exclamation_${kind}`, sfxVolume)
+          }
+        })
+        delay += EXCLAMATION_MS
+        later(delay, () => setExclamation(null))
+      }
+      later(delay, () => {
+        void dialogueTextLayout().then((layout) => {
+          eventBusy.current = false
+          if (!mounted.current) return
+          play(timelineToLines(nextEvent.performance, layout), nextEvent.performance.settle)
+        })
+      })
+    })
+    return () => {
+      // Leaving the conversation (or a new turn) cancels a pending event presentation.
+      if (!mounted.current) {
+        timers.forEach((timer) => window.clearTimeout(timer))
+        stopRing?.()
+      }
+    }
+  }, [nextEvent, phase, overlay, settings, inbox, play, character.voice.shout])
+
+  const removeEvidence = () => {
+    playMenuSound('menu_cancel')
+    setEvidence((previous) => { releaseEvidence(previous); return null })
+  }
+  const filesDragged = (event: DragEvent) => event.dataTransfer.types.includes('Files')
 
   const cancel = async () => {
     const request = activeRequest.current
@@ -486,7 +613,21 @@ export function ConversationScreen({
 
   return (
     <div className="app-layout" data-artifact-phase={delivery.phase}>
-      <div className="scene-column">
+      <div
+        className="scene-column"
+        onDragEnter={(event) => { if (filesDragged(event) && !waiting) setDragging(true) }}
+        onDragOver={(event) => { if (filesDragged(event) && !waiting) event.preventDefault() }}
+        onDragLeave={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragging(false)
+        }}
+        onDrop={(event) => {
+          if (!filesDragged(event)) return
+          event.preventDefault()
+          setDragging(false)
+          if (!waiting) attachEvidence(event.dataTransfer.files[0])
+        }}
+      >
+        {dragging && <div className="evidence-drop">{t('evidence.drop')}</div>}
         <GameScene
           background={background}
           characterFrame={animation.frame}
@@ -498,14 +639,15 @@ export function ConversationScreen({
         >
           {shown && overlay !== 'court-record' && overlay !== 'conversation-record' && (
             <DialogueBox
-              speakerName={character.displayName}
+              speakerName={characterName}
               text={shown.text}
               visibleCount={line ? typewriter.visibleCount : shown.text.length}
               showContinue={Boolean(line) && typewriter.state === 'complete'}
             />
           )}
           {overlay === 'talk' && (
-            <TalkOptions options={DEV_TALK_TOPICS} onSelect={chooseTopic} onCancel={() => setOverlay(null)}
+            <TalkOptions options={DEV_TALK_TOPICS.map((option) => ({ ...option, label: t(TALK_LABELS[option.id] ?? 'talk.smallTalk') }))}
+              onSelect={chooseTopic} onCancel={() => setOverlay(null)}
               backdrop={talkBackdrop} />
           )}
           {overlay === 'court-record' && (
@@ -517,6 +659,10 @@ export function ConversationScreen({
             <ConversationRecordView onClose={() => setOverlay(null)} evidenceFrame={evidenceFrame}
               portraitFor={portraitFor} nameFor={nameFor} />
           )}
+          {/* The presented file stays on screen while the character thinks, then leaves with the reply. */}
+          {presented && waiting && <PresentedEvidence evidence={presented} frame={evidenceFrame} fileIcon={fileIcon} />}
+          {exclamation && <ExclamationBubble kind={exclamation.kind}
+            image={bubbleFor(exclamations, exclamation.kind, exclamation.japanese)} />}
           <ArtifactDeliveryOverlay state={delivery}
             workingIcon={thinkerIcon ? <img src={thinkerIcon.url} width={48} height={48} alt="" /> : undefined}
             phoneIcon={phoneIcon ? <img src={phoneIcon.url} width={48} height={48} alt="" /> : undefined}
@@ -530,22 +676,33 @@ export function ConversationScreen({
         </GameScene>
         <div className="conversation-actions">
           {(waiting || delivery.phase === 'task-acknowledgement') && currentTask?.state === 'working'
-            && <button type="button" onClick={() => void cancel()}>Cancel request</button>}
+            && <button type="button" onClick={() => void cancel()}>{t('chat.cancelRequest')}</button>}
           <button type="button" disabled={phase !== 'input' || overlay !== null
             || ['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
-            onClick={() => { playMenuSound('menu_open'); setOverlay('talk') }}>Talk</button>
+            onClick={() => { playMenuSound('menu_open'); setOverlay('talk') }}>{t('chat.talk')}</button>
           <button type="button" disabled={phase !== 'input' || overlay !== null
             || ['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
-            onClick={() => { playMenuSound('menu_open'); setOverlay('court-record') }}>Court Record</button>
+            onClick={() => { playMenuSound('menu_open'); setOverlay('court-record') }}>{t('chat.courtRecord')}</button>
           <button type="button" disabled={phase !== 'input' || overlay !== null
             || ['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
-            onClick={() => { playMenuSound('menu_open'); setOverlay('conversation-record') }}>Record</button>
+            onClick={() => { playMenuSound('menu_open'); setOverlay('conversation-record') }}>{t('chat.record')}</button>
+          <button type="button" disabled={phase === 'waiting' || overlay !== null}
+            title={t('chat.presentTitle')}
+            onClick={() => evidenceInput.current?.click()}>{t('chat.present')}</button>
+          <input ref={evidenceInput} type="file" hidden onChange={(event) => {
+            attachEvidence(event.target.files?.[0])
+            event.target.value = ''
+          }} />
         </div>
+        {evidence && <PendingEvidence evidence={evidence} onRemove={removeEvidence} disabled={phase === 'waiting'} />}
+        {evidenceError && !evidence && <p className="evidence-error" role="alert">{evidenceError}</p>}
         <ChatBar
-          placeholder={`Say something to ${character.displayName}…`}
+          placeholder={t(evidence ? 'chat.askAboutEvidence' : 'chat.placeholder', { name: characterName })}
+          allowEmpty={Boolean(evidence)}
+          submitLabel={t(evidence ? 'chat.presentSubmit' : 'chat.send')}
           disabled={phase !== 'input'}
           waiting={phase === 'waiting'}
-          waitingLabel={`${character.displayName} is thinking…`}
+          waitingLabel={t('chat.thinking', { name: characterName })}
           error={chatError}
           onSubmit={submit}
           typingBlip={{ volume: settings.blipVolume, muted: settings.blipsMuted }}

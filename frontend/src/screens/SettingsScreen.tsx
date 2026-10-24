@@ -2,20 +2,31 @@ import { useEffect, useRef, useState } from 'react'
 import { PixelStage } from '../components/PixelStage.tsx'
 import { ProviderProfilesPanel } from '../components/ProviderProfilesPanel.tsx'
 import { StageBackdrop } from '../components/StageBackdrop.tsx'
+import { StageSelect } from '../components/StageSelect.tsx'
+import { ToolsPanel } from '../tools/ToolsPanel.tsx'
 import { audioEngine } from '../engine/audioEngine.ts'
 import { getRingtoneCatalog, previewRingtone, resolveRingtone } from '../engine/ringtones.ts'
 import { playMenuSound } from '../engine/menuSounds.ts'
 import type { SoundId, UiImage } from '../engine/manifestTypes.ts'
 import { bgmPool, contextualPool, resolveProfileTrack, type SoundtrackManifest } from '../music/soundtrack.ts'
 import type { MusicSourceSetting } from '../music/types.ts'
-import { TEXT_SPEEDS, useSettings } from '../settings/settings.ts'
+import { TEXT_SPEEDS, useSettings, type StageScaling } from '../settings/settings.ts'
+import { LANGUAGES, type Language, type StringKey } from '../i18n/i18n.ts'
+import { useT } from '../i18n/useT.ts'
 
-const MUSIC_SOURCES: { value: MusicSourceSetting; label: string }[] = [
-  { value: 'original', label: 'Game music' },
-  { value: 'imported', label: 'Imported' },
-  { value: 'radio', label: 'Radio' },
-  { value: 'off', label: 'Off' },
+const MUSIC_SOURCES: { value: MusicSourceSetting; label: StringKey }[] = [
+  { value: 'original', label: 'music.game' },
+  { value: 'imported', label: 'music.imported' },
+  { value: 'radio', label: 'music.radio' },
+  { value: 'off', label: 'music.off' },
 ]
+
+const STAGE_SCALINGS: { value: StageScaling; label: StringKey; title: StringKey }[] = [
+  { value: 'pixel', label: 'settings.scalePixel', title: 'settings.scalePixelTitle' },
+  { value: 'fit', label: 'settings.scaleFit', title: 'settings.scaleFitTitle' },
+]
+
+const SPEED_LABELS: Record<number, StringKey> = { 0.5: 'settings.slow', 1: 'settings.normal', 2: 'settings.fast' }
 
 interface SettingsScreenProps {
   previewBlip: SoundId | null
@@ -31,6 +42,7 @@ export function SettingsScreen({
   previewBlip, testCharacterId, soundtrack, importedTracks = [], onBack, backdrop,
 }: SettingsScreenProps) {
   const { settings, update: updateSettings } = useSettings()
+  const t = useT()
   const update = (patch: Parameters<typeof updateSettings>[0]) => {
     playMenuSound('menu_confirm')
     updateSettings(patch)
@@ -79,113 +91,136 @@ export function SettingsScreen({
     <PixelStage>
       <StageBackdrop image={backdrop} />
       <div className={`menu-screen settings-screen ${backdrop ? 'menu-screen-overlay' : 'menu-screen-plain'}`}>
-        <h1 className="menu-heading">Settings</h1>
-        <ProviderProfilesPanel characterId={testCharacterId} />
+        <h1 className="menu-heading">{t('settings.heading')}</h1>
+
+        <div className="settings-row settings-row-field">
+          <span>{t('settings.language')}</span>
+          <StageSelect label={t('settings.language')} value={settings.language} options={LANGUAGES}
+            onChange={(value) => updateSettings({ language: value as Language })} />
+        </div>
 
         <div className="settings-row">
-          <span>Speed</span>
+          <span>{t('settings.shouts')}</span>
+          <div className="settings-options">
+            {(['ja', 'en'] as const).map((value) => (
+              <button key={value} type="button" aria-pressed={settings.shoutLanguage === value}
+                onClick={() => update({ shoutLanguage: value })}>{value === 'ja' ? '日本語' : 'English'}</button>
+            ))}
+          </div>
+        </div>
+
+        <ProviderProfilesPanel characterId={testCharacterId} />
+        <ToolsPanel />
+
+        <div className="settings-row">
+          <span>{t('settings.speed')}</span>
           <div className="settings-options">
             {TEXT_SPEEDS.map((speed) => (
               <button key={speed.label} type="button" aria-pressed={settings.textSpeed === speed.value}
-                onClick={() => update({ textSpeed: speed.value })}>{speed.label}</button>
+                onClick={() => update({ textSpeed: speed.value })}>{t(SPEED_LABELS[speed.value] ?? 'settings.normal')}</button>
             ))}
           </div>
         </div>
 
         <div className="settings-row settings-row-field">
-          <span>Music</span>
-          <select aria-label="Music source" value={settings.musicSource}
-            onChange={(event) => update({ musicSource: event.target.value as MusicSourceSetting })}>
-            {MUSIC_SOURCES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
+          <span>{t('settings.music')}</span>
+          <StageSelect label={t('settings.music')} value={settings.musicSource}
+            options={MUSIC_SOURCES.map((option) => ({ value: option.value, label: t(option.label) }))}
+            onChange={(value) => updateSettings({ musicSource: value as MusicSourceSetting })} />
         </div>
 
         {settings.musicSource === 'original' && soundtrack && (
           <div className="settings-row settings-row-field">
-            <span>Track</span>
-            <select aria-label="Soundtrack track" value={settings.originalTrackId || ''}
-              onChange={(event) => update({ originalTrackId: event.target.value })}>
-              <option value="">Default ({soundtrack.tracks[resolveProfileTrack(soundtrack) ?? '']?.title ?? 'none'})</option>
-              <optgroup label="Background music">
-                {bgmPool(soundtrack).map((id) => <option key={id} value={id}>{soundtrack.tracks[id].title}</option>)}
-              </optgroup>
-              <optgroup label="Event music">
-                {contextualPool(soundtrack).map((id) => <option key={id} value={id}>{soundtrack.tracks[id].title}</option>)}
-              </optgroup>
-            </select>
+            <span>{t('settings.track')}</span>
+            <StageSelect label="Soundtrack track" value={settings.originalTrackId || ''}
+              onChange={(value) => updateSettings({ originalTrackId: value })}
+              options={[
+                { value: '', label: t('settings.trackDefault', { title: soundtrack.tracks[resolveProfileTrack(soundtrack) ?? '']?.title ?? '—' }) },
+                ...[...bgmPool(soundtrack), ...contextualPool(soundtrack)].map((id) => ({ value: id, label: soundtrack.tracks[id].title })),
+              ]} />
           </div>
         )}
 
         {settings.musicSource === 'imported' && (
           <div className="settings-row settings-row-field">
-            <span>Track</span>
-            <select aria-label="Imported track" value={settings.importedTrackId}
-              onChange={(event) => update({ importedTrackId: event.target.value })}>
-              <option value="">{importedTracks.length ? 'Choose…' : 'Import below'}</option>
-              {importedTracks.map((track) => <option key={track.id} value={track.id}>{track.title}</option>)}
-            </select>
+            <span>{t('settings.track')}</span>
+            <StageSelect label="Imported track" value={settings.importedTrackId}
+              onChange={(value) => updateSettings({ importedTrackId: value })}
+              options={[
+                { value: '', label: t(importedTracks.length ? 'settings.importedChoose' : 'settings.importBelow') },
+                ...importedTracks.map((track) => ({ value: track.id, label: track.title })),
+              ]} />
           </div>
         )}
 
         <div className="settings-row">
-          <span>BGM vol</span>
+          <span>{t('settings.bgmVolume')}</span>
           <input aria-label="Music volume" type="range" min={0} max={1} step={0.05} value={settings.musicVolume}
             onChange={(event) => updateSettings({ musicVolume: Number(event.target.value) })} />
         </div>
 
         <div className="settings-row">
-          <span>Mute BGM</span>
+          <span>{t('settings.muteBgm')}</span>
           <input aria-label="Mute music" type="checkbox" checked={settings.musicMuted}
             onChange={(event) => update({ musicMuted: event.target.checked })} />
         </div>
 
         <div className="settings-row">
-          <span>Blip vol</span>
+          <span>{t('settings.blipVolume')}</span>
           <input aria-label="Blip volume" type="range" min={0} max={1} step={0.05} value={settings.blipVolume}
             onChange={(event) => updateSettings({ blipVolume: Number(event.target.value) })} onPointerUp={testBlip} />
         </div>
 
         <div className="settings-row">
-          <span>Mute blips</span>
+          <span>{t('settings.muteBlips')}</span>
           <input aria-label="Mute blips" type="checkbox" checked={settings.blipsMuted}
             onChange={(event) => update({ blipsMuted: event.target.checked })} />
         </div>
 
         <div className="settings-row">
-          <span>SFX vol</span>
+          <span>{t('settings.sfxVolume')}</span>
           <input aria-label="Sound effects volume" type="range" min={0} max={1} step={0.05} value={settings.sfxVolume}
             onChange={(event) => updateSettings({ sfxVolume: Number(event.target.value) })} />
         </div>
 
         {ringtones && (
           <div className="settings-row settings-row-field">
-            <span>Ringtone</span>
+            <span>{t('settings.ringtone')}</span>
             <div style={{ display: 'flex', gap: 4, minWidth: 0 }}>
-              <select aria-label="Phone ringtone" value={resolveRingtone(ringtones, settings.ringtoneId).id}
-                onChange={(event) => { endPreview(); update({ ringtoneId: event.target.value }) }}>
-                {ringtones.items.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
-              </select>
+              <StageSelect label="Phone ringtone" value={resolveRingtone(ringtones, settings.ringtoneId).id}
+                onChange={(value) => { endPreview(); updateSettings({ ringtoneId: value }) }}
+                options={ringtones.items.map((item) => ({ value: item.id, label: item.label }))} />
               <button type="button" disabled={sfxSilent || previewing}
-                onClick={() => startPreview(settings.ringtoneId)}>Preview</button>
-              <button type="button" disabled={!previewing} onClick={endPreview}>Stop</button>
+                onClick={() => startPreview(settings.ringtoneId)}>{t('settings.preview')}</button>
+              <button type="button" disabled={!previewing} onClick={endPreview}>{t('settings.stop')}</button>
             </div>
           </div>
         )}
 
         <div className="settings-row">
-          <span>Mute SFX</span>
+          <span>{t('settings.muteSfx')}</span>
           <input aria-label="Mute sound effects" type="checkbox" checked={settings.sfxMuted}
             onChange={(event) => update({ sfxMuted: event.target.checked })} />
         </div>
 
         <div className="settings-row">
-          <span>Display</span>
-          <button type="button" onClick={() => void document.documentElement.requestFullscreen?.()}>Fullscreen</button>
+          <span>{t('settings.scale')}</span>
+          <div className="settings-options">
+            {STAGE_SCALINGS.map((option) => (
+              <button key={option.value} type="button" aria-pressed={settings.stageScaling === option.value}
+                title={t(option.title)} onClick={() => update({ stageScaling: option.value })}>{t(option.label)}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="settings-row">
+          <span>{t('settings.display')}</span>
+          <button type="button" onClick={() => void document.documentElement.requestFullscreen?.()}>{t('settings.fullscreen')}</button>
         </div>
 
         <div className="settings-footer">
-          <button type="button" onClick={testBlip}>Test blip</button>
-          <button type="button" onClick={back}>Back</button>
+          <button type="button" onClick={testBlip}>{t('settings.testBlip')}</button>
+          <button type="button" onClick={back}>{t('common.back')}</button>
         </div>
       </div>
     </PixelStage>

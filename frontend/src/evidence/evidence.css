@@ -1,0 +1,177 @@
+/* ---- Presented evidence: in-stage box (stage pixels), slides in like the DS "present" box ---- */
+
+.presented-evidence {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  animation: presented-evidence-in 180ms steps(6) both;
+}
+
+@keyframes presented-evidence-in {
+  from {
+    transform: translateX(-90px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .presented-evidence {
+    animation: none;
+  }
+}
+
+.presented-evidence-name {
+  max-width: 120px;
+  padding: 0 4px;
+  overflow: hidden;
+  line-height: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #fff;
+  background: var(--nameplate-bg);
+  border: 1px solid var(--nameplate-edge);
+  border-radius: 2px;
+}
+
+/* Photos are not pixel art: fit them into the 64×64 window with smooth scaling. */
+.evidence-photo {
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  image-rendering: auto;
+  background: #000;
+}
+
+.evidence-file {
+  position: relative;
+  display: block;
+  width: 64px;
+  height: 64px;
+}
+
+.evidence-file img {
+  display: block;
+}
+
+.evidence-badge {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  padding: 0 2px;
+  line-height: 13px;
+  color: #fff8c8;
+  background: var(--nameplate-bg);
+  border: 1px solid var(--nameplate-edge);
+}
+
+/* ---- Pending evidence: out-of-stage chip above the chat bar (chat-bar frame) ---- */
+
+.evidence-pending {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: calc(100% - 32px);
+  max-width: 992px;
+  margin: 0 auto 8px;
+  padding: 4px 8px;
+  color: #fff;
+  background: var(--dialogue-bg);
+  border: 2px solid var(--frame-light);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px var(--frame-dark);
+}
+
+.evidence-pending-thumb {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  font-family: var(--stage-font);
+  font-size: var(--stage-font-size);
+  color: #fff8c8;
+  background: var(--nameplate-bg);
+  border: 1px solid var(--nameplate-edge);
+}
+
+.evidence-pending-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.evidence-pending-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.evidence-pending-name {
+  overflow: hidden;
+  font-family: var(--stage-font);
+  font-size: calc(var(--stage-font-size) * 2);
+  line-height: 1.1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.evidence-pending-size {
+  font-size: 12px;
+  color: #c8c8d8;
+}
+
+.evidence-pending button {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  color: #fff;
+  background: var(--dialogue-bg);
+  border: 2px solid var(--frame-light);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.evidence-pending button:hover:not(:disabled) {
+  background: var(--nameplate-bg);
+}
+
+/* File rejected before sending (type or size): shown where the chip would be. */
+.evidence-error {
+  width: calc(100% - 32px);
+  max-width: 992px;
+  margin: 0 auto 8px;
+  font-family: var(--stage-font);
+  font-size: var(--stage-font-size);
+  color: var(--error);
+}
+
+/* ---- Drop target over the whole conversation column ---- */
+
+.evidence-drop {
+  position: absolute;
+  inset: 8px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--stage-font);
+  font-size: calc(var(--stage-font-size) * 2);
+  color: var(--title-gold);
+  text-shadow: 2px 2px #000;
+  background: rgb(0 0 0 / 0.6);
+  border: 4px dashed var(--title-gold);
+  border-radius: 8px;
+  pointer-events: none;
+}

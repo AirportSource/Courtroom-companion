@@ -13,6 +13,7 @@ import '../courtRecord/court-record.css'
 import type { UiImage } from '../engine/manifestTypes.ts'
 import { playMenuSound } from '../engine/menuSounds.ts'
 import { StageBackdrop } from './StageBackdrop.tsx'
+import { useT } from '../i18n/useT.ts'
 
 interface TalkOptionsProps {
   options: TalkOption[]
@@ -30,6 +31,7 @@ interface TalkOptionsProps {
  * choose, Esc/Backspace/X cancel. Mouse: hover moves the cursor, click chooses.
  */
 export function TalkOptions({ options, onSelect, onCancel, backdrop = null }: TalkOptionsProps) {
+  const t = useT()
   const sorted = useMemo(() => sortTalkOptions(options), [options])
   const [stored, setStored] = useState(() => firstSelectable(sorted))
   const [listStart, setListStart] = useState(0)
@@ -81,7 +83,7 @@ export function TalkOptions({ options, onSelect, onCancel, backdrop = null }: Ta
   return (
     <div className="to-view" onClick={(event) => event.stopPropagation()}>
       {backdrop ? <StageBackdrop image={backdrop} /> : null}
-      <ul className="to-list" role="listbox" aria-label="Talk options">
+      <ul className="to-list" role="listbox" aria-label={t('talk.label')}>
         {visible.map((option, offset) => {
           const i = visibleStart + offset
           const isSelected = i === selected
@@ -107,7 +109,7 @@ export function TalkOptions({ options, onSelect, onCancel, backdrop = null }: Ta
             >
               {isSelected ? <span className="to-cursor" aria-hidden="true" /> : null}
               <span className="to-label">{option.label}</span>
-              {option.isNew ? <span className="to-new">NEW</span> : null}
+              {option.isNew ? <span className="to-new">{t('talk.new')}</span> : null}
             </li>
           )
         })}

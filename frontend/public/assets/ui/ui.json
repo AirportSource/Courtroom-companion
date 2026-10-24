@@ -52,6 +52,11 @@
       "width": 256,
       "height": 192
     },
+    "exclamation_objection_ja": {
+      "src": "exclamations/objection_ja.png",
+      "width": 256,
+      "height": 192
+    },
     "exclamation_take_that": {
       "src": "exclamations/take_that.png",
       "width": 256,

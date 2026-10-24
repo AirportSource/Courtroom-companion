@@ -2,6 +2,7 @@ import { useRef, type ReactNode } from 'react'
 import { useDevDisplay } from '../dev/devDisplay.ts'
 import { STAGE_HEIGHT, STAGE_WIDTH } from '../engine/stage.ts'
 import { useStageScale } from '../engine/useStageScale.ts'
+import { useSettings } from '../settings/settings.ts'
 
 interface PixelStageProps {
   children: ReactNode
@@ -11,12 +12,13 @@ interface PixelStageProps {
 
 /**
  * A 256×192 logical-pixel surface. Everything inside (background, sprites, UI) shares this
- * coordinate system and the whole surface is scaled as one unit, by the largest whole factor
- * that fits ("auto") or by a fixed factor chosen in the dev panel.
+ * coordinate system and the whole surface is scaled as one unit ("auto": per the Settings
+ * scaling choice, whole factor or fill) or by a fixed factor chosen in the dev panel.
  */
 export function PixelStage({ children, onClick, label }: PixelStageProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
-  const autoScale = useStageScale(viewportRef, STAGE_WIDTH, STAGE_HEIGHT)
+  const { settings } = useSettings()
+  const autoScale = useStageScale(viewportRef, STAGE_WIDTH, STAGE_HEIGHT, settings.stageScaling)
   const { display } = useDevDisplay()
   const scale = display.scale === 'auto' ? autoScale : display.scale
 

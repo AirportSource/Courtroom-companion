@@ -91,6 +91,14 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [x] Selectable ringtone presets (Phoenix default, Wellington, Godot) with Settings preview — D-061; loops not auditioned
 - [ ] Listen to ringtone loops and record/artifact UX on real providers
 
+## Phase 7 — Agents and events (D-067, plan and status in docs/AGENTS_AND_EVENTS.md)
+- [x] Event inbox: characters speak without a user message; exclamation bubbles — 2026-10-25
+- [x] Claude Code companion: hook script → events → character lines (installation pending owner consent)
+- [x] Tool framework + reminders (phone rings when due)
+- [x] Reading authorized folders
+- [x] Web search (Brave/Tavily; key not configured yet)
+- [x] Voiced shouts (EN/JA) and title intro (D-068/D-069): 12 objection voices, no immediate repeat
+
 ## Phase 6 — Voice input
 - [ ] Microphone / Whisper
 

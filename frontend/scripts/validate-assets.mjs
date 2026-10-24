@@ -183,10 +183,17 @@ if (ui) {
 // Music (original soundtrack). Excluded tracks are manifest-only (no runtime file).
 const musicDir = join(ASSETS, 'music')
 const soundtrack = existsSync(join(musicDir, 'soundtrack.json')) ? readJson(join(musicDir, 'soundtrack.json')) : null
+// The OST MP3s are local-only (not in Git, see docs/MUSIC.md): a clone without any of them is valid,
+// but once some are installed every referenced track must be present.
+const ostDir = join(musicDir, 'original')
+const ostInstalled = existsSync(ostDir) && readdirSync(ostDir).some((name) => name.endsWith('.mp3'))
+if (soundtrack && !ostInstalled) {
+  console.log('Note: original soundtrack not installed (python scripts/install_ost.py <zip>); track files not checked.')
+}
 if (soundtrack) {
   for (const error of validateSoundtrackManifest(soundtrack)) errors.push(`music/soundtrack.json ${error}`)
   for (const [id, track] of Object.entries(soundtrack.tracks ?? {})) {
-    if (track?.src !== undefined) checkFile(musicDir, track.src, `music/soundtrack.json tracks.${id}`)
+    if (track?.src !== undefined && ostInstalled) checkFile(musicDir, track.src, `music/soundtrack.json tracks.${id}`)
     // Flat loop entries are canonical in samples; a malformed one would silently play unlooped.
     if (track?.loop !== null && track?.loop !== undefined) {
       const { startSample, endSample, sampleRate } = track.loop

@@ -28,7 +28,7 @@ def parse_artifact_turn(content) -> TurnParseResult:
     action = None
     if isinstance(data, dict) and data.get("artifactAction") is not None:
         try:
-            if set(data) - {"beats", "settleEmotion", "settle_emotion", "artifactAction"}:
+            if set(data) - {"beats", "settleEmotion", "settle_emotion", "artifactAction", "toolRequest"}:
                 raise ValueError()
             content = data["artifactAction"].get("content") if isinstance(data["artifactAction"], dict) else None
             if isinstance(content, str) and len(content.encode("utf-8", "replace")) > MAX_ARTIFACT_BYTES:

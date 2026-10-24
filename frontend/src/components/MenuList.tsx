@@ -22,13 +22,15 @@ interface MenuListProps {
   initialId?: string
   /** Max entries visible before the list scrolls; PageUp/PageDown move by this much. */
   visibleRows?: number
+  /** Height of one entry including its margin, in stage px (19 for text-only entries). */
+  rowHeight?: number
 }
 
 /**
  * Vertical DS-style menu: mouse or keyboard (↑/↓, PageUp/PageDown, Enter/Space/Z,
  * Esc/Backspace/X), with logical menu sounds.
  */
-export function MenuList({ items, onSelect, onBack, onHighlight, initialId, visibleRows = 6 }: MenuListProps) {
+export function MenuList({ items, onSelect, onBack, onHighlight, initialId, visibleRows = 6, rowHeight = 19 }: MenuListProps) {
   const [index, setIndex] = useState(() => Math.max(0, items.findIndex((item) => item.id === initialId)))
   // Label marquee: keyboard selection scrolls the selected label; with the mouse, only the
   // label under the pointer scrolls, and leaving it resets the text.
@@ -80,7 +82,7 @@ export function MenuList({ items, onSelect, onBack, onHighlight, initialId, visi
   }, [items.length, index, visibleRows, current])
 
   return (
-    <ul className="menu-list" role="listbox" ref={listRef} style={{ maxHeight: visibleRows * 19 }}>
+    <ul className="menu-list" role="listbox" ref={listRef} style={{ maxHeight: visibleRows * rowHeight }}>
       {items.map((item, i) => (
         <li
           key={item.id}

@@ -137,7 +137,26 @@
       "category": "effect",
       "src": "effects/godot_ringtone.mp3",
       "loop": { "startSeconds": 2.0, "endSeconds": 38.00068027210884 }
-    }
+    },
+    "voice_en_phoenix_objection": { "category": "dialogue", "src": "voices/en/phoenix_objection.wav" },
+    "voice_en_phoenix_hold_it": { "category": "dialogue", "src": "voices/en/phoenix_hold_it.wav" },
+    "voice_en_phoenix_take_that": { "category": "dialogue", "src": "voices/en/phoenix_take_that.wav" },
+    "voice_en_mia_objection": { "category": "dialogue", "src": "voices/en/mia_objection.wav" },
+    "voice_en_mia_hold_it": { "category": "dialogue", "src": "voices/en/mia_hold_it.wav" },
+    "voice_en_mia_take_that": { "category": "dialogue", "src": "voices/en/mia_take_that.wav" },
+    "voice_en_edgeworth_objection": { "category": "dialogue", "src": "voices/en/edgeworth_objection.wav" },
+    "voice_en_edgeworth_hold_it": { "category": "dialogue", "src": "voices/en/edgeworth_hold_it.wav" },
+    "voice_ja_mia_objection": { "category": "dialogue", "src": "voices/ja/mia_objection.wav" },
+    "voice_ja_mia_hold_it": { "category": "dialogue", "src": "voices/ja/mia_hold_it.wav" },
+    "voice_ja_phoenix_hold_it": { "category": "dialogue", "src": "voices/ja/phoenix_hold_it.wav" },
+    "voice_ja_edgeworth_objection": { "category": "dialogue", "src": "voices/ja/edgeworth_objection.wav" },
+    "voice_en_mia_take2_objection": { "category": "dialogue", "src": "voices/en/mia_take2_objection.wav" },
+    "voice_en_guest_m1_objection": { "category": "dialogue", "src": "voices/en/guest_m1_objection.wav" },
+    "voice_en_guest_m2_objection": { "category": "dialogue", "src": "voices/en/guest_m2_objection.wav" },
+    "voice_en_guest_m3_objection": { "category": "dialogue", "src": "voices/en/guest_m3_objection.wav" },
+    "voice_ja_guest_f1_objection": { "category": "dialogue", "src": "voices/ja/guest_f1_objection.wav" },
+    "voice_ja_guest_m4_objection": { "category": "dialogue", "src": "voices/ja/guest_m4_objection.wav" },
+    "voice_ja_phoenix_objection": { "category": "dialogue", "src": "voices/ja/phoenix_objection.wav" }
   },
   "ringtones": {
     "default": "phoenix",
@@ -167,6 +186,46 @@
     "phone_ring_loop": "fx_phone_ring",
     "phone_answer": "fx_phone_answer",
     "evidence_reveal": "fx_evidence_reveal",
-    "evidence_added": "fx_evidence_added"
+    "evidence_added": "fx_evidence_added",
+    "exclamation_objection": "sfx_assertive",
+    "exclamation_hold_it": "fx_emphasis",
+    "exclamation_take_that": "fx_emphasis"
+  },
+  "voices": {
+    "objection": {
+      "en": {
+        "phoenix": "voice_en_phoenix_objection",
+        "mia": "voice_en_mia_objection",
+        "edgeworth": "voice_en_edgeworth_objection",
+        "mia_take2": "voice_en_mia_take2_objection",
+        "guest_m1": "voice_en_guest_m1_objection",
+        "guest_m2": "voice_en_guest_m2_objection",
+        "guest_m3": "voice_en_guest_m3_objection"
+      },
+      "ja": {
+        "mia": "voice_ja_mia_objection",
+        "edgeworth": "voice_ja_edgeworth_objection",
+        "guest_f1": "voice_ja_guest_f1_objection",
+        "guest_m4": "voice_ja_guest_m4_objection",
+        "phoenix": "voice_ja_phoenix_objection"
+      }
+    },
+    "hold_it": {
+      "en": {
+        "phoenix": "voice_en_phoenix_hold_it",
+        "mia": "voice_en_mia_hold_it",
+        "edgeworth": "voice_en_edgeworth_hold_it"
+      },
+      "ja": {
+        "mia": "voice_ja_mia_hold_it",
+        "phoenix": "voice_ja_phoenix_hold_it"
+      }
+    },
+    "take_that": {
+      "en": {
+        "phoenix": "voice_en_phoenix_take_that",
+        "mia": "voice_en_mia_take_that"
+      }
+    }
   }
 }

@@ -67,9 +67,11 @@ export interface CharacterManifest {
   schemaVersion: number
   id: CharacterId
   displayName: string
+  /** Name per interface language (e.g. { ja: "綾里真宵" }); displayName is the fallback (D-066). */
+  names?: Record<string, string>
   anchor?: string
   render?: Partial<CharacterRender>
-  voice?: { blip?: string }
+  voice?: { blip?: string; shout?: string }
   defaultEmotion: EmotionId
   fallbackEmotion: EmotionId
   animations: Record<AnimationId, AnimationManifest>
@@ -150,9 +152,10 @@ export interface CharacterAnchor {
 export interface LoadedCharacter {
   id: CharacterId
   displayName: string
+  names: Record<string, string>
   anchor: CharacterAnchor
   render: CharacterRender
-  voice: { blip?: SoundId }
+  voice: { blip?: SoundId; shout?: string }
   defaultEmotion: EmotionId
   fallbackEmotion: EmotionId
   animations: Record<AnimationId, CharacterAnimation>
@@ -204,6 +207,7 @@ export interface LoadedUi {
 export interface CharacterSummary {
   id: CharacterId
   displayName: string
+  names: Record<string, string>
   manifestUrl: string
   /** First idle frame of the default emotion, if resolvable. */
   previewUrl: string | null

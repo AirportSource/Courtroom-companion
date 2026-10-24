@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "characters": {
-    "maya_fey": "maya/character.json"
+    "maya_fey": "maya/character.json",
+    "dick_gumshoe": "gumshoe/character.json",
+    "mia_fey": "mia/character.json"
   }
 }

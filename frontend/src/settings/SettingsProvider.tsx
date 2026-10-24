@@ -5,6 +5,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<Settings>(readStoredSettings)
 
   useEffect(() => writeStoredSettings(settings), [settings])
+  // <html lang> drives dialogue segmentation and acknowledgement lines (D-066).
+  useEffect(() => { document.documentElement.lang = settings.language }, [settings.language])
 
   const update = useCallback((patch: Partial<Settings>) => {
     setSettings((current) => ({ ...current, ...patch }))

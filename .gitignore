@@ -33,3 +33,7 @@ __pycache__/
 .env.*
 !.env.example
 backend/.local/
+
+# Original soundtrack MP3s: local-only (© Capcom, not redistributed). Install them with
+# python scripts/install_ost.py <zip>  (download link in README.md / docs/MUSIC.md).
+frontend/public/assets/music/original/*.mp3
