@@ -8,7 +8,7 @@ import {
 import { readStoredSettings } from '../settings/settings.ts'
 
 const PROVIDERS: Record<ProviderType, string> = {
-  fake: 'Fake', ollama: 'Ollama', openai_compatible: 'OpenAI Compatible',
+  fake: 'Fake', ollama: 'Ollama', openai_compatible: 'OpenAI Compatible', anthropic: 'Anthropic',
 }
 const TEST_MESSAGES: Record<string, string> = {
   generation_succeeded: 'Connection and generation succeeded.',
@@ -21,6 +21,13 @@ const TEST_MESSAGES: Record<string, string> = {
   timeout: 'The connection test timed out.',
   openai_compatible_unreachable: 'The endpoint is unreachable.',
   ollama_unreachable: 'Ollama is unreachable.',
+  anthropic_unreachable: 'Anthropic is unreachable.',
+  malformed_response: 'The provider returned malformed output.',
+  empty_output: 'The provider returned no final output.',
+  response_truncated: 'The response reached its token or context limit.',
+  provider_refused: 'The provider declined the request.',
+  invalid_provider_configuration: 'The provider request configuration was rejected.',
+  provider_http_error: 'The provider service failed. Try again later.',
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -82,7 +89,7 @@ export function ProviderProfilesPanel({ characterId }: { characterId: string | n
     change({
       providerType, model: null,
       baseUrl: providerType === 'ollama' ? legacy.ollamaBaseUrl : null,
-      apiKeyEnv: providerType === 'openai_compatible' ? 'COURTROOM_LLM_API_KEY' : null,
+      apiKeyEnv: ['openai_compatible', 'anthropic'].includes(providerType) ? 'COURTROOM_LLM_API_KEY' : null,
     })
     setModels([])
   }
@@ -124,10 +131,10 @@ export function ProviderProfilesPanel({ characterId }: { characterId: string | n
         </select> : <input aria-label="Provider type" readOnly value={PROVIDERS[fields.providerType]} />}
       </Field>
       {fields.providerType !== 'fake' && <>
-        <Field label={fields.providerType === 'ollama' ? 'Server' : 'Base URL'}>
+        {fields.providerType !== 'anthropic' && <Field label={fields.providerType === 'ollama' ? 'Server' : 'Base URL'}>
           <input aria-label="Profile base URL" type="url" value={fields.baseUrl ?? ''} readOnly={!draft} disabled={busy}
             onChange={(event) => change({ baseUrl: event.target.value })} />
-        </Field>
+        </Field>}
         <Field label="Model">
           {draft && models.length ? <select aria-label="Profile model" value={fields.model ?? ''} disabled={busy}
             onChange={(event) => change({ model: event.target.value })}>
@@ -141,7 +148,7 @@ export function ProviderProfilesPanel({ characterId }: { characterId: string | n
         </Field>
       </>}
 
-      {draft && fields.providerType === 'openai_compatible' && <Field label="Env var">
+      {draft && ['openai_compatible', 'anthropic'].includes(fields.providerType) && <Field label="Env var">
         <input aria-label="Fallback API key environment variable" value={fields.apiKeyEnv ?? ''} disabled={busy}
           placeholder="Optional" onChange={(event) => change({ apiKeyEnv: event.target.value || null })} />
       </Field>}

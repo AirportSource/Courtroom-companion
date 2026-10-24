@@ -65,7 +65,7 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [x] First real provider adapter: Ollama native HTTP API, JSON-Schema output, backend model discovery and Settings controls — 2026-10-24 (D-039)
 - [x] Generic OpenAI-compatible provider: Chat Completions, native JSON Schema, backend-only secret state and Settings test flow — 2026-10-24 (D-040)
 - [x] Persistent backend provider profiles, active selection, OS credential storage and environment fallback — 2026-10-24 (D-041); Windows-vault browser lifecycle verified with synthetic credentials
-- [ ] Next provider: Anthropic — reuse profiles/CredentialStore; adapter + registration + profile type/form fields
+- [x] Native Anthropic Messages provider — existing profiles/CredentialStore, current native JSON output, shared schema/validation, profile Test Connection and compact Settings fields — 2026-10-24 (D-042); transport mocked, real-vault UI verified, live Claude generation pending a configured profile credential
 - [ ] Streaming (metadata first, then text) — design only so far
 - [ ] Conversation memory (in-memory 12-message history only so far)
 - [ ] Effects/music intent in the contract (exclamations, music moods)

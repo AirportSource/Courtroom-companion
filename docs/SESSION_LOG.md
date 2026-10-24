@@ -636,3 +636,24 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - Backend: **137 passed** (`pytest -q -p no:cacheprovider`; cache disabled to avoid the pre-existing Windows cache-path warning). New deterministic tests use an injected in-memory keyring and mocked provider HTTP, including profile-scoped Ollama discovery/test and vault-unavailable API behavior.
 - Frontend: **30 passed** (28 existing engine/font/pagination tests plus migration/storage/API coverage).
 - `validate:assets`: **161 references, 0 errors**; build: **58 modules**, pass; lint: pass; `git diff --check`: pass.
+
+---
+
+## 2026-10-24 — Native Anthropic provider
+
+**Inspected**
+- CLAUDE.md and persistent docs, the committed profile/credential milestone (`feff9df`), adapter/config/registry, profile validation, profile Test Connection/chat, shared prompt/schema/repair, and the compact Settings form. Starting tree was clean except the existing untracked `docs/sfx general/`.
+- Current official Anthropic Messages, structured-output and API-version documentation. API `2026-10-21` removes sampling parameters; native JSON output uses `output_config.format` and rejects several bounds present in the shared CharacterReply schema.
+
+**Implemented**
+- Added `app/llm/providers/anthropic.py`: fixed native Messages endpoint, current version/Bearer headers, unchanged common system/history context, configured model/max_tokens/timeout, and `stream: false`. No SDK dependency was needed.
+- Native JSON grammar is derived mechanically from the existing schema, with unsupported bounds moved to descriptions. Original schema/prompt and the shared validator/director remain authoritative; no second response contract or reply repair was introduced.
+- Only final text enters shared validation/history/presentation. Thinking/signatures/redacted thinking are discarded; refusals, truncation and unexpected intermediate/tool blocks fail safely. Typed sanitized errors cover auth, rate limit, model/configuration, schema rejection, timeout/unreachable, HTTP service errors and malformed/empty output.
+- Registered Anthropic and extended profile/credential-using types. The editor adds Anthropic with model and existing credential controls, without a base-URL field. Existing CredentialStore, environment fallback, persistence/security and profile testing are reused unchanged. Updated architecture/state/roadmap/setup docs and added D-042.
+
+**Verification**
+- Backend: **192 tests passed**. New mocked tests cover registration, auth/version, system/history/model/settings mapping, schema projection/source preservation, final extraction, reasoning exclusion, malformed/empty/refused/truncated responses, HTTP/transport failures, native profile validation/env resolution, history-free connection outcomes, and active-profile chat through shared validation/director. Existing provider/profile/service/director regressions pass.
+- Frontend: **31 tests passed**, including native profile metadata acceptance/save through the existing API plus all font/pagination/presentation regressions. Asset validation: **161 references, 0 errors**. Build: **58 modules**, pass. Lint and `git diff --check`: pass.
+- Real Windows-vault browser flow used a temporary synthetic key: Add Anthropic, no base-URL field, save password with input cleared, switch away/back retaining Configured status, replace/remove, and clean missing-key Test Connection. Inspected 256×192 editor/key-actions/lower-settings screenshots: no row overlap, horizontal overflow or browser exceptions. No secret appeared in local/session storage or API responses. Temporary profile/key/artifacts were removed.
+- No saved Anthropic profile/credential was configured for a real Claude smoke test. No cloud generation was requested; live English/French/Japanese/personality/multi-beat/director/pagination behavior remains unverified.
+- No changes to CredentialStore/security, CharacterService, CharacterReply, CharacterDirector rules, paginator, fonts, Maya assets or performance rules. `docs/sfx general/` preserved. No commit/push.

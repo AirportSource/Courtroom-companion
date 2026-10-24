@@ -13,8 +13,8 @@ from ..llm.base import GenerationSettings
 from ..llm.config import ProviderConfig
 from .credentials import CredentialStore, CredentialStoreError
 
-ProviderType = Literal["fake", "ollama", "openai_compatible"]
-CREDENTIAL_PROVIDER_TYPES = frozenset({"openai_compatible"})
+ProviderType = Literal["fake", "ollama", "openai_compatible", "anthropic"]
+CREDENTIAL_PROVIDER_TYPES = frozenset({"openai_compatible", "anthropic"})
 
 
 class ProfileDraft(BaseModel):
@@ -39,7 +39,10 @@ class ProfileDraft(BaseModel):
     def validate_provider(self):
         config = ProviderConfig(type=self.provider_type, base_url=self.base_url, model=self.model)
         self.base_url, self.model = config.base_url, config.model
-        if self.provider_type != "fake" and (not self.base_url or not self.model):
+        if self.provider_type == "anthropic":
+            if self.base_url is not None or not self.model:
+                raise ValueError("Anthropic profiles require a model and use the native endpoint without a base URL")
+        elif self.provider_type != "fake" and (not self.base_url or not self.model):
             raise ValueError("network profiles require a base URL and model")
         if self.provider_type == "fake" and (self.base_url or self.model or self.api_key_env):
             raise ValueError("Fake profiles do not use network settings")

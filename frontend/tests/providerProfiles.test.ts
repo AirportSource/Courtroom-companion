@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { DEFAULT_SETTINGS, readStoredSettings, writeStoredSettings, completeProviderMigration } from '../src/settings/settings.ts'
-import { activateProfile, loadProfiles, profileDraft, saveCredential, testProfile } from '../src/settings/providerProfiles.ts'
+import { activateProfile, loadProfiles, profileDraft, saveCredential, saveProfile, testProfile } from '../src/settings/providerProfiles.ts'
 
 const storage = new Map<string, string>()
 const storageKey = 'courtroom-companion.settings'
@@ -21,6 +21,37 @@ test('browser settings retain migration metadata until import, then persist only
   assert.deepEqual(JSON.parse(storage.get(storageKey)!), {
     textSpeed: 2, blipVolume: 0.6, blipsMuted: false, providerProfilesMigrated: true,
   })
+})
+
+test('native Anthropic profile metadata uses the existing profile and credential API without a base URL', async () => {
+  const originalFetch = globalThis.fetch
+  const profile = {
+    ...profileDraft(), id: 'native-profile', name: 'Claude', providerType: 'anthropic' as const,
+    baseUrl: null, model: 'claude-test-model', apiKeyEnv: 'TEST_NATIVE_KEY',
+    credentialRef: 'courtroom:profile:native-profile', credentialConfigured: true,
+    storedCredentialConfigured: true, credentialStoreAvailable: true,
+  }
+  const requests: { path: string; init?: RequestInit }[] = []
+  globalThis.fetch = async (input, init) => {
+    const path = String(input)
+    requests.push({ path, init })
+    const body = init?.method === 'POST' && path === '/api/provider-profiles' ? profile
+      : { activeProfileId: profile.id, profiles: [profile], migrationWarnings: [] }
+    return new Response(JSON.stringify(body))
+  }
+  try {
+    const loaded = await activateProfile(profile.id)
+    assert.equal(loaded.profiles[0].providerType, 'anthropic')
+    assert.equal(loaded.profiles[0].credentialConfigured, true)
+    assert.equal(await saveProfile(profileDraft(profile)), profile.id)
+    const saved = JSON.parse(String(requests.at(-1)!.init!.body))
+    assert.equal(saved.baseUrl, null)
+    assert.equal(saved.model, 'claude-test-model')
+    assert.equal(saved.providerType, 'anthropic')
+    assert.ok(!('credentialRef' in saved) && !('secret' in saved))
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
 
 test('profile APIs migrate once, switch on the server, and send a credential only to its write endpoint', async () => {

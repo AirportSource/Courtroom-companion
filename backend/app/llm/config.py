@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field, PrivateAttr, SecretStr, field_validator, 
 from .base import GenerationSettings
 
 #: Provider types recognized by configuration. The registry decides which are available;
-#: Fake, Ollama and OpenAI-compatible are implemented; the remaining names reserve future adapters.
+#: Fake, Ollama, OpenAI-compatible and Anthropic are implemented; openai reserves a future adapter.
 KNOWN_PROVIDER_TYPES = ("fake", "ollama", "openai_compatible", "openai", "anthropic")
 DEFAULT_OLLAMA_BASE_URL = "http://localhost:11434"
 DEFAULT_API_KEY_ENV = "COURTROOM_LLM_API_KEY"

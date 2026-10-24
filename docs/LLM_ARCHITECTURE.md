@@ -1,6 +1,6 @@
 # LLM Architecture — Courtroom Companion
 
-_Provider-agnostic conversation layer with FakeProvider, OllamaProvider, OpenAICompatibleProvider and local provider profiles / OS credentials (2026-10-24). See also `docs/CHARACTER_DIRECTOR.md`._
+_Provider-agnostic conversation layer with FakeProvider, OllamaProvider, OpenAICompatibleProvider, native AnthropicProvider and local provider profiles / OS credentials (2026-10-24). See also `docs/CHARACTER_DIRECTOR.md`._
 
 ## Responsibilities (four layers)
 
@@ -34,7 +34,7 @@ CharacterService  backend/app/characters/service.py
 LLMGateway  backend/app/llm/gateway.py
   │  registry → provider adapter; timeout; exception isolation
   ▼
-Provider adapter  backend/app/llm/providers/*.py   (Fake, Ollama or OpenAI-compatible; only place with vendor code)
+Provider adapter  backend/app/llm/providers/*.py   (Fake, Ollama, OpenAI-compatible or Anthropic; vendor code only here)
   ▼
 RawCompletion (untrusted JSON/text)
   ▼
@@ -93,8 +93,9 @@ class LLMProvider(ABC):
 Implemented providers: **Ollama** (local, no secrets, native HTTP JSON and JSON Schema through
 `format`) and one generic **OpenAI-compatible** adapter (Chat Completions plus
 `response_format.json_schema`). Gemini, OpenAI, Qwen/DashScope, Kimi/Moonshot, LM Studio,
-vLLM and OpenRouter are configurations of that adapter, not new provider classes. Next:
-**Anthropic** (separate request shape; JSON-instructed or tool-based structured output).
+vLLM and OpenRouter are configurations of that adapter, not new provider classes. Native
+**Anthropic** uses the Messages API and native JSON output through `output_config.format`.
+Claude model names are selected inside Anthropic, never provider subclasses.
 
 ## CharacterReply schema (`app/llm/schemas.py`)
 
@@ -176,7 +177,9 @@ existing integrations. Settings now uses profile-scoped testing and discovery.
 `ProfileDraft` / `ProviderProfile` contain `id` (server-generated UUID hex), `name`,
 `providerType`, optional `baseUrl` / `model`, optional backend-owned `credentialRef`, optional
 `apiKeyEnv` (environment variable name only), and `generationSettings` (the existing generic
-temperature, token and timeout settings). Network profiles require a valid URL and model.
+temperature, token and timeout settings). Ollama/compatible profiles require a valid URL and
+model. Anthropic requires a model and rejects a base URL: the native endpoint belongs to its
+adapter and is not exposed in normal Settings.
 Fake has no network/credential configuration; local Ollama needs no key. Unknown/extra input
 fields and unsupported provider types are rejected. Credential references are scoped to their
 profile, e.g. `courtroom:profile:<uuid>`, never accepted as arbitrary browser input.
@@ -232,10 +235,10 @@ Environment variables (server only):
 
 | Variable | Example |
 |---|---|
-| `COURTROOM_LLM_PROVIDER` | `fake` (default), `ollama`, or `openai_compatible`; later `anthropic` |
+| `COURTROOM_LLM_PROVIDER` | `fake` (default), `ollama`, `openai_compatible`, or `anthropic` |
 | `COURTROOM_LLM_BASE_URL` | `http://localhost:11434` or an OpenAI-compatible API prefix |
 | `COURTROOM_LLM_MODEL` | installed/hosted model ID |
-| `COURTROOM_LLM_API_KEY` | default backend-only secret used by `openai_compatible` |
+| `COURTROOM_LLM_API_KEY` | generic cloud-secret fallback for compatible/Anthropic profiles |
 | `COURTROOM_LLM_API_KEY_ENV` | optional override naming another server environment variable, e.g. `GEMINI_API_KEY` |
 | `COURTROOM_LLM_TEMPERATURE` / `_MAX_TOKENS` / `_TIMEOUT_S` | generation settings |
 | `COURTROOM_ASSETS_DIR` | override the character-pack root |
@@ -317,10 +320,59 @@ model    = gemini-3.8-flash
 secret   = COURTROOM_LLM_API_KEY (or COURTROOM_LLM_API_KEY_ENV=GEMINI_API_KEY)
 ```
 
+## AnthropicProvider
+
+`backend/app/llm/providers/anthropic.py` is a thin `httpx` adapter for native
+`POST https://api.anthropic.com/v1/messages`. It is registered as `anthropic` and receives only
+the configured model and resolved SecretStr from the existing factory. Profile creation,
+activation, duplication, persistence, credential status/set/remove, environment fallback and
+history-free Test Connection all reuse the existing infrastructure; CredentialStore and the
+configuration security boundary are unchanged.
+
+The request sends `anthropic-version: 2026-10-21`, `Authorization: Bearer <resolved key>`, the
+unchanged character prompt as top-level `system`, and the existing user/assistant history as
+`messages`. It always sends `stream: false`, the configured `max_tokens`, and the generic timeout.
+The [current API version](https://platform.claude.com/docs/en/api/migration-2026-10-21) removed
+temperature/top_p/top_k, so this adapter does not send them. Other providers retain their
+temperature behavior. No thinking option or tool definition is requested; model defaults apply.
+
+Native structured output uses `output_config.format: {type: "json_schema", schema: ...}`.
+The sole schema source is `reply_schema(character)`. Anthropic's [documented schema subset](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+rejects the shared schema's numeric, string-length and maximum-array-length constraints.
+`native_output_schema` therefore mechanically projects a copy into the supported grammar,
+moving those bounds into descriptions in the same manner documented for Anthropic SDKs. It
+does not define any CharacterReply fields or perform reply validation. Property names, types,
+required fields, enums and nullable intent are preserved; the original schema remains untouched
+in the common character prompt. The existing shared repair/validation and director enforce the
+application's bounds and capabilities. There is no second Claude-specific contract.
+
+Only completed `text` blocks are concatenated into RawCompletion. `thinking`, signatures and
+`redacted_thinking` never enter it, metadata, conversation history or presentation. Refusals,
+token/context truncation, unexpected intermediate/tool output, missing text and malformed
+Messages envelopes fail safely. Optional token counts/stop reason remain provider metadata.
+
+Sanitized errors distinguish missing/auth-failed keys, rate limiting, invalid models,
+unsupported structured output, timeout/unreachable API, HTTP service failures, malformed/empty
+output, refusal and truncation. No upstream error body or secret is logged/returned. Test
+Connection surfaces these through the existing profile endpoint without touching sessions;
+normal chat retains the existing character error-line behavior and never switches provider on
+failure. Unsupported native output is not retried with an alternate schema or provider.
+
+Settings → Add → Anthropic → name/model → Save Profile → Set API Key uses the existing password
+flow and native OS entry. There is no base-URL field. The optional Env var field can reference
+`ANTHROPIC_API_KEY` or any valid backend variable through the same generic `apiKeyEnv` property.
+To seed a new environment-only profile, set provider `anthropic`, model `<claude-model-id>` and
+the existing generic secret/reference settings; leave `COURTROOM_LLM_BASE_URL` unset.
+
+Mocked transport/profile tests cover native translation, schema projection, redaction,
+credential reuse, connection outcomes, shared validation and active-profile chat through the
+director. A real Windows-vault browser check used temporary synthetic credentials and made no
+cloud call. No saved Anthropic profile/credential was available for a live Claude smoke test.
+
 ## Streaming (design only)
 
-Not implemented at application level. Ollama and OpenAI-compatible endpoints advertise streaming
-capability, but both adapters always send `stream: false`. A future provider-generic streaming
+Not implemented at application level. Ollama, OpenAI-compatible and Anthropic endpoints advertise streaming
+capability, but the adapters always send `stream: false`. A future provider-generic streaming
 mode would:
 
 1. Ask the model for metadata first (beats' emotion/intensity/reaction), validate it, and

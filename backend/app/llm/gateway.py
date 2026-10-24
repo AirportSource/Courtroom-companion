@@ -15,6 +15,7 @@ from .config import DEFAULT_OLLAMA_BASE_URL, ProviderConfig
 from .providers.fake import FakeProvider
 from .providers.ollama import OllamaProvider
 from .providers.openai_compatible import OpenAICompatibleProvider
+from .providers.anthropic import AnthropicProvider
 from .repair import parse_reply
 from .schemas import CharacterReply, ChatMessage
 
@@ -31,6 +32,7 @@ DEFAULT_REGISTRY: dict[str, ProviderFactory] = {
         model=config.model,
         api_key=config.resolve_api_key(),
     ),
+    "anthropic": lambda config: AnthropicProvider(model=config.model, api_key=config.resolve_api_key()),
 }
 
 

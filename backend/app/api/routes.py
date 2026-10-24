@@ -18,7 +18,7 @@ from ..llm.schemas import ChatMessage
 router = APIRouter(prefix="/api")
 
 ID_PATTERN = r"^[a-z0-9_]{1,64}$"
-ProviderType = Literal["fake", "ollama", "openai_compatible"]
+ProviderType = Literal["fake", "ollama", "openai_compatible", "anthropic"]
 
 
 class ProviderSelection(BaseModel):

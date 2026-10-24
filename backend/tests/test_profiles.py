@@ -112,7 +112,7 @@ def test_profile_create_edit_activate_duplicate_delete_reload(profiles):
 
 @pytest.mark.parametrize("values", [
     {"name": " ", "providerType": "fake"},
-    {"name": "bad", "providerType": "anthropic"},
+    {"name": "bad", "providerType": "unknown_vendor"},
     {"name": "bad", "providerType": "ollama"},
     {"name": "bad", "providerType": "openai_compatible", "model": "x"},
     {"name": "bad", "providerType": "openai_compatible", "baseUrl": "file:///tmp/x", "model": "x"},

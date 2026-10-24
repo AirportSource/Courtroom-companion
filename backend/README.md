@@ -32,3 +32,19 @@ Environment-only operation remains supported: a new configuration directory is s
 such as `GEMINI_API_KEY`. OS credentials take precedence. No plaintext credential-file fallback
 exists if the vault is unavailable. Gemini's compatible URL is
 `https://generativelanguage.googleapis.com/v1beta/openai/`; model `gemini-3.8-flash`.
+
+Native Anthropic is available as another profile type. Choose Anthropic, enter a name and a
+Claude model ID available to your account, Save Profile, then Set API Key. It uses the same OS
+vault, environment fallback and profile Test Connection; no base URL is shown or required.
+Transport is `POST https://api.anthropic.com/v1/messages`, API version `2026-10-21`, Bearer auth
+and native `output_config.format` JSON output derived from the shared CharacterReply schema.
+Unsupported numeric/length bounds move into transport descriptions and remain in the original
+prompt/shared validation. There is no separate Claude reply contract. This API version removed
+temperature; token limits and timeouts apply, while the stored generic temperature is unused.
+
+For an environment-seeded Anthropic profile in a fresh config directory, set
+`COURTROOM_LLM_PROVIDER=anthropic`, `COURTROOM_LLM_MODEL=<claude-model-id>`, leave
+`COURTROOM_LLM_BASE_URL` unset, and reference a secret through the existing generic variables.
+For example, `COURTROOM_LLM_API_KEY_ENV=ANTHROPIC_API_KEY` selects that backend variable without
+creating a second secret mechanism. Native structured output requires a supported model;
+unsupported models/formats fail safely without retrying through a different provider.
