@@ -1,0 +1,106 @@
+{
+  "id": "maya_fey",
+  "displayName": "Maya Fey",
+
+  "defaultAnimation": "neutral_idle",
+
+  "animations": {
+    "neutral_idle": {
+      "folder": "sprites/neutral_front",
+      "fps": 6,
+      "loop": true
+    },
+
+    "happy_idle": {
+      "folder": "sprites/smile_front",
+      "fps": 7,
+      "loop": true
+    },
+
+    "excited": {
+      "folder": "sprites/excited_front",
+      "fps": 9,
+      "loop": true
+    },
+
+    "thinking": {
+      "folder": "sprites/thinking_side",
+      "fps": 6,
+      "loop": true
+    },
+
+    "surprised": {
+      "folder": "sprites/shocked_panicked",
+      "fps": 10,
+      "loop": false
+    },
+
+    "sad": {
+      "folder": "sprites/sad_crying",
+      "fps": 6,
+      "loop": true
+    },
+
+    "anxious": {
+      "folder": "sprites/necklace_anxious",
+      "fps": 7,
+      "loop": true
+    },
+
+    "giggle": {
+      "folder": "sprites/hand_mouth_giggle",
+      "fps": 7,
+      "loop": true
+    },
+
+    "happy_clasped": {
+      "folder": "sprites/clasped_hands_happy",
+      "fps": 8,
+      "loop": true
+    },
+
+    "arms_open": {
+      "folder": "sprites/arms_open",
+      "fps": 8,
+      "loop": true
+    },
+
+    "polite_bow": {
+      "folder": "sprites/bow_polite",
+      "fps": 6,
+      "loop": false
+    },
+
+    "side_idle": {
+      "folder": "sprites/side_idle",
+      "fps": 6,
+      "loop": true
+    },
+
+    "side_praying": {
+      "folder": "sprites/side_praying",
+      "fps": 6,
+      "loop": true
+    },
+
+    "three_quarter_idle": {
+      "folder": "sprites/three_quarter_idle",
+      "fps": 6,
+      "loop": true
+    }
+  },
+
+  "emotionMap": {
+    "neutral": "neutral_idle",
+    "happy": "happy_idle",
+    "excited": "excited",
+    "thinking": "thinking",
+    "surprised": "surprised",
+    "sad": "sad",
+    "anxious": "anxious",
+    "playful": "giggle",
+    "grateful": "happy_clasped",
+    "explaining": "arms_open",
+    "polite": "polite_bow"
+  }
+}
