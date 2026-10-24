@@ -3,22 +3,29 @@
   "id": "maya_fey",
   "displayName": "Maya Fey",
   "anchor": "bottom-center",
-  "voice": {
-    "blip": "blip_female"
-  },
+  "render": { "scale": 1, "offsetX": 0, "offsetY": 0 },
+  "voice": { "blip": "blip_female" },
   "defaultEmotion": "neutral",
   "fallbackEmotion": "neutral",
-
   "animations": {
     "neutral_front": {
+      "canvas": { "width": 92, "height": 161 },
       "idle": {
         "fps": 6,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
           "sprites/neutral_front/idle/maya_frame_009.png",
           "sprites/neutral_front/idle/maya_frame_010.png",
           "sprites/neutral_front/idle/maya_frame_011.png",
           "sprites/neutral_front/idle/maya_frame_012.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
@@ -29,202 +36,335 @@
           "sprites/neutral_front/talking/maya_frame_014.png",
           "sprites/neutral_front/talking/maya_frame_015.png",
           "sprites/neutral_front/talking/maya_frame_016.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "smile_front": {
+      "canvas": { "width": 89, "height": 162 },
       "idle": {
         "fps": 7,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
-          "sprites/smile_front/idle/maya_frame_039.png",
           "sprites/smile_front/idle/maya_frame_040.png",
           "sprites/smile_front/idle/maya_frame_041.png",
-          "sprites/smile_front/idle/maya_frame_042.png"
+          "sprites/smile_front/idle/maya_frame_042.png",
+          "sprites/smile_front/idle/maya_frame_043.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
         "fps": 7,
         "loop": true,
         "frames": [
-          "sprites/smile_front/talking/maya_frame_043.png",
           "sprites/smile_front/talking/maya_frame_044.png",
           "sprites/smile_front/talking/maya_frame_045.png",
-          "sprites/smile_front/talking/maya_frame_046.png"
+          "sprites/smile_front/talking/maya_frame_046.png",
+          "sprites/smile_front/talking/maya_frame_047.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "excited_front": {
+      "canvas": { "width": 94, "height": 160 },
       "idle": {
         "fps": 9,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
-          "sprites/excited_front/idle/maya_frame_078.png",
           "sprites/excited_front/idle/maya_frame_079.png",
           "sprites/excited_front/idle/maya_frame_080.png",
-          "sprites/excited_front/idle/maya_frame_081.png"
+          "sprites/excited_front/idle/maya_frame_081.png",
+          "sprites/excited_front/idle/maya_frame_082.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
         "fps": 9,
         "loop": true,
         "frames": [
-          "sprites/excited_front/talking/maya_frame_082.png",
           "sprites/excited_front/talking/maya_frame_083.png",
           "sprites/excited_front/talking/maya_frame_084.png",
-          "sprites/excited_front/talking/maya_frame_085.png"
+          "sprites/excited_front/talking/maya_frame_085.png",
+          "sprites/excited_front/talking/maya_frame_086.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "thinking_side": {
+      "canvas": { "width": 90, "height": 155 },
       "idle": {
         "fps": 6,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
-          "sprites/thinking_side/idle/maya_frame_047.png",
           "sprites/thinking_side/idle/maya_frame_048.png",
           "sprites/thinking_side/idle/maya_frame_049.png",
-          "sprites/thinking_side/idle/maya_frame_050.png"
+          "sprites/thinking_side/idle/maya_frame_050.png",
+          "sprites/thinking_side/idle/maya_frame_051.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
         "fps": 6,
         "loop": true,
         "frames": [
-          "sprites/thinking_side/talking/maya_frame_051.png",
           "sprites/thinking_side/talking/maya_frame_052.png",
           "sprites/thinking_side/talking/maya_frame_053.png",
-          "sprites/thinking_side/talking/maya_frame_054.png"
+          "sprites/thinking_side/talking/maya_frame_054.png",
+          "sprites/thinking_side/talking/maya_frame_055.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "sad_crying": {
+      "canvas": { "width": 93, "height": 146 },
       "idle": {
         "fps": 6,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
-          "sprites/sad_crying/idle/maya_frame_031.png",
           "sprites/sad_crying/idle/maya_frame_032.png",
           "sprites/sad_crying/idle/maya_frame_033.png",
-          "sprites/sad_crying/idle/maya_frame_034.png"
+          "sprites/sad_crying/idle/maya_frame_034.png",
+          "sprites/sad_crying/idle/maya_frame_035.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
         "fps": 6,
         "loop": true,
         "frames": [
-          "sprites/sad_crying/talking/maya_frame_035.png",
           "sprites/sad_crying/talking/maya_frame_036.png",
           "sprites/sad_crying/talking/maya_frame_037.png",
-          "sprites/sad_crying/talking/maya_frame_038.png"
+          "sprites/sad_crying/talking/maya_frame_038.png",
+          "sprites/sad_crying/talking/maya_frame_039.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "necklace_anxious": {
+      "canvas": { "width": 107, "height": 160 },
       "idle": {
         "fps": 7,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
-          "sprites/necklace_anxious/idle/maya_frame_070.png",
           "sprites/necklace_anxious/idle/maya_frame_071.png",
           "sprites/necklace_anxious/idle/maya_frame_072.png",
-          "sprites/necklace_anxious/idle/maya_frame_073.png"
+          "sprites/necklace_anxious/idle/maya_frame_073.png",
+          "sprites/necklace_anxious/idle/maya_frame_074.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
         "fps": 7,
         "loop": true,
         "frames": [
-          "sprites/necklace_anxious/talking/maya_frame_074.png",
           "sprites/necklace_anxious/talking/maya_frame_075.png",
           "sprites/necklace_anxious/talking/maya_frame_076.png",
-          "sprites/necklace_anxious/talking/maya_frame_077.png"
+          "sprites/necklace_anxious/talking/maya_frame_077.png",
+          "sprites/necklace_anxious/talking/maya_frame_078.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "hand_mouth_giggle": {
+      "canvas": { "width": 89, "height": 160 },
       "idle": {
         "fps": 7,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
-          "sprites/hand_mouth_giggle/idle/maya_frame_086.png",
           "sprites/hand_mouth_giggle/idle/maya_frame_087.png",
           "sprites/hand_mouth_giggle/idle/maya_frame_088.png",
-          "sprites/hand_mouth_giggle/idle/maya_frame_089.png"
+          "sprites/hand_mouth_giggle/idle/maya_frame_089.png",
+          "sprites/hand_mouth_giggle/idle/maya_frame_090.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
         "fps": 7,
         "loop": true,
         "frames": [
-          "sprites/hand_mouth_giggle/talking/maya_frame_090.png",
           "sprites/hand_mouth_giggle/talking/maya_frame_091.png",
           "sprites/hand_mouth_giggle/talking/maya_frame_092.png",
-          "sprites/hand_mouth_giggle/talking/maya_frame_093.png"
+          "sprites/hand_mouth_giggle/talking/maya_frame_093.png",
+          "sprites/hand_mouth_giggle/talking/maya_frame_094.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "clasped_hands_happy": {
+      "canvas": { "width": 92, "height": 156 },
       "idle": {
         "fps": 8,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
-          "sprites/clasped_hands_happy/idle/maya_frame_055.png",
           "sprites/clasped_hands_happy/idle/maya_frame_056.png",
           "sprites/clasped_hands_happy/idle/maya_frame_057.png",
-          "sprites/clasped_hands_happy/idle/maya_frame_058.png"
+          "sprites/clasped_hands_happy/idle/maya_frame_058.png",
+          "sprites/clasped_hands_happy/idle/maya_frame_059.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
         "fps": 8,
         "loop": true,
         "frames": [
-          "sprites/clasped_hands_happy/talking/maya_frame_059.png",
           "sprites/clasped_hands_happy/talking/maya_frame_060.png",
           "sprites/clasped_hands_happy/talking/maya_frame_061.png",
-          "sprites/clasped_hands_happy/talking/maya_frame_062.png"
+          "sprites/clasped_hands_happy/talking/maya_frame_062.png",
+          "sprites/clasped_hands_happy/talking/maya_frame_063.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "clasped_hands_laugh": {
+      "canvas": { "width": 92, "height": 160 },
       "idle": {
         "fps": 8,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
-          "sprites/clasped_hands_happy/idle/maya_frame_055.png",
           "sprites/clasped_hands_happy/idle/maya_frame_056.png",
           "sprites/clasped_hands_happy/idle/maya_frame_057.png",
-          "sprites/clasped_hands_happy/idle/maya_frame_058.png"
+          "sprites/clasped_hands_happy/idle/maya_frame_058.png",
+          "sprites/clasped_hands_happy/idle/maya_frame_059.png"
+        ],
+        "offsets": [
+          [0, 4],
+          [0, 4],
+          [0, 4],
+          [0, 4]
         ]
       },
       "talking": {
         "fps": 8,
         "loop": true,
         "frames": [
+          "sprites/clasped_hands_happy/talking_laugh/maya_frame_064.png",
+          "sprites/clasped_hands_happy/talking_laugh/maya_frame_065.png",
           "sprites/clasped_hands_happy/talking_laugh/maya_frame_066.png",
           "sprites/clasped_hands_happy/talking_laugh/maya_frame_067.png",
           "sprites/clasped_hands_happy/talking_laugh/maya_frame_068.png",
-          "sprites/clasped_hands_happy/talking_laugh/maya_frame_069.png"
+          "sprites/clasped_hands_happy/talking_laugh/maya_frame_069.png",
+          "sprites/clasped_hands_happy/talking_laugh/maya_frame_070.png"
+        ],
+        "offsets": [
+          [0, 4],
+          [0, 4],
+          [0, 4],
+          [0, 0],
+          [0, 2],
+          [0, 0],
+          [0, 4]
         ]
       }
     },
-
     "arms_open": {
+      "canvas": { "width": 137, "height": 156 },
       "idle": {
         "fps": 8,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
           "sprites/arms_open/idle/maya_frame_017.png",
+          "sprites/arms_open/idle/maya_frame_018.png",
           "sprites/arms_open/idle/maya_frame_019.png",
           "sprites/arms_open/idle/maya_frame_020.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
@@ -233,20 +373,35 @@
         "frames": [
           "sprites/arms_open/talking/maya_frame_021.png",
           "sprites/arms_open/talking/maya_frame_022.png",
-          "sprites/arms_open/talking/maya_frame_023.png"
+          "sprites/arms_open/talking/maya_frame_023.png",
+          "sprites/arms_open/talking/maya_frame_024.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "bow_polite": {
+      "canvas": { "width": 76, "height": 157 },
       "idle": {
         "fps": 6,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
           "sprites/bow_polite/idle/maya_frame_001.png",
           "sprites/bow_polite/idle/maya_frame_002.png",
           "sprites/bow_polite/idle/maya_frame_003.png",
           "sprites/bow_polite/idle/maya_frame_004.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
@@ -257,49 +412,84 @@
           "sprites/bow_polite/talking/maya_frame_006.png",
           "sprites/bow_polite/talking/maya_frame_007.png",
           "sprites/bow_polite/talking/maya_frame_008.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     },
-
     "three_quarter": {
+      "canvas": { "width": 95, "height": 159 },
       "idle": {
         "fps": 6,
         "loop": true,
+        "frameDurations": [2600, 70, 90, 70],
+        "holdJitterMs": 1800,
         "frames": [
-          "sprites/three_quarter_idle/idle/maya_frame_094.png",
           "sprites/three_quarter_idle/idle/maya_frame_095.png",
           "sprites/three_quarter_idle/idle/maya_frame_096.png",
-          "sprites/three_quarter_idle/idle/maya_frame_097.png"
+          "sprites/three_quarter_idle/idle/maya_frame_097.png",
+          "sprites/three_quarter_idle/idle/maya_frame_098.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       },
       "talking": {
         "fps": 6,
         "loop": true,
         "frames": [
-          "sprites/three_quarter_idle/talking/maya_frame_098.png",
           "sprites/three_quarter_idle/talking/maya_frame_099.png",
           "sprites/three_quarter_idle/talking/maya_frame_100.png",
-          "sprites/three_quarter_idle/talking/maya_frame_101.png"
+          "sprites/three_quarter_idle/talking/maya_frame_101.png",
+          "sprites/three_quarter_idle/talking/maya_frame_102.png"
+        ],
+        "offsets": [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ]
       }
     }
   },
-
   "reactions": {
     "shocked": {
+      "canvas": { "width": 158, "height": 161 },
       "fps": 10,
       "loop": false,
       "frames": [
-        "sprites/shocked_panicked/reaction/maya_frame_025.png",
-        "sprites/shocked_panicked/reaction/maya_frame_026.png",
         "sprites/shocked_panicked/reaction/maya_frame_027.png",
+        "sprites/shocked_panicked/reaction/maya_frame_026.png",
         "sprites/shocked_panicked/reaction/maya_frame_028.png",
         "sprites/shocked_panicked/reaction/maya_frame_029.png",
-        "sprites/shocked_panicked/reaction/maya_frame_030.png"
+        "sprites/shocked_panicked/reaction/maya_frame_030.png",
+        "sprites/shocked_panicked/reaction/maya_frame_031.png",
+        "sprites/shocked_panicked/reaction/maya_frame_028.png",
+        "sprites/shocked_panicked/reaction/maya_frame_029.png",
+        "sprites/shocked_panicked/reaction/maya_frame_030.png",
+        "sprites/shocked_panicked/reaction/maya_frame_031.png"
+      ],
+      "offsets": [
+        [0, 0],
+        [26, 4],
+        [40, 9],
+        [40, 9],
+        [40, 9],
+        [40, 9],
+        [40, 9],
+        [40, 9],
+        [40, 9],
+        [40, 9]
       ]
     }
   },
-
   "emotions": {
     "neutral": { "animation": "neutral_front" },
     "happy": { "animation": "smile_front" },
@@ -315,8 +505,7 @@
     "polite": { "animation": "bow_polite" },
     "relaxed": { "animation": "three_quarter" }
   },
-
   "unassignedFrames": [
-    "sprites/_unassigned/maya_frame_024.png"
+    "sprites/_unassigned/maya_frame_025.png"
   ]
 }

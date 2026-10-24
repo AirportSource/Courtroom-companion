@@ -18,24 +18,40 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
   - `audio.json` v1 (D-012): 18 sounds in `blip` / `dialogue` / `effect` / `ui`, blip paths fixed.
 - [ ] Prepare loopable music
   - No music files exist. `assets/music/` folder reserved.
-- [ ] Prepare UI assets
-  - No dialogue box / nameplate / continue-arrow / font assets exist. `assets/ui/` folder reserved.
+- [~] Prepare UI assets
+  - 2026-10-24: Spriters Resource is blocked for automated access (Cloudflare challenge). Manual-download checklist is in ASSET_SOURCES.md. CSS stand-ins are in use for the dialogue box, name plate, arrow, title and menus.
+  - [~] Owner downloads the source sheets: title sheet, exclamations and font received 2026-10-24. **Missing:** the miscellaneous background sheet (Title/Discussion, Bottom Screen, Top Screen, Cross Examination, Talk Option) and a text box / name plate / arrow source.
+  - [x] `ui.json` manifest + validator coverage; title art, exclamations and font extracted — 2026-10-24
+  - [x] Pixel font in use on its native 16 px grid — 2026-10-24
+  - [x] Menu panels from the miscellaneous sheet → `ui/menu/`, used as menu backgrounds — 2026-10-24 (D-031)
+  - [ ] Replace the remaining CSS stand-ins (text box, name plate, arrow, menu buttons)
 - [x] Decide and apply runtime asset location convention — 2026-10-24, everything under `frontend/public/assets/` (D-010)
 - [x] Manifest validation script — 2026-10-24, `npm run validate:assets` (D-014)
 
 ## Phase 2 — Scene & character rendering
-- [ ] Typed manifest loader (TS types + runtime validation for characters/backgrounds/audio manifests)
-- [ ] React scene renderer (background + character + dialogue layers, pixel-perfect scaling)
-- [ ] Character animation engine (one controller per character, data-driven fps/loop)
-- [ ] Idle/talking state handling (talking driven by dialogue playback state)
+- [x] Typed manifest loader — 2026-10-24 (characters + backgrounds; audio manifest typed when the audio manager arrives)
+- [x] React scene renderer — 2026-10-24: background → character → dialogue overlay on a 256×192 integer-scaled stage. Wide-background panning not done.
+- [~] Character animation engine — 2026-10-24: single timer per character, manifest fps/loop, one-shot reactions with settle. Still to come: multi-character, transitions.
+- [x] Idle/talking state handling — 2026-10-24: driven by typewriter reveal state (dev toggle remains in the Animation Test screen)
+- [x] Frame splits confirmed by the original sheet's "x Talk" brackets — 2026-10-24 (D-027). Remaining by-eye items: shocked order, unassigned frame 025
+- [x] Sprite jitter fix: canvas + per-frame offsets (D-022), with dev A/B toggle, debug overlay and 1–4×/auto scale — 2026-10-24
+- [x] Re-extract Maya frames 1:1 from the original sheet — 2026-10-24: 102 native frames from `maya fey.png` (D-027); fixes muddiness, jitter and scale
+- [x] Generic character render profile (scale/offset in manifest) + dev overrides — 2026-10-24 (D-026); Maya = native 1/0/0
+- [ ] Extract sheet rows 14–17 (side poses) as new animations when needed
+- [x] Start / main menu, character select (from index.json), location select (from backgrounds.json), settings screen — 2026-10-24 (CSS-styled; original title/menu art pending)
 
 ## Phase 3 — Dialogue
-- [ ] Typewriter dialogue (punctuation pauses, skip/advance, continue indicator)
-- [ ] Dialogue blip engine (throttled, per-character blip)
-- [ ] Emotion mapping (logical emotion → animation via character pack, safe `neutral` fallback)
+- [x] Typewriter dialogue — 2026-10-24: waiting/revealing/complete, punctuation pauses, skip, advance, continue indicator
+- [x] Dialogue blip engine — 2026-10-24: voice from the character manifest, per-line and dev overrides, voiced characters only, 60 ms throttle
+- [~] Classic DS dialogue box + name plate — layout and behaviour done; original graphics pending (see Phase 1 UI assets)
+- [ ] Dialogue source abstraction (script / later LLM) and text colour markup
+- [x] Emotion mapping — 2026-10-24: logical emotion → animation/reaction via character pack, fallback chain in `characterResolver.ts`
 
 ## Phase 4 — Audio
-- [ ] Audio manager (central service; blip / UI / effect categories; volume & mute)
+- [~] Audio manager — 2026-10-24: central Web Audio engine, decode-once, gesture unlock, blip volume/mute. Still to come: effect SFX wiring and per-category volumes.
+- [x] Menu/navigation SFX via logical events (cursor/confirm/cancel/open/page/save/start) — 2026-10-24 (D-028)
+- [x] Lightweight engine tests (`npm test`, node:test) — 2026-10-24 (D-029)
+- [x] Settings: text speed, blip volume, mute, fullscreen — 2026-10-24
 - [ ] Music manager and crossfade (single active track, no restart of same track)
 
 ## Phase 5 — Conversation intelligence

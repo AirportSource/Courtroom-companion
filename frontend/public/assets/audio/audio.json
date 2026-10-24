@@ -23,6 +23,17 @@
     "ui_select": { "category": "ui", "src": "menu_ui/selectblip.wav" },
     "ui_select_alt": { "category": "ui", "src": "menu_ui/selectblip2.wav" },
     "ui_jingle": { "category": "ui", "src": "menu_ui/selectjingle.wav" },
-    "ui_typewriter": { "category": "ui", "src": "menu_ui/typwriter.wav" }
+    "ui_typewriter": { "category": "ui", "src": "menu_ui/typwriter.wav" },
+    "ui_page": { "category": "ui", "src": "menu_ui/pageturn.wav" }
+  },
+
+  "events": {
+    "menu_cursor": "ui_select",
+    "menu_confirm": "ui_select_alt",
+    "menu_cancel": "ui_cancel",
+    "menu_open": "ui_scroll",
+    "menu_page": "ui_page",
+    "menu_save": "ui_save",
+    "menu_start": "ui_jingle"
   }
 }

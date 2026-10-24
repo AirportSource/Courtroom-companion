@@ -25,6 +25,8 @@ Validated by `frontend/scripts/validate-assets.mjs` (`npm run validate:assets`).
 
 ## Maya — conversational animations
 
+> **Superseded 2026-10-24** by the native re-extraction; see "Maya — native re-extraction" at the end of this file.
+
 Folder: `characters/maya/sprites/`. All frames are 8-bit RGBA PNG named `maya_frame_NNN.png`. NNN is the original source frame number, kept for traceability.
 
 | Animation id | Folder | idle frames | talking frames | fps | Frame size(s) |
@@ -48,11 +50,15 @@ All 12 animations have both idle and talking variants.
 
 ## Maya — one-shot reactions
 
+> **Superseded 2026-10-24** by the native re-extraction; see "Maya — native re-extraction" at the end of this file.
+
 | Reaction id | Folder | Frames | fps | Sizes | Note |
 |---|---|---|---|---|---|
 | `shocked` | `shocked_panicked/reaction/` | 025–030 | 10 | 109×111, 74×108, 56×105 ×4 | recoil (arms up) → "O" mouth hold |
 
 ## Maya — unassigned
+
+> **Superseded 2026-10-24** by the native re-extraction; see "Maya — native re-extraction" at the end of this file.
 
 | File | Size | Reason |
 |---|---|---|
@@ -172,3 +178,109 @@ Folder: `audio/`. All mono PCM WAV. Files unchanged this session; only `audio.js
 **None.** `ui/` exists with only `.gitkeep`. The Vite demo `hero.png` was removed (byte-identical to the scaffold image, unreferenced, recoverable from Git).
 
 Referenced-but-missing scaffold files (not game assets): `/favicon.svg` (index.html), `/icons.svg` (App.tsx).
+
+---
+
+## Update 2026-10-24 (Phase 2B)
+
+No runtime assets were added, removed or renamed. `ui/` and `music/` still hold only `.gitkeep`. All UI graphics are CSS stand-ins pending manual download of the original sheets; see `docs/ASSET_SOURCES.md`, which also records the provenance status of the existing assets.
+
+Runtime usage of existing assets:
+- `audio.json` `blip_female` is used as Maya's voice (`voice.blip` in `character.json`).
+- `blip_male` is used by test line 7 and the dev voice override.
+- No other sounds are played yet.
+
+---
+
+## Update 2026-10-24 (presentation pass)
+
+### New UI assets (`frontend/public/assets/ui/`, manifest `ui/ui.json`)
+
+| ID | File | Size | Notes |
+|---|---|---|---|
+| `title_screen` | `title/title_screen.png` | 256×192 | Original DS title art (crop of the owner-supplied Spriters Resource sheet, 208 colours) |
+| `exclamation_objection` | `exclamations/objection.png` | 256×192 | Transparent background; not used at runtime yet |
+| `exclamation_take_that` | `exclamations/take_that.png` | 256×192 | Transparent background; not used at runtime yet |
+| `exclamation_hold_it` | `exclamations/hold_it.png` | 256×190 | Transparent background; not used at runtime yet |
+| font `dialogue` | `fonts/ace_attorney.ttf` | — | "Ace Attorney" (David Fens, FontStruct, non-commercial licence); 16 px grid. No `-` or `…` glyphs. |
+
+Provenance is recorded in `docs/ASSET_SOURCES.md`. Original source files stay in `docs/references/` (untracked).
+
+`npm run validate:assets` now covers `ui.json` (files and PNG dimensions). Fonts count as media for the unreferenced-file check. Total referenced files: **149**.
+
+### Maya manifest additions (D-022)
+
+> **Superseded 2026-10-24** by the native re-extraction; see "Maya — native re-extraction" at the end of this file.
+
+Each animation now has a `canvas` and each clip an `offsets` list. Frames and pixels are unchanged.
+
+| Animation | Canvas | Animation | Canvas |
+|---|---|---|---|
+| neutral_front | 66×111 | clasped_hands_happy | 66×107 |
+| smile_front | 64×112 | clasped_hands_laugh | 66×108 |
+| excited_front | 67×110 | arms_open | 95×107 |
+| thinking_side | 65×107 | bow_polite | 56×108 |
+| sad_crying | 66×100 | three_quarter | 68×109 |
+| necklace_anxious | 76×110 | reaction `shocked` | 109×111 |
+| hand_mouth_giggle | 64×110 | | |
+
+### New finding: Maya frames were resampled before import
+
+> **Resolved 2026-10-24**: confirmed against the original sheet and re-extracted 1:1; see the end of this file.
+
+Each Maya frame contains about **1,400 distinct colours** (e.g. `maya_frame_009.png`: 1,392 in 65×111 px). Backgrounds have about 224, and the title art 208. Magnified crops show soft, anti-aliased outlines (a purple halo around the hair), which points to resampling or filtering during extraction. That's why Maya looks blockier and muddier than the original sheet when magnified, and why ±0.25 px of outline wobble remains after the jitter fix. It can't be fixed in the renderer. **Recommended:** re-extract Maya's frames 1:1 from the original sheet, without scaling, and keep the sheet's canvas offsets.
+
+---
+
+## Maya — native re-extraction (2026-10-24, current)
+
+Source: `docs/references/maya fey.png` (1180×3112, 15-colour palette; ripped by Shoda), the authoritative Maya sheet. Frames are exact 1:1 crops with the background turned transparent. Pixel-identical to the sheet: 102/102. Manifest `characters/maya/character.json` (D-026/D-027).
+
+| Animation | Sheet row | idle frames | talking frames | Native size | Canvas |
+|---|---|---|---|---|---|
+| bow_polite | 1 | 001–004 | 005–008 | 76×157 | 76×157 |
+| neutral_front | 2 | 009–012 | 013–016 | 92×161 | 92×161 |
+| arms_open | 3 | 017–020 | 021–024 | 137×156 | 137×156 |
+| sad_crying | 5 | 032–035 | 036–039 | 93×146 | 93×146 |
+| smile_front | 6 | 040–043 | 044–047 | 89×162 | 89×162 |
+| thinking_side | 7 | 048–051 | 052–055 | 90×155 | 90×155 |
+| clasped_hands_happy | 8 | 056–059 | 060–063 | 92×156 | 92×156 |
+| clasped_hands_laugh | 8 + 9 | 056–059 (shared) | 064–070 (7-frame laugh) | 92×156–160 | 92×160 |
+| necklace_anxious | 10 | 071–074 | 075–078 | 107×160 | 107×160 |
+| excited_front | 11 | 079–082 | 083–086 | 94×160 | 94×160 |
+| hand_mouth_giggle | 12 | 087–090 | 091–094 | 89×160 | 89×160 |
+| three_quarter | 13 | 095–098 | 099–102 | 95×159 | 95×159 |
+
+The `three_quarter` folder is still named `three_quarter_idle/`.
+
+**Idle timing (D-030):** every idle clip is a blink (open → half → closed → half), timed `[2600, 70, 90, 70]` ms with `holdJitterMs: 1800`.
+
+**Reaction `shocked`** (row 4): 027 (158×161, arms wide) → 026 (106×157, fists) → hold 028–031 (78×152) ×2, as annotated "x2" on the sheet. That's 10 steps at 10 fps on a 158×161 canvas.
+
+**Unassigned:** `_unassigned/maya_frame_025.png` (89×162, row 4 col 1: standing, worried, arms down).
+
+**Not extracted:** sheet rows 14–17 (40 frames of additional side-facing poses, several with "x Talk" groups). They're available for future poses such as the `side_idle` / `side_praying` names in the original draft manifest.
+
+Old resampled frames (97, ~0.69× size, ~1,400 colours each) were removed with `git rm`; they remain in history at `0db92d6`.
+
+### Audio additions
+
+- `audio/menu_ui/pageturn.wav` (sound `ui_page`): mono, 21819 Hz, 16-bit, 0.412 s.
+- `audio.json` `events`: 7 logical menu events (D-028).
+- The other menu SFX in `docs/sfx general/` are byte-identical to the existing `menu_ui/` files, so they're reused, not duplicated.
+
+Totals: 155 referenced runtime files (102 Maya + 29 backgrounds + 19 audio + 5 UI).
+
+### UI menu panels (2026-10-24)
+
+Source: `docs/references/DS _ DSi - Phoenix Wright_ Ace Attorney - Backgrounds - Miscellaneous.png` (1553×238, by TSP184). All crops are 256×192 at y = 23.
+
+| ui.json id | File (`ui/menu/`) | Sheet x | Colours | Used on |
+|---|---|---|---|---|
+| `menu_title_discussion` | `title-screen-discussion.png` | 23 | 14 | Main menu |
+| `menu_bottom_screen` | `bottom-screen.png` | 302 | 49 | Settings |
+| `menu_top_screen` | `top-screen.png` | 581 | 42 | (registered, unused) |
+| `menu_cross_examination_start` | `cross-examination-start.png` | 860 | 14 | (registered, unused; future effects) |
+| `menu_talk_option` | `talk-option.png` | 1139 | 15 | Character select |
+
+Filenames use kebab-case as specified by the owner (other assets use snake_case). Total referenced runtime files: **160**.

@@ -1,111 +1,156 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-24 (runtime asset stabilization & manifests). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-24 (Maya native re-extraction, render profile, menu SFX, engine tests). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
-Courtroom Companion is an Ace Attorney-style conversational interface. The repository now contains **a normalized runtime asset library with validated manifests** and the Vite + React + TypeScript starter page (build/lint green). No game feature (renderer, animation, dialogue, audio playback) is implemented yet.
+Courtroom Companion is an Ace Attorney-style conversational interface. It now has a complete scripted presentation loop:
+
+title → main menu → character select → location select → conversation scene
+
+In the scene, a typewriter dialogue engine drives the existing character animation engine: TALKING while text reveals, then IDLE. Reactions play before text. Throttled dialogue blips come from the character's manifest voice. Settings cover text speed, blip volume and mute. There's no LLM yet; dialogue comes from a temporary test script.
+
+**Original UI assets, partly in.** The owner manually supplied:
+- the original title-screen sheet (now the "press start" art);
+- the exclamation bubbles (extracted, not yet used);
+- the "Ace Attorney" pixel font (now the stage font, on its native 16 px grid).
+
+The text box, name plate, continue arrow and menu buttons are still CSS stand-ins. The five-panel miscellaneous background sheet hasn't been supplied yet. Details are in `docs/ASSET_SOURCES.md`.
+
+**Maya now uses native DS sprites** (D-027). All 102 frames are re-extracted 1:1 from the authoritative sheet `docs/references/maya fey.png` (15-colour palette). The old frames were proven to be 0.69× resampled copies, which caused the muddy look, the per-frame width rounding (the real jitter source) and the "too small" composition.
+
+At native size and render scale 1 (D-026), Maya is 146–162 px tall on the 192 px stage, head around y=31, continuing behind the dialogue box, like the DS game. Within each pose all frames draw at a single stage position; only genuine motion (laugh head-bob, reaction recoil) moves. The canvas/offset architecture (D-022) is kept.
+
+**Menu SFX** play through logical events in `audio.json` (D-028).
+
+**Engine tests** run with `npm test` (D-029).
 
 ## Current architecture
 
 ```
-Courtroom-companion/
-├── CLAUDE.md                 # project rules for Claude Code
-├── .claude/skills/           # 11 project skills
-├── .gitignore                # Vite default ignore rules (root-level only)
-├── README.md, LICENSE        # empty (0 bytes)
-├── docs/                     # persistent project memory (this folder)
-├── tests/                    # empty (.gitkeep only)
-└── frontend/                 # Vite + React 19 + TypeScript 6 app
-    ├── index.html            # scaffold; title "frontend"; links missing /favicon.svg
-    ├── package.json          # scripts: dev, build, lint, validate:assets, preview
-    ├── scripts/
-    │   └── validate-assets.mjs   # manifest ↔ filesystem validator (Node, no deps)
-    ├── src/
-    │   ├── main.tsx, App.tsx # Vite starter page (to be replaced by the scene UI)
-    │   ├── App.css, index.css
-    │   └── components/       # 4 placeholder files, all 0 bytes
-    └── public/
-        └── assets/           # ALL runtime assets (decision D-010)
-            ├── characters/
-            │   ├── index.json            # character id → manifest path
-            │   └── maya/
-            │       ├── character.json    # schema v1 character pack
-            │       └── sprites/<pose>/{idle,talking,reaction,...}/maya_frame_NNN.png
-            ├── backgrounds/
-            │   ├── backgrounds.json      # bg_NN → file + dimensions
-            │   └── background_NN_WxH.png
-            ├── audio/
-            │   ├── audio.json            # sound id → category + file
-            │   └── {blips,dialogue,menu_ui}/...
-            ├── music/                    # empty (.gitkeep), no music exists yet
-            └── ui/                       # empty (.gitkeep), no UI graphics exist yet
+frontend/src/
+├── main.tsx                      # StrictMode → SettingsProvider → App
+├── App.tsx                       # catalog loading + screen state machine
+├── App.css, index.css            # stage UI (logical px), menus, dev panels; palette vars
+├── engine/                       # character-independent logic
+│   ├── manifestTypes.ts          # manifest + resolved types (characters, backgrounds, audio)
+│   ├── manifestLoader.ts         # index/summaries/characters/backgrounds/sounds loaders
+│   ├── characterResolver.ts      # PURE emotion+mode(+reaction) → clip, with fallbacks
+│   ├── useClipPlayback.ts        # the single animation timer
+│   ├── useCharacterAnimation.ts  # useReactionGate + useCharacterPlayback (+ convenience wrapper)
+│   ├── useTypewriter.ts          # waiting/revealing/complete, punctuation pauses, skip
+│   ├── useBlips.ts               # per-character blip callback: voiced chars only, 60 ms throttle
+│   ├── audioEngine.ts            # one AudioContext, decode-once buffers, unlock on gesture
+│   ├── dialogueTypes.ts          # DialogueLine { speaker?, emotion, text, voice? }
+│   ├── stage.ts                  # 256×192 logical stage constants
+│   └── useStageScale.ts          # integer scaling via ResizeObserver
+├── settings/
+│   ├── settings.ts               # Settings type, defaults, context, localStorage helpers
+│   └── SettingsProvider.tsx
+├── components/
+│   ├── PixelStage.tsx            # scaled 256×192 surface used by every screen (auto or dev-fixed scale)
+│   ├── CharacterSprite.tsx       # canvas anchored bottom-centre, frame drawn at its offset; debug overlay
+│   ├── GameScene.tsx             # background → character → overlay children
+│   ├── BackgroundRenderer.tsx
+│   ├── DialogueBox.tsx           # name plate + box + continue arrow (CSS stand-ins)
+│   ├── TypewriterText.tsx        # revealed text + invisible remainder (stable wrapping)
+│   ├── MenuList.tsx              # DS-style keyboard/mouse menu
+│   └── DevPanel.tsx              # Phase 2A animation inspector panel (dev)
+├── screens/
+│   ├── TitleScreen.tsx           # press start (unlocks audio) + main menu
+│   ├── CharacterSelectScreen.tsx # generated from characters/index.json
+│   ├── LocationSelectScreen.tsx  # generated from backgrounds.json, live preview
+│   ├── SettingsScreen.tsx        # speed / volume / mute / fullscreen / test blip
+│   ├── ConversationScreen.tsx    # dialogue engine driving the character
+│   └── AnimationTestScreen.tsx   # Phase 2A inspector (dev only)
+└── dev/
+    ├── testConversation.ts       # TEMPORARY 8-line test script
+    ├── ConversationDevPanel.tsx  # TEMPORARY voice override, state readout (dev only)
+    ├── devDisplay.ts, DevDisplayProvider.tsx  # scale / alignment / overlay options (dev only)
+    └── DevDisplayControls.tsx    # 1×–4×/auto, canvas vs per-frame, overlay, native-size readout
 ```
 
-Runtime URL of any asset = `/assets/<folder>/<manifest-relative path>`. Paths inside a manifest are relative to that manifest's directory.
+### Conversation data flow
 
-Planned layers (not yet present): scene renderer, animation controller, typewriter + blip engine, central audio/music manager, LLM contract, FastAPI backend, Ollama/Qwen.
-
-## Manifests (all validated by `npm run validate:assets`)
-
-| Manifest | Exposes |
-|---|---|
-| `assets/characters/index.json` | `characters: { <characterId>: <manifest path> }` |
-| `assets/characters/maya/character.json` | `emotions` → `animations` (each with `idle` + `talking` frame lists) and optional one-shot `reactions`; `voice.blip` → audio sound id; `defaultEmotion`, `fallbackEmotion`, `anchor`, `unassignedFrames` |
-| `assets/backgrounds/backgrounds.json` | `backgrounds: { bg_NN: { src, width, height, description, notes? } }` |
-| `assets/audio/audio.json` | `categories` (`blip`, `dialogue`, `effect`, `ui`); `sounds: { <id>: { category, src } }` |
-
-No music manifest (no music assets). No UI manifest (no UI graphics).
-
-The future renderer consumes logical IDs only (emotion, animation, sound id, background id). Physical filenames exist only inside manifests.
+```
+line (emotion, text, voice?)
+  → useReactionGate(lineKey)            reaction pending?
+  → useTypewriter(active = !pending)    waiting | revealing | complete  (+ onReveal(char))
+  → mode = revealing ? talking : idle
+  → useCharacterPlayback → resolveClip → useClipPlayback → frame
+onReveal(char) → useBlips(voice) → audioEngine.play()
+voice = dev override ?? line.voice ?? character.voice.blip
+```
 
 ## Frontend status
 
-- Node.js v24.22.1 / npm 11.19.1 at `C:\Program Files\nodejs`. It may need prepending to a shell's `PATH` on this machine.
-- `npm run build`: **pass**. `npm run lint`: **pass**. `npm run validate:assets`: **pass** (144 referenced files, 0 errors). Verified 2026-10-24.
-- Scaffold leftovers that don't break the build: `/favicon.svg` and `/icons.svg` are referenced but don't exist (runtime 404s), and the `.hero` CSS is unused.
-- The four component files exist but are empty.
+- `npm run validate:assets`: pass (149: +3 exclamations, +1 font, +1 title art). `npm run build`: pass (47 modules). `npm run lint`: pass. Verified 2026-10-24.
+- Dimensions: stage 256×192. Maya frames are native 55–109 px wide × 100–112 px tall, drawn at native size and scaled only with the whole stage (e.g. neutral talking frame 65×111 → 390×666 CSS px at auto 6×, 260×444 at 4×). Backgrounds are 256×192 (or 512 wide, centre-cropped).
+- Verified in Chrome (dev server):
+  - full menu flow;
+  - each line: TALKING while revealing → IDLE + arrow when complete;
+  - surprised: `waiting` (reaction) → revealing → complete;
+  - female blips by default, male blips on line 7 or via dev override;
+  - zero blips triggered by whitespace or punctuation;
+  - one advance per click or Enter;
+  - settings persist and mute is honoured;
+  - integer rescaling (6× → 1× → 6×);
+  - no console errors, no failed requests or broken images.
+- Dev-only UI (Asset/Animation Test entry, conversation dev panel) is hidden when `import.meta.env.DEV` is false. The code is still bundled but unreachable. The `window.__ccAudio` debug hook is stripped in production.
+- Launch: `cd frontend` then `npm run dev`.
+- `npm test`: 8 engine tests (node:test, no dependencies), all passing.
 
 ## Backend status
 
-No backend code exists. FastAPI/Ollama is out of scope until explicitly requested.
+No backend code exists. FastAPI/Ollama/LLM are out of scope until explicitly requested.
 
 ## What already works
 
-- Build, lint and asset validation all pass.
-- Every runtime asset lives under `frontend/public/assets/` and is referenced by exactly one manifest category. The validator fails on unreferenced media.
-- Maya: 12 conversational animations (all with idle + talking), 1 one-shot reaction (`shocked`), 13 logical emotions.
-- 18 sounds in 4 categories, 29 backgrounds with verified dimensions.
-- No filenames contain spaces.
+- Phase 2A, intact: typed manifest loading, emotion resolver with fallbacks, idle/talking loops, one-shot reactions, pixel-perfect integer scaling, asset validation.
+- Screen flow with keyboard (↑/↓, Enter/Space/Z, Esc/Backspace/X) and mouse.
+- Character and location menus are generated from manifests; any character added to `characters/index.json` appears automatically.
+- Long menu labels stay inside fixed DS-width buttons and scroll horizontally (whole-pixel steps) when selected or hovered; reduced motion uses a static reveal (D-032).
+- Typewriter:
+  - reveal speed from settings;
+  - punctuation pauses: sentence end 350 ms, comma 180 ms, ellipsis dots 120 ms (at 1×);
+  - skip-to-end, then advance;
+  - restart on a new line;
+  - one timer at a time, cleaned up.
+- Blips:
+  - Web Audio, decoded once;
+  - voiced characters only;
+  - 60 ms minimum spacing;
+  - volume and mute from settings;
+  - audio unlocks on the first user gesture (press start).
+- Settings persisted in `localStorage` (guarded with try/catch).
 
 ## What is incomplete
 
-- No working UI: scene, character renderer, dialogue box, typewriter, blips and audio manager are all unimplemented.
-- No music assets, no UI graphics, no visual-effect graphics.
-- No TypeScript types for the manifests yet. Those belong with the loader/renderer work.
-- No unit tests or test runner (validation is a script only).
-- README and LICENSE are empty.
+- **Original DS UI graphics:** the title art, pixel font and menu panels (D-031) are in. The text box, name plate, continue arrow and menu buttons are still CSS stand-ins.
+- No music, no effect SFX wiring, no exclamation bubbles or screen effects (bubble images are extracted but not used yet).
+- The script is a hard-coded test array; there's no dialogue source abstraction or LLM yet.
+- One character on screen. Wide backgrounds are centre-cropped (no panning).
+- Sheet rows 14–17 (Maya side poses) are not extracted yet.
 
 ## Known problems / ambiguities
 
-1. **Visually inferred frame splits** (D-013). `thinking_side`, `bow_polite` and `arms_open` frame 021 were assigned to idle/talking by mouth shape plus the consistent 4-idle + 4-talking numbering pattern. Confirm by eye in the running renderer.
-2. **Frame 024** (`sprites/_unassigned/maya_frame_024.png`) is a front-facing, arms-down frame that doesn't match `arms_open`. Listed in `unassignedFrames`; not used by any animation.
-3. **`arms_open` has only 3 idle + 3 talking frames.** Frame 018 is missing; `maya_frame_017` was originally named `017 (2)`, so it may actually be 018.
-4. **Frames 063–065 are missing.** `clasped_hands_laugh` reuses `clasped_hands_happy` idle frames (055–058, eyes-closed smile) as its idle.
-5. **`surprised`** plays the `shocked` reaction (025–030) and then settles to `neutral_front`. There is no shocked talking/idle loop. Frames 027–030 could serve as a "shocked hold" if wanted later.
-6. **`bow_polite`** is a steady leaning pose with idle/talking frames, not an animated bow. It was formerly modelled as a one-shot.
-7. **Talking fps** copies each pose's previous single fps value. It hasn't been tuned.
-8. Frame sizes vary slightly within a pose, so the renderer must anchor frames (`anchor: "bottom-center"`).
-9. `background_18` has characters baked in. Backgrounds 19, 22 and 24 are 1 px off the standard size.
-10. Audio filenames keep source typos (`typwriter.wav`) and the `dialogue/shock/` folder holds `effect`-category sounds. Logical IDs hide both from the engine.
-11. Background `description` fields are visual guesses from thumbnails.
-12. Vite emits its hashed bundles into `dist/assets/`, the same folder `public/assets/` is copied into. There is no collision today; `build.assetsDir` could be changed if one ever appears.
-13. README/LICENSE empty; `index.html` title is "frontend".
+1. **Shocked reaction order** (arms-wide then fists) is kept from the old rip and is uncertain. Frame 025 (standing, worried) is unassigned. Confirm by eye.
+2. **Laugh clip:** `clasped_hands_laugh` talking is now the full 7-frame row-9 laugh (was 4). Confirm it reads well as "laughing while talking".
+3. **Missing font glyphs:** `-` and `…` render in the fallback font.
+4. Talking fps is untuned. `surprised` settles to neutral (no shocked hold loop).
+5. bg_18 has characters baked in. Three backgrounds are 1 px off-size. Descriptions are guesses.
+6. Vite `dist/assets/` is shared between bundles and public assets (no collision today).
+7. Dev-only code is unreachable in production but still bundled.
+8. The download sources of the backgrounds and audio, and the page URL of the Maya sheet, were never recorded (ASSET_SOURCES).
+9. Menu SFX play at a fixed volume of 0.5 (no UI volume setting yet).
+10. Vite's file watcher occasionally cached a half-written file during scripted edits; touching the file fixes it (dev-only).
 
 ## Current development phase
 
-**Phase 1 — Asset stabilization.** Character, background and SFX assets are stable and have manifests. Music and UI assets don't exist yet.
+**Phase 2B — DS presentation, scripted dialogue, native Maya, menu SFX, original menu panels: implemented and validated.** Uncommitted, awaiting owner approval.
 
 ## Immediate next objective
 
-Start Phase 2 with a typed manifest loader (TypeScript types + fetch/validate for `characters/index.json`, `character.json`, `backgrounds.json`, `audio.json`). Then build a minimal scene renderer that shows a background and Maya's idle loop, which also lets the inferred frame splits be checked by eye.
+1. Owner reviews the menu panel assignments (main menu / character select / settings).
+2. Owner visually confirms the native Maya composition, the shocked order, and the 7-frame laugh.
+3. Commit the milestone after approval.

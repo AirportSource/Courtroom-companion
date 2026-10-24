@@ -1,0 +1,65 @@
+# Asset Sources & Provenance — Courtroom Companion
+
+_Record the origin of every external asset. Never remove attribution or source metadata. Ace Attorney characters, art, audio and UI are © Capcom. They are third-party copyrighted material; this repository does not own them and makes no claim to them._
+
+---
+
+## External assets in the repository
+
+All were downloaded **manually by the owner** and placed in `docs/references/` (kept unmodified there for provenance). Runtime copies or cut-outs were made by Claude on 2026-10-24.
+
+| Logical asset (ui.json id) | Runtime file | Source file (docs/references/) | Source | Credit / licence | Purpose |
+|---|---|---|---|---|---|
+| `title_screen` | `frontend/public/assets/ui/title/title_screen.png` (256×192) | `DS _ DSi - Phoenix Wright_ Ace Attorney - Miscellaneous - Title Screen.png` (502×388) | The Spriters Resource, DS/DSi "Phoenix Wright: Ace Attorney" → Miscellaneous → Title Screen: https://www.spriters-resource.com/ds_dsi/phoenixwrightaceattorney/asset/20859/ | © Capcom. Sheet note: "Ripped By Badassbill. Please Give Credit If Used." | Title-screen art. Exact crop of the sheet's top-left panel (x 1–256, y 1–192; 1 px white sheet border excluded); pixels unchanged. |
+| `exclamation_objection` | `ui/exclamations/objection.png` (256×192) | `Exclamations.png` (265×662) | Owner-supplied sheet; source page not recorded. Sheet note credits Capcom and ripper Trish Rowdy (trishrowdy.deviantart.com) | © Capcom. "Give credit if used." (ripper: Trish Rowdy) | "Objection!" bubble for a future effects milestone. Cropped to content; sheet background (153,217,234) made transparent; no other pixel changes. |
+| `exclamation_take_that` | `ui/exclamations/take_that.png` (256×192) | same | same | same | "Take that!" bubble (future) |
+| `exclamation_hold_it` | `ui/exclamations/hold_it.png` (256×190) | same | same | same | "Hold it!" bubble (future). The content is 190 rows; not padded. |
+| **Maya Fey sprites** (all 102 frames in `characters/maya/sprites/`) | `frontend/public/assets/characters/maya/sprites/**/maya_frame_001–102.png` | `maya fey.png` (1180×3112) — **authoritative Maya source** | Owner-supplied sheet. The download page was not recorded; the sheet layout matches a Spriters Resource DS "Phoenix Wright: Ace Attorney" character sheet, but that is unconfirmed. | © Capcom. Sheet note: "Ripped by Shoda. Please give credit." | Exact 1:1 crops of rows 1–13 (each sprite's bounding box); background (181,165,213) made transparent; no other pixel changes. Replaces the earlier resampled frames (D-027). The owner's note called this file `maya-original-sheet.png`; the actual filename is `maya fey.png`. |
+| `ui_page` sound | `frontend/public/assets/audio/menu_ui/pageturn.wav` | `docs/sfx general/sfx-pageturn.wav` (byte-identical copy) | Owner-supplied SFX pack `docs/sfx general/` (108 WAVs); source not recorded | © Capcom (Ace Attorney SFX) | Menu page-turn (`menu_page` event). The pack's selectblip, selectblip2, cancel, scroll, saveblip, selectjingle, blipfemale and blipmale are byte-identical to files already in `audio/`, so those are reused. |
+| `menu_title_discussion`, `menu_bottom_screen`, `menu_top_screen`, `menu_cross_examination_start`, `menu_talk_option` | `frontend/public/assets/ui/menu/{title-screen-discussion,bottom-screen,top-screen,cross-examination-start,talk-option}.png` (each 256×192) | `DS _ DSi - Phoenix Wright_ Ace Attorney - Backgrounds - Miscellaneous.png` (1553×238) | The Spriters Resource, DS/DSi "Phoenix Wright: Ace Attorney" → Backgrounds → Miscellaneous (filename indicates the page; exact URL not recorded) | © Capcom. Sheet note: "Miscellaneous Sprite Sheet by TSP184. No need to credit me." (credited anyway) | Exact 256×192 crops at sheet x = 23 / 302 / 581 / 860 / 1139, y = 23 (panel interiors only; dark-green sheet background (2,66,15), labels and credit box excluded). Pixels unchanged and verified identical. Main menu, character select and settings backgrounds. |
+| `dialogue` font | `ui/fonts/ace_attorney.ttf` (byte-identical copy) | `Ace-Attorney.ttf` | FontStruct: http://fontstruct.com/fontstructions/show/875083 (URL from the font's own metadata) | "Ace Attorney" by **David Fens**, © 2013, **FontStruct Non-Commercial License** (from font metadata) | Stage font for dialogue, name plate, menus. Non-commercial use only. |
+
+Not copied to runtime (kept in `docs/references/` only):
+- The Capcom / "Licensed by Nintendo" splash and the loose logo parts on the title sheet. **Deliberately unused**: showing a licensing splash in this fan project would misrepresent it as licensed.
+- The exclamations sheet's credit block.
+- `courtroom_companion_claude_setup.zip`: the project's Claude setup bundle (CLAUDE.md + skills), not an asset.
+
+### Miscellaneous background sheet: received 2026-10-24
+
+The five-panel sheet is now in `docs/references/` and extracted (see the table above).
+
+---
+
+## Stand-ins currently used instead of original graphics
+
+These are **CSS/React approximations**, not original assets. They should be replaced once the originals above are available.
+
+| UI element | Current implementation | Replace with |
+|---|---|---|
+| Dialogue box frame | CSS (`.dialogue-box`): grey outer border, dark interior | Original DS text box graphic (sheet #2 or #4) |
+| Name plate | CSS (`.dialogue-nameplate`): blue-grey plate | Original name plate graphic |
+| Continue indicator | CSS triangle (`.dialogue-continue`), 2-step nudge | Original arrow sprite |
+| Title logo | **Replaced 2026-10-24** for the "press start" phase by the original title art (`title_screen`). The menu phase keeps the styled "Courtroom Companion" text. | — |
+| Menu screens | **Replaced 2026-10-24** by the original DS panels (title-screen-discussion / talk-option / bottom-screen). The blue gradient is only a fallback if they fail to load. | — |
+| Menu buttons | CSS (`.menu-item`) | Original button graphics, if a sheet is found |
+| Font | **Replaced 2026-10-24** by the "Ace Attorney" FontStruct font (16 px grid). Missing glyphs (`-`, `…`) fall back to the system font. | — |
+
+## Visual references (not stored in the repository)
+
+| Reference | Origin | Use |
+|---|---|---|
+| `_random_ace_attorney_ds_textbox_recreation_by_rapbattleeditor0510_deg24mu-fullview.png` (1280×960) | Supplied by the owner from their Downloads folder. The filename indicates a fan recreation by "rapbattleeditor0510" (DeviantArt-style naming). | Geometry and colour reference only. Its 1280×960 size is exactly 5× the DS screen, so dimensions ÷5 gave the stand-in layout: name plate 48×13 at y=133, box 256×48 at y=144. A copy exists **untracked** at `docs/references/_random_ace_attorney_ds_textbox_recreation_by_rapbattleeditor0510_deg24mu-fullview.png` (placed by the owner). It is third-party fan art, so the owner decides whether to commit it; if committed, keep this attribution. Not used at runtime. |
+
+---
+
+## Pre-existing assets (added before provenance tracking)
+
+Added by the owner in commit `2c3e957` ("added assets"); the original download sources were **not recorded**.
+
+| Assets | Location | Apparent origin |
+|---|---|---|
+| ~~Maya Fey sprite frames (97)~~ | removed 2026-10-24 | Were resampled copies (~0.69×) of an unknown rip; replaced by the 1:1 extraction from `maya fey.png` (see above). |
+| Backgrounds (29) | `frontend/public/assets/backgrounds/` | Ace Attorney series locations (© Capcom). Source unknown. |
+| Blips, dialogue/effect/UI SFX (18) | `frontend/public/assets/audio/` | Ace Attorney series sound effects (© Capcom). Source unknown. |
+
+If the owner remembers the sources, add them here.
