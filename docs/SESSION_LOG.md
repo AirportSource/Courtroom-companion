@@ -975,3 +975,10 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 
 - Owner on a friend's PC wants everything on their own GitHub (AirportSource, public repo), directly on `main`, commits as `Adriano. P <122989996+AirportSource@users.noreply.github.com>` (repo-local config). The `gh` CLI on this PC is signed in to the friend's account (read-only on the repo), so the owner signs in for the push and the access is removed afterwards.
 - OST excluded (`.gitignore`), `scripts/install_ost.py` + download link (README, MUSIC.md); validator/test tolerate a clone without the OST (simulated by moving the folder out: validate 343 / 0 with a notice, music tests 38 passed). Root README written (setup, OST, AI profiles, Claude Code hook, checks, credits).
+
+## 2026-10-25 — Subscription profiles (D-072)
+
+- Owner asked to use a Claude or ChatGPT/Codex subscription in Settings, in addition to the API. Added the `claude_code` and `codex` profile types (backend provider, profile validation, gateway registry, Settings panel with install/login help and error messages) and 9 tests (`test_subscription_cli.py`).
+- **Live check (Claude):** isolated backend :8001 with a "Claude (abonnement)" profile (haiku). Test Connection → `generation_succeeded` in 3.5 s. Mia answered in French and the `reminder_create` tool worked ("Rappelle-moi dans 30 minutes…" → pending reminder "Relire le contrat"). Verified that `--setting-sources ""` keeps the user's Claude Code hooks from firing.
+- **Not verified:** Codex CLI is not installed on this PC (simulated tests only). The Settings panel was not checked visually.
+- **Checks:** backend 458 passed; frontend 261 passed / 2 skipped; `tsc`, lint 0, build OK; `validate:assets` 368 / 0.

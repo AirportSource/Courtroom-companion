@@ -10,14 +10,22 @@ import { StageSelect } from './StageSelect.tsx'
 import { generationFailureMessage } from '../engine/generation.ts'
 
 const PROVIDERS: Record<ProviderType, string> = {
-  fake: 'Fake', ollama: 'Ollama', openai_compatible: 'OpenAI Compatible', anthropic: 'Anthropic',
+  fake: 'Fake', ollama: 'Ollama', openai_compatible: 'OpenAI Compatible', anthropic: 'Anthropic (API)',
+  claude_code: 'Claude (subscription)', codex: 'ChatGPT / Codex (subscription)',
+}
+/** Plans used through their official CLI login (D-072): no URL, no key, model optional. */
+const SUBSCRIPTIONS: ProviderType[] = ['claude_code', 'codex']
+const SUBSCRIPTION_HELP: Partial<Record<ProviderType, string>> = {
+  claude_code: 'Uses your Claude Pro/Max plan through Claude Code. Install it (npm install -g @anthropic-ai/claude-code) and run "claude login" once. Model: empty = default, or e.g. sonnet, haiku, opus.',
+  codex: 'Uses your ChatGPT plan through the Codex CLI. Install it (npm install -g @openai/codex) and run "codex login" once. Model: empty = default.',
 }
 const TEST_MESSAGES: Record<string, string> = {
   generation_succeeded: 'Connection and generation succeeded.',
   selected_model_missing: 'The selected model is not installed.',
-  auth_not_configured: 'API key is not configured.',
+  auth_not_configured: 'Not signed in: API key missing, or run "claude login" / "codex login" for a subscription.',
   auth_failed: 'Authentication failed.',
-  rate_limited: 'The endpoint rate limit was reached.',
+  rate_limited: 'The endpoint rate limit was reached (or the subscription usage limit).',
+  cli_not_installed: 'The CLI for this subscription is not installed or not on PATH.',
   model_error: 'The model or request was rejected.',
   structured_output_failed: 'Structured output validation failed.',
   timeout: 'The connection test timed out.',
@@ -133,7 +141,7 @@ export function ProviderProfilesPanel({ characterId }: { characterId: string | n
           onChange={(value) => changeType(value as ProviderType)} /> : <input aria-label="Provider type" readOnly value={PROVIDERS[fields.providerType]} />}
       </Field>
       {fields.providerType !== 'fake' && <>
-        {fields.providerType !== 'anthropic' && <Field label={fields.providerType === 'ollama' ? 'Server' : 'Base URL'}>
+        {fields.providerType !== 'anthropic' && !SUBSCRIPTIONS.includes(fields.providerType) && <Field label={fields.providerType === 'ollama' ? 'Server' : 'Base URL'}>
           <input aria-label="Profile base URL" type="url" value={fields.baseUrl ?? ''} readOnly={!draft} disabled={busy}
             onChange={(event) => change({ baseUrl: event.target.value })} />
         </Field>}
@@ -148,6 +156,8 @@ export function ProviderProfilesPanel({ characterId }: { characterId: string | n
             onChange={(event) => change({ model: event.target.value })} />}
         </Field>
       </>}
+
+      {SUBSCRIPTION_HELP[fields.providerType] && <p className="settings-provider-status">{SUBSCRIPTION_HELP[fields.providerType]}</p>}
 
       {draft && ['openai_compatible', 'anthropic'].includes(fields.providerType) && <Field label="Env var">
         <input aria-label="Fallback API key environment variable" value={fields.apiKeyEnv ?? ''} disabled={busy}

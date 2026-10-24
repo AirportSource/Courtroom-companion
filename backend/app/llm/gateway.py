@@ -18,6 +18,7 @@ from .providers.fake import FakeProvider
 from .providers.ollama import OllamaProvider
 from .providers.openai_compatible import OpenAICompatibleProvider
 from .providers.anthropic import AnthropicProvider
+from .providers.subscription_cli import ClaudeCodeProvider, CodexProvider
 from .repair import parse_reply, decode_reply_content
 from .schemas import CharacterReply, ChatMessage
 from ..artifacts.contracts import CreateTextArtifact
@@ -37,6 +38,9 @@ DEFAULT_REGISTRY: dict[str, ProviderFactory] = {
         api_key=config.resolve_api_key(),
     ),
     "anthropic": lambda config: AnthropicProvider(model=config.model, api_key=config.resolve_api_key()),
+    # Subscription plans through the official CLIs (D-072); no API key involved.
+    "claude_code": lambda config: ClaudeCodeProvider(model=config.model),
+    "codex": lambda config: CodexProvider(model=config.model),
 }
 
 

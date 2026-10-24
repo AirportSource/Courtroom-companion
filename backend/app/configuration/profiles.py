@@ -13,8 +13,10 @@ from ..llm.base import GenerationSettings
 from ..llm.config import ProviderConfig
 from .credentials import CredentialStore, CredentialStoreError
 
-ProviderType = Literal["fake", "ollama", "openai_compatible", "anthropic"]
+ProviderType = Literal["fake", "ollama", "openai_compatible", "anthropic", "claude_code", "codex"]
 CREDENTIAL_PROVIDER_TYPES = frozenset({"openai_compatible", "anthropic"})
+#: Subscription plans used through their CLI login (D-072): no URL, no stored key, model optional.
+SUBSCRIPTION_PROVIDER_TYPES = frozenset({"claude_code", "codex"})
 
 
 class ProfileDraft(BaseModel):
@@ -39,7 +41,10 @@ class ProfileDraft(BaseModel):
     def validate_provider(self):
         config = ProviderConfig(type=self.provider_type, base_url=self.base_url, model=self.model)
         self.base_url, self.model = config.base_url, config.model
-        if self.provider_type == "anthropic":
+        if self.provider_type in SUBSCRIPTION_PROVIDER_TYPES:
+            if self.base_url is not None or self.api_key_env:
+                raise ValueError("Subscription profiles use the CLI login: no base URL or API key")
+        elif self.provider_type == "anthropic":
             if self.base_url is not None or not self.model:
                 raise ValueError("Anthropic profiles require a model and use the native endpoint without a base URL")
         elif self.provider_type != "fake" and (not self.base_url or not self.model):

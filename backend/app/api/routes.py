@@ -23,7 +23,7 @@ from ..conversation_record.capture import capture_turn
 router = APIRouter(prefix="/api")
 
 ID_PATTERN = r"^[a-z0-9_]{1,64}$"
-ProviderType = Literal["fake", "ollama", "openai_compatible", "anthropic"]
+ProviderType = Literal["fake", "ollama", "openai_compatible", "anthropic", "claude_code", "codex"]
 
 
 class ProviderSelection(BaseModel):

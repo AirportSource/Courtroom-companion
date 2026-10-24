@@ -49,6 +49,19 @@ For example, `COURTROOM_LLM_API_KEY_ENV=ANTHROPIC_API_KEY` selects that backend 
 creating a second secret mechanism. Native structured output requires a supported model;
 unsupported models/formats fail safely without retrying through a different provider.
 
+## Subscription profiles (D-072)
+
+`claude_code` and `codex` profiles use your own Claude or ChatGPT plan through the official CLI instead
+of an API key. Install and log in once on the machine running the backend:
+
+- Claude: `npm install -g @anthropic-ai/claude-code`, then `claude login` (Pro/Max)
+- ChatGPT: `npm install -g @openai/codex`, then `codex login`
+
+Then add a "Claude (subscription)" or "ChatGPT / Codex (subscription)" profile in Settings → AI Profile
+(model optional, no key, no base URL). Each reply runs the CLI headless for one turn with no tools,
+no user settings and API-key variables removed, so the plan is used. Text evidence only. Override the
+executable with `COURTROOM_CLAUDE_BIN` / `COURTROOM_CODEX_BIN`.
+
 ## Generated text artifacts (milestone 2)
 
 Chat can save validated `.txt`, `.md` and `.py` content as inert UTF-8 text under

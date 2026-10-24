@@ -1,7 +1,7 @@
 import { backendJson, modelsFrom } from '../engine/llmProviders.ts'
 import { readStoredSettings, completeProviderMigration } from './settings.ts'
 
-export type ProviderType = 'fake' | 'ollama' | 'openai_compatible' | 'anthropic'
+export type ProviderType = 'fake' | 'ollama' | 'openai_compatible' | 'anthropic' | 'claude_code' | 'codex'
 export interface ProfileDraft {
   name: string
   providerType: ProviderType
@@ -56,7 +56,7 @@ function catalogFrom(raw: Record<string, unknown>): ProfileCatalog {
   if (typeof raw.activeProfileId !== 'string' || !Array.isArray(raw.profiles)) throw new Error('Invalid profile list.')
   const profiles = raw.profiles as ProviderProfile[]
   if (!profiles.every((profile) => typeof profile.id === 'string' && typeof profile.name === 'string'
-    && ['fake', 'ollama', 'openai_compatible', 'anthropic'].includes(profile.providerType)
+    && ['fake', 'ollama', 'openai_compatible', 'anthropic', 'claude_code', 'codex'].includes(profile.providerType)
     && typeof profile.credentialConfigured === 'boolean') || !profiles.some((profile) => profile.id === raw.activeProfileId)) {
     throw new Error('Invalid profile list.')
   }

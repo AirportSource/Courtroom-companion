@@ -8,7 +8,7 @@ Courtroom Companion is an Ace Attorney-style conversational interface with a com
 
 title → main menu → character select → location select → conversation scene
 
-In the scene, the React client sends a message to the FastAPI backend. The server resolves its active saved provider profile and OS-vault/environment credential into the existing gateway configuration. The gateway supports deterministic `FakeProvider`, native-HTTP `OllamaProvider`, one generic Chat-Completions `OpenAICompatibleProvider`, and native Messages `AnthropicProvider`; validated semantic beats pass through the same data-driven Character Director and measured paginator before the existing typewriter, reaction, animation and blip engines play them. The temporary test script remains available from the dev panel.
+In the scene, the React client sends a message to the FastAPI backend. The server resolves its active saved provider profile and OS-vault/environment credential into the existing gateway configuration. The gateway supports deterministic `FakeProvider`, native-HTTP `OllamaProvider`, one generic Chat-Completions `OpenAICompatibleProvider`, native Messages `AnthropicProvider`, and the subscription CLI providers `claude_code` / `codex` (D-072); validated semantic beats pass through the same data-driven Character Director and measured paginator before the existing typewriter, reaction, animation and blip engines play them. The temporary test script remains available from the dev panel.
 
 **Original UI assets, partly in.** The owner manually supplied:
 - the original title-screen sheet (now the "press start" art);

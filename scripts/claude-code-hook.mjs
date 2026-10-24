@@ -44,6 +44,8 @@ async function readStdin() {
 }
 
 async function main() {
+  // Set by Courtroom Companion's own headless Claude Code runs (subscription provider, D-072).
+  if (process.env.COURTROOM_HOOK_DISABLED) return
   try {
     const event = toEvent(JSON.parse(await readStdin()))
     if (!event) return

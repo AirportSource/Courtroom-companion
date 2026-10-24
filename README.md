@@ -5,7 +5,7 @@ Dick Gumshoe) with native DS sprites, typewriter dialogue, blips, music and cour
 
 - **Frontend:** React + TypeScript + Vite (`frontend/`)
 - **Backend:** FastAPI (`backend/`): provider-agnostic LLM gateway (Fake, Ollama, OpenAI-compatible,
-  Anthropic) + deterministic Character Director
+  Anthropic, Claude/ChatGPT subscriptions) + deterministic Character Director
 - **Languages:** English, French, Japanese, Italian, Spanish
 - **Features:** present evidence (text, images, PDF), character tools (reminders, authorized folders,
   web search), event inbox and a Claude Code companion, voiced "Objection!" / 「異議あり！」 shouts
@@ -60,7 +60,15 @@ Open http://localhost:5173.
 
 In the app: **Settings → AI Profile**. Add a profile (Anthropic, OpenAI-compatible such as OpenAI or
 Gemini, or Ollama), save it, then **Set API Key** (stored in the OS credential vault, never in a file)
-and **Test Connection**. The built-in **Fake** profile works offline for testing; offline test commands
+and **Test Connection**.
+
+To use your own **Claude** or **ChatGPT** subscription instead of an API key, install and log in to the
+official CLI once (`npm install -g @anthropic-ai/claude-code` then `claude login`, or
+`npm install -g @openai/codex` then `codex login`), then add a **Claude (subscription)** or
+**ChatGPT / Codex (subscription)** profile. No key is needed; usage counts against your plan. These
+modes read text evidence only (images and PDFs need an API profile).
+
+The built-in **Fake** profile works offline for testing; offline test commands
 include `#remind`, `#reminders`, `#folder`, `#read <path>`, `#search <query>`, `#artifact-md`.
 
 ## Claude Code companion (optional)

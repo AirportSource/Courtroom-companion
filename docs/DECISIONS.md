@@ -791,3 +791,14 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Date:** 2026-10-25
 - **Resolves:** the D-044 open item (normal Git vs LFS).
 - **Decision:** the repository is public, so the owner chose not to redistribute the Capcom OST. `frontend/public/assets/music/original/*.mp3` is git-ignored; the README and `docs/MUSIC.md` point to https://archive.org/details/pwaa-original-soundtrack (VBR MP3 ZIP) and `scripts/install_ost.py` (stdlib only) installs the 25 runtime tracks by OST number. `validate:assets` and the music test accept a clone with no OST installed (notice only) but still require every track once any is present. Other Capcom assets (sprites, SFX, voices, bubbles) stay in the repository as before.
+
+## D-072 — Subscription profiles: Claude (Claude Code) and ChatGPT (Codex CLI)
+- **Status:** Accepted (Claude verified live; Codex covered by simulated tests only)
+- **Date:** 2026-10-25
+- **Decision:** two new profile types, `claude_code` and `codex`, use the owner's own plan instead of an API key by running the official CLI that is installed and logged in on the machine (`backend/app/llm/providers/subscription_cli.py`).
+  - `claude_code` runs `claude -p --output-format json --json-schema <CharacterReply schema> --system-prompt <prompt> --tools "" --setting-sources "" --no-session-persistence [--model m]` and passes the conversation as text on stdin. It reads `structured_output`. `--bare` is not used because it forces API-key auth.
+  - `codex` runs `codex exec - --output-schema <file> -o <file> --sandbox read-only --skip-git-repo-check --ephemeral --ignore-user-config [-m m]`. The schema is converted to OpenAI strict mode: every property is required, optional ones become nullable, and unsupported bounds are removed (the shared validation keeps them).
+  - Each call is one turn with no tools, no saved session and no user settings, run from an empty temp folder. API-key variables (`ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `CODEX_API_KEY`, `OPENAI_API_KEY`) are removed from the child environment so the plan is billed, not an API account. `COURTROOM_HOOK_DISABLED=1` makes our Claude Code hook (D-067) ignore these runs.
+  - Profiles take no base URL and no key; the model is optional (empty = the CLI's default). Executables are found on PATH (npm wrappers are resolved to the real binary) or set with `COURTROOM_CLAUDE_BIN` / `COURTROOM_CODEX_BIN`.
+  - Error codes: `cli_not_installed`, `auth_not_configured` (not logged in), `rate_limited` (plan limit), `context_window_exceeded`, `timeout`, `provider_error`.
+- **Limits:** text evidence only (images and PDFs need an API profile); each reply has the latency of a CLI start (about 3–6 s with haiku here); usage counts against the plan's limits. Use stays within each provider's terms for personal use of one's own subscription.

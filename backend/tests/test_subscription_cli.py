@@ -1,0 +1,139 @@
+"""Subscription providers (D-072): Claude Code and Codex CLIs, with a simulated process runner."""
+
+import asyncio
+import json
+import os
+from pathlib import Path
+
+import pytest
+
+from app.configuration.profiles import ProfileDraft
+from app.llm.attachments import AttachmentUnsupported
+from app.llm.base import GenerationRequest, GenerationSettings
+from app.llm.config import ProviderConfig
+from app.llm.gateway import LLMGateway
+from app.llm.providers.subscription_cli import (
+    ClaudeCodeProvider, CodexProvider, SubscriptionCliError, _clean_env, strict_schema, transcript,
+)
+from app.llm.schemas import Attachment, ChatMessage
+
+SCHEMA = {"type": "object", "additionalProperties": False, "required": ["beats"], "properties": {
+    "beats": {"type": "array", "minItems": 1, "maxItems": 3, "items": {
+        "type": "object", "additionalProperties": False, "required": ["text", "emotion"],
+        "properties": {"text": {"type": "string", "maxLength": 600}, "emotion": {"type": "string"},
+                       "intensity": {"type": "number", "minimum": 0, "maximum": 1},
+                       "reaction": {"anyOf": [{"type": "string"}, {"type": "null"}]}}}},
+    "settleEmotion": {"anyOf": [{"type": "string"}, {"type": "null"}]}}}
+REPLY = {"beats": [{"text": "Hello there!", "emotion": "happy"}]}
+
+
+def request(*messages: ChatMessage) -> GenerationRequest:
+    messages = messages or (ChatMessage(role="user", content="hi"),)
+    return GenerationRequest("You are Maya.", list(messages), SCHEMA, GenerationSettings(timeout_s=30))
+
+
+class Runner:
+    def __init__(self, code=0, out="", err="", write=None):
+        self.code, self.out, self.err, self.write = code, out, err, write
+        self.calls = []
+
+    async def __call__(self, args, stdin, timeout_s, cwd):
+        self.calls.append({"args": args, "stdin": stdin, "timeout": timeout_s, "cwd": cwd})
+        if self.write:
+            Path(args[args.index("-o") + 1]).write_text(self.write, encoding="utf-8")
+        return self.code, self.out, self.err
+
+
+def test_claude_code_runs_headless_with_schema_and_reads_structured_output():
+    runner = Runner(out=json.dumps({"type": "result", "subtype": "success", "is_error": False,
+                                    "result": json.dumps(REPLY), "structured_output": REPLY}))
+    provider = ClaudeCodeProvider(model="haiku", command=["claude.exe"], runner=runner)
+    history = (ChatMessage(role="user", content="Bonjour"), ChatMessage(role="assistant", content=json.dumps(REPLY)),
+               ChatMessage(role="user", content="Ça va ?"))
+    raw = asyncio.run(provider.generate(request(*history)))
+    assert raw.content == REPLY
+    args = runner.calls[0]["args"]
+    assert args[:2] == ["claude.exe", "-p"]
+    for flag in ("--output-format", "--json-schema", "--system-prompt", "--tools", "--setting-sources", "--no-session-persistence"):
+        assert flag in args
+    assert args[args.index("--tools") + 1] == "" and args[args.index("--setting-sources") + 1] == ""
+    assert json.loads(args[args.index("--json-schema") + 1]) == SCHEMA
+    assert args[args.index("--model") + 1] == "haiku"
+    stdin = runner.calls[0]["stdin"]
+    assert "Bonjour" in stdin and stdin.index("Bonjour") < stdin.index("Ça va ?") and "JSON object only" in stdin
+
+
+@pytest.mark.parametrize("body,code", [
+    ({"is_error": True, "result": "Invalid API key · Please run /login", "api_error_status": 401}, "auth_not_configured"),
+    ({"is_error": True, "result": "Claude usage limit reached", "api_error_status": 429}, "rate_limited"),
+    ({"is_error": True, "result": "Something broke", "api_error_status": 500}, "provider_error"),
+])
+def test_claude_code_error_mapping(body, code):
+    provider = ClaudeCodeProvider(command=["claude.exe"], runner=Runner(code=1, out=json.dumps(body)))
+    with pytest.raises(SubscriptionCliError) as error:
+        asyncio.run(provider.generate(request()))
+    assert error.value.code == code
+
+
+def test_not_installed_attachments_and_no_json():
+    with pytest.raises(SubscriptionCliError) as error:
+        asyncio.run(ClaudeCodeProvider(command=["definitely-not-installed-cli-xyz"]).generate(request()))
+    assert error.value.code == "cli_not_installed"
+    image = Attachment(kind="image", name="a.png", media_type="image/png", data="AAAA")
+    with pytest.raises(AttachmentUnsupported):
+        asyncio.run(ClaudeCodeProvider(command=["claude.exe"], runner=Runner()).generate(
+            request(ChatMessage(role="user", content="look", attachments=[image]))))
+    with pytest.raises(SubscriptionCliError):
+        asyncio.run(ClaudeCodeProvider(command=["claude.exe"], runner=Runner(out="not json", err="login required")).generate(request()))
+
+
+def test_codex_exec_uses_strict_schema_file_and_reads_last_message():
+    seen = {}
+
+    async def runner(args, stdin, timeout_s, cwd):
+        seen["args"], seen["stdin"] = args, stdin
+        seen["schema"] = json.loads(Path(args[args.index("--output-schema") + 1]).read_text(encoding="utf-8"))
+        Path(args[args.index("-o") + 1]).write_text(json.dumps(REPLY), encoding="utf-8")
+        return 0, "", ""
+
+    raw = asyncio.run(CodexProvider(model="gpt-5", command=["codex"], runner=runner).generate(request()))
+    assert json.loads(raw.content) == REPLY
+    args = seen["args"]
+    assert args[:3] == ["codex", "exec", "-"] and args[args.index("--sandbox") + 1] == "read-only"
+    for flag in ("--skip-git-repo-check", "--ephemeral", "--ignore-user-config"):
+        assert flag in args
+    assert args[args.index("-m") + 1] == "gpt-5"
+    assert seen["stdin"].startswith("You are Maya.")
+    beat = seen["schema"]["properties"]["beats"]["items"]
+    assert sorted(beat["required"]) == ["emotion", "intensity", "reaction", "text"]
+    assert {"type": "null"} in beat["properties"]["intensity"]["anyOf"]
+    assert "maxLength" not in json.dumps(seen["schema"]) and "minItems" not in json.dumps(seen["schema"])
+    failed = CodexProvider(command=["codex"], runner=Runner(code=1, err="You've hit your usage limit"))
+    with pytest.raises(SubscriptionCliError) as error:
+        asyncio.run(failed.generate(request()))
+    assert error.value.code == "rate_limited"
+
+
+def test_environment_never_carries_api_keys(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-should-not-pass")
+    monkeypatch.setenv("CODEX_API_KEY", "x")
+    env = _clean_env()
+    assert "ANTHROPIC_API_KEY" not in env and "CODEX_API_KEY" not in env
+    assert env["COURTROOM_HOOK_DISABLED"] == "1" and env.get("PATH") == os.environ.get("PATH")
+
+
+def test_strict_schema_and_transcript_helpers():
+    strict = strict_schema(SCHEMA)
+    assert strict["required"] == ["beats", "settleEmotion"] and strict["additionalProperties"] is False
+    assert SCHEMA["properties"]["beats"]["items"]["required"] == ["text", "emotion"]  # input untouched
+    assert transcript([ChatMessage(role="user", content="only")]).startswith("User's new message:\nonly")
+
+
+def test_profiles_and_gateway_accept_subscription_types():
+    draft = ProfileDraft(name="Claude Max", provider_type="claude_code", model="sonnet")
+    assert draft.base_url is None
+    ProfileDraft(name="ChatGPT", provider_type="codex")  # model optional
+    with pytest.raises(ValueError):
+        ProfileDraft(name="Bad", provider_type="claude_code", base_url="https://example.test")
+    assert isinstance(LLMGateway(ProviderConfig(type="claude_code")).provider, ClaudeCodeProvider)
+    assert isinstance(LLMGateway(ProviderConfig(type="codex", model="gpt-5")).provider, CodexProvider)
