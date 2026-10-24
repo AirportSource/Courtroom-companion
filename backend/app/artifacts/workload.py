@@ -1,0 +1,34 @@
+"""Advisory output-size estimate before the single model call, never action detection.
+
+Every modern chat schema permits an optional action, including ordinary chat. Schema capability
+alone must not raise every request's budget. Explicit creation requests get more headroom; only
+the model's separately validated action can create a file. Unrecognized phrasing stays at the
+normal budget and fails safely if truncated. A future task planner can pass the same workload.
+"""
+
+import re
+import unicodedata
+
+from ..llm.base import OutputWorkload
+
+_TARGET = re.compile(r"\.(?:txt|md|py)\b|\b(?:file|script|document|markdown|checklist|fichier|texte|liste)\b", re.I)
+_REQUEST = re.compile(
+    r"(?:^|[\n.!?。！？])\s*(?:please\s+)?"
+    r"(?:(?:can|could|would|will)\s+you\s+(?:please\s+)?|i\s+(?:want|need)(?:\s+you)?\s+to\s+)?"
+    r"(?:create|write|save|generate|make|export|produce|put|build|draft)\b"
+    r"|(?:^|[\n.!?。！？])\s*(?:(?:peux-tu|pourrais-tu|tu peux)\s+)?"
+    r"(?:cree|creer|ecris|ecrire|redige|rediger|genere|generer|enregistre|enregistrer|sauvegarde|sauvegarder|mets|mettre|fais|faire)\b", re.I,
+)
+_JAPANESE_TARGET = re.compile(r"ファイル|スクリプト|テキスト|マークダウン|\.(?:txt|md|py)\b", re.I)
+_JAPANESE_REQUEST = re.compile(r"作成して|作って|生成して|保存して|書いて|書き出して")
+
+
+def expected_workload(message: str, *, artifacts_enabled: bool) -> OutputWorkload:
+    if not artifacts_enabled:
+        return OutputWorkload.DIALOGUE
+    # Accent folding only for the budget hint; the actual message/content is never changed.
+    text = "".join(c for c in unicodedata.normalize("NFKD", message) if not unicodedata.combining(c))
+    demo = re.search(r"(?:^|\s)#artifact-(?:txt|md|py)(?:\s|$)", text, re.I)
+    explicit = _TARGET.search(text) and _REQUEST.search(text)
+    japanese = _JAPANESE_TARGET.search(message) and _JAPANESE_REQUEST.search(message)
+    return OutputWorkload.TEXT_ARTIFACT if demo or explicit or japanese else OutputWorkload.DIALOGUE

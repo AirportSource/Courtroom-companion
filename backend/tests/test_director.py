@@ -22,7 +22,9 @@ def test_valid_neutral_reply(maya):
     s = t.segments[0]
     assert (s.emotion, s.animation, s.reaction) == ("neutral", "neutral_front", None)
     assert (t.settle_emotion, t.settle_animation) == ("neutral", "neutral_front")
-    assert t.notes == []
+    assert t.notes == [
+        "segment 0: emotion=neutral, intensity=0.50, reaction=none, SFX suppressed: emotion 'neutral' has no SFX mapping"
+    ]
 
 
 def test_happy_reply_uses_intensity_variants(maya):
@@ -252,7 +254,7 @@ def test_strong_reaction_earns_its_sfx(maya):
 def test_ordinary_reply_is_silent(maya):
     t, _ = run(maya, reply({"text": "Sure.", "emotion": "happy", "intensity": 0.5}))
     assert t.segments[0].sfx is None
-    low, _ = run(maya, reply({"text": "Hm.", "emotion": "excited", "intensity": 0.6}))
+    low, _ = run(maya, reply({"text": "Hm.", "emotion": "excited", "intensity": 0.55}))
     assert low.segments[0].sfx is None
 
 
@@ -264,13 +266,13 @@ def test_strong_emotion_without_reaction_gets_emotion_sfx(maya):
     assert unmapped.segments[0].sfx is None
 
 
-def test_suppressed_reaction_produces_no_sfx(maya):
+def test_inferred_reaction_cooldown_keeps_moderate_emotion_sfx(maya):
     r = reply({"text": "What?!", "emotion": "surprised", "intensity": 0.95})
     first, state = run(maya, r)
-    assert first.segments[0].sfx == "shock"
+    assert first.segments[0].sfx == "surprise"
     again, _ = run(maya, r, state, now=1000.0)  # inside the cooldown
     assert again.segments[0].reaction is None
-    assert again.segments[0].sfx is None
+    assert again.segments[0].sfx == "surprise"
 
 
 def test_sfx_capped_per_reply_and_deterministic(maya):
@@ -280,7 +282,7 @@ def test_sfx_capped_per_reply_and_deterministic(maya):
     )
     a, _ = run(maya, r)
     b, _ = run(maya, r)
-    assert [s.sfx for s in a.segments] == ["shock", None]
+    assert [s.sfx for s in a.segments] == ["surprise", None]
     assert [s.sfx for s in a.segments] == [s.sfx for s in b.segments]
 
 
@@ -293,5 +295,64 @@ def test_maya_sfx_data_is_valid(maya):
     from app.characters.repository import SFX_NAMES
 
     assert not [w for w in maya.warnings if "sfx" in w]
-    assert maya.sfx.reactions == {"shocked": "shock"}
+    assert maya.sfx.reactions == {
+        "shocked": "shock", "shock": "shock", "surprise": "surprise",
+        "realization": "realization", "comic": "comic", "emphasis": "emphasis",
+    }
     assert set(maya.sfx.reactions.values()) | set(maya.sfx.emotions.values()) <= SFX_NAMES
+
+
+def test_reply_schema_and_shared_prompt_offer_semantic_sounds(maya):
+    from app.characters.prompt import build_system_prompt, reply_schema
+
+    reaction_schema = reply_schema(maya)["properties"]["beats"]["items"]["properties"]["reaction"]
+    allowed = set(reaction_schema["anyOf"][0]["enum"])
+    assert {"shock", "surprise", "realization", "comic", "emphasis"} <= allowed
+    prompt = build_system_prompt(maya)
+    assert "genuinely theatrical" in prompt
+    assert "not routine emotion" in prompt
+
+
+def test_explicit_semantic_reactions_select_their_sfx_once(maya):
+    for semantic, expected in [("shock", "shock"), ("surprise", "surprise"),
+                               ("realization", "realization"), ("comic", "comic"),
+                               ("emphasis", "emphasis")]:
+        timeline, _ = run(maya, reply({"text": "A theatrical moment!", "emotion": "neutral",
+                                       "intensity": 0.2, "reaction": semantic}))
+        assert [segment.sfx for segment in timeline.segments] == [expected]
+        assert any(f"SFX={expected} (explicit reaction '{semantic}')" in note for note in timeline.notes)
+
+
+def test_explicit_shock_bypasses_inferred_reaction_limits(maya):
+    shocked = reply({"text": "Wait, what?!", "emotion": "surprised", "intensity": 0.9, "reaction": "shock"})
+    first, state = run(maya, shocked)
+    second, _ = run(maya, shocked, state, now=1000.0)
+    assert first.segments[0].reaction == "shocked"
+    assert second.segments[0].reaction is None  # the visual reaction remains cooldown-limited
+    assert first.segments[0].sfx == second.segments[0].sfx == "shock"
+
+    two, _ = run(maya, reply(
+        {"text": "Wait, what?!", "emotion": "surprised", "intensity": 0.9, "reaction": "shock"},
+        {"text": "Again?!", "emotion": "surprised", "intensity": 0.9, "reaction": "shock"},
+    ))
+    assert [segment.reaction for segment in two.segments] == ["shocked", None]
+    assert [segment.sfx for segment in two.segments] == ["shock", "shock"]
+
+
+def test_distinct_explicit_sounds_on_distinct_beats_are_each_kept(maya):
+    timeline, _ = run(maya, reply(
+        {"text": "Wait, what?!", "emotion": "surprised", "intensity": 0.9, "reaction": "shock"},
+        {"text": "Oh, I understand now!", "emotion": "thinking", "intensity": 0.4, "reaction": "realization"},
+    ))
+    assert [segment.sfx for segment in timeline.segments] == ["shock", "realization"]
+
+
+def test_surprise_emotion_fallback_at_moderate_intensity(maya):
+    timeline, _ = run(maya, reply({"text": "Really?", "emotion": "surprised", "intensity": 0.65}))
+    assert timeline.segments[0].sfx == "surprise"
+
+
+def test_low_anxiety_is_silent(maya):
+    timeline, _ = run(maya, reply({"text": "I am a little worried.", "emotion": "anxious", "intensity": 0.35}))
+    assert timeline.segments[0].sfx is None
+    assert "SFX suppressed: emotion 'anxious' has no SFX mapping" in timeline.notes[0]

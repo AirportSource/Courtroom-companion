@@ -15,6 +15,7 @@ from .api.routes import router
 from .api.profile_routes import router as profile_router
 from .api.music_routes import router as music_router
 from .api.artifact_routes import router as artifact_router
+from .conversation_record import ConversationRecordStore, install_conversation_record
 from .artifacts.store import ArtifactError, ArtifactNotFound, ArtifactStore, outputs_dir
 from .artifacts.turns import TurnRegistry
 from .characters.repository import CharacterRepository
@@ -35,6 +36,7 @@ def create_app(
     profile_store: ProfileStore | None = None,
     credential_store: CredentialStore | None = None,
     music_library: MusicLibrary | None = None,
+    conversation_record: ConversationRecordStore | None = None,
     artifact_store: ArtifactStore | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Courtroom Companion API", version="0.1.0")
@@ -84,6 +86,8 @@ def create_app(
     app.include_router(profile_router)
     app.include_router(music_router)
     app.include_router(artifact_router)
+    # User-facing archive of completed turns (D-058); never part of provider context.
+    install_conversation_record(app, conversation_record)
     return app
 
 

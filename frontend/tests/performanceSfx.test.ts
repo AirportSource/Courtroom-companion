@@ -30,13 +30,17 @@ test('parseChatResponse accepts known sfx and nulls unknown or malformed ones', 
 })
 
 test('sfx lands only on the first page of a paginated segment', () => {
-  const long = 'This is a rather long sentence that needs more than one page. '.repeat(5)
-  const { performance } = parseChatResponse(body([seg({ text: long, sfx: 'shock', reaction: 'shocked' }), seg({ text: 'Okay.' })]))
-  const lines = timelineToLines(performance, layout)
-  assert.ok(lines.length > 2)
+  const sentence = 'This is a rather long sentence that needs more than one page. '
+  let lines: ReturnType<typeof timelineToLines> = []
+  for (let repeats = 1; repeats <= 8; repeats += 1) {
+    const { performance } = parseChatResponse(body([seg({ text: sentence.repeat(repeats), sfx: 'shock', reaction: 'shocked' })]))
+    lines = timelineToLines(performance, layout)
+    if (lines.length === 3) break
+  }
+  assert.equal(lines.length, 3, 'fixture should occupy exactly three pages')
   assert.equal(lines[0].sfx, 'shock')
   assert.equal(lines[0].reaction, 'shocked')
-  assert.ok(lines.slice(1).every((l) => !l.sfx))
+  assert.deepEqual(lines.map((line) => line.sfx), ['shock', null, null])
 })
 
 test('a normal reply carries no sfx', () => {

@@ -784,3 +784,116 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - Chrome with an isolated Fake backend/config verified txt/md/py creation, duplicate name suffixes, semantic cue order, one final paginated response, thinking while waiting, cancellation returning to input, provider error performance, normal chat with no artifacts, navigation/reload persistence, preview/download/delete and no content in browser storage. Logical stage remained 256×192; screenshots inspected; no browser exceptions. A cancellation-response race found in the browser was corrected and the complete flow rerun successfully.
 - Final **complete integrated suite against the combined working tree**: backend **309 passed / 1 skipped** (Windows developer symlink privilege unavailable); frontend **188 passed**; assets **196 references / 0 errors**; build **100 modules**, pass; lint clean; `git diff --check` pass. All earlier provider/service/director, typography, paginator, audio/music, waiting and Court Record tests run with the new tests.
 - Final baseline/hash/file-set audit found **no unexpected concurrent modifications** outside the declared milestone files. HEAD stayed `178fda9`; nothing was staged. Browser fixture scripts, dedicated backend/Vite processes, scratch config/output files and Chrome profile were removed; ignored audit snapshot/results/screenshots remain for review. Source archives and all unrelated starting work were preserved.
+
+---
+
+## 2026-10-24 — Anthropic artifact truncation and shared output budgets
+
+- Starting HEAD was the owner's checkpoint `5fd307a`; only untracked source/reference folders and OST runtime copies remained. The interrupted earlier staging turn ran no commands here. No source/archive was staged, deleted or rewritten, and no commit/push was performed.
+- Inspected actual active profile metadata without reading/printing its credential: Anthropic / claude-sonnet-5-5, max_tokens **600**, timeout **120 s**. The adapter sent that exact saved budget for both chat and artifacts; shared validation previously capped max_tokens at 8,192. Verified current official stop-reason documentation.
+- Added provider-independent expected workload and shared per-request budget copying. Normal dialogue retains its configured cap (600 in the inspected profile), explicit text-artifact requests use **16,384**, and the following normal turn returns to 600. Saved profiles, timeouts, byte limits, CharacterReply, validation/storage, director and paginator are preserved. Workload estimates only affect headroom, never action authorization; unrecognized phrasing may keep the conservative budget. No extra model generation or retry was added.
+- Anthropic now reports output_token_limit versus context_window_exceeded separately; refusal/end_turn also remain distinct. Exhaustion is rejected before extraction/repair, even when returned JSON looks complete, so no partial artifact, artifact_ready or hidden/partial assistant history can appear. Separate safe generation diagnostics and distinct chat/Settings messages carry the requested cap and stop reason.
+- Final full combined-tree checks: **345 backend passed / 1 skipped** (existing Windows symlink privilege skip); **190 frontend passed**; assets **196 / 0 errors**; build **101 modules**, pass; lint clean; git diff check pass. New tests mock all four provider adapters, assert actual wire budgets/immutability, test both complete-looking and partial truncated output, and save a larger completed file exactly once.
+- No paid/live cloud generation was requested and no OS-vault credential was read. The active saved profile budget remains 600; the artifact budget is transient application policy.
+
+---
+
+## 2026-10-24 — Semantic Maya reaction-SFX reliability audit
+
+- Traced LLM `Beat` values through CharacterDirector segments, `timelineToLines`, ConversationScreen's line-keyed SFX effect, `playSfx`, audio.json events, preloaded WAVs and the shared AudioContext. Reaction/SFX event order is before typewriter reveal; pagination assigns the event only to page 1. React StrictMode effect replay was not guarded by the prior event cooldown, so a line-key guard now ensures one request per beat.
+- Root cause: Maya's `surprised` emotion inferred the visual `shocked` reaction, whose 0.46 effective reaction threshold and 5.2-second cross-reply cooldown also suppressed its mapped sound. The SFX `surprised` emotion fallback was therefore unreachable on that path. Explicit replies were only schema-allowed to name `shocked`; the fallback `maxPerReply` cap could also silence later emotion-only beats.
+- Added shared prompt/schema semantic intents (`shock`, `surprise`, `realization`, `comic`, `emphasis`) and data mappings without provider-specific guidance. Explicit mapped sounds bypass emotion fallback thresholds and the fallback SFX cap, while the visual reaction retains its original intensity/cooldown/per-reply gates. Emotion-only thresholds: surprised .55, excited .60, playful .70, happy .70; anxious/neutral/calm/thinking stay silent.
+- Added per-beat director selection/suppression notes; dev-only actual event outcome display and five-sound audition controls. WAV byte headers and semantic manifest mappings are tested. The supplied package still uses distinct shock, surprise, realization, comic and emphasis WAVs.
+- Fixture review: FakeProvider has several explicit `shocked` cases (realization/worried/story), while French and Japanese samples only emit `surprised` + intensity. No persisted real-provider development CharacterReply was found in the repository, so actual cloud-provider reaction frequency cannot be claimed from these fixtures.
+- No sprite, audio asset, provider, artifact, paginator, or performance presentation architecture was changed. Final validation: backend 351 passed / 1 existing Windows symlink skip; frontend 191 passed; asset validation 196 / 0 errors; build 101 modules; lint clean; `git diff --check` pass. No browser speakers were used to audition the samples; the dev panel now has controls for listening on the developer's machine.
+
+---
+
+## 2026-10-24 — Milestone 3 artifact delivery and generated-file Court Record
+
+- Read `CLAUDE.md` and persistent project docs before editing. Starting Git state contained substantial user-owned modifications from earlier provider, output-budget, SFX, music, and artifact work plus untracked source/reference archives. All were preserved. Source/reference folders were not rewritten. Existing port 5199 was already occupied by a user's dev process; this run used isolated ports 5203 (Vite), 8012 (FakeProvider FastAPI) and Chrome CDP 9236 instead. The existing process was not touched. No additional unexpected concurrent write was observed.
+- Model allocation: lead GPT-6.1-Sol / High; evidence-flow GPT-6.1-Sol / High; Court Record UI GPT-6.1-Sol / Medium; asset-reference GPT-6-Luna / Medium. The requested model assignments were supported and used as specified. The lead integrated shared `App`/`ConversationScreen` changes and reviewed all workstreams.
+- Added a frontend-only delivery reducer. It consumes milestone 2 task/artifact results, uses a temporary Thinker cue during `artifact_working`, rings once when ready, waits for mouse/keyboard acknowledgement, shows a bounded summon, refreshes the existing artifact list, then releases the same buffered performance. Failure/cancellation show no phone/summon. Navigation/reload does not delete persisted files or replay the entire sequence.
+- The generated-file Court Record reads from existing artifact list/read/download/delete endpoints, with six 64×64 square slots per 3×2 page, stable creation/ID order, empty/selected states, keyboard/mouse operation, pagination, safe inspector preview/download/delete, and no filesystem path. Static/demo evidence remains separate. The old Generated files panel is behind dev tools only.
+- Native file icon: exact 64×64 crop from owner-supplied `docs/references/evidence.png` (same pixels as `envelope_tied`); source image left unchanged. Runtime manifest key `court_record_file_document`. Added byte-identical owner-supplied `phone_cut.wav`, `evidence_start.wav`, `evidence_finish.wav`. `phone_ring` reuses existing short `phonebeep.wav`; the full ringtone was not copied. Asset source/rights limits are in `ASSET_SOURCES.md`.
+- Response buffering: one FakeProvider `#artifact-py` POST created `hello_maya.py`; final “All done! Your file is ready below.” was absent in the phone and summon states and appeared only after Continue. The dev last-reply diagnostic was also empty before release. Presentation code makes no API call; only the original request and existing task-status polling occurred. After release it used the ordinary performance/timeline/paginator path. Court Record preview showed inert Python text and download used only the opaque artifact ID; no Run/Execute action exists.
+- Follow-up conversation: eight unrelated prompts were sent through FakeProvider; replies varied across greeting, family story, teasing, concern and realization fixtures, with no burger references. Since FakeProvider is deterministic and does not interpret the character prompt, this is not evidence of real-model adherence. `personality.md` now retains burgers and other Maya quirks but says they are occasional, context-led traits; no counters/filters or prompt architecture changes were added.
+- Visual inspection: 256×192 stage at native/1× and captured 3×, 4×, and auto. The Court Record stays crisp with nearest-neighbour sprites and no horizontal overflow. The summon shows a readable filename/message and file icon. A nameplate collision was found when the Court Record overlay opened; the existing dialogue box is now hidden for that overlay. At 3×/4× auto selected 4× in the enlarged viewport. No typography, dialogue geometry, pagination, music or performance rule was changed.
+- Automated frontend state-machine tests cover ready, duplicate ready, acknowledgement, summon, response buffer/release, failure and cancellation. Court Record tests cover derived entries/order, grid page movement/selection, empty/fallback/metadata behavior. Existing milestone 1/2 tests remain part of the complete run.
+- Personality changed: `frontend/public/assets/characters/maya/personality.md`. No Maya sprites or performance rules changed.
+- Validation: final counts are recorded below after the complete combined tree run. No real cloud-provider call was made; FakeProvider was used first and only. No provider credential was read or logged. No commit, push or staging occurred.
+
+---
+
+## 2026-10-24 — Artifact phone/acknowledgement and Court Record audio correction
+
+- Preflight captured Git status, recent commits and content hashes before edits. The existing modified/untracked work, including `docs/references/courtroom-screens/`, was present in this task's baseline and preserved. That reference directory was reported as newly observed at the preceding milestone's final scan; no current source/reference archive was changed. No subagents were spawned for this focused pass, and no unexpected writes outside the declared correction paths were detected.
+- Inspected the phone sources. Phoenix, Wellington and Godot MP3s have separate embedded ID3 titles. Selected the title-identified Phoenix recording, not the unlabeled `phone1.wav` or notification beep; copied its MP3 bytes unchanged to `audio/effects/phoenix_ringtone.mp3`. Offline spectral/sample analysis supplied a native loop region; see `ASSET_SOURCES.md` for metadata, SHA-256, seam metrics and provenance limits. No original DS loop claim or by-ear identification is made.
+- Added semantic `phone_ring_loop` with reference-counted, cancellable event-loop leases in the existing audio engine. Duplicate acquisitions share one native source; releasing pending work prevents late decode playback. Phase exit, answer, cancellation/navigation/unmount stop the loop; volume changes update its gain without restarting it. Existing `phone_answer`/cut and evidence effects stay mapped as before.
+- Added scoped MusicEngine duck leases: factor 0.12, 220 ms down / 350 ms restore. Original/imported tracks use a separate GainNode; radio uses bounded native-player volume ramps that preserve stop fades. User volume/mute, track/source and fade automation are not replaced. SFX mute releases attenuation while retaining the silent native loop; unmute updates it without a second source.
+- Exposed the existing pre-generation workload estimate as advisory `expectedWorkload` in turn status. It cannot authorize an artifact and does not change provider requests, CharacterReply or storage. The browser starts the existing chat request once, then uses the hint to present a local character-defined acknowledgement concurrently. Maya's character manifest supplies four EN/FR/JA variants and a happy pose. Known document locale selects copy; there is no new language detector. No model call or history entry is added for acknowledgement.
+- Extended the existing reducer with task acknowledgement and a minimum 350 ms working display. The local line uses the existing measured paginator, typewriter, animation and blips, holds 500 ms after typing, then changes to thinking/Thinker. Ready responses arriving early remain buffered. Failures finish the acknowledgement then release the existing error; cancellation returns to input without phone/summon. The original final performance is released after the existing summon.
+- Restored Court Record ordinary menu sounds: cursor move, page, confirm/open/action, and cancel/back/close. Mouse and keyboard share the same handlers; movement sound has a 140 ms cadence cap. No delivery/evidence sound is used for browsing.
+- Isolated FakeProvider Chrome checks on ports 8013/5204/CDP 9237 verified acknowledgement → working → phone → summon → final response; one POST per prompt; native ringing persisted for >22 seconds across its loop with one source; actual gains 0.80 → 0.096 → 0.80; answer stopped the source once; BGM never restarted. Follow-up checks covered mute preservation, provider failure, cancellation while work was pending, navigation during ringing, mouse/keyboard Court Record sounds, and dev audition start/stop. No browser exceptions were recorded. A Vite audio-module HMR reset during development required a full page reload; final checks used fresh pages after code settled.
+- Listening was unavailable. Browser decoding/playback events, native-source count, real GainNode values and visual acknowledgement were checked; acoustic balance/loop approval remains a human check. Dev builds include a 45-second ringtone audition and Stop, including temporary BGM ducking, hidden during active turns and cleaned on unmount.
+- Final combined-tree validation: **353 backend passed / 1 existing Windows symlink privilege skip; 216 frontend passed; assets 201 references / 0 errors; production build 110 modules; lint clean; `git diff --check` passed.** Existing provider/profile/credential, artifact persistence/cancellation, CharacterDirector, measured pagination/Japanese, typing/reaction SFX and music/import/radio regressions were included.
+- No staging, commit or push. Temporary browser/server configuration, generated test files and analysis harnesses were isolated under ignored local storage and removed after validation; the owner's existing local outputs/configuration were preserved.
+
+---
+
+## 2026-10-24 — Conversation Record, evidence frame, collapsible panels, ringtones, token budgets
+
+**Process and models**
+- Lead: Claude Opus 5.5 (medium), covering architecture, contracts, shared integration (App, ConversationScreen, TitleScreen, settings, main.py, validator), review, browser validation and docs.
+- Workers: conversation-history (Sonnet, high), token-budget (Sonnet, high), ui-polish (Sonnet, medium), audio-settings (Sonnet, medium), asset-reference (Haiku, default effort). No Opus workers. conversation-history needed one respawn after a spawn lock race.
+
+**Implemented** (D-058 to D-061; see DECISIONS)
+- **Backend:**
+  - `app/conversation_record/` + routes;
+  - capture in the chat route after a successful turn;
+  - `llm/budgets.py`, `llm/errors.py`, `characters/context.py`;
+  - provider stop-reason normalization.
+- **Frontend:**
+  - `EvidenceTile`, `ConversationRecordView` + API;
+  - `CollapsiblePanel`;
+  - `engine/ringtones.ts` + Settings ringtone row;
+  - generation failure messages;
+  - manifest `courtRecordPortrait`.
+- **Assets:** evidence frame, Maya record portrait, Wellington/Godot ringtones.
+- **Lead fixes during review:**
+  - The record detail view used a 12 px line grid that clipped 16 px glyph descenders ("Mava Fev", "hello_maya.pv"); it is now 15 px everywhere.
+  - The summon icon now renders at native 64×64 inside the frame instead of 48 px.
+  - Character packs load once on demand for record portraits.
+  - The conversation-record test now injects its store through `create_app`.
+
+**Browser validation** (isolated backend on 8010 with a scratch config and a scratch FakeProvider wrapper for `#trunc`/`#ctx`; Vite 5180; the user's servers on 8000/5173 were untouched)
+- **A, history:**
+  - three exchanges (EN/FR/JA) gave three records, and a replayed requestId added none;
+  - the grid showed framed Maya portraits;
+  - details covered Japanese and long-text scrolling;
+  - records persisted across a page reload and a backend restart;
+  - no paths in responses.
+- **B, artifact:**
+  - the phone rang;
+  - the summon showed the framed native icon;
+  - exactly one record was linked to `hello_maya.py`;
+  - after the file was deleted, the record showed "File no longer available".
+- **C, panels:** all start collapsed; expanding persists `expandedPanels`; no horizontal overflow.
+- **D, ringtones:**
+  - Godot and Phoenix previews played one native loop each;
+  - Stop and leaving Settings both stopped them;
+  - with Godot selected, the real phone flow played the Godot loop with the duck at 0.12;
+  - answering stopped it and restored 1.0 with Maya's track still playing;
+  - menus and Settings stayed silent, and the conversation started Maya's BGM.
+- **E, failures:**
+  - `#trunc` (valid JSON with a `max_tokens` stop) and `#ctx` produced no file, no cues and no record;
+  - failure classes were `output_truncated` (16,384 artifact budget) and `context_window_exceeded` (4,096 dialogue budget);
+  - the chat showed the specific output-limit message, and no ringtone or summon appeared.
+- **Not done:** no audio was heard. Normal UI flows keep the lists in sync; lists only go stale after changes made outside the UI, and Refresh syncs them.
+
+**Final checks**
+- Backend 405 passed, 1 skipped. Frontend 244 passed.
+- `validate:assets` 205 / 0 errors. Build 120 modules. Lint, `tsc` and `git diff --check` pass. No secrets found.
+- Scratch configs and launchers were deleted.
+- `backend/.local/outputs` holds two files from 20:15 that were not created by this session (likely the user's own server); they were left untouched.
+- No commit or push.

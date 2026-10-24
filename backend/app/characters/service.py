@@ -16,10 +16,13 @@ from typing import Any
 from ..director.director import CharacterDirector, DirectorState
 from ..llm.gateway import LLMGateway
 from ..llm.schemas import ChatMessage, CharacterReply
+from .context import fit_history
 from .prompt import build_system_prompt, reply_schema
 from .repository import CharacterRepository
 from ..artifacts.contracts import turn_prompt, turn_schema
 from ..artifacts.store import ArtifactError, ArtifactStore
+from ..artifacts.workload import expected_workload
+from ..llm.base import OutputWorkload
 
 HISTORY_TURNS = 12  # messages kept per session (user + assistant)
 
@@ -39,6 +42,7 @@ class ChatResult:
     warnings: list[str]
     artifacts: list[dict] = field(default_factory=list)
     error: str | None = None
+    generation: dict[str, Any] = field(default_factory=dict)
 
 
 class CharacterService:
@@ -65,10 +69,11 @@ class CharacterService:
         operation_key: str | None = None,
         fingerprint: str | None = None,
         on_artifact_working: Callable[[], Awaitable[None]] | None = None,
+        on_expected_workload: Callable[[OutputWorkload], None] | None = None,
     ) -> ChatResult:
         profile = self.repository.get(character_id)  # raises CharacterNotFoundError
         session = self._sessions.setdefault((session_id, character_id), _Session())
-        messages = [*session.history, ChatMessage(role="user", content=message)]
+        messages = [*fit_history(list(session.history)), ChatMessage(role="user", content=message)]
 
         active_gateway = gateway or self.gateway
         schema = reply_schema(profile)
@@ -76,7 +81,10 @@ class CharacterService:
         if artifact_store is not None:
             schema = turn_schema(schema)
             prompt = turn_prompt(prompt, schema)
-        result = await active_gateway.generate_reply(prompt, messages, schema)
+        workload = expected_workload(message, artifacts_enabled=artifact_store is not None)
+        if on_expected_workload:
+            on_expected_workload(workload)
+        result = await active_gateway.generate_reply(prompt, messages, schema, workload=workload)
         artifacts = []
         if result.reply is not None and result.artifact_action is not None:
             if on_artifact_working:
@@ -105,4 +113,4 @@ class CharacterService:
         warnings = list(result.warnings)
         if result.error:
             warnings.append(f"provider failure: {result.error}")
-        return ChatResult(result.reply, timeline.to_json(), active_gateway.info(), warnings, artifacts, result.error)
+        return ChatResult(result.reply, timeline.to_json(), active_gateway.info(), warnings, artifacts, result.error, result.generation)

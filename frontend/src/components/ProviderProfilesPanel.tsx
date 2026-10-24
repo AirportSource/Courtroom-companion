@@ -6,6 +6,7 @@ import {
   type ProfileCatalog, type ProfileDraft, type ProviderType,
 } from '../settings/providerProfiles.ts'
 import { readStoredSettings } from '../settings/settings.ts'
+import { generationFailureMessage } from '../engine/generation.ts'
 
 const PROVIDERS: Record<ProviderType, string> = {
   fake: 'Fake', ollama: 'Ollama', openai_compatible: 'OpenAI Compatible', anthropic: 'Anthropic',
@@ -24,8 +25,11 @@ const TEST_MESSAGES: Record<string, string> = {
   anthropic_unreachable: 'Anthropic is unreachable.',
   malformed_response: 'The provider returned malformed output.',
   empty_output: 'The provider returned no final output.',
-  response_truncated: 'The response reached its token or context limit.',
+  response_truncated: 'The provider returned an incomplete response.',
+  output_token_limit: generationFailureMessage('output_token_limit')!,
+  context_window_exceeded: generationFailureMessage('context_window_exceeded')!,
   provider_refused: 'The provider declined the request.',
+  provider_limit: generationFailureMessage('provider_limit')!,
   invalid_provider_configuration: 'The provider request configuration was rejected.',
   provider_http_error: 'The provider service failed. Try again later.',
 }

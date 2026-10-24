@@ -1,4 +1,6 @@
-import { useState, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import { setPanelExpanded } from './collapsiblePanel.ts'
+import { CollapsiblePanel } from './CollapsiblePanel.tsx'
 import { audioEngine } from '../engine/audioEngine.ts'
 import { musicRuntime } from '../music/musicRuntime.ts'
 import { RadioPanel } from '../music/radio/RadioPanel.tsx'
@@ -45,14 +47,15 @@ export function MusicDock({ soundtrack, importPanel, onAudition }: MusicDockProp
   const { settings, update } = useSettings()
   const state = useMusicState()
   const { engine, radio } = musicRuntime()
-  // The library is open by default whenever Imported is selected, so importing is discoverable.
-  const [hidden, setHidden] = useState(false)
-  const expanded = !hidden
   const source = settings.musicSource
+  // The official player must be visible while radio plays: the Radio section is locked open then,
+  // and pressing Play re-opens it.
+  const radioActive = state.source === 'radio' && (state.status === 'playing' || state.status === 'loading')
 
   // Every Play here is a real user gesture: unlock Web Audio first, then recover.
   const play = () => {
     audioEngine.unlock()
+    if (source === 'radio') update({ expandedPanels: setPanelExpanded(settings.expandedPanels, 'music-radio', true) })
     onAudition?.()
     if (state.status === 'paused') engine.resume()
     else if (state.status === 'blocked' && state.source === 'radio') radio.resume()
@@ -69,14 +72,10 @@ export function MusicDock({ soundtrack, importPanel, onAudition }: MusicDockProp
         <span className="music-dock-status" role="status">{statusLine(state, soundtrack, state.trackId)}</span>
         {canPlay && source !== 'off' && <button type="button" onClick={play}>Play</button>}
         {state.status === 'playing' && <button type="button" onClick={() => engine.pause()}>Pause</button>}
-        {source === 'imported' && importPanel && (
-          <button type="button" aria-expanded={expanded} onClick={() => setHidden((v) => !v)}>
-            {expanded ? 'Hide library' : 'Library'}
-          </button>
-        )}
       </div>
       {/* Always mounted (the engine stops it when Radio is not the active source). */}
       <div className="music-dock-panel" hidden={source !== 'radio'}>
+        <CollapsiblePanel id="music-radio" title="Music / Radio" keepMounted locked={radioActive}>
         <RadioPanel
           source={radio}
           videoId={settings.radioVideoId || DEFAULT_RADIO_VIDEO_ID}
@@ -84,8 +83,13 @@ export function MusicDock({ soundtrack, importPanel, onAudition }: MusicDockProp
           onPlay={play}
           visible={source === 'radio'}
         />
+        </CollapsiblePanel>
       </div>
-      {source === 'imported' && expanded && importPanel && <div className="music-dock-panel">{importPanel}</div>}
+      {source === 'imported' && importPanel && (
+        <div className="music-dock-panel">
+          <CollapsiblePanel id="music-library" title="Imported library / loop editor">{importPanel}</CollapsiblePanel>
+        </div>
+      )}
     </aside>
   )
 }

@@ -13,12 +13,18 @@ useMusicSync (App)  ── persisted settings ──►  musicRequestFor()  ─�
 
 - `src/music/types.ts`: shared contracts (`MusicSource`, `LoopRegion` in **samples**, `LoopMetadata`, provenance, error codes).
 - `MusicEngine.ts`: play/pause/resume/stop/switchSource/volume/mute/fade/retry. Every request bumps a generation, aborts the previous AbortController and joins one serial queue. The previous source is always fully stopped (faded) before the next `start()`, so two BGM sources can never be audible. A switch during loading aborts silently (`aborted` is never shown as an error). The same track is never restarted. The engine knows no character, provider or file name; a future MusicDirector would send the same logical `play(kind, trackId)` requests.
-- `webAudioSource.ts`: fetch → ArrayBuffer → `decodeAudioData` → AudioBuffer → AudioBufferSourceNode (`loop`, `loopStart/loopEnd` = samples ÷ sampleRate) → track gain → fade gain → master gain. It shares the single `audioEngine` AudioContext and never suspends it, so blips and SFX are unaffected. Pause stops the node and remembers the position; resume restarts inside the loop. Before the first gesture the state is `blocked`, and `audioEngine.onUnlock` retries.
+- `webAudioSource.ts`: fetch → ArrayBuffer → `decodeAudioData` → AudioBuffer → AudioBufferSourceNode (`loop`, `loopStart/loopEnd` = samples ÷ sampleRate) → track gain → fade gain → master gain → temporary duck gain. It shares the single `audioEngine` AudioContext and never suspends it, so blips and SFX are unaffected. Pause stops the node and remembers the position; resume restarts inside the loop. Before the first gesture the state is `blocked`, and `audioEngine.onUnlock` retries.
 - `bufferCache.ts`: lazy LRU (3 decoded tracks / 160 MB), with in-flight dedupe. Nothing is decoded at startup.
 - `loopMath.ts`: region validation, sample→seconds, equal-power crossfade baking into a buffer copy, lenient metadata parsing. Malformed loop metadata plays the whole buffer and records an `invalid_loop` warning.
 - `musicRuntime.ts` / `useMusicSync.ts`: lead wiring and the pure settings → request mapping. In dev builds the runtime is exposed as `window.__ccMusic` and disposed on HMR.
 - `components/MusicDock.tsx`: out-of-stage bar (status, Play after a block, Pause). It keeps the official YouTube player mounted and visible while Radio is selected, and hosts the import library.
 - Settings (in-stage): Music source (Game music / Imported / Radio / Off), Track, BGM vol, Mute BGM. Blip volume is separate and unchanged in behaviour (renamed "Blip vol").
+
+## Temporary phone attenuation (D-057)
+
+`MusicEngine.acquireDuck(factor, attackMs, releaseMs)` returns an idempotent release function. Multiple leases use the lowest factor. It never writes the user's volume/mute or issues play/stop requests. Original/imported sources apply it through an independent duck GainNode, so master changes and existing track/pause fades remain independent. The radio source uses the official player's volume control with a bounded cancellable ramp, multiplying its existing stop-fade level rather than replacing it.
+
+While the delivery phone rings, the scoped factor is **0.12** with **220 ms** attack and **350 ms** restoration. At configured volume 0.80, effective master output is 0.096 while ringing. Current settings are applied on release, including volume/mute changes during the ring; no stale volume snapshot is restored. Source changes inherit the active factor, and disposal clears attenuation leases. All phone exits/unmounts release their lease.
 
 ## Original soundtrack
 

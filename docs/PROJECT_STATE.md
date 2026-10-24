@@ -1,6 +1,6 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-24 (milestone 2 of 3: safe generated text artifacts). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-24 (Conversation Record / evidence frame / ringtones / token budgets). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
@@ -31,7 +31,7 @@ At native size and render scale 1 (D-026), Maya is 146–162 px tall on the 192 
 
 **Presentation and audio UX (D-049–D-051).**
 - While a reply is generated, Maya holds her data-driven thinking pose (`thinking_side`, animated idle).
-- Strong beats play one semantic reaction SFX (director `sfx` → audio.json `sfx_<name>`), once per beat, with their own SFX volume/mute.
+- Strong beats play one semantic reaction SFX (director `sfx` → audio.json `sfx_<name>`), once on the first page, with their own SFX volume/mute. Explicit semantic SFX bypass emotion fallback and visual-reaction suppression; visual one-shots retain their existing limits. Emotion fallbacks use per-emotion thresholds and ordinary anxious/neutral/calm states remain silent. Dev builds show selection/suppression and per-event playback status, with audition controls.
 - The user's typing plays male blips (IME-safe, throttled).
 - Character BGM starts only in the conversation scene; menus are silent.
 - DotGothic16 kanji are scaled to 75% so they match Igiari kana.
@@ -39,7 +39,20 @@ At native size and render scale 1 (D-026), Maya is 146–162 px tall on the 192 
 
 **Court Record (D-047).** Data-driven evidence/profile manifest with 3 native evidence icons. Its DS view is reachable from the main menu and from a conversation overlay. Generic Talk Options sit over the original talk-option panel.
 
-**Generated text artifacts (D-052, milestone 2).** The shared conversation turn may propose one strict `create_text_artifact` action beside the unchanged CharacterReply. The backend saves inert UTF-8 `.txt` / `.md` / `.py` content under opaque IDs in ignored `backend/.local/outputs/`, then delivers the one final performance. Local metadata/text/download/delete routes, persistent receipts, bounded storage, duplicate handling and cancel/status operations support a minimal Generated files panel outside the DS stage. Python is never executed/imported/compiled. The polished phone/summon/evidence cinematic belongs to milestone 3. See `docs/ARTIFACTS.md` and `docs/MILESTONE_2_CHANGE_AUDIT.md`.
+**Generated text artifacts (D-052, milestone 2) and delivery (D-055/D-057).** The shared conversation turn may propose one strict `create_text_artifact` action beside the unchanged CharacterReply. The backend saves inert UTF-8 `.txt` / `.md` / `.py` content under opaque IDs in ignored `backend/.local/outputs/`; it remains the only artifact store. The frontend buffers that one final response through `idle → task-acknowledgement → artifact-working → waiting-for-phone-acknowledgement → evidence-summon → response-release → idle`; failure/cancellation do not summon. A file-only Court Record is a view over artifact metadata/content APIs, while Thinker and phone are temporary presentation cues. Python is never executed/imported/compiled. The old Generated files panel is now dev-only. See `docs/ARTIFACTS.md`.
+
+**Maya personality tuning (D-056).** Food/burger references remain part of Maya's personality, but personality guidance now prioritizes the user's subject and discourages repetitive trait callbacks. No keyword censor or counter was added. A deterministic eight-turn FakeProvider follow-up showed varied playful fixture replies and no burger references; real-provider adherence was not tested.
+
+**Artifact presentation/audio correction (D-057).** Character-defined acknowledgement variants are typed while the original provider request runs. The existing backend workload estimate is exposed as advisory turn metadata; no frontend action detector or second provider request is added. Fast results wait through acknowledgement and a short working gate. Phone readiness now starts the metadata-identified Phoenix ringtone as one native loop until answer/interruption; scoped 12% BGM ducking uses 220/350 ms ramps without changing configured volume or restarting the track. Court Record browsing uses ordinary move/confirm/back/page sounds; the dev panel has a bounded ringtone audition. See `ARTIFACTS.md` and `MUSIC.md`.
+
+**Output budgets (D-053).** Normal chat keeps the selected profile's budget (inspected Sonnet 5.5 profile: 600). Explicit text-artifact requests receive an advisory service workload and a transient 16,384-token cap through the shared gateway. Anthropic output-token exhaustion, context-window exhaustion and refusal have distinct diagnostics/UI messages; truncated output never reaches artifact validation/storage and never emits ready. No saved budget, model maximum, automatic retry or artifact architecture change is involved.
+
+**Conversation Record, frame, panels, ringtones and budgets (D-058–D-061).**
+- Completed turns are archived server-side (git-ignored `conversation-record/records.json`, one idempotent record per turn, artifact IDs only). They are browsable from the title menu and from a conversation "Record" overlay as framed character-portrait slots with a scrollable detail view. The archive is never sent to the LLM.
+- Evidence tiles use the native 70×70 frame.
+- Out-of-stage panels are collapsible and start collapsed; the radio panel stays open while it plays.
+- Settings offers Phoenix (default), Richard Wellington and Godot ringtones with Preview/Stop; the phone uses the selection at ring time.
+- Dialogue has a 4096-token output floor. Truncation and context-window errors are detected and distinguished on every provider. LLM history is fitted to a deterministic size budget.
 
 **Engine tests** run with `npm test` (D-029).
 
@@ -113,7 +126,7 @@ voice = dev override ?? line.voice ?? character.voice.blip
 ## Frontend status
 
 - Igiari is the primary stage/UI font: WOFF2, 16 px, zero added letter/word spacing. Bundled DotGothic16 is the deterministic first fallback, especially for Kanji; Japanese/system sans-serif fonts are tertiary emergency fallbacks. DotGothic16 is visually compatible but is not claimed to be the original Ace Attorney Kanji font (D-037, D-038).
-- Final combined-tree checks: asset validation 196 references / 0 errors; build 100 modules + analysis worker; lint clean; frontend tests 188 passed; backend tests 309 passed / 1 skipped (Windows symlink privilege). Verified 2026-10-24 (milestone 2 of 3), including the preserved milestone 1 and music/Court Record work.
+- Final combined-tree checks: asset validation 201 references / 0 errors; build 110 modules + analysis worker; lint clean; frontend tests 216 passed; backend tests 353 passed / 1 skipped (Windows symlink privilege). Verified 2026-10-24 after the phone/acknowledgement audio correction.
 - Dimensions: stage 256×192. Maya frames are native 55–109 px wide × 100–112 px tall, drawn at native size and scaled only with the whole stage (e.g. neutral talking frame 65×111 → 390×666 CSS px at auto 6×, 260×444 at 4×). Backgrounds are 256×192 (or 512 wide, centre-cropped).
 - Verified in Chrome (dev server):
   - full menu flow;
@@ -141,7 +154,7 @@ voice = dev override ?? line.voice ?? character.voice.blip
 - **Configuration:** `app/configuration/profiles.py` contains validated ProviderProfile metadata, an atomic local ProfileStore and ProfileManager resolution. Ignored `backend/.local/provider-profiles.json` holds profiles and the active ID; `COURTROOM_CONFIG_DIR` can override the directory. `credentials.py` isolates Python keyring and accepts native OS vaults only. This Windows machine uses `keyring.backends.Windows.WinVaultKeyring`; env references remain a fallback. D-041 supersedes per-request browser configuration and environment-only credential UX.
 - **API:** existing health/capabilities/chat and legacy discovery/test routes, plus local profile CRUD/activation/duplication, credential set/delete/status, profile model discovery and Test Connection. Chat uses the server's active profile; old `provider` request overrides receive 409. Test generation bypasses conversation history.
 - **Artifacts/tasks:** `app/artifacts/` owns a strict action, bounded atomic ArtifactStore and in-memory TurnRegistry; `api/artifact_routes.py` reuses local/same-origin protection. Current chat includes requestId and a separate task/artifacts result. Legacy dialogue-only callers and provider connection tests cannot create files. Records/content survive restart; receipts prevent duplicate writes; incomplete/missing/corrupt storage fails safely. No general tool calling or code execution was added.
-- **Tests:** `pytest`, 309 passed / 1 skipped (real symlink creation requires Windows privilege). Provider transports and credential backends are mocked; normal tests require neither a real OS vault, local model nor cloud key. Tests also cover artifact action/storage/API validation, all four providers, no execution, atomic failure/rollback, receipts, cancellation/duplicates and normal-chat/presentation regressions.
+- **Tests:** `pytest`, 353 passed / 1 skipped (real symlink creation requires Windows privilege). Provider transports and credential backends are mocked; normal tests require neither a real OS vault, local model nor cloud key. Tests also cover artifact action/storage/API validation, all four providers, no execution, atomic failure/rollback, receipts, cancellation/duplicates, workload budgets, early advisory workload status, distinct stop reasons and normal-chat/presentation regressions.
 - **Local environment check:** `ollama` command not found and `http://localhost:11434/api/tags` did not respond. No installed models could be queried, so no real-model end-to-end smoke test was possible and no model was downloaded.
 - **Gemini environment check:** neither `COURTROOM_LLM_API_KEY`, `GEMINI_API_KEY`, nor a configured generic secret selector is present. The requested real Gemini smoke test was therefore skipped without making a cloud request.
 - **Anthropic check:** no saved Anthropic profile/credential was configured, so real Claude multilingual/personality/director/pagination generation could not be exercised. The 256×192 Settings flow was verified against the real Windows vault with a temporary synthetic key: no base URL, key save/switch/retain/replace/remove, clean missing-key test, no storage/response leakage or overlap. No cloud call was made.
@@ -173,8 +186,8 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 
 - **Original DS UI graphics:** the title art, pixel font and menu panels (D-031) are in. The text box, name plate, continue arrow and menu buttons are still CSS stand-ins.
 - Music: 10 playable tracks remain `loop: null` (list in `docs/MUSIC.md`); built-in loops are not ear-verified. Lofi Girl `EWrX250Zhko` refuses embedding (error 150); users can enter another embeddable video. No MusicDirector.
-- No effect SFX wiring, no exclamation bubbles or screen effects (bubble images are extracted but not used yet).
-- Court Record has 3 evidence entries and no profiles; Talk topics are static dev samples; no case logic. Generated files currently use a minimal independent text panel; file-only Court Record, phone interaction, summon box, evidence-added cinematic and polished inspector remain milestone 3.
+- Semantic reaction SFX are wired through the director and audio event manifest; the selected WAVs still await by-ear approval. Exclamation bubbles and screen effects remain unwired (bubble images are extracted but not used yet).
+- The original static Court Record retains three demo evidence entries; the generated-file Court Record is separate and contains only generated artifacts. Talk topics are static dev samples; no case logic.
 - Ollama, generic OpenAI-compatible and native Anthropic providers plus local profile/credential management are implemented. No application streaming or persistent memory yet.
 - The chat UX is minimal (single input under the scene, no history view).
 - One character on screen. Wide backgrounds are centre-cropped (no panning).
@@ -195,12 +208,11 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 
 ## Current development phase
 
-**Phase 5h — milestone 2 of 3 (safe generated artifacts) implemented on the preserved uncommitted milestone 1, music/Court Record and music finishing work.** The Anthropic provider is committed (`45a9797`); starting HEAD is `178fda9`. Milestone 2 ownership and validation are recorded in `MILESTONE_2_CHANGE_AUDIT.md` / `SESSION_LOG.md`. No commit, push, stash, reset or branch switch was performed.
+**Phase 5h — milestone 3 of 3 (artifact presentation and file-only Court Record) is implemented in the current uncommitted working tree.** Milestone 2 remains authoritative for artifacts and storage. The task-aware budget/truncation fix and Maya quirk-variety guidance are preserved. Current results are in `SESSION_LOG.md`. No commit or push was performed.
 
 ## Immediate next objective
 
-1. Milestone 3: build the final artifact delivery/summon/Court Record experience using the artifact IDs and semantic task cues, preserving the safe pipeline.
-2. Review the uncommitted music/Court Record milestone; decide whether the ~58 MB of OST MP3s go into Git normally or via LFS (D-044).
-3. Listen across loop boundaries of the curated tracks and correct the unlooped ones (start with Maya Fey).
-4. Add an Anthropic profile with a supported Claude model and real credential through Settings for a live smoke test; browser vault checks used synthetic credentials only.
-5. Application streaming remains a later generic gateway/API milestone.
+1. Decide whether the ~58 MB of OST MP3s belong in Git normally or via LFS (D-044).
+2. Listen across loop boundaries of the curated tracks and correct the unlooped ones (start with Maya Fey).
+3. Add a configured Anthropic profile for a real live smoke test; no cloud call was made during this milestone.
+4. Application streaming remains a later generic gateway/API milestone.

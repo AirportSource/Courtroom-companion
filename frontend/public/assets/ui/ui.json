@@ -17,14 +17,60 @@
     }
   },
   "images": {
-    "title_screen": { "src": "title/title_screen.png", "width": 256, "height": 192 },
-    "menu_title_discussion": { "src": "menu/title-screen-discussion.png", "width": 256, "height": 192 },
-    "menu_bottom_screen": { "src": "menu/bottom-screen.png", "width": 256, "height": 192 },
-    "menu_top_screen": { "src": "menu/top-screen.png", "width": 256, "height": 192 },
-    "menu_cross_examination_start": { "src": "menu/cross-examination-start.png", "width": 256, "height": 192 },
-    "menu_talk_option": { "src": "menu/talk-option.png", "width": 256, "height": 192 },
-    "exclamation_objection": { "src": "exclamations/objection.png", "width": 256, "height": 192 },
-    "exclamation_take_that": { "src": "exclamations/take_that.png", "width": 256, "height": 192 },
-    "exclamation_hold_it": { "src": "exclamations/hold_it.png", "width": 256, "height": 190 }
+    "title_screen": {
+      "src": "title/title_screen.png",
+      "width": 256,
+      "height": 192
+    },
+    "menu_title_discussion": {
+      "src": "menu/title-screen-discussion.png",
+      "width": 256,
+      "height": 192
+    },
+    "menu_bottom_screen": {
+      "src": "menu/bottom-screen.png",
+      "width": 256,
+      "height": 192
+    },
+    "menu_top_screen": {
+      "src": "menu/top-screen.png",
+      "width": 256,
+      "height": 192
+    },
+    "menu_cross_examination_start": {
+      "src": "menu/cross-examination-start.png",
+      "width": 256,
+      "height": 192
+    },
+    "menu_talk_option": {
+      "src": "menu/talk-option.png",
+      "width": 256,
+      "height": 192
+    },
+    "exclamation_objection": {
+      "src": "exclamations/objection.png",
+      "width": 256,
+      "height": 192
+    },
+    "exclamation_take_that": {
+      "src": "exclamations/take_that.png",
+      "width": 256,
+      "height": 192
+    },
+    "exclamation_hold_it": {
+      "src": "exclamations/hold_it.png",
+      "width": 256,
+      "height": 190
+    },
+    "court_record_file_document": {
+      "src": "court-record/file_document.png",
+      "width": 64,
+      "height": 64
+    },
+    "evidence_frame": {
+      "src": "court-record/evidence_frame.png",
+      "width": 70,
+      "height": 70
+    }
   }
 }

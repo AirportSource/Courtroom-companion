@@ -16,7 +16,8 @@ Reply ONLY with a JSON object that matches the schema below. No prose outside th
   most replies need 1 or 2 beats. Never split a sentence into several beats.
 - Each beat: "text" (what you say, plain dialogue, no stage directions, no markdown),
   "emotion" (one of the allowed emotions), "intensity" (0.0 = barely, 1.0 = maximum),
-  optional "reaction" (a short one-shot event, only for genuine surprises),
+  optional "reaction" (only for a genuinely theatrical beat; use shock, surprise, realization,
+  comic or emphasis when that semantic sound is clearly warranted, otherwise null),
   optional "gesture" (how you express the emotion physically).
 - "settleEmotion": the emotion you calmly settle into after speaking.
 - Use only the IDs listed below. Never include file names, paths, URLs, code to execute,
@@ -48,7 +49,7 @@ def reply_schema(profile: CharacterProfile) -> dict[str, Any]:
                         "text": {"type": "string", "minLength": 1, "maxLength": MAX_BEAT_TEXT},
                         "emotion": {"type": "string", "enum": emotions, "maxLength": ID_MAX},
                         "intensity": {"type": "number", "minimum": 0, "maximum": 1},
-                        "reaction": nullable_enum(sorted(profile.reactions)),
+                        "reaction": nullable_enum(sorted(set(profile.reactions) | set(profile.sfx.reactions))),
                         "gesture": nullable_enum(sorted(profile.gestures)),
                     },
                 },
@@ -67,7 +68,9 @@ def build_system_prompt(profile: CharacterProfile) -> str:
         profile.personality.strip(),
         "## Performance capabilities",
         f"Allowed emotions: {', '.join(sorted(profile.emotions))}.",
-        f"Allowed reactions: {', '.join(sorted(profile.reactions)) or 'none'}.",
+        f"Available visual reactions: {', '.join(sorted(profile.reactions)) or 'none'}.",
+        f"Available semantic reaction sounds: {', '.join(sorted(profile.sfx.reactions)) or 'none'}.",
+        "Use a semantic reaction sound only for a genuinely theatrical moment, not routine emotion.",
         f"Allowed gestures: {gestures or 'none'}.",
         "## Reply format",
         CONTRACT_RULES.format(max_beats=profile.director.max_beats_per_reply),

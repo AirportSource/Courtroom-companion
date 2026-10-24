@@ -9,6 +9,7 @@ from typing import Any
 import httpx
 from pydantic import SecretStr
 
+from ..errors import CONTEXT_HINTS, QUOTA_HINTS, normalize_stop_reason
 from ..base import (
     GenerationRequest,
     LLMProvider,
@@ -33,6 +34,15 @@ class OpenAICompatibleAuthError(ProviderError):
 
 class OpenAICompatibleRateLimitError(ProviderError):
     code = "rate_limited"
+
+
+class OpenAICompatibleLimitedError(ProviderError):
+    """Output cap, context window or request/quota limit; `code` selects which."""
+
+    def __init__(self, code: str, message: str, *, stop_reason: str | None = None) -> None:
+        super().__init__(message)
+        self.code = code
+        self.stop_reason = stop_reason
 
 
 class OpenAICompatibleModelError(ProviderError):
@@ -111,6 +121,16 @@ class OpenAICompatibleProvider(LLMProvider):
             raise OpenAICompatibleRateLimitError("OpenAI-compatible endpoint rate limit exceeded")
 
         hints = _error_hints(response)
+        if response.status_code == 413 and not any(marker in hints for marker in CONTEXT_HINTS):
+            raise OpenAICompatibleLimitedError("provider_limit", "OpenAI-compatible request was too large for the endpoint")
+        if response.status_code in {400, 413, 422} and any(marker in hints for marker in CONTEXT_HINTS):
+            raise OpenAICompatibleLimitedError(
+                "context_window_exceeded",
+                "OpenAI-compatible context window exceeded; shorten the conversation or input. Increasing max_tokens alone will not fix this",
+                stop_reason="model_context_window_exceeded",
+            )
+        if response.status_code == 402 or (response.status_code in {400, 403} and any(m in hints for m in QUOTA_HINTS)):
+            raise OpenAICompatibleLimitedError("provider_limit", "OpenAI-compatible account quota or billing limit reached")
         if response.status_code in {400, 422} and any(
             marker in hints for marker in ("response_format", "json_schema", "structured output")
         ):
@@ -180,6 +200,18 @@ class OpenAICompatibleProvider(LLMProvider):
         choices = data.get("choices")
         if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
             raise OpenAICompatibleResponseError("OpenAI-compatible response is missing choices")
+        # Completion status is checked before content: a cut-off reply (even a parseable-looking or
+        # empty one, e.g. reasoning consumed the whole cap) must never reach JSON repair.
+        finish_reason = choices[0].get("finish_reason")
+        stop_reason = normalize_stop_reason(finish_reason)
+        if stop_reason == "max_tokens":
+            raise OpenAICompatibleLimitedError(
+                "output_token_limit",
+                f"OpenAI-compatible output reached the requested max_tokens budget ({request.settings.max_tokens} tokens); incomplete output was discarded",
+                stop_reason=stop_reason,
+            )
+        if stop_reason == "refusal":
+            raise OpenAICompatibleLimitedError("provider_refused", "OpenAI-compatible endpoint declined the generation request", stop_reason=stop_reason)
         message = choices[0].get("message")
         if not isinstance(message, dict) or not isinstance(message.get("content"), str):
             raise OpenAICompatibleResponseError(
@@ -192,8 +224,10 @@ class OpenAICompatibleProvider(LLMProvider):
             )
 
         metadata: dict[str, Any] = {}
-        if isinstance(choices[0].get("finish_reason"), str):
-            metadata["finish_reason"] = choices[0]["finish_reason"]
+        if isinstance(finish_reason, str):
+            metadata["finish_reason"] = finish_reason
+        if stop_reason:
+            metadata["stop_reason"] = stop_reason
         usage = data.get("usage")
         if isinstance(usage, dict):
             metadata["usage"] = {

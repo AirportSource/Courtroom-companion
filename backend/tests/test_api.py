@@ -34,11 +34,12 @@ def test_chat_returns_reply_and_performance(client):
     assert body["performance"]["settle"] == {"emotion": "happy", "animation": "clasped_hands_happy"}
 
 
-def test_follow_up_message_and_cooldown(client):
+def test_explicit_fake_reaction_sound_survives_visual_cooldown(client):
     first = client.post("/api/chat", json={"character": "maya_fey", "message": "guess what", "sessionId": "t2"}).json()
     second = client.post("/api/chat", json={"character": "maya_fey", "message": "guess what", "sessionId": "t2"}).json()
     assert any(s["reaction"] for s in first["performance"]["segments"])
-    assert not any(s["reaction"] for s in second["performance"]["segments"])  # cooldown
+    assert not any(s["reaction"] for s in second["performance"]["segments"])  # visual cooldown remains
+    assert next(s["sfx"] for s in second["performance"]["segments"] if s["sfx"]) == "shock"
 
 
 def test_messy_reply_degrades_safely(client):

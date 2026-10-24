@@ -110,6 +110,25 @@ function setup(opts: { autoplayTimeoutMs?: number; online?: boolean; loadApi?: (
 }
 const opts = (volume = 1, signal = new AbortController().signal) => ({ volume, signal })
 
+test('radio ducks and restores through bounded volume ramps without replaying the video', async (t) => {
+  const { source, players, tick } = setup()
+  const started = source.start(ID, opts(0.8))
+  await tick(); players[0].state(1); await started
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  source.setDucking!(0.12, 4)
+  for (let i = 0; i < 4; i++) t.mock.timers.tick(1)
+  assert.equal(players[0].volumes.at(-1), 10)
+  source.setVolume(0)
+  source.setDucking!(1, 4)
+  for (let i = 0; i < 4; i++) t.mock.timers.tick(1)
+  assert.equal(players[0].volumes.at(-1), 0)
+  source.setVolume(0.8)
+  assert.equal(players[0].volumes.at(-1), 80)
+  assert.equal(players[0].calls.filter((call) => call === 'play').length, 1)
+  assert.equal(players[0].calls.filter((call) => call.startsWith('load:')).length, 1)
+  source.dispose()
+})
+
 // ---- lifecycle -------------------------------------------------------------------------
 
 test('start -> playing, pause, resume, stop', async () => {

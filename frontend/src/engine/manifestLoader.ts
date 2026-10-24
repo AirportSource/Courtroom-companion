@@ -3,6 +3,8 @@
 // entry is dropped; only an unusable manifest throws.
 import { readFontMetrics, hasFontMetrics, fontFaceCss } from './fontMetrics.ts'
 import { readWaiting } from './presentation.ts'
+import { readTaskAcknowledgements } from './taskAcknowledgements.ts'
+import { parseRingtones, ringtoneEvents, setRingtoneCatalog, type RingtoneCatalog } from './ringtones.ts'
 import type {
   FontMetricDescriptors,
   AnimationClip,
@@ -20,6 +22,7 @@ import type {
   Sound,
   SoundId,
   SpriteFrame,
+  UiImage,
 } from './manifestTypes.ts'
 
 const DEFAULT_FPS = 6
@@ -219,6 +222,25 @@ function bottomCentred(frames: SpriteFrame[]): { frames: SpriteFrame[]; canvas: 
   }
 }
 
+/** Resolves the optional Court Record portrait against the manifest URL; invalid values are ignored. */
+export function readCourtRecordPortrait(raw: unknown, manifestUrl: string, warnings: string[]): UiImage | null {
+  if (raw === undefined) return null
+  const valid = isRecord(raw) && typeof raw.src === 'string' && raw.src !== ''
+    && Number.isInteger(raw.width) && Number.isInteger(raw.height)
+    && (raw.width as number) > 0 && (raw.height as number) > 0
+  if (!valid) {
+    warnings.push('courtRecordPortrait: expected { src, width, height }, ignoring it')
+    return null
+  }
+  const portrait = raw as { src: string; width: number; height: number }
+  try {
+    return { url: new URL(portrait.src, manifestUrl).href, width: portrait.width, height: portrait.height }
+  } catch {
+    warnings.push('courtRecordPortrait: unresolvable src, ignoring it')
+    return null
+  }
+}
+
 export async function loadCharacter(manifestUrl: string): Promise<LoadedCharacter> {
   const raw = await fetchJson(new URL(manifestUrl))
   if (!isRecord(raw) || !isRecord(raw.animations) || !isRecord(raw.emotions)) {
@@ -296,6 +318,8 @@ export async function loadCharacter(manifestUrl: string): Promise<LoadedCharacte
     reactions,
     emotions,
     waiting: readWaiting(manifest.waiting, emotions, animations, defaultEmotion),
+    taskAcknowledgements: readTaskAcknowledgements(manifest.taskAcknowledgements, emotions, defaultEmotion),
+    courtRecordPortrait: readCourtRecordPortrait(manifest.courtRecordPortrait, manifestUrl, warnings),
     warnings,
   }
 }
@@ -323,7 +347,7 @@ export async function loadBackgrounds(): Promise<Background[]> {
 
 // ---- Audio ----
 
-export async function loadAudio(): Promise<{ sounds: Sound[]; events: Record<string, SoundId> }> {
+export async function loadAudio(): Promise<{ sounds: Sound[]; events: Record<string, SoundId>; ringtones: RingtoneCatalog | null }> {
   const manifestUrl = new URL('audio/audio.json', assetRoot())
   const raw = await fetchJson(manifestUrl)
   if (!isRecord(raw) || !isRecord(raw.sounds)) {
@@ -336,6 +360,9 @@ export async function loadAudio(): Promise<{ sounds: Sound[]; events: Record<str
       id,
       category: typeof sound.category === 'string' ? sound.category : 'unknown',
       url: new URL(sound.src, manifestUrl).href,
+      ...(sound.loop && Number.isFinite(sound.loop.startSeconds) && Number.isFinite(sound.loop.endSeconds)
+        && sound.loop.startSeconds >= 0 && sound.loop.endSeconds > sound.loop.startSeconds
+        ? { loop: sound.loop } : {}),
     }))
   const known = new Set(sounds.map((s) => s.id))
   const events: Record<string, SoundId> = {}
@@ -343,7 +370,11 @@ export async function loadAudio(): Promise<{ sounds: Sound[]; events: Record<str
     if (typeof soundId === 'string' && known.has(soundId)) events[event] = soundId
     else console.warn(`[audio] event "${event}" maps to unknown sound "${String(soundId)}"`)
   }
-  return { sounds, events }
+  // Ringtone events are registered here so App's existing audioEngine.register(...) needs no change.
+  const ringtones = parseRingtones(manifest.ringtones, known)
+  if (ringtones) Object.assign(events, ringtoneEvents(ringtones))
+  setRingtoneCatalog(ringtones)
+  return { sounds, events, ringtones }
 }
 
 // ---- UI (fonts + images) ----

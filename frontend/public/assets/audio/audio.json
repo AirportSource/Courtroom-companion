@@ -1,40 +1,152 @@
 {
   "schemaVersion": 1,
-  "categories": ["blip", "dialogue", "effect", "ui"],
-
+  "categories": [
+    "blip",
+    "dialogue",
+    "effect",
+    "ui"
+  ],
   "sounds": {
-    "blip_female": { "category": "blip", "src": "blips/blip_female/blipfemale.wav" },
-    "blip_male": { "category": "blip", "src": "blips/blip_male/blipmale.wav" },
-
-    "sfx_assertive": { "category": "dialogue", "src": "dialogue/assertive/objection.wav" },
-    "sfx_cute": { "category": "dialogue", "src": "dialogue/cute/meow.wav" },
-    "sfx_idea": { "category": "dialogue", "src": "dialogue/idea/lightbulb.wav" },
-    "sfx_realization": { "category": "dialogue", "src": "dialogue/realization/realization.wav" },
-
-    "fx_damage": { "category": "effect", "src": "dialogue/shock/damage2.wav" },
-    "fx_smack": { "category": "effect", "src": "dialogue/shock/smack.wav" },
-    "fx_stab": { "category": "effect", "src": "dialogue/shock/stab2.wav" },
-    "fx_whack": { "category": "effect", "src": "dialogue/shock/whack.wav" },
-
-    "fx_surprise": { "category": "effect", "src": "effects/shock.wav" },
-    "fx_shock": { "category": "effect", "src": "effects/supershock.wav" },
-    "fx_comic": { "category": "effect", "src": "effects/badum.wav" },
-    "fx_emphasis": { "category": "effect", "src": "effects/deskslam.wav" },
-    "fx_tension": { "category": "effect", "src": "effects/dramapound.wav" },
-    "fx_notification": { "category": "effect", "src": "effects/phonebeep.wav" },
-    "fx_soft_transition": { "category": "effect", "src": "effects/swoop.wav" },
-
-    "ui_cancel": { "category": "ui", "src": "menu_ui/cancel.wav" },
-    "ui_evidence": { "category": "ui", "src": "menu_ui/evidenceshoop.wav" },
-    "ui_save": { "category": "ui", "src": "menu_ui/saveblip.wav" },
-    "ui_scroll": { "category": "ui", "src": "menu_ui/scroll.wav" },
-    "ui_select": { "category": "ui", "src": "menu_ui/selectblip.wav" },
-    "ui_select_alt": { "category": "ui", "src": "menu_ui/selectblip2.wav" },
-    "ui_jingle": { "category": "ui", "src": "menu_ui/selectjingle.wav" },
-    "ui_typewriter": { "category": "ui", "src": "menu_ui/typwriter.wav" },
-    "ui_page": { "category": "ui", "src": "menu_ui/pageturn.wav" }
+    "blip_female": {
+      "category": "blip",
+      "src": "blips/blip_female/blipfemale.wav"
+    },
+    "blip_male": {
+      "category": "blip",
+      "src": "blips/blip_male/blipmale.wav"
+    },
+    "sfx_assertive": {
+      "category": "dialogue",
+      "src": "dialogue/assertive/objection.wav"
+    },
+    "sfx_cute": {
+      "category": "dialogue",
+      "src": "dialogue/cute/meow.wav"
+    },
+    "sfx_idea": {
+      "category": "dialogue",
+      "src": "dialogue/idea/lightbulb.wav"
+    },
+    "sfx_realization": {
+      "category": "dialogue",
+      "src": "dialogue/realization/realization.wav"
+    },
+    "fx_damage": {
+      "category": "effect",
+      "src": "dialogue/shock/damage2.wav"
+    },
+    "fx_smack": {
+      "category": "effect",
+      "src": "dialogue/shock/smack.wav"
+    },
+    "fx_stab": {
+      "category": "effect",
+      "src": "dialogue/shock/stab2.wav"
+    },
+    "fx_whack": {
+      "category": "effect",
+      "src": "dialogue/shock/whack.wav"
+    },
+    "fx_surprise": {
+      "category": "effect",
+      "src": "effects/shock.wav"
+    },
+    "fx_shock": {
+      "category": "effect",
+      "src": "effects/supershock.wav"
+    },
+    "fx_comic": {
+      "category": "effect",
+      "src": "effects/badum.wav"
+    },
+    "fx_emphasis": {
+      "category": "effect",
+      "src": "effects/deskslam.wav"
+    },
+    "fx_tension": {
+      "category": "effect",
+      "src": "effects/dramapound.wav"
+    },
+    "fx_notification": {
+      "category": "effect",
+      "src": "effects/phonebeep.wav"
+    },
+    "fx_soft_transition": {
+      "category": "effect",
+      "src": "effects/swoop.wav"
+    },
+    "ui_cancel": {
+      "category": "ui",
+      "src": "menu_ui/cancel.wav"
+    },
+    "ui_evidence": {
+      "category": "ui",
+      "src": "menu_ui/evidenceshoop.wav"
+    },
+    "ui_save": {
+      "category": "ui",
+      "src": "menu_ui/saveblip.wav"
+    },
+    "ui_scroll": {
+      "category": "ui",
+      "src": "menu_ui/scroll.wav"
+    },
+    "ui_select": {
+      "category": "ui",
+      "src": "menu_ui/selectblip.wav"
+    },
+    "ui_select_alt": {
+      "category": "ui",
+      "src": "menu_ui/selectblip2.wav"
+    },
+    "ui_jingle": {
+      "category": "ui",
+      "src": "menu_ui/selectjingle.wav"
+    },
+    "ui_typewriter": {
+      "category": "ui",
+      "src": "menu_ui/typwriter.wav"
+    },
+    "ui_page": {
+      "category": "ui",
+      "src": "menu_ui/pageturn.wav"
+    },
+    "fx_evidence_reveal": {
+      "category": "effect",
+      "src": "effects/evidence_start.wav"
+    },
+    "fx_evidence_added": {
+      "category": "effect",
+      "src": "effects/evidence_finish.wav"
+    },
+    "fx_phone_answer": {
+      "category": "effect",
+      "src": "effects/phone_cut.wav"
+    },
+    "fx_phone_ring": {
+      "category": "effect",
+      "src": "effects/phoenix_ringtone.mp3",
+      "loop": { "startSeconds": 1.6869041799071132, "endSeconds": 20.54525177218284 }
+    },
+    "fx_phone_ring_wellington": {
+      "category": "effect",
+      "src": "effects/wellington_ringtone.mp3",
+      "loop": { "startSeconds": 1.0, "endSeconds": 8.380136054421769 }
+    },
+    "fx_phone_ring_godot": {
+      "category": "effect",
+      "src": "effects/godot_ringtone.mp3",
+      "loop": { "startSeconds": 2.0, "endSeconds": 38.00068027210884 }
+    }
   },
-
+  "ringtones": {
+    "default": "phoenix",
+    "items": {
+      "phoenix": { "label": "Phoenix Wright", "sound": "fx_phone_ring" },
+      "wellington": { "label": "Richard Wellington", "sound": "fx_phone_ring_wellington" },
+      "godot": { "label": "Godot", "sound": "fx_phone_ring_godot" }
+    }
+  },
   "events": {
     "menu_cursor": "ui_select",
     "menu_confirm": "ui_select_alt",
@@ -43,9 +155,7 @@
     "menu_page": "ui_page",
     "menu_save": "ui_save",
     "menu_start": "ui_jingle",
-
     "user_typing": "blip_male",
-
     "sfx_surprise": "fx_surprise",
     "sfx_shock": "fx_shock",
     "sfx_realization": "sfx_realization",
@@ -53,6 +163,10 @@
     "sfx_emphasis": "fx_emphasis",
     "sfx_tension": "fx_tension",
     "sfx_notification": "fx_notification",
-    "sfx_soft_transition": "fx_soft_transition"
+    "sfx_soft_transition": "fx_soft_transition",
+    "phone_ring_loop": "fx_phone_ring",
+    "phone_answer": "fx_phone_answer",
+    "evidence_reveal": "fx_evidence_reveal",
+    "evidence_added": "fx_evidence_added"
   }
 }

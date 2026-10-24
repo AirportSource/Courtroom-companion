@@ -5,7 +5,18 @@
   "anchor": "bottom-center",
   "render": { "scale": 1, "offsetX": 0, "offsetY": 0 },
   "voice": { "blip": "blip_female" },
+  "courtRecordPortrait": { "src": "portraits/court_record.png", "width": 64, "height": 64 },
   "waiting": { "emotion": "thinking", "animation": "thinking_side" },
+  "taskAcknowledgements": {
+    "artifact": {
+      "emotion": "happy",
+      "lines": {
+        "en": ["Sure! Leave it to me.", "Okay! I'll put something together.", "Give me a second. I'm on it!", "Let me work on that!"],
+        "fr": ["Bien sûr ! Je m'en occupe.", "D'accord ! Je vais te préparer ça.", "Une seconde, je m'y mets !", "Laisse-moi faire !"],
+        "ja": ["うん！まかせて！", "よーし、作ってみるね！", "ちょっと待ってね。やってみる！", "わかった！取りかかるね！"]
+      }
+    }
+  },
   "defaultEmotion": "neutral",
   "fallbackEmotion": "neutral",
   "animations": {

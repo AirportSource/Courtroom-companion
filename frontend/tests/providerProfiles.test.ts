@@ -19,7 +19,7 @@ test('browser settings retain migration metadata until import, then persist only
   completeProviderMigration()
   writeStoredSettings({ ...DEFAULT_SETTINGS, textSpeed: 2 })
   assert.deepEqual(JSON.parse(storage.get(storageKey)!), {
-    textSpeed: 2, blipVolume: 0.6, blipsMuted: false, sfxVolume: 0.6, sfxMuted: false,
+    textSpeed: 2, blipVolume: 0.6, blipsMuted: false, sfxVolume: 0.6, sfxMuted: false, ringtoneId: '', expandedPanels: [],
     musicSource: 'off', musicVolume: 0.5, musicMuted: false, originalTrackId: '', importedTrackId: '', radioVideoId: '',
     providerProfilesMigrated: true,
   })

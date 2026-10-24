@@ -1,0 +1,51 @@
+.gcr-view {
+  position: absolute;
+  inset: 0;
+  width: 256px;
+  height: 192px;
+  overflow: hidden;
+  background: #172738;
+  color: #fff9dd;
+  font-size: 9px;
+  line-height: 11px;
+  outline: none;
+}
+.gcr-view *, .gcr-view *::before, .gcr-view *::after { box-sizing: border-box; }
+.gcr-view button, .gcr-view a {
+  min-width: 0;
+  margin: 0;
+  padding: 0 3px;
+  border: 1px solid #93a6b0;
+  border-radius: 0;
+  background: #243b50;
+  color: #fff9dd;
+  font: inherit;
+  line-height: 13px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.gcr-view button:disabled { color: #81909a; cursor: default; }
+.gcr-view button:focus-visible, .gcr-view a:focus-visible, .gcr-view pre:focus-visible { outline: 1px solid #ffdd79; outline-offset: 1px; }
+.gcr-heading { position: absolute; z-index: 2; inset: 0 0 auto; height: 16px; padding: 0 6px; display: flex; align-items: center; justify-content: space-between; background: #354c60; border-bottom: 1px solid #b5a56c; }
+.gcr-grid { position: absolute; inset: 0; pointer-events: none; }
+.gcr-view .gcr-slot { position: absolute; padding: 0; border: 0; background: none; pointer-events: auto; }
+.gcr-view .gcr-slot-empty { display: block; pointer-events: none; }
+.gcr-view .gcr-slot:focus-visible { outline: none; }
+.gcr-slot img { image-rendering: pixelated; }
+.gcr-file-symbol { display: block; margin: 15px auto; width: 30px; height: 34px; padding-top: 10px; border: 2px solid #c5d3dc; color: #e3edf2; }
+.gcr-format { position: absolute; right: 4px; bottom: 4px; z-index: 1; padding: 0 2px; background: #172738; }
+.gcr-empty { position: absolute; left: 12px; top: 69px; width: 232px; padding: 4px; margin: 0; text-align: center; background: #172738; }
+.gcr-footer { position: absolute; z-index: 2; inset: auto 0 0; height: 32px; padding: 1px 6px 0; background: #263e53; border-top: 1px solid #9c966c; }
+.gcr-current { height: 14px; line-height: 14px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.gcr-paging { display: flex; align-items: center; gap: 5px; }
+.gcr-paging button { height: 15px; }
+.gcr-inspector { position: absolute; left: 6px; top: 19px; width: 244px; bottom: 3px; }
+.gcr-filename { display: block; height: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gcr-metadata { color: #c8d8e3; font-size: 8px; line-height: 10px; }
+.gcr-metadata span, .gcr-metadata time { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gcr-inert { margin: 2px 0; color: #ffdd79; font-size: 8px; }
+.gcr-inspector pre { height: 61px; margin: 2px 0 4px; padding: 3px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #101e2b; color: #fff; font: 8px/10px monospace; user-select: text; }
+.gcr-actions { display: flex; gap: 4px; align-items: center; }
+.gcr-actions button, .gcr-actions a { font-size: 8px; }
+.gcr-action-error { margin: 2px 0; font-size: 8px; line-height: 9px; color: #ffc1a7; }
+.gcr-list-error { position: absolute; left: 4px; top: 20px; right: 4px; margin: 0; padding: 2px; background: #5a2c2b; color: #fff; font-size: 8px; }

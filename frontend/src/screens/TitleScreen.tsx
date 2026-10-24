@@ -17,6 +17,7 @@ interface TitleScreenProps {
   onSettings: () => void
   /** Present when a Court Record manifest loaded. */
   onCourtRecord?: () => void
+  onConversationRecord?: () => void
   /** Development-only entry; omitted in production builds. */
   onAnimationTest?: () => void
 }
@@ -34,6 +35,7 @@ export function TitleScreen({
   onStart,
   onSettings,
   onCourtRecord,
+  onConversationRecord,
   onAnimationTest,
 }: TitleScreenProps) {
   const start = () => {
@@ -85,6 +87,7 @@ export function TitleScreen({
     { id: 'start', label: 'Start Conversation', sound: 'menu_open' },
     { id: 'settings', label: 'Settings', sound: 'menu_open' },
     ...(onCourtRecord ? [{ id: 'court-record', label: 'Court Record', sound: 'menu_open' as const }] : []),
+    ...(onConversationRecord ? [{ id: 'conversation-record', label: 'Conversation Record', sound: 'menu_open' as const }] : []),
   ]
   if (onAnimationTest) {
     items.push({ id: 'animation-test', label: 'Asset / Animation Test', dev: true, sound: 'menu_open' })
@@ -94,6 +97,7 @@ export function TitleScreen({
     if (id === 'start') onStart()
     else if (id === 'settings') onSettings()
     else if (id === 'court-record') onCourtRecord?.()
+    else if (id === 'conversation-record') onConversationRecord?.()
     else if (id === 'animation-test') onAnimationTest?.()
   }
 

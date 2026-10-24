@@ -2,6 +2,7 @@
 // and of the resolved, ready-to-render data produced by the loader.
 // Logical IDs (emotions, animations, backgrounds) are plain strings: the set of valid
 // values lives in the manifests, never in TypeScript.
+import type { TaskAcknowledgements } from './taskAcknowledgements.ts'
 
 export type EmotionId = string
 export type AnimationId = string
@@ -76,6 +77,9 @@ export interface CharacterManifest {
   emotions: Record<EmotionId, EmotionBindingManifest>
   /** Optional pose held (idle, looping) while a reply is pending. Invalid parts fall back. */
   waiting?: { emotion?: EmotionId; animation?: AnimationId }
+  taskAcknowledgements?: TaskAcknowledgements
+  /** Optional square portrait (path relative to the pack dir) for Court Record style slots. */
+  courtRecordPortrait?: { src: string; width: number; height: number }
   unassignedFrames?: string[]
 }
 
@@ -95,9 +99,11 @@ export interface BackgroundsManifest {
 export interface AudioManifest {
   schemaVersion: number
   categories: string[]
-  sounds: Record<SoundId, { category: string; src: string }>
+  sounds: Record<SoundId, { category: string; src: string; loop?: { startSeconds: number; endSeconds: number } }>
   /** Logical event name (e.g. "menu_cursor") → sound id. */
   events?: Record<string, SoundId>
+  /** Selectable phone ringtones; each item references a looping entry in `sounds`. */
+  ringtones?: { default: string; items: Record<string, { label: string; sound: SoundId }> }
 }
 
 // ---- Resolved data ----
@@ -154,6 +160,9 @@ export interface LoadedCharacter {
   emotions: Record<EmotionId, EmotionBindingManifest>
   /** Pose while a reply is pending; null = use the default emotion. */
   waiting?: { emotion: EmotionId; animation: AnimationId } | null
+  taskAcknowledgements?: TaskAcknowledgements
+  /** Resolved Court Record portrait, or null when absent/invalid. */
+  courtRecordPortrait?: UiImage | null
   /** Non-fatal problems found while loading (missing frames, bad references...). */
   warnings: string[]
 }
@@ -204,6 +213,7 @@ export interface Sound {
   id: SoundId
   category: string
   url: string
+  loop?: { startSeconds: number; endSeconds: number }
 }
 
 export interface Background {

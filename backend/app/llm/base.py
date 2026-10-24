@@ -35,8 +35,15 @@ class GenerationSettings(BaseModel):
     """Generic generation parameters; adapters map them to vendor parameters."""
 
     temperature: float = Field(default=0.7, ge=0.0, le=2.0)
-    max_tokens: int = Field(default=600, ge=16, le=8192)
+    max_tokens: int = Field(default=600, ge=16, le=16384)
     timeout_s: float = Field(default=120.0, gt=0, le=300)
+
+
+class OutputWorkload(str, Enum):
+    """Application estimate of response size; never authorizes an action."""
+
+    DIALOGUE = "dialogue"
+    TEXT_ARTIFACT = "text_artifact"
 
 
 @dataclass
@@ -46,6 +53,7 @@ class GenerationRequest:
     #: JSON schema of the expected reply (with this character's allowed IDs as enums).
     response_schema: dict[str, Any]
     settings: GenerationSettings = field(default_factory=GenerationSettings)
+    workload: OutputWorkload = OutputWorkload.DIALOGUE
 
 
 @dataclass

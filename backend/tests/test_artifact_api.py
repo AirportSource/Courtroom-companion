@@ -131,7 +131,7 @@ def test_invalid_model_action_replaces_success_dialogue_and_never_emits_ready(tm
     with client_for(app) as client:
         data = client.post("/api/chat", json=body()).json()
         assert data["task"]["state"] == "failed" and data["task"]["cue"] is None
-        assert data["task"]["error"] == "invalid_artifact_action"
+        assert data["task"]["error"] == ("artifact_too_large" if mutation.get("content") == "x" * 65537 else "invalid_artifact_action")
         assert "artifact_ready" not in data["task"]["cues"]
         assert data["reply"] is None and data["artifacts"] == []
         assert data["performance"]["segments"][0]["text"] == app.state.character_service.repository.get("maya_fey").error_text
@@ -171,6 +171,35 @@ def test_duplicate_request_is_cached_and_restart_receipt_prevents_second_file(tm
         retry = client.post("/api/chat", json=request).json()
         assert retry["artifacts"][0]["id"] == first["artifacts"][0]["id"]
         assert len(client.get("/api/artifacts").json()["artifacts"]) == 1
+
+
+@pytest.mark.parametrize("message,expected", [("#artifact-py", "text_artifact"), ("How are you?", "dialogue")])
+def test_expected_workload_is_available_while_the_only_provider_request_is_pending(tmp_path, message, expected):
+    async def scenario():
+        started, release = asyncio.Event(), asyncio.Event()
+        class Slow(Stub):
+            async def generate(self, request):
+                self.calls += 1
+                started.set()
+                await release.wait()
+                # A workload hint alone must never authorize an artifact.
+                return RawCompletion(json.dumps({"beats": [{"text": "Okay!", "emotion": "happy"}]}))
+        app, provider = stub_app(tmp_path, Slow())
+        request = body(message)
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app), base_url="http://127.0.0.1") as client:
+            pending = asyncio.create_task(client.post("/api/chat", json=request))
+            await asyncio.wait_for(started.wait(), 2)
+            status = (await client.get("/api/chat/turns/" + request["requestId"])).json()
+            assert status["expectedWorkload"] == expected
+            assert status["state"] == "working" and status["cue"] is None
+            assert status["cues"] == [] and status["artifactId"] is None
+            assert provider.calls == 1
+            release.set()
+            result = (await pending).json()
+            assert result["artifacts"] == []
+            assert result["task"]["expectedWorkload"] == expected
+            assert provider.calls == 1
+    asyncio.run(scenario())
 
 
 def test_local_api_download_text_delete_missing_and_no_execution(tmp_path):

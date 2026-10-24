@@ -54,6 +54,8 @@ class SfxSettings:
     reactions: dict[str, str] = field(default_factory=dict)
     #: Emotion id -> sfx name, for strong beats without a reaction.
     emotions: dict[str, str] = field(default_factory=dict)
+    #: Optional per-emotion thresholds for the moderate, non-explicit fallback.
+    emotion_min_intensities: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -263,9 +265,21 @@ class CharacterRepository:
             max_per_reply = max(0, int(raw.get("maxPerReply", defaults.max_per_reply)))
         except (TypeError, ValueError):
             max_per_reply = defaults.max_per_reply
+        reaction_names = set(reactions) | set(reaction_aliases) | set(SFX_NAMES)
+        raw_thresholds = raw.get("emotionMinIntensities")
+        emotion_min_intensities: dict[str, float] = {}
+        if isinstance(raw_thresholds, dict):
+            for emotion, value in raw_thresholds.items():
+                if emotion not in emotions:
+                    warnings.append(f"sfx.emotionMinIntensities: unknown emotion '{emotion}'; dropped")
+                elif isinstance(value, (int, float)) and not isinstance(value, bool):
+                    emotion_min_intensities[emotion] = _clamp01(value, defaults.min_intensity)
+                else:
+                    warnings.append(f"sfx.emotionMinIntensities: invalid threshold for '{emotion}'; dropped")
         return SfxSettings(
             max_per_reply=max_per_reply,
             min_intensity=_clamp01(raw.get("minIntensity"), defaults.min_intensity),
-            reactions=table("reactions", reactions),
+            reactions=table("reactions", reaction_names),
             emotions=table("emotions", emotions),
+            emotion_min_intensities=emotion_min_intensities,
         )

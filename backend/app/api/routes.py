@@ -17,6 +17,7 @@ from ..llm.providers.ollama import OllamaProvider
 from ..llm.schemas import ChatMessage
 from ..artifacts.turns import TurnCancelled, TurnConflict, request_fingerprint
 from ..artifacts.store import ArtifactNotFound
+from ..conversation_record.capture import capture_turn
 
 router = APIRouter(prefix="/api")
 
@@ -259,8 +260,11 @@ async def chat(body: ChatRequest, request: Request) -> dict[str, Any]:
             options = {"artifact_store": request.app.state.artifact_store,
                 "operation_key": hashlib.sha256(f"{body.session_id}:{body.character}:{turn.id}".encode()).hexdigest(),
                 "fingerprint": request_fingerprint(body.character, body.message.strip(), body.session_id),
-                "on_artifact_working": turn.artifact_working}
-        return await service.chat(body.character, body.message.strip(), body.session_id, gateway=gateway, **options)
+                "on_artifact_working": turn.artifact_working,
+                "on_expected_workload": turn.set_expected_workload}
+        result = await service.chat(body.character, body.message.strip(), body.session_id, gateway=gateway, **options)
+        capture_turn(request.app, body.character, body.message.strip(), result, turn.id if turn else None)
+        return result
     try:
         if body.request_id:
             # Legacy dialogue-only requests retain their contract. Artifact-capable turns require
@@ -291,5 +295,6 @@ async def chat(body: ChatRequest, request: Request) -> dict[str, Any]:
         "performance": result.performance,
         "provider": result.provider,
         "warnings": result.warnings,
+        "generation": result.generation,
         **({"task": task, "artifacts": result.artifacts} if task else {}),
     }

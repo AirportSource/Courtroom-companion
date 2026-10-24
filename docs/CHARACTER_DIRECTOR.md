@@ -151,17 +151,20 @@ Segments may carry `"sfx": "<name>"` (closed set: surprise, shock, realization, 
 
 ```json
 "sfx": { "maxPerReply": 1, "minIntensity": 0.75,
-         "reactions": { "shocked": "shock" },
-         "emotions": { "surprised": "surprise", "excited": "emphasis", "playful": "comic", "anxious": "tension", "thinking": null } }
+         "reactions": { "shocked": "shock", "shock": "shock", "surprise": "surprise",
+                        "realization": "realization", "comic": "comic", "emphasis": "emphasis" },
+         "emotions": { "surprised": "surprise", "excited": "emphasis", "playful": "comic", "happy": "comic" },
+         "emotionMinIntensities": { "surprised": 0.55, "excited": 0.60, "playful": 0.70, "happy": 0.70 } }
 ```
 
 Rules:
-- A surviving reaction takes precedence. Otherwise the emotion mapping applies only at ≥ `minIntensity`.
-- A reaction suppressed by threshold, cap or cooldown produces no sound.
-- At most one sound per segment and `maxPerReply` per reply.
-- Deterministic.
+- Explicit semantic reactions select their named sound without requiring the emotion fallback threshold, regardless of the separate visual-reaction cooldown/cap. Visual one-shots retain the existing threshold, cooldown and per-reply cap so they cannot overplay.
+- Emotion-only fallbacks use their configured per-emotion threshold. Ordinary anxious, neutral, calm and thinking beats stay silent unless explicitly mapped.
+- At most one sound per segment. Explicit semantic reactions are not silenced by the emotion-fallback cap; `maxPerReply` limits only fallback sounds.
+- A suppressed inferred visual reaction may still receive its moderate mapped emotion sound. Director diagnostics record the beat values, selected sound or suppression reason.
+- Deterministic. The shared provider-independent prompt requests semantic reactions only at genuinely theatrical moments.
 
-The frontend plays audio.json event `sfx_<name>` once, on the segment's first page only.
+The frontend plays audio.json event `sfx_<name>` once, on the segment's first page only, before text reveal while a visual reaction is underway. Dev builds show event playback outcomes and provide audition buttons; production UI has neither.
 
 ## Waiting performance (D-049)
 

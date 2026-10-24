@@ -40,6 +40,9 @@ class Segment:
     #: Semantic reaction sound (closed set, see SFX_NAMES) or None. Played by the frontend as
     #: audio event `sfx_<name>` when the segment's first page appears.
     sfx: str | None = None
+    #: Explicit semantic sound request, kept separate from the visual one-shot reaction.
+    explicit_sfx: str | None = field(default=None, repr=False)
+    reaction_intent: str | None = field(default=None, repr=False)
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -91,6 +94,8 @@ class _Resolved:
     intensity: float
     reaction: str | None
     gesture: str | None
+    explicit_sfx: str | None
+    reaction_intent: str | None
 
 
 class CharacterDirector:
@@ -120,8 +125,8 @@ class CharacterDirector:
 
         resolved = [self._resolve(beat, profile, notes, i) for i, beat in enumerate(beats)]
         segments = self._merge(resolved, profile, hold_scale, notes)
-        state, suppressed = self._apply_reactions(segments, profile, state, now_ms, notes)
-        self._apply_sfx(segments, profile, suppressed, notes)
+        state = self._apply_reactions(segments, profile, state, now_ms, notes)
+        self._apply_sfx(segments, profile, notes)
         settle_emotion, settle_animation = self._settle(reply, segments, profile, notes)
         return PerformanceTimeline(profile.id, segments, settle_emotion, settle_animation, notes), state
 
@@ -165,12 +170,17 @@ class CharacterDirector:
             target = profile.reaction_aliases.get(raw_reaction, raw_reaction)
             if target in profile.reactions:
                 reaction = target
-            else:
-                notes.append(f"beat {i}: unknown reaction '{raw_reaction}' ignored")
         if reaction is None and binding.reaction:
             reaction = binding.reaction  # the emotion itself implies a reaction (e.g. surprised)
 
-        return _Resolved(beat, emotion, animation, intensity, reaction, gesture)
+        explicit_sfx = profile.sfx.reactions.get(raw_reaction or "")
+        explicit_reaction = bool(raw_reaction and (
+            profile.reaction_aliases.get(raw_reaction, raw_reaction) in profile.reactions or explicit_sfx
+        ))
+        if raw_reaction and not explicit_reaction:
+            notes.append(f"beat {i}: unknown reaction '{raw_reaction}' ignored")
+        return _Resolved(beat, emotion, animation, intensity, reaction, gesture,
+                         explicit_sfx, raw_reaction)
 
     # ---- merging / pose holding ------------------------------------------------------------
 
@@ -188,14 +198,14 @@ class CharacterDirector:
             if segments:
                 prev = segments[-1]
                 same_pose = r.emotion == prev.emotion and r.animation == prev.animation
-                if same_pose and r.reaction is None:
+                if same_pose and r.reaction is None and r.explicit_sfx is None:
                     prev.text = f"{prev.text} {text}"
                     prev.intensity = max(prev.intensity, r.intensity)
                     prev.estimated_ms = self._estimate_ms(prev.text, profile)
                     notes.append(f"beat {i}: same pose as previous beat, merged")
                     continue
                 too_soon = prev.estimated_ms < min_hold
-                if too_soon and r.reaction is None and r.intensity < cfg.strong_change_intensity:
+                if too_soon and r.reaction is None and r.explicit_sfx is None and r.intensity < cfg.strong_change_intensity:
                     notes.append(
                         f"beat {i}: pose change to '{r.animation}' suppressed "
                         f"(previous pose held only ~{prev.estimated_ms}ms < {int(min_hold)}ms)"
@@ -205,7 +215,9 @@ class CharacterDirector:
                     )
                     continue
             segments.append(
-                Segment(text, r.emotion, r.animation, r.intensity, r.reaction, r.gesture, self._estimate_ms(text, profile))
+                Segment(text, r.emotion, r.animation, r.intensity, r.reaction, r.gesture,
+                        self._estimate_ms(text, profile), explicit_sfx=r.explicit_sfx,
+                        reaction_intent=r.reaction_intent)
             )
         return segments
 
@@ -218,13 +230,12 @@ class CharacterDirector:
         state: DirectorState,
         now_ms: float,
         notes: list[str],
-    ) -> tuple[DirectorState, set[int]]:
+    ) -> DirectorState:
         cfg = profile.director
         threshold = min(1.0, max(0.0, cfg.reaction_min_intensity + (0.5 - cfg.expressiveness) * 0.4))
         cooldown = cfg.reaction_cooldown_ms * (1.5 - cfg.expressiveness)
         last = state.last_reaction_at_ms
         used = 0
-        suppressed: set[int] = set()
         clock = now_ms
         for i, segment in enumerate(segments):
             if segment.reaction:
@@ -238,39 +249,50 @@ class CharacterDirector:
                 if reason:
                     notes.append(f"segment {i}: reaction '{segment.reaction}' suppressed: {reason}")
                     segment.reaction = None
-                    suppressed.add(i)
                 else:
                     used += 1
                     last = clock
             clock += segment.estimated_ms
-        return DirectorState(last_reaction_at_ms=last), suppressed
+        return DirectorState(last_reaction_at_ms=last)
 
     # ---- semantic reaction sounds ------------------------------------------------------------
 
     def _apply_sfx(
-        self, segments: list[Segment], profile: CharacterProfile, suppressed: set[int], notes: list[str]
+        self, segments: list[Segment], profile: CharacterProfile, notes: list[str]
     ) -> None:
-        """At most `maxPerReply` sounds, one per segment, never for a suppressed reaction.
-
-        A surviving reaction earns its mapped sound; otherwise a beat needs a mapped emotion at
-        `minIntensity` or more. Ordinary replies stay silent. No randomness.
-        """
+        """Select explicit semantic sounds first, then conservative emotion fallbacks."""
         cfg = profile.sfx
         used = 0
         for i, segment in enumerate(segments):
-            if used >= cfg.max_per_reply:
-                break
-            if i in suppressed:
-                continue  # the reaction was held back, so its sound must be too
-            name = None
-            if segment.reaction:
-                name = cfg.reactions.get(segment.reaction)
-            if name is None and segment.intensity >= cfg.min_intensity:
-                name = cfg.emotions.get(segment.emotion)
+            name = segment.explicit_sfx
             if name:
                 segment.sfx = name
+                notes.append(
+                    f"segment {i}: emotion={segment.emotion}, intensity={segment.intensity:.2f}, "
+                    f"reaction={segment.reaction_intent or 'none'}, SFX={name} "
+                    f"(explicit reaction '{segment.reaction_intent}')"
+                )
+                continue
+            threshold = cfg.emotion_min_intensities.get(segment.emotion, cfg.min_intensity)
+            if segment.intensity >= threshold:
+                name = cfg.emotions.get(segment.emotion)
+            if name and used < cfg.max_per_reply:
+                segment.sfx = name
                 used += 1
-                notes.append(f"segment {i}: sfx '{name}'")
+                notes.append(
+                    f"segment {i}: emotion={segment.emotion}, intensity={segment.intensity:.2f}, "
+                    f"reaction={segment.reaction_intent or 'none'}, SFX={name} (emotion fallback at {threshold:.2f})"
+                )
+            elif name:
+                notes.append(f"segment {i}: SFX '{name}' suppressed: max {cfg.max_per_reply} per reply")
+            else:
+                reason = (f"intensity {segment.intensity:.2f} < {threshold:.2f}"
+                          if segment.emotion in cfg.emotions and segment.intensity < threshold
+                          else f"emotion '{segment.emotion}' has no SFX mapping")
+                notes.append(
+                    f"segment {i}: emotion={segment.emotion}, intensity={segment.intensity:.2f}, "
+                    f"reaction={segment.reaction_intent or 'none'}, SFX suppressed: {reason}"
+                )
 
     # ---- end state -----------------------------------------------------------------------
 

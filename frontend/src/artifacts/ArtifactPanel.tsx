@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { artifactDownloadUrl, deleteArtifact, listArtifacts, readArtifact, type GeneratedArtifact, type TurnTask } from './artifacts.ts'
+import { CollapsiblePanel } from '../components/CollapsiblePanel.tsx'
 import './artifacts.css'
 
 /** Temporary pipeline inspector, outside the DS stage. Milestone 3 owns evidence delivery. */
@@ -32,6 +33,7 @@ export function ArtifactPanel({ task }: { task: TurnTask | null }) {
   }
   return (
     <section className="artifacts-panel" aria-label="Generated files">
+      <CollapsiblePanel id="dev-generated-files" title="Generated files (dev)">
       <div className="artifacts-panel__heading"><strong>Generated files</strong><button type="button" onClick={() => void refresh()}>Refresh</button></div>
       {task?.cue === 'artifact_working' && <p role="status" data-artifact-cue="artifact_working">Creating a file…</p>}
       {readyId && artifacts.some((item) => item.id === readyId && item.status === 'ready') && <p role="status" data-artifact-cue="artifact_ready">File ready.</p>}
@@ -60,6 +62,7 @@ export function ArtifactPanel({ task }: { task: TurnTask | null }) {
           })}>Delete</button>
         </div>
       </div>}
+      </CollapsiblePanel>
     </section>
   )
 }

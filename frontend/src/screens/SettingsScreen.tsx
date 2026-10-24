@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PixelStage } from '../components/PixelStage.tsx'
 import { ProviderProfilesPanel } from '../components/ProviderProfilesPanel.tsx'
 import { StageBackdrop } from '../components/StageBackdrop.tsx'
 import { audioEngine } from '../engine/audioEngine.ts'
+import { getRingtoneCatalog, previewRingtone, resolveRingtone } from '../engine/ringtones.ts'
 import { playMenuSound } from '../engine/menuSounds.ts'
 import type { SoundId, UiImage } from '../engine/manifestTypes.ts'
 import { bgmPool, contextualPool, resolveProfileTrack, type SoundtrackManifest } from '../music/soundtrack.ts'
@@ -50,6 +51,24 @@ export function SettingsScreen({
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [previewBlip, onBack])
+
+  const ringtones = getRingtoneCatalog()
+  const [previewing, setPreviewing] = useState(false)
+  const stopPreview = useRef<(() => void) | null>(null)
+  const endPreview = () => stopPreview.current?.()
+  useEffect(() => () => stopPreview.current?.(), [])
+  const sfxSilent = settings.sfxMuted || settings.sfxVolume <= 0
+  const startPreview = (ringtoneId: string) => {
+    endPreview()
+    if (sfxSilent) return
+    audioEngine.unlock()
+    setPreviewing(true)
+    const stop = previewRingtone(audioEngine, ringtoneId, settings.sfxVolume, () => {
+      if (stopPreview.current === stop) stopPreview.current = null
+      setPreviewing(false)
+    })
+    stopPreview.current = stop
+  }
 
   const testBlip = () => {
     audioEngine.unlock()
@@ -137,6 +156,21 @@ export function SettingsScreen({
           <input aria-label="Sound effects volume" type="range" min={0} max={1} step={0.05} value={settings.sfxVolume}
             onChange={(event) => updateSettings({ sfxVolume: Number(event.target.value) })} />
         </div>
+
+        {ringtones && (
+          <div className="settings-row settings-row-field">
+            <span>Ringtone</span>
+            <div style={{ display: 'flex', gap: 4, minWidth: 0 }}>
+              <select aria-label="Phone ringtone" value={resolveRingtone(ringtones, settings.ringtoneId).id}
+                onChange={(event) => { endPreview(); update({ ringtoneId: event.target.value }) }}>
+                {ringtones.items.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+              </select>
+              <button type="button" disabled={sfxSilent || previewing}
+                onClick={() => startPreview(settings.ringtoneId)}>Preview</button>
+              <button type="button" disabled={!previewing} onClick={endPreview}>Stop</button>
+            </div>
+          </div>
+        )}
 
         <div className="settings-row">
           <span>Mute SFX</span>

@@ -4,9 +4,10 @@ from dataclasses import dataclass, field
 
 from pydantic import ValidationError
 
+from ..llm.errors import ARTIFACT_TOO_LARGE
 from ..llm.repair import decode_reply_content, parse_reply
 from ..llm.schemas import CharacterReply
-from .contracts import CreateTextArtifact, display_filename
+from .contracts import MAX_ARTIFACT_BYTES, CreateTextArtifact, display_filename
 
 
 @dataclass
@@ -29,6 +30,9 @@ def parse_artifact_turn(content) -> TurnParseResult:
         try:
             if set(data) - {"beats", "settleEmotion", "settle_emotion", "artifactAction"}:
                 raise ValueError()
+            content = data["artifactAction"].get("content") if isinstance(data["artifactAction"], dict) else None
+            if isinstance(content, str) and len(content.encode("utf-8", "replace")) > MAX_ARTIFACT_BYTES:
+                return TurnParseResult(None, ["The generated file is larger than the 64 KiB limit; no file was created."], error=ARTIFACT_TOO_LARGE)
             action = CreateTextArtifact.model_validate(data["artifactAction"])
             display_filename(action.filename, action.format)
         except ValidationError as error:

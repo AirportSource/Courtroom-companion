@@ -1,11 +1,15 @@
 // TEMPORARY developer controls for the conversation scene (dev builds only).
+import { generationDiagnosticLine } from '../engine/generation.ts'
+import { CollapsiblePanel } from '../components/CollapsiblePanel.tsx'
 import { audioEngine } from '../engine/audioEngine.ts'
 import type { DialogueLine } from '../engine/dialogueTypes.ts'
 import type { Background, CharacterRender, SoundId } from '../engine/manifestTypes.ts'
 import type { ChatResponse } from '../engine/performance.ts'
 import type { CharacterAnimationState } from '../engine/useCharacterAnimation.ts'
 import type { TypewriterState } from '../engine/useTypewriter.ts'
+import { SFX_NAMES, type SfxName } from '../engine/sfx.ts'
 import { DevDisplayControls } from './DevDisplayControls.tsx'
+import { PhoneRingtoneAudition } from './PhoneRingtoneAudition.tsx'
 
 interface ConversationDevPanelProps {
   lineNumber: number
@@ -24,7 +28,10 @@ interface ConversationDevPanelProps {
   onPlayTestScript: () => void
   /** Restart the current line, optionally forcing a voice (null = script/character). */
   onReplayLine: (voice: SoundId | null) => void
+  onAuditionSfx: (name: SfxName) => void
+  sfxPlayback: { name: string; event: string; played: boolean; reason: string; source: 'dialogue' | 'audition' }[]
   onExit: () => void
+  canAuditionRingtone: boolean
 }
 
 export function ConversationDevPanel({
@@ -42,7 +49,10 @@ export function ConversationDevPanel({
   lastResponse,
   onPlayTestScript,
   onReplayLine,
+  onAuditionSfx,
+  sfxPlayback,
   onExit,
+  canAuditionRingtone,
 }: ConversationDevPanelProps) {
   const blips = audioEngine.getSounds('blip')
   // Dev convenience: the audio manifest's male blip, if present.
@@ -52,6 +62,7 @@ export function ConversationDevPanel({
   return (
     <aside className="dev-panel">
       <h2>Dialogue dev panel (temporary)</h2>
+      <CollapsiblePanel id="dev-dialogue" title="Dialogue dev tools">
 
       <section>
         <h3>Voice / blip</h3>
@@ -113,10 +124,14 @@ export function ConversationDevPanel({
                 <li key={i}>
                   {s.emotion} → {s.animation} · {s.intensity.toFixed(2)}
                   {s.reaction ? ` · ⚡${s.reaction}` : ''}
+                  {s.sfx ? ` · SFX:${s.sfx}` : ' · SFX:silent'}
                   {s.gesture ? ` · ✋${s.gesture}` : ''}
                 </li>
               ))}
             </ol>
+            {generationDiagnosticLine(lastResponse.task?.error, lastResponse.generation) && (
+              <p className="dev-hint">{generationDiagnosticLine(lastResponse.task?.error, lastResponse.generation)}</p>
+            )}
             {[...lastResponse.performance.notes, ...lastResponse.warnings].map((note) => (
               <p key={note} className="dev-warning">
                 {note}
@@ -126,6 +141,21 @@ export function ConversationDevPanel({
         ) : (
           <p className="dev-hint">No reply yet. Type a message under the scene.</p>
         )}
+      </section>
+
+      <section>
+        <h3>Semantic SFX audition</h3>
+        {canAuditionRingtone && <PhoneRingtoneAudition />}
+        <div className="dev-buttons">
+          {SFX_NAMES.slice(0, 5).map((name) => (
+            <button key={name} type="button" onClick={() => onAuditionSfx(name)}>{name}</button>
+          ))}
+        </div>
+        {sfxPlayback.length ? sfxPlayback.map((item, index) => (
+          <p className="dev-hint" key={`${item.event}:${index}`}>
+            {item.source} · {item.event} → {item.played ? 'played' : `not played (${item.reason})`}
+          </p>
+        )) : <p className="dev-hint">No semantic SFX playback recorded yet.</p>}
       </section>
 
       <DevDisplayControls
@@ -156,6 +186,7 @@ export function ConversationDevPanel({
           #malformed, #empty, #text, #timeout.
         </p>
       </section>
+      </CollapsiblePanel>
     </aside>
   )
 }

@@ -95,6 +95,10 @@ export function createYouTubeRadioSource(deps: YouTubeRadioDeps = {}): YouTubeRa
   let readyWaiters: Array<(ok: boolean) => void> = []
   let gen = 0
   let volume = 1
+  let duckFactor = 1
+  let duckTarget = 1
+  let duckTimer: unknown = null
+  let fadeLevel = 1
   let muted = false
   let timer: unknown = null
   let release: (() => void) | null = null
@@ -136,7 +140,7 @@ export function createYouTubeRadioSource(deps: YouTubeRadioDeps = {}): YouTubeRa
     }
   }
   const applyVolume = () => {
-    const pct = Math.round(Math.min(1, Math.max(0, volume)) * 100)
+    const pct = Math.round(Math.min(1, Math.max(0, volume * duckFactor * fadeLevel)) * 100)
     safe((p) => {
       if (pct === 0) {
         p.mute()
@@ -300,6 +304,7 @@ export function createYouTubeRadioSource(deps: YouTubeRadioDeps = {}): YouTubeRa
       finishStart()
       clearTimer()
       volume = options.volume
+      fadeLevel = 1
       set({ status: 'loading', trackId: videoId, title: null, error: null })
       if (options.signal.aborted) {
         halt()
@@ -349,18 +354,40 @@ export function createYouTubeRadioSource(deps: YouTubeRadioDeps = {}): YouTubeRa
       if (fadeMs > 0 && state.status === 'playing' && player && ready) {
         const steps = Math.max(1, Math.round(fadeMs / rampStepMs))
         for (let i = steps - 1; i >= 0 && gen === myGen; i--) {
-          safe((p) => p.setVolume(Math.round(volume * 100 * (i / steps))))
+          fadeLevel = i / steps
+          applyVolume()
           await new Promise<void>((r) => setT(r, rampStepMs))
         }
         if (gen !== myGen) return // superseded during the fade
       }
       halt()
+      fadeLevel = 1
       applyVolume()
     },
 
     setVolume(v) {
       volume = v
       applyVolume()
+    },
+
+    setDucking(factor, rampMs) {
+      const target = Math.min(1, Math.max(0, Number.isFinite(factor) ? factor : 1))
+      if (target === duckTarget && (duckTimer !== null || target === duckFactor)) return
+      duckTarget = target
+      if (duckTimer !== null) clearT(duckTimer)
+      duckTimer = null
+      const from = duckFactor
+      const steps = Math.max(1, Math.ceil(rampMs / rampStepMs))
+      let step = 0
+      const tick = () => {
+        duckTimer = null
+        if (disposed) return
+        duckFactor = from + (target - from) * (++step / steps)
+        applyVolume()
+        if (step < steps) duckTimer = setT(tick, rampStepMs)
+      }
+      if (rampMs > 0) duckTimer = setT(tick, rampStepMs)
+      else { duckFactor = target; applyVolume() }
     },
 
     attach(next) {
@@ -380,6 +407,8 @@ export function createYouTubeRadioSource(deps: YouTubeRadioDeps = {}): YouTubeRa
 
     dispose() {
       disposed = true
+      if (duckTimer !== null) clearT(duckTimer)
+      duckTimer = null
       gen++
       finishStart()
       clearTimer()

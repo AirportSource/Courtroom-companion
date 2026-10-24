@@ -102,3 +102,36 @@ Byte-identical copies (verified with `cmp`) from the owner-supplied pack `docs/s
 | `sfx_tension` | `fx_tension` | `audio/effects/dramapound.wav` (7,200 B) | `sfx-dramapound.wav` |
 | `sfx_notification` | `fx_notification` | `audio/effects/phonebeep.wav` (8,236 B) | `sfx-phonebeep.wav` |
 | `sfx_soft_transition` | `fx_soft_transition` | `audio/effects/swoop.wav` (3,992 B) | `sfx-swoop.wav` |
+
+
+## Court Record UI icon and delivery SFX (2026-10-24)
+
+| Logical asset / event | Runtime | Source | Origin and rights | Notes |
+|---|---|---|---|---|
+| `court_record_file_document` | `ui/court-record/file_document.png` | `docs/references/evidence.png` (1008×711) | Owner-supplied evidence sheet; download page not recorded. Ace Attorney imagery © Capcom; no separate licence supplied. | Exact 64×64 RGB crop at (x=75, y=4), matching the existing `envelope_tied` runtime pixels. Pixel identity verified. The enlarged `court-record/file_document.png` remains an unchanged identification reference. Registered in `ui/ui.json`. |
+| `evidence_reveal` (`fx_evidence_reveal`) | `audio/effects/evidence_start.wav` | `docs/sfx general/evidence_start.wav` | Owner-supplied SFX pack; source page not recorded. Ace Attorney SFX (c) Capcom; no separate licence supplied. | Byte-identical copy; mono PCM, 32,728 Hz, 16-bit, 0.115 s. |
+| `evidence_added` (`fx_evidence_added`) | `audio/effects/evidence_finish.wav` | `docs/sfx general/evidence_finish.wav` | Same owner-supplied SFX pack; (c) Capcom; no separate licence supplied. | Byte-identical copy; mono PCM, 32,728 Hz, 16-bit, 0.164 s. Separate cue from reveal. |
+| `phone_ring` (`fx_notification`) | Reuses `audio/effects/phonebeep.wav` | `docs/sfx general/sfx-phonebeep.wav` | Same owner-supplied SFX pack; (c) Capcom; no separate licence supplied. | Existing runtime file is byte-identical to source; reused as a short 0.188 s phone cue. Full 11.601 s `phone1.wav` ringtone was not copied. |
+| `phone_answer` (`fx_phone_answer`) | `audio/effects/phone_cut.wav` | `docs/sfx general/phone_cut.wav` | Same owner-supplied SFX pack; (c) Capcom; no separate licence supplied. | Byte-identical copy; mono PCM, 32,728 Hz, 16-bit, 0.100 s. |
+
+All supplied reference files and source-pack files were left unchanged. These runtime assets remain third-party copyrighted material; this record documents provenance and does not grant redistribution rights.
+
+### Phoenix ringtone (D-057)
+
+Runtime `audio/effects/phoenix_ringtone.mp3` is byte-identical to owner-supplied `docs/sfx general/2-11 Ringtone (Phoenix Wright).mp3` (730,044 bytes; SHA-256 `c448482137d52264df796592571252ec85cd2eb31f68fcfe9de4905b1e500506`). Selection uses its embedded ID3 title **Ringtone (Phoenix Wright)**, album **Phoenix Wright: Ace Attorney Sound BOX**, album artist **Capcom**, artist/composer **Akemi Kimura**, year **2012**, disc **2**, track **11**. The supplied Wellington and Godot MP3s have distinct corresponding embedded titles. This is more specific evidence than filenames; no by-ear identification is claimed.
+
+ID3 COMMENT/WWW fields name `www.sittingonclouds.net`, and ORGANIZATION names Suleputer; these are supplied metadata, not independently verified download provenance. No separate redistribution licence was supplied; the existing Capcom rights caveat applies. No source file was rewritten or transcoded.
+
+The 24.504-second decoded recording has a repeating musical passage near 18.86 seconds. Offline spectral matching (cosine similarity about 0.992 on a one-second window), full-sample refinement and seam analysis selected a loop from 55,209 to 672,405 samples at the 32,728 Hz analysis decode rate, stored as seconds in `audio.json`. The measured left-channel sample jump is 0.0142 full scale (about 0.404 of nearby sample steps). This is analysis of this recording, not a Nintendo DS loop claim; listening approval remains pending. The unknown `phone1.wav` was not relabelled as Phoenix, and the full source archive remains outside runtime.
+
+### Evidence frame, Maya record portrait and ringtone presets (added 2026-10-24, D-058/D-060/D-061)
+
+All are owner-supplied Capcom material; sources stay untracked in `docs/`.
+
+| Logical asset | Runtime file | Source | Notes |
+|---|---|---|---|
+| `evidence_frame` (ui.json) | `ui/court-record/evidence_frame.png` (70×70 RGBA) | `docs/references/court-record/evidences_profiles_full.png`, tile at x=1, y=1 (sheet note "Ripped by Shoda. No credit needed.", credited anyway) | Border rows/cols 0–2 and 67–69 kept exactly (804 px, 0 mismatches); 64×64 interior made transparent. The ring is identical in 17 of 19 checked tiles; tiles at (937,1) and (511,72) differ slightly. |
+| Maya `courtRecordPortrait` | `characters/maya/portraits/court_record.png` (64×64 RGB) | same sheet, profile tile origin (866,1), rect x=869 y=4 64×64 | 1:1, 0 differences. Identified by black hair, bangs and topknot; Mia Fey's look-alike portrait has brown hair. |
+| Ringtone `wellington` | `audio/effects/wellington_ringtone.mp3` (619,634 B) | `docs/sfx general/2-02 Ringtone (Richard Wellington).mp3` | Byte-identical. ID3: "Ringtone (Richard Wellington)", Akemi Kimura, *Phoenix Wright: Ace Attorney Sound BOX* disc 2 track 2. Loop 1.000–8.380136 s measured offline, not auditioned. |
+| Ringtone `godot` | `audio/effects/godot_ringtone.mp3` (2,638,708 B) | `docs/sfx general/3-34 Ringtone (Godot).mp3` | Byte-identical. ID3: "Ringtone (Godot)", Sound BOX disc 3 track 34 (composer Noriyuki Iwadare; the artist tag reads "Ringtone"). The decoded length is 102.5 s; the large ID3 tag holds artwork. Loop 2.000–38.000680 s measured offline, not auditioned. |
+| Ringtone `phoenix` (existing default) | `audio/effects/phoenix_ringtone.mp3` | `docs/sfx general/2-11 Ringtone (Phoenix Wright).mp3` | Re-verified byte-identical (SHA-256 c4484821…). |

@@ -388,6 +388,7 @@ test('engine notifies subscribers only on real changes', async () => {
 
 class FakeParam {
   value: number
+  ramps: [number, number][] = []
   constructor(value = 1) {
     this.value = value
   }
@@ -395,7 +396,8 @@ class FakeParam {
   setValueAtTime(v: number) {
     this.value = v
   }
-  linearRampToValueAtTime(v: number) {
+  linearRampToValueAtTime(v: number, at = 0) {
+    this.ramps.push([v, at])
     this.value = v
   }
   setTargetAtTime(v: number) {
@@ -530,6 +532,44 @@ function webSource(options: { track?: MusicTrack | null; status?: number; fetchT
 }
 
 const startOptions = (volume = 0.5, fadeInMs = 0): StartOptions => ({ volume, fadeInMs, signal: new AbortController().signal })
+
+test('scoped music duck preserves configured volume/mute/track and never restarts playback', async () => {
+  const { engine, original, world } = engineWith()
+  const ramps: [number, number][] = []
+  original.setDucking = (factor, ms) => { ramps.push([factor, ms]) }
+  engine.setVolume(0.8)
+  await engine.play('original', 'a')
+  const before = world.log.filter((l) => l.startsWith('start')).length
+  const restore = engine.acquireDuck(0.12, 220, 350)
+  assert.equal(engine.getState().volume, 0.8)
+  assert.equal(engine.effectiveVolume, 0.096)
+  assert.deepEqual(ramps.at(-1), [0.12, 220])
+  engine.setVolume(0.6)
+  assert.equal(engine.effectiveVolume, 0.072)
+  engine.setMuted(true)
+  assert.equal(engine.effectiveVolume, 0)
+  restore(); restore()
+  assert.equal(engine.effectiveVolume, 0)
+  assert.deepEqual(ramps.at(-1), [1, 350])
+  engine.setMuted(false)
+  assert.equal(engine.effectiveVolume, 0.6)
+  assert.equal(engine.getState().trackId, 'a')
+  assert.equal(world.log.filter((l) => l.startsWith('start')).length, before)
+})
+
+test('Web Audio duck ramps use a separate gain and preserve existing track fade automation', async () => {
+  const { source, context } = webSource()
+  await source.start('t', startOptions(0.8, 600))
+  const fadeRamps = context.gains[1].gain.ramps.slice()
+  source.setDucking!(0.12, 220)
+  assert.equal(context.gains[2].gain.value, 0.8)
+  assert.equal(context.gains[3].gain.value, 0.12)
+  assert.deepEqual(context.gains[3].gain.ramps.at(-1), [0.12, 0.22])
+  source.setDucking!(1, 350)
+  assert.deepEqual(context.gains[1].gain.ramps, fadeRamps)
+  assert.equal(context.gains[3].gain.value, 1)
+  assert.equal(context.sources.length, 1)
+})
 
 test('web audio source builds the chain and applies the loop region in seconds', async () => {
   const { source, context } = webSource({

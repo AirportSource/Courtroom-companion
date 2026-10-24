@@ -61,7 +61,11 @@ class LLMProvider(ABC):
 
 - `GenerationRequest`: `system_prompt`, `messages` (user/assistant turns), `response_schema`
   (JSON schema with this character's allowed IDs as enums), `settings` (temperature,
-  max_tokens, timeout_s).
+  max_tokens, timeout_s), and a provider-independent expected output `workload`.
+- Shared `llm/budgets.py` copies settings per request: dialogue keeps the saved budget
+  (default 600), text-artifact work gets 16,384 tokens. CharacterService supplies the advisory
+  workload; providers only translate the resulting numeric settings. Saved profiles and
+  ordinary conversation budgets are not mutated. See D-053 and `ARTIFACTS.md`.
 - `RawCompletion.content`: a JSON string, plain text, or an already-parsed dict. Optional
   transport timing/token metadata stays separate and is never part of `CharacterReply`.
 - Adapters **must not** parse or validate, must not add personality rules, and must not
@@ -351,6 +355,14 @@ Only completed `text` blocks are concatenated into RawCompletion. `thinking`, si
 token/context truncation, unexpected intermediate/tool output, missing text and malformed
 Messages envelopes fail safely. Optional token counts/stop reason remain provider metadata.
 
+Native [stop reasons](https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons)
+are distinguished before extraction: `max_tokens` → `output_token_limit` with the requested
+budget, `model_context_window_exceeded` → `context_window_exceeded` with an input/history
+diagnostic, `refusal` → `provider_refused`, `end_turn` → shared validation. Neither exhaustion
+case passes partial content to the artifact pipeline or triggers a retry/continuation.
+Separate `generation` diagnostics expose only workload, requested token cap and bounded
+stop reason; chat and Test Connection no longer conflate token and context exhaustion.
+
 Sanitized errors distinguish missing/auth-failed keys, rate limiting, invalid models,
 unsupported structured output, timeout/unreachable API, HTTP service failures, malformed/empty
 output, refusal and truncation. No upstream error body or secret is logged/returned. Test
@@ -368,6 +380,13 @@ Mocked transport/profile tests cover native translation, schema projection, reda
 credential reuse, connection outcomes, shared validation and active-profile chat through the
 director. A real Windows-vault browser check used temporary synthetic credentials and made no
 cloud call. No saved Anthropic profile/credential was available for a live Claude smoke test.
+
+## Output budgets, failure taxonomy and context budget (D-059)
+
+- Dialogue: `max(profile max_tokens, 4096)`. Text artifacts: 16,384. These are request caps, not targets.
+- Stop reasons are normalized (`length` → `max_tokens`, `stop` → `end_turn`). The gateway rejects `max_tokens` / `model_context_window_exceeded` before parsing.
+- `generation.failureClass`: `output_truncated`, `context_window_exceeded`, `artifact_too_large`, `provider_limit`, `unknown_provider_error`.
+- History sent to providers is fitted by `characters/context.py` (8,000 per entry, 16,000 in total, oldest whole messages dropped first, no summaries). The persistent Conversation Record (D-058) is never sent.
 
 ## Streaming (design only)
 

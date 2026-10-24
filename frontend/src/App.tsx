@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import './App.css'
 import { ArtifactPanel } from './artifacts/ArtifactPanel.tsx'
-import type { TurnTask } from './artifacts/artifacts.ts'
-import { CourtRecordView } from './components/CourtRecordView.tsx'
+import { listArtifacts, type GeneratedArtifact, type TurnTask } from './artifacts/artifacts.ts'
+import { GeneratedFilesCourtRecord } from './courtRecord/GeneratedFilesCourtRecord.tsx'
+import { ConversationRecordView } from './conversationRecord/ConversationRecordView.tsx'
 import { MusicDock } from './components/MusicDock.tsx'
 import { PixelStage } from './components/PixelStage.tsx'
 import { loadCourtRecord, type LoadedCourtRecord } from './courtRecord/courtRecord.ts'
@@ -38,7 +39,8 @@ import { TitleScreen } from './screens/TitleScreen.tsx'
 
 const DEV_TOOLS = import.meta.env.DEV
 
-type Screen = 'title' | 'characters' | 'locations' | 'settings' | 'conversation' | 'court-record' | 'animation-test'
+type Screen = 'title' | 'characters' | 'locations' | 'settings' | 'conversation' | 'court-record'
+  | 'conversation-record' | 'animation-test'
 
 interface Catalog {
   characters: CharacterSummary[]
@@ -120,6 +122,9 @@ function StageMessage({ text, error = false }: { text: string; error?: boolean }
 
 function App() {
   const [artifactTask, setArtifactTask] = useState<TurnTask | null>(null)
+  const [generatedArtifacts, setGeneratedArtifacts] = useState<GeneratedArtifact[]>([])
+  const [artifactsLoading, setArtifactsLoading] = useState(true)
+  const [artifactsError, setArtifactsError] = useState<string | null>(null)
   const [catalog, setCatalog] = useState<CatalogState>({ status: 'loading' })
   const [screen, setScreen] = useState<Screen>('title')
   // "Press start" is shown once per session; later returns go straight to the main menu.
@@ -145,6 +150,29 @@ function App() {
   const pausedForPreview = useRef(false)
   const music = useMusicState()
   const { engine, importApi, importedResolver } = musicRuntime()
+  const refreshGeneratedArtifacts = useCallback(async () => {
+    setArtifactsLoading(true)
+    try {
+      setGeneratedArtifacts(await listArtifacts())
+      setArtifactsError(null)
+    } catch (error) {
+      setArtifactsError(error instanceof Error ? error.message : 'Generated files could not be loaded.')
+    } finally {
+      setArtifactsLoading(false)
+    }
+  }, [])
+
+  // Court Record is a view over the existing artifact API; load once at app startup and refresh
+  // after delivery/deletion. Reloading therefore recovers persisted files without replaying it.
+  useEffect(() => {
+    const controller = new AbortController()
+    void listArtifacts(controller.signal).then((records) => {
+      if (!controller.signal.aborted) { setGeneratedArtifacts(records); setArtifactsError(null) }
+    }, (error: unknown) => {
+      if (!controller.signal.aborted) setArtifactsError(error instanceof Error ? error.message : 'Generated files could not be loaded.')
+    }).finally(() => { if (!controller.signal.aborted) setArtifactsLoading(false) })
+    return () => controller.abort()
+  }, [])
   const importLibrary = useImportLibrary({
     api: importApi,
     getContext: () => audioEngine.getContext(),
@@ -186,10 +214,29 @@ function App() {
     }
   }, [catalog, characterId, loaded])
 
+  // The Conversation Record shows every character's portrait: load packs on demand (once each).
+  const requestedPacks = useRef(new Set<CharacterId>())
+  useEffect(() => {
+    if (catalog.status !== 'ready' || screen !== 'conversation-record') return
+    for (const summary of catalog.characters) {
+      if (requestedPacks.current.has(summary.id)) continue
+      requestedPacks.current.add(summary.id)
+      loadCharacter(summary.manifestUrl).then(
+        (pack) => setLoaded((current) => (current[summary.id] ? current : { ...current, [summary.id]: pack })),
+        () => {}, // a missing pack only means a fallback slot, never a broken screen
+      )
+    }
+  }, [catalog, screen])
+
   if (catalog.status === 'loading') return <StageMessage text="Loading…" />
   if (catalog.status === 'error') return <StageMessage text={`Failed to load assets: ${catalog.message}`} error />
 
   const toTitle = () => setScreen('title')
+  const evidenceFrame = catalog.ui.images.evidence_frame ?? null
+  // Generic per-character lookups for the Conversation Record (no character is hard-coded).
+  const portraitFor = (id: CharacterId) => loaded[id]?.courtRecordPortrait ?? null
+  const nameFor = (id: CharacterId) =>
+    loaded[id]?.displayName ?? catalog.characters.find((summary) => summary.id === id)?.displayName ?? null
   const character = characterId ? loaded[characterId] : undefined
   const background = catalog.backgrounds.find((bg) => bg.id === backgroundId) ?? null
 
@@ -228,7 +275,7 @@ function App() {
           />
         }
       />
-      <ArtifactPanel task={artifactTask} />
+      {DEV_TOOLS && <ArtifactPanel task={artifactTask} />}
     </div>
   )
 
@@ -244,7 +291,8 @@ function App() {
           onPressStart={() => setTitleStarted(true)}
           onStart={() => setScreen('characters')}
           onSettings={() => setScreen('settings')}
-          onCourtRecord={catalog.courtRecord ? () => setScreen('court-record') : undefined}
+          onCourtRecord={() => setScreen('court-record')}
+          onConversationRecord={() => setScreen('conversation-record')}
           onAnimationTest={
             DEV_TOOLS
               ? () => {
@@ -299,19 +347,37 @@ function App() {
           character={c}
           background={background}
           testScript={TEST_CONVERSATION}
-          courtRecord={catalog.courtRecord}
           talkBackdrop={catalog.ui.images.menu_talk_option ?? null}
+          generatedArtifacts={generatedArtifacts}
+          artifactsLoading={artifactsLoading}
+          artifactsError={artifactsError}
+          onArtifactsChanged={refreshGeneratedArtifacts}
+          fileIcon={catalog.ui.images.court_record_file_document ?? null}
+          thinkerIcon={catalog.courtRecord?.entries.find((item) => item.id === 'thinker_statue')?.image ?? null}
+          phoneIcon={catalog.courtRecord?.entries.find((item) => item.id === 'cellphone_blue')?.image ?? null}
           onExit={toTitle}
           devTools={DEV_TOOLS}
           onTaskChange={setArtifactTask}
+          evidenceFrame={evidenceFrame}
+          portraitFor={portraitFor}
+          nameFor={nameFor}
         />
       ))
     case 'court-record':
-      return catalog.courtRecord ? (
+      return (
         <PixelStage>
-          <CourtRecordView record={catalog.courtRecord} onClose={toTitle} backdrop={catalog.ui.images.menu_bottom_screen ?? null} />
+          <GeneratedFilesCourtRecord artifacts={generatedArtifacts} loading={artifactsLoading} error={artifactsError}
+            onClose={toTitle} onRefresh={() => refreshGeneratedArtifacts()} onArtifactsChanged={() => refreshGeneratedArtifacts()}
+            fileIcon={catalog.ui.images.court_record_file_document ?? null} evidenceFrame={evidenceFrame} />
         </PixelStage>
-      ) : null
+      )
+    case 'conversation-record':
+      return (
+        <PixelStage>
+          <ConversationRecordView onClose={toTitle} evidenceFrame={evidenceFrame}
+            portraitFor={portraitFor} nameFor={nameFor} />
+        </PixelStage>
+      )
     case 'animation-test':
       return requireCharacter((c) => (
         <AnimationTestScreen character={c} backgrounds={catalog.backgrounds} onExit={toTitle} />

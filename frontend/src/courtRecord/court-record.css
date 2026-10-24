@@ -199,3 +199,68 @@
   color: var(--title-gold);
   text-shadow: 1px 1px #000;
 }
+
+/* ---- Evidence tile (ev-) ----
+   Native evidence frame with a 64×64 content window. The frame image sits above the content and
+   is never filtered; the selection cursor is an outline drawn outside the tile. */
+
+.ev-tile {
+  position: relative;
+  display: block;
+  flex: none;
+  image-rendering: pixelated;
+}
+
+.ev-tile__window {
+  position: absolute;
+  overflow: hidden;
+  background: #0b1624;
+}
+
+.ev-tile__image {
+  position: absolute;
+  display: block;
+  image-rendering: pixelated;
+  user-select: none;
+}
+
+.ev-tile__window > img:not(.ev-tile__image),
+.ev-tile__window > svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  max-width: 64px;
+  max-height: 64px;
+  margin: auto;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.ev-tile__frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  image-rendering: pixelated;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Frameless fallback: the previous flat slot appearance. */
+.ev-tile--plain .ev-tile__window {
+  background: #213447;
+  box-shadow: 0 0 0 1px #637184;
+}
+
+.ev-tile--plain.ev-tile--empty .ev-tile__window {
+  background: #1c2d3e;
+  box-shadow: 0 0 0 1px #3c4c5c;
+}
+
+.ev-tile--selected::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid #ffdd79;
+  pointer-events: none;
+}

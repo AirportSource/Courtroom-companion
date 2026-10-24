@@ -6,7 +6,7 @@ _Updated 2026-10-24 after the Igiari + DotGothic16 stage/UI font integration, fr
 
 All paths are relative to `frontend/public/assets/`. Browser URL = `/assets/` + path. No path contains spaces.
 
-Current totals: 102 Maya sprite frames (101 assigned + 1 unassigned) · 29 backgrounds · 2 blips · 4 dialogue SFX · 4 effect SFX · 9 UI SFX · 2 runtime fonts · 9 UI images · 0 music · 5 manifests. `npm run validate:assets` reports 161 referenced files.
+Current totals: 102 Maya sprite frames (101 assigned + 1 unassigned) | 29 backgrounds | 2 blips | 4 dialogue SFX | 14 effect SFX | 9 UI SFX | 2 runtime fonts | 10 UI images | 25 music tracks | 3 Court Record icons | 7 manifests. `npm run validate:assets` reports 200 referenced files.
 
 ---
 
@@ -342,3 +342,35 @@ Imported user music is **not** an asset: it lives in the git-ignored `backend/.l
 - `music/soundtrack.json` gains `profiles.maya_fey`.
 - `ui/ui.json` DotGothic16 fallback gains `sizeAdjust: "75%"` (D-051).
 - `npm run validate:assets`: **196 referenced files, 0 errors**.
+
+
+## Court Record icon and delivery audio additions (2026-10-24)
+
+`ui/ui.json` registers `court_record_file_document` at `ui/court-record/file_document.png` (64×64), an exact crop from `docs/references/evidence.png` at x=75, y=4. Its RGB pixels match the existing `envelope_tied` Court Record runtime icon exactly. The enlarged `docs/references/court-record/file_document.png` remains unchanged and is used only as an identification reference. The Thinker and phone references already have runtime counterparts: `thinker_statue` and `cellphone_blue` in `court-record/court-record.json`; no duplicate icon files were added.
+
+`audio/audio.json` now includes these semantic events:
+
+| Event | Sound ID | Runtime source | Duration / note |
+|---|---|---|---|
+| `phone_ring` | `fx_notification` | `effects/phonebeep.wav` (existing) | 0.188 s; reused because it matches the short phone-beep source. The 11.601 s full ringtone was not copied. |
+| `phone_answer` | `fx_phone_answer` | `effects/phone_cut.wav` | 0.100 s; byte-identical source-pack copy. |
+| `evidence_reveal` | `fx_evidence_reveal` | `effects/evidence_start.wav` | 0.115 s; byte-identical source-pack copy. |
+| `evidence_added` | `fx_evidence_added` | `effects/evidence_finish.wav` | 0.164 s; distinct byte-identical source-pack copy. |
+
+Source rights and limits are recorded in `docs/ASSET_SOURCES.md`; source archives and supplied reference images were not modified.
+
+## Phone ringtone correction (2026-10-24, D-057)
+
+- Added `audio/effects/phoenix_ringtone.mp3` (730,044 bytes), a byte-identical copy of the supplied `2-11 Ringtone (Phoenix Wright).mp3`. Embedded ID3 metadata identifies the Phoenix recording; the Wellington and Godot recordings were inspected separately.
+- `phone_ring_loop → fx_phone_ring` replaces the short-beep `phone_ring` event in delivery. `sfx_notification → fx_notification` and the existing `phone_answer → fx_phone_answer` remain.
+- The native loop region is 1.6869041799071132–20.54525177218284 seconds (55,209–672,405 samples at the 32,728 Hz analysis decode rate). The file itself is unchanged. These are project analysis of a supplied soundtrack recording, not original DS loop data. Acoustic approval is pending; dev audition includes two loop passes.
+- Maya's optional `character.json.taskAcknowledgements` contains four short variants per English/French/Japanese locale; no sprite or performance rule changed.
+- Asset validation after this addition: **201 referenced files, 0 errors**.
+
+## Update 2026-10-24 (Conversation Record / evidence frame / ringtones milestone)
+
+- `ui/court-record/evidence_frame.png`: native 70×70 frame, `ui.json` `evidence_frame`.
+- `characters/maya/portraits/court_record.png`: 64×64 record portrait, `character.json` `courtRecordPortrait`.
+- `audio/effects/wellington_ringtone.mp3` and `godot_ringtone.mp3`: sounds `fx_phone_ring_wellington` / `fx_phone_ring_godot`; `audio.json` `ringtones` (default `phoenix`).
+- The validator now also checks record portraits (square, matching size) and ringtone presets.
+- `npm run validate:assets`: **205 referenced files, 0 errors**.

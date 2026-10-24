@@ -17,6 +17,14 @@ from ..base import (
     StructuredOutputMode,
 )
 from ..config import DEFAULT_OLLAMA_BASE_URL
+from ..errors import CONTEXT_HINTS, normalize_stop_reason
+
+
+class OllamaLimitedError(ProviderError):
+    def __init__(self, code: str, message: str, *, stop_reason: str | None = None) -> None:
+        super().__init__(message)
+        self.code = code
+        self.stop_reason = stop_reason
 
 
 class OllamaUnavailableError(ProviderError):
@@ -83,6 +91,17 @@ class OllamaProvider(LLMProvider):
 
         if response.status_code == 404 and path == "/api/chat":
             raise OllamaModelNotFoundError("selected Ollama model is not installed")
+        if response.status_code in (400, 413) and path == "/api/chat":
+            try:
+                hints = str(response.json().get("error", "")).lower()[:1000]
+            except (ValueError, AttributeError):
+                hints = ""
+            if any(marker in hints for marker in CONTEXT_HINTS):
+                raise OllamaLimitedError(
+                    "context_window_exceeded",
+                    "Ollama context window exceeded; shorten the conversation or input. Increasing num_predict alone will not fix this",
+                    stop_reason="model_context_window_exceeded",
+                )
         if not response.is_success:
             raise OllamaHTTPError(f"Ollama returned HTTP {response.status_code}")
         try:
@@ -119,6 +138,22 @@ class OllamaProvider(LLMProvider):
         if not isinstance(message, dict) or not isinstance(message.get("content"), str):
             raise OllamaResponseError("Ollama response is missing message.content")
         content = message["content"]
+        stop_reason = normalize_stop_reason(data.get("done_reason"))
+        if stop_reason == "max_tokens":
+            # Ollama reports "length" both for num_predict and for a full num_ctx window. If it
+            # stopped before generating the requested number of tokens, the window filled first.
+            produced = data.get("eval_count")
+            if type(produced) is int and produced < request.settings.max_tokens:
+                raise OllamaLimitedError(
+                    "context_window_exceeded",
+                    "Ollama stopped because the model context window filled; shorten the conversation or input. Increasing num_predict alone will not fix this",
+                    stop_reason="model_context_window_exceeded",
+                )
+            raise OllamaLimitedError(
+                "output_token_limit",
+                f"Ollama output reached the requested num_predict budget ({request.settings.max_tokens} tokens); incomplete output was discarded",
+                stop_reason=stop_reason,
+            )
         if not content.strip():
             raise OllamaEmptyResponseError("Ollama returned empty assistant content")
         metadata_keys = (
@@ -131,6 +166,8 @@ class OllamaProvider(LLMProvider):
             "eval_duration",
         )
         metadata = {key: data[key] for key in metadata_keys if key in data}
+        if stop_reason:
+            metadata["stop_reason"] = stop_reason
         # Deliberately ignore message.thinking: only final assistant content enters repair/history.
         return RawCompletion(content=content, model=data.get("model") or self.model, metadata=metadata)
 

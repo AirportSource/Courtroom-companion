@@ -60,7 +60,7 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [ ] Manual by-ear loop validation of built-in tracks (Maya Fey, Initial Investigation, Cross-Examination Moderato, Suspense, a contextual track)
 - [ ] MusicDirector (logical music intents → engine), not LLM-chosen paths
 - [x] Character BGM only in the conversation scene; menus silent; leaving fades out — 2026-10-24 (D-050)
-- [x] Semantic reaction SFX (director → `sfx_<name>` events, once per beat) + SFX volume/mute — 2026-10-24 (D-049); sounds chosen by name, not yet listened to
+- [x] Semantic reaction SFX (director → `sfx_<name>` events, once per beat) + SFX volume/mute — 2026-10-24 (D-049); selection/timing reliability follow-up in D-054; WAVs still await by-ear approval
 - [x] User typing blips (male), IME-safe and throttled — 2026-10-24 (D-049)
 - [x] Discoverable import UX (button + drop zone, visible steps, readable failures, auto-open loop editor) — 2026-10-24
 
@@ -84,6 +84,13 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [x] Generic Talk Options over the original talk-option panel; chosen topic returns as a normal chat message — 2026-10-24 (D-047)
 - [ ] Profiles entries, more evidence, case logic / presenting evidence
 
+## Phase 5c — Archive, polish and robustness (2026-10-24)
+- [x] Persistent Conversation Record (backend archive + DS grid/detail, artifact links), separate from LLM context — D-058
+- [x] Dialogue output floor 4096, cross-provider truncation/context taxonomy, history context budget — D-059
+- [x] Native evidence frame primitive (Court Record, summon, record) and collapsible secondary panels — D-060
+- [x] Selectable ringtone presets (Phoenix default, Wellington, Godot) with Settings preview — D-061; loops not auditioned
+- [ ] Listen to ringtone loops and record/artifact UX on real providers
+
 ## Phase 6 — Voice input
 - [ ] Microphone / Whisper
 
@@ -93,4 +100,16 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [x] Local list/metadata/content/download/delete API; Python remains inert text
 - [x] Turn working/ready/failed cues, duplicate coalescing, explicit cancellation, stable error performance and normal-chat regression coverage
 - [x] Minimal out-of-stage Generated files panel: preview, full text, download, delete and reload/navigation persistence
-- [ ] Milestone 3: final file-only Court Record, phone interaction, summon box, evidence-added cinematic and polished artifact inspector
+- [x] Task-aware output cap: normal profile budget retained, explicit text-artifact requests use 16,384; separate Anthropic token/context/refusal diagnostics, fail-closed truncation and all-provider budget regression tests — 2026-10-24 (D-053)
+- [x] Milestone 3: file-only generated-artifact Court Record, phone acknowledgement, summon box, semantic delivery SFX, buffered reply release and artifact inspector (D-055)
+
+## Milestone 3 of 3 — Artifact delivery presentation
+- [x] One authoritative frontend delivery state machine; backend artifacts remain the sole storage authority
+- [x] Thinker working cue, bounded one-shot phone ring, explicit mouse/keyboard acknowledgement and deterministic summon/continue timing
+- [x] Existing final CharacterReply is buffered and released once through the existing CharacterDirector, dialogue paginator and performance engine
+- [x] Generated-file-only 3×2 square Court Record pages, stable creation ordering, keyboard/mouse selection, inspector, safe preview/download/delete
+- [x] Temporary Thinker/phone presentation assets are not Court Record files; static/demo evidence remains separate
+- [x] Milestone 2 Generated files panel is development-only; no duplicate production artifact library
+- [x] Maya personality guidance keeps burgers and other recurring traits occasional and context-led without counters or keyword filters (D-056)
+- [x] Browser FakeProvider flow: artifact → phone → acknowledgement → summon → existing reply; eight ordinary follow-up turns and 3×/4×/auto Court Record inspection
+- [x] Presentation/audio correction: character-defined local task acknowledgement concurrent with existing provider work, fast-result gate, real Phoenix ringtone loop, scoped BGM duck/restore, Court Record browsing sounds and dev ringtone audition (D-057)

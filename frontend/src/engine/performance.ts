@@ -5,6 +5,7 @@ import type { TextLayout } from './dialogueLayout.ts'
 import type { DialogueLine } from './dialogueTypes.ts'
 import { initializeProviderProfiles } from '../settings/providerProfiles.ts'
 import { cancelTurn, parseArtifact, parseTurnTask, watchTurn, type GeneratedArtifact, type TurnTask } from '../artifacts/artifacts.ts'
+import { parseGeneration, type GenerationDiagnostics } from './generation.ts'
 
 /** Closed set of semantic reaction sounds; the frontend plays audio event `sfx_<name>`. */
 export const SFX_NAMES = [
@@ -53,6 +54,7 @@ export interface ChatResponse {
   warnings: string[]
   task?: TurnTask
   artifacts?: GeneratedArtifact[]
+  generation?: GenerationDiagnostics
 }
 
 const ID = /^[a-z0-9_]{1,64}$/
@@ -96,6 +98,7 @@ export function parseChatResponse(raw: unknown): ChatResponse {
     unknown
   >
   const task = parseTurnTask(body.task)
+  const generation = parseGeneration(body.generation)
   const artifacts = Array.isArray(body.artifacts) ? body.artifacts.flatMap((raw) => {
     const artifact = parseArtifact(raw); return artifact ? [artifact] : []
   }) : undefined
@@ -119,6 +122,7 @@ export function parseChatResponse(raw: unknown): ChatResponse {
     warnings: Array.isArray(body.warnings) ? body.warnings.filter((w): w is string => typeof w === 'string') : [],
     ...(task ? { task } : {}),
     ...(artifacts ? { artifacts } : {}),
+    ...(generation ? { generation } : {}),
   }
 }
 

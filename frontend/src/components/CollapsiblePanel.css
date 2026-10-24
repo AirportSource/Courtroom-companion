@@ -1,0 +1,19 @@
+.collapsible-panel { margin: 6px 0; }
+
+.collapsible-panel__header {
+  display: block;
+  width: 100%;
+  padding: 4px 8px;
+  text-align: left;
+  font: inherit;
+  color: var(--text, #eee);
+  background: var(--panel-bg, #1c1c28);
+  border: 1px solid var(--border, #4a4a66);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.collapsible-panel__header:disabled { cursor: default; opacity: 0.85; }
+.collapsible-panel__header:focus-visible { outline: 2px solid #ffd54a; outline-offset: 1px; }
+.collapsible-panel__body { padding-top: 6px; }
+.collapsible-panel__body[hidden] { display: none; }

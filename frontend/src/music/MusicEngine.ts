@@ -44,6 +44,7 @@ export class MusicEngine {
   /** Generation allowed to publish source state (older, aborted starts stay silent). */
   private publishGeneration = 0
   private lastRequest: { kind: MusicSourceKind; trackId: string } | null = null
+  private readonly ducks = new Map<symbol, number>()
 
   constructor(options: MusicEngineOptions = {}) {
     this.fadeInMs = options.fadeInMs ?? DEFAULT_FADE_IN_MS
@@ -63,6 +64,7 @@ export class MusicEngine {
   registerSource(source: MusicSource): void {
     this.unsubscribe.get(source.kind)?.()
     this.sources.set(source.kind, source)
+    source.setDucking?.(this.duckFactor, 0)
     this.unsubscribe.set(
       source.kind,
       source.subscribe((sourceState) => this.onSourceState(source, sourceState)),
@@ -78,9 +80,23 @@ export class MusicEngine {
     return () => this.listeners.delete(listener)
   }
 
-  /** Effective linear volume handed to sources (mute folded in, track gain applied by the source). */
+  /** Effective mix level: master, mute and temporary duck; track gains/fades remain separate. */
   get effectiveVolume(): number {
-    return this.state.muted ? 0 : this.state.volume
+    return this.baseVolume * this.duckFactor
+  }
+
+  private get baseVolume(): number { return this.state.muted ? 0 : this.state.volume }
+  get duckFactor(): number { return Math.min(1, ...this.ducks.values()) }
+
+  /** A scoped mix lease. Releasing it restores current user settings, never an old snapshot. */
+  acquireDuck(factor: number, attackMs = 200, releaseMs = 350): () => void {
+    const key = Symbol('music duck')
+    this.ducks.set(key, clamp01(factor))
+    this.applyDucking(attackMs)
+    return () => {
+      if (!this.ducks.delete(key)) return
+      this.applyDucking(releaseMs)
+    }
   }
 
   /** Play `trackId` from `kind`. A track that is already loading/playing/paused is left alone. */
@@ -138,6 +154,7 @@ export class MusicEngine {
   }
 
   dispose(): void {
+    this.ducks.clear()
     this.supersede()
     for (const off of this.unsubscribe.values()) off()
     this.unsubscribe.clear()
@@ -154,7 +171,12 @@ export class MusicEngine {
 
   private applyVolume(): void {
     const source = this.activeSource()
-    if (source) source.setVolume(this.effectiveVolume)
+    if (source) source.setVolume(source.setDucking ? this.baseVolume : this.effectiveVolume)
+  }
+
+  private applyDucking(rampMs: number): void {
+    for (const source of this.sources.values()) source.setDucking?.(this.duckFactor, Math.max(0, rampMs))
+    if (!this.activeSource()?.setDucking) this.applyVolume()
   }
 
   /** Invalidate every earlier request; returns the new generation. */
@@ -183,7 +205,8 @@ export class MusicEngine {
       this.audible = target
       this.publishGeneration = mine
       try {
-        await target.start(trackId, { volume: this.effectiveVolume, fadeInMs: this.fadeInMs, signal: controller.signal })
+        target.setDucking?.(this.duckFactor, 0)
+        await target.start(trackId, { volume: target.setDucking ? this.baseVolume : this.effectiveVolume, fadeInMs: this.fadeInMs, signal: controller.signal })
       } catch (error) {
         // Sources should report failures through state; this is the safety net.
         if (mine === this.generation) this.fail({ code: 'unknown', message: error instanceof Error ? error.message : 'Music source failed' })

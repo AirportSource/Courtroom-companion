@@ -7,6 +7,7 @@ from typing import Any
 import httpx
 from pydantic import SecretStr
 
+from ..errors import CONTEXT_HINTS, QUOTA_HINTS
 from ..base import GenerationRequest, LLMProvider, ProviderCapabilities, ProviderError, RawCompletion, StructuredOutputMode
 
 MESSAGES_URL = "https://api.anthropic.com/v1/messages"
@@ -16,9 +17,10 @@ API_VERSION = "2026-10-21"
 class AnthropicError(ProviderError):
     """Only static/bounded messages and provider-independent machine codes leave transport."""
 
-    def __init__(self, code: str, message: str) -> None:
+    def __init__(self, code: str, message: str, *, stop_reason: str | None = None) -> None:
         super().__init__(message)
         self.code = code
+        self.stop_reason = stop_reason
 
 
 def native_output_schema(schema: dict[str, Any]) -> dict[str, Any]:
@@ -92,6 +94,16 @@ class AnthropicProvider(LLMProvider):
         if status == 429:
             raise AnthropicError("rate_limited", "Anthropic rate limit exceeded")
         hints = _error_hints(response)
+        if status == 413:
+            raise AnthropicError("provider_limit", "Anthropic request was too large")
+        if status in (400, 422) and any(marker in hints for marker in CONTEXT_HINTS):
+            raise AnthropicError(
+                "context_window_exceeded",
+                "Anthropic context window exceeded; reduce conversation/input length. Increasing max_tokens alone will not fix this",
+                stop_reason="model_context_window_exceeded",
+            )
+        if status == 402 or (status in (400, 403) and any(marker in hints for marker in QUOTA_HINTS)):
+            raise AnthropicError("provider_limit", "Anthropic account usage or billing limit reached")
         if status in (400, 422) and any(marker in hints for marker in ("output_config", "json_schema", "schema", "structured output")):
             raise AnthropicError("structured_output_unsupported", "Anthropic rejected native structured output")
         if status == 404 or (status in (400, 422) and "model" in hints):
@@ -137,9 +149,15 @@ class AnthropicProvider(LLMProvider):
             raise AnthropicError("malformed_response", "Anthropic returned an invalid assistant message")
         stop_reason = body.get("stop_reason")
         if stop_reason == "refusal":
-            raise AnthropicError("provider_refused", "Anthropic declined the generation request")
-        if stop_reason in ("max_tokens", "model_context_window_exceeded"):
-            raise AnthropicError("response_truncated", "Anthropic output reached its token or context limit")
+            raise AnthropicError("provider_refused", "Anthropic declined the generation request", stop_reason=stop_reason)
+        if stop_reason == "max_tokens":
+            raise AnthropicError("output_token_limit",
+                f"Anthropic output reached the requested max_tokens budget ({request.settings.max_tokens} tokens); incomplete output was discarded",
+                stop_reason=stop_reason)
+        if stop_reason == "model_context_window_exceeded":
+            raise AnthropicError("context_window_exceeded",
+                "Anthropic exhausted the model context window; reduce conversation/input length. Increasing max_tokens alone will not fix this",
+                stop_reason=stop_reason)
         if stop_reason not in ("end_turn", "stop_sequence"):
             raise AnthropicError("malformed_response", "Anthropic did not return a completed final answer")
         content = body.get("content")

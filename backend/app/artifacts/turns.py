@@ -6,6 +6,7 @@ import json
 from dataclasses import dataclass, field
 
 from ..characters.service import ChatResult
+from ..llm.base import OutputWorkload
 
 MAX_TURNS = 256
 
@@ -32,10 +33,16 @@ class Turn:
     artifact_id: str | None = None
     cues: list[str] = field(default_factory=list)
     job: asyncio.Task | None = None
+    expected_workload: str | None = None
 
     def public(self) -> dict:
         return {"id": self.id, "state": self.state, "cue": self.cue, "error": self.error,
-                "artifactId": self.artifact_id, "cues": list(self.cues)}
+                "artifactId": self.artifact_id, "cues": list(self.cues),
+                "expectedWorkload": self.expected_workload}
+
+    def set_expected_workload(self, workload: OutputWorkload):
+        # Advisory presentation hint only. It never authorizes creation or emits ready.
+        self.expected_workload = workload.value
 
     async def artifact_working(self):
         self.cue = "artifact_working"

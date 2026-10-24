@@ -1,0 +1,52 @@
+/* Conversation Record (rec-): 256x192 stage surface in the Court Record vocabulary. Text uses the
+   stage font stack at its native size; the detail body uses the dialogue box's 15 px line grid. */
+.rec-view {
+  position: absolute;
+  inset: 0;
+  width: 256px;
+  height: 192px;
+  overflow: hidden;
+  background: #172738;
+  color: #fff9dd;
+  font-family: var(--stage-font);
+  font-size: var(--stage-font-size);
+  line-height: 15px;
+  outline: none;
+}
+.rec-view *, .rec-view *::before, .rec-view *::after { box-sizing: border-box; }
+.rec-view button, .rec-view a {
+  min-width: 0;
+  margin: 0;
+  padding: 0 4px;
+  border: 1px solid #93a6b0;
+  border-radius: 0;
+  background: #243b50;
+  color: #fff9dd;
+  font: inherit;
+  line-height: 13px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.rec-view button:disabled { color: #81909a; cursor: default; }
+.rec-view button:focus-visible, .rec-view a:focus-visible { outline: 1px solid #ffdd79; outline-offset: 1px; }
+.rec-heading { position: absolute; z-index: 2; inset: 0 0 auto; height: 16px; padding: 0 6px; display: flex; align-items: center; justify-content: space-between; background: #354c60; border-bottom: 1px solid #b5a56c; }
+.rec-grid { position: absolute; inset: 0; outline: none; }
+.rec-view .rec-slot { position: absolute; display: block; padding: 0; border: 0; background: none; }
+.rec-view .rec-slot:focus-visible { outline: none; }
+.rec-unknown { display: block; width: 64px; height: 64px; color: #8fa3b0; font-size: 24px; line-height: 64px; text-align: center; }
+.rec-empty { position: absolute; left: 12px; top: 72px; width: 232px; padding: 4px; margin: 0; text-align: center; background: #172738; }
+.rec-footer { position: absolute; z-index: 2; inset: auto 0 0; height: 32px; padding: 1px 6px 0; background: #263e53; border-top: 1px solid #9c966c; }
+.rec-current { height: 14px; line-height: 14px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.rec-paging { display: flex; align-items: center; gap: 5px; }
+.rec-paging button { height: 15px; }
+.rec-detail { position: absolute; left: 6px; top: 20px; width: 244px; bottom: 2px; }
+.rec-character { margin: 0; height: 15px; line-height: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #ffdd79; }
+.rec-body { height: 120px; margin-top: 2px; overflow: hidden; background: #101e2b; padding: 0 3px; line-height: 15px; user-select: text; outline: none; }
+.rec-label { margin: 0; color: #ffdd79; }
+.rec-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+.rec-file-text { padding: 0; }
+.rec-gone { color: #c9b9a8; }
+.rec-view .rec-file { display: block; max-width: 100%; height: 15px; margin: 0; padding: 0; border: 0; background: none; text-align: left; line-height: 15px; color: #9fd3ff; text-decoration: underline; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rec-actions { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 5px; height: 17px; }
+.rec-confirm { color: #ffc1a7; }
+.rec-notice { position: absolute; z-index: 3; left: 4px; top: 17px; right: 4px; margin: 0; padding: 1px 3px; background: #5a2c2b; color: #fff; }

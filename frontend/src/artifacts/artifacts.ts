@@ -22,6 +22,8 @@ export interface TurnTask {
   artifactId: string | null
   error: string | null
   cues: ArtifactCue[]
+  /** Advisory backend workload, available before generation; never an artifact action. */
+  expectedWorkload?: 'dialogue' | 'text_artifact'
 }
 
 export function parseArtifact(raw: unknown): GeneratedArtifact | null {
@@ -51,7 +53,8 @@ export function parseTurnTask(raw: unknown): TurnTask | null {
   const cues: ArtifactCue[] = Array.isArray(t.cues)
     ? t.cues.filter((c): c is ArtifactCue => c === 'artifact_working' || (ready && c === 'artifact_ready')) : []
   return { id: t.id, state: t.state as TaskState, cue, artifactId: ready ? artifactId : null,
-    error: typeof t.error === 'string' && /^[a-z_]{1,64}$/.test(t.error) ? t.error : null, cues }
+    error: typeof t.error === 'string' && /^[a-z_]{1,64}$/.test(t.error) ? t.error : null, cues,
+    ...(t.expectedWorkload === 'dialogue' || t.expectedWorkload === 'text_artifact' ? { expectedWorkload: t.expectedWorkload } : {}) }
 }
 
 function idPath(id: string): string {

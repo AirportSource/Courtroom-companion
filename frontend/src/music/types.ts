@@ -107,6 +107,8 @@ export interface MusicSource {
   stop(options?: { fadeOutMs?: number }): Promise<void>
   /** Linear 0–1 effective volume. */
   setVolume(volume: number): void
+  /** Temporary mix attenuation, independent of master volume and track fades. */
+  setDucking?(factor: number, rampMs: number): void
   dispose(): void
 }
 

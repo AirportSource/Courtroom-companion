@@ -3,7 +3,7 @@
 // Pipeline per track:
 //   fetch -> ArrayBuffer -> decodeAudioData -> AudioBuffer (LRU cache)
 //   -> AudioBufferSourceNode -> trackGain (per-track) -> fadeGain (fades/pause click guard)
-//   -> masterGain (effective master volume) -> destination
+//   -> masterGain (effective master volume) -> duckGain (temporary mix attenuation) -> destination
 //
 // Looping uses the explicit region (loopStart/loopEnd in seconds, derived from samples).
 // No/invalid region: the whole buffer loops (play to the end, restart from 0).
@@ -68,6 +68,7 @@ interface ActiveChain {
   trackGain: GainNode
   fadeGain: GainNode
   masterGain: GainNode
+  duckGain: GainNode
   /** Context time at which `node` started, and the track position it started from. */
   startedAt: number
   base: number
@@ -113,6 +114,7 @@ export function createWebAudioSource(kind: 'original' | 'imported', resolver: Tr
   let warnings: MusicError[] = []
   let generation = 0
   let volume = 1
+  let duckFactor = 1
   let chain: ActiveChain | null = null
   let disposed = false
 
@@ -132,7 +134,7 @@ export function createWebAudioSource(kind: 'original' | 'imported', resolver: Tr
     } catch {
       // already stopped
     }
-    for (const node of [target.node, target.trackGain, target.fadeGain, target.masterGain]) node?.disconnect()
+    for (const node of [target.node, target.trackGain, target.fadeGain, target.masterGain, target.duckGain]) node?.disconnect()
     target.node = null
   }
 
@@ -290,10 +292,12 @@ export function createWebAudioSource(kind: 'original' | 'imported', resolver: Tr
         const fadeGain = context.createGain()
         const masterGain = context.createGain()
         masterGain.gain.value = volume
+        const duckGain = context.createGain()
+        duckGain.gain.value = duckFactor
         trackGain.connect(fadeGain)
         fadeGain.connect(masterGain)
-        masterGain.connect(context.destination)
-        const next: ActiveChain = { context, buffer, loop: plan.loop, node: null, trackGain, fadeGain, masterGain, startedAt: 0, base: 0, pausedAt: null }
+        masterGain.connect(duckGain).connect(context.destination)
+        const next: ActiveChain = { context, buffer, loop: plan.loop, node: null, trackGain, fadeGain, masterGain, duckGain, startedAt: 0, base: 0, pausedAt: null }
         startNode(next, 0, Math.max(0, options.fadeInMs ?? 0) / 1000)
         chain = next
         setState({ status: 'playing', error: null })
@@ -345,6 +349,17 @@ export function createWebAudioSource(kind: 'original' | 'imported', resolver: Tr
       const now = chain.context.currentTime
       chain.masterGain.gain.cancelScheduledValues(now)
       chain.masterGain.gain.setTargetAtTime(volume, now, 0.015)
+    },
+
+    setDucking(factor, rampMs) {
+      duckFactor = clamp01(factor)
+      if (!chain) return
+      const now = chain.context.currentTime
+      const param = chain.duckGain.gain
+      if (typeof param.cancelAndHoldAtTime === 'function') param.cancelAndHoldAtTime(now)
+      else { param.cancelScheduledValues(now); param.setValueAtTime(param.value, now) }
+      if (rampMs > 0) param.linearRampToValueAtTime(duckFactor, now + rampMs / 1000)
+      else param.setValueAtTime(duckFactor, now)
     },
 
     dispose() {

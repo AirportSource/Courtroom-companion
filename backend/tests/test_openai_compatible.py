@@ -137,6 +137,7 @@ def test_chat_request_translation_authorization_and_content_extraction():
     assert raw.model == MODEL
     assert raw.metadata == {
         "finish_reason": "stop",
+        "stop_reason": "end_turn",
         "usage": {"prompt_tokens": 10, "completion_tokens": 8, "total_tokens": 18},
     }
 

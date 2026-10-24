@@ -574,3 +574,118 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - Current chat supplies a requestId and uses local/same-origin task status/cancellation and duplicate coalescing. Cues `artifact_working` / `artifact_ready` are separate from CharacterReply; no ready state is published after failed/cancelled creation. Cancellation before the bounded atomic commit prevents creation; a completed commit remains honestly ready. Legacy chat/Test Connection remain dialogue-only.
   - Use a minimal plain-text Generated files panel outside the DS stage. Full phone/summon/evidence cinematic and final Court Record redesign are milestone 3.
 - **Rationale:** explicit small-file creation can fit the existing conversation boundary without giving generated text execution privileges or coupling providers to filesystem/presentation behavior. Full details and limits: `docs/ARTIFACTS.md`.
+
+## D-053 — Shared workload output budgets and distinct truncation failures
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - Normal dialogue preserves the configured output budget (default/inspected active Sonnet 5.5 profile: 600 tokens). Explicit artifact work gets a transient 16,384-token cap via shared `OutputWorkload` / gateway budget policy. Raise the shared settings ceiling from 8,192 to 16,384 to admit it; do not change saved profile budgets or automatically select model maximums.
+  - CharacterService estimates workload before the single response using advisory explicit-creation hints. The estimate affects budget only; it cannot authorize artifact creation, choose a path, change credentials or bypass action validation. Unknown phrasing stays on the normal budget. Schema capability alone is not evidence of artifact intent.
+  - Adapters remain thin: Anthropic/OpenAI-compatible use request max_tokens, Ollama maps it to num_predict, Fake receives the same request settings/workload. No provider has artifact-specific budget logic.
+  - Distinguish Anthropic max_tokens (`output_token_limit`), model_context_window_exceeded (`context_window_exceeded`), refusal and end_turn before parsing. Exhaustion never persists partial files or emits artifact_ready, even for parseable returned JSON. No continuation/retry is added. Report bounded workload/budget/stop-reason diagnostics separately from CharacterReply/performance and distinguish the two exhaustion causes in chat and Settings.
+- **Evidence:** mocked actual adapter payloads verify 600 → 16,384 → 600; integration tests prove no file/ready state for truncation and one file for larger completed output. Anthropic's [stop-reason documentation](https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons) distinguishes output cap from context-window exhaustion.
+- **Rationale:** small dialogue and file content need different headroom, while the existing artifact contract/storage/security boundary stays authoritative.
+
+## D-054 — Explicit semantic reactions take priority over inferred SFX gates
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** the semantic-SFX selection/suppression details of D-049; all other D-049 presentation and typing decisions remain.
+- **Decision:**
+  - Keep the existing data-driven CharacterDirector and audio-event system. `performance.json` may map explicit semantic reaction values (`shock`, `surprise`, `realization`, `comic`, `emphasis`) separately from visual reaction IDs. The shared reply schema exposes these configured semantic values to every provider.
+  - An explicit mapped semantic reaction selects its intended SFX without the emotion fallback threshold or fallback sound cap. Visual one-shots retain their existing intensity threshold, cross-reply cooldown and per-reply cap; an explicit sound still fires with the beat's starting pose if the visual reaction is held back.
+  - Emotion-only fallback thresholds are per-character data: Maya uses surprised 0.55, excited 0.60, playful 0.70 and happy 0.70. Ordinary anxious/neutral/calm/thinking emotions are silent unless explicitly mapped.
+  - Record per-beat selection/suppression diagnostics in the existing director notes. Development UI adds recent actual audio-event outcomes and manual audition controls; production UI stays unchanged.
+  - SFX remains on only the first page of a beat and is guarded by its line key, including React development effect replay. Runtime WAV event names and source mappings are unchanged.
+- **Evidence:** deterministic director tests cover explicit sounds, moderate surprise fallback, low anxious silence, cooldown behavior and per-reply caps; frontend tests verify page-one-only playback and RIFF/WAVE mappings for shock, surprise, realization, comic and emphasis.
+- **Rationale:** the prior shared path conflated a visual surprised pose with a semantic sound and applied the visual reaction cooldown to audible explicit intent. Explicit intent is already a deliberate model choice; emotion-only fallback remains selective.
+
+## D-055 — Artifact delivery is a frontend presentation over the existing artifact store
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - Keep milestone 2 `GeneratedArtifact` storage, IDs, API, receipt, cancellation and provider-independent action authoritative. The Court Record is a derived view and never persists a second copy/catalog.
+  - Use one turn-scoped frontend reducer: `idle → artifact-working → waiting-for-phone-acknowledgement → evidence-summon → response-release → idle`, with failed/cancelled terminal presentation states reset by the next turn. Duplicate/stale ready, acknowledgement and timer events do not start another sequence.
+  - Reuse Maya's thinking state. `artifact_working` maps to a temporary Thinker visual; the ready artifact maps to a bounded phone notification requiring user acknowledgement. The summon displays the existing native file icon, safe display name, and deterministic copy.
+  - Buffer the final response already returned by the one chat request; after summon release it through the existing performance/timeline and paginator. No model call is made for notification text or after acknowledgement.
+  - Add semantic `phone_ring`, `phone_answer`, `evidence_reveal`, `evidence_added` events in `audio.json`; reuse the existing brief phone beep for ring and distinct one-shots for answer/reveal/add. Later Court Record visits do not replay delivery effects.
+  - Generated-file Court Record has six fixed 64×64 slots per 3×2 page, stable createdAt/ID order, selection, pagination, and an inspector using existing read/download/delete endpoints. Thinker, phone and static/demo evidence are not generated files. The old Generated files panel stays dev-only.
+  - A reload or navigation interruption does not replay the entire cinematic. Persisted artifacts remain listed; task cancellation uses existing milestone 2 behavior and never deletes a committed artifact.
+- **Evidence:** frontend reducer and Court Record tests plus an isolated FakeProvider browser run completed artifact creation → phone → acknowledgement → summon → one buffered reply, then read/download inspection by opaque ID. Logical 256×192 stage was inspected at 1×, 3×, 4× and auto. No second `/api/chat` request was made by presentation.
+- **Rationale:** theatrics are presentation state, while generated data and safe persistence remain provider-independent and durable.
+
+## D-056 — Maya's recurring quirks stay occasional and context-led
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - Keep Maya's fondness for burgers/food and other traits in `personality.md`, but describe them as occasional interests rather than catchphrases.
+  - Prioritize the user's current topic and Maya's relevant emotional response. Encourage variation across food, spirit medium, Phoenix/Nick, mystery and supernatural references, with recent dialogue context informing repetition.
+  - Do not implement keyword censoring, trait counters or provider-specific prompt logic.
+- **Evidence:** an isolated eight-turn deterministic FakeProvider conversation showed playful fixture variety and no burger lines. This verifies the follow-up test run only; FakeProvider does not assess whether a real LLM obeys personality guidance.
+- **Rationale:** retain character identity without reducing Maya to a rotating reference gag.
+
+## D-057 — Character task acknowledgements and scoped phone ringing/mix control
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** D-055's short notification-beep phone policy. Artifact persistence, response buffering and Court Record view architecture are preserved.
+- **Decision:**
+  - Expose the service's existing advisory `expectedWorkload` in turn status before the single provider call. It permits presentation acknowledgement, never action authorization. Only validated artifact data still creates files or emits ready.
+  - Put local task acknowledgement copy/locale variants and pose in the character pack. Reuse the existing measured dialogue/typewriter path, rotate short variants and preserve Maya's anti-caricature guidance. The current document locale is used; there is no new language detector. No acknowledgement model request or conversation-history turn is added.
+  - Extend the existing delivery reducer with `task-acknowledgement` and a minimum 350 ms working gate. A fast final result waits for acknowledgement completion (500 ms after typing) and the working gate before phone; failures finish the line then release the original error response. Cancellation ends presentation promptly.
+  - `phone_ring_loop` uses the supplied MP3 identified by embedded title **Ringtone (Phoenix Wright)**. Its audio bytes stay unchanged; a measured manifest region loops natively until answer or cleanup. Audio event leases share one source and reject late pending-decode work after release. Preserve the existing phone-answer/cut event.
+  - A scoped MusicEngine attenuation lease multiplies current BGM by 0.12, with 220 ms attack / 350 ms restore. A separate Web Audio gain preserves master/mute and track fades; radio uses bounded official-player volume ramps. Release restores current settings, not saved old values, and never restarts a track.
+  - Court Record browsing uses existing cursor/confirm/cancel/page menu sounds with a 140 ms movement-sound cadence. Delivery sounds never play during ordinary browsing. Dev builds expose a 45-second ringtone audition with Stop and cleanup.
+- **Evidence:** deterministic loop ownership/cleanup, duck preservation/ramp, acknowledgement order/failure, workload single-call and Court Record-feedback tests. An isolated Chrome/FakeProvider run held one native ringtone source across a loop, measured 0.80 → 0.096 → 0.80 BGM gain, and stopped the ringtone on answer without a track restart. Acoustic listening was unavailable.
+- **Rationale:** acknowledgement, delivery timing and temporary mix changes belong in generic presentation/audio layers while the existing artifact, provider and conversation contracts stay authoritative.
+
+## D-058 — Persistent Conversation Record, separate from LLM context
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - The backend keeps a user-facing archive of completed turns at `<COURTROOM_CONVERSATION_RECORD_DIR | COURTROOM_CONFIG_DIR | backend/.local>/conversation-record/records.json` (git-ignored). The document is versioned and written atomically under a lock, with opaque 32-hex IDs.
+  - Public entry: `{ id, characterId, createdAt, userText, assistantText, artifactIds }`. `assistantText` is the directed, visible reply. Hidden reasoning, prompts, raw provider payloads, file content, credentials and paths are never stored.
+  - Caps: 5,000 entries (oldest pruned deterministically), user text 2,000 characters, reply 20,000, at most 8 artifact IDs. A corrupt file is preserved as `records.corrupt-*.json`, and the store starts empty.
+  - Capture happens once, server-side, in the chat route after `service.chat` succeeds, inside the shielded `TurnRegistry` job. A hashed requestId receipt makes replays idempotent. Failures, cancellations, Test Connection, acknowledgements, phone/summon cues, beats and pages create nothing.
+  - Routes: `GET/DELETE /api/conversation-record[/{id}]`, plus clear-all requiring `{confirm: true}`. All are behind the local/same-origin guard with `no-store`. The list is ordered newest first.
+  - The archive is never sent to a provider. LLM history keeps its own in-memory window (D-059).
+  - The frontend `ConversationRecordView` is an in-stage DS screen and overlay. It shows one framed portrait slot per turn (`character.json` `courtRecordPortrait`, looked up per character id) and a detail view with YOU / character / FILES on the 15 px line grid. Artifacts open through the existing safe read/download API, and a deleted file shows "File no longer available". It uses ordinary menu sounds only.
+- **Rationale:** users can revisit exchanges and linked files without growing or changing the model's context.
+
+## D-059 — Dialogue output floor, normalized truncation taxonomy and history context budget
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Supersedes:** D-053's "normal dialogue preserves the configured budget (600)". The rest of D-053 remains.
+- **Root causes of the reported "600 token overflow":**
+  - The 600-token normal budget was too small for structured multi-beat replies, which reach about 2.7k tokens in worst-case Japanese.
+  - Reasoning models spend hidden tokens from the same cap.
+  - OpenAI-compatible (`finish_reason: length`) and Ollama (`done_reason: length`) truncation was not detected, so cut-off JSON could be shown as plain dialogue.
+- **Decision:**
+  - Dialogue requests use `max(profile max_tokens, 4096)` (`DIALOGUE_MIN_OUTPUT_TOKENS`). Artifacts keep 16,384 tokens, which covers about 48 KiB of dense code and about 64 KiB of prose and stays within common OpenAI-compatible output limits. A completed file over 64 KiB is `artifact_too_large`. Saved profiles are not rewritten and no model maximum is looked up.
+  - Stop reasons are normalized across providers. Any `max_tokens` or `model_context_window_exceeded` result is rejected by the gateway before parsing, even when the body is valid JSON.
+  - `generation.failureClass` groups public codes (`output_truncated`, `context_window_exceeded`, `artifact_too_large`, `provider_limit`, `unknown_provider_error`); existing public codes are unchanged. Chat shows specific messages, such as "The model reached its output limit (N tokens) before finishing the file. Incomplete output was discarded. No partial file was saved."
+  - Ollama reports `length` for both output and context exhaustion; `eval_count` below the budget is classified as context.
+  - LLM history is fitted at request time (`characters/context.py`): script-aware cost, 8,000 per entry (clipped with a marker), 16,000 in total, oldest whole messages dropped first, always starting with a user message. Nothing is summarized, and the Conversation Record is never included.
+- **Evidence:** 27 backend taxonomy tests covering three providers × dialogue/artifact × truncation/context: no file, no ready cue, no artifact, history unchanged. Browser runs with a scratch provider stub reproduced both failures through the real chat API and UI.
+
+## D-060 — Native evidence frame primitive and collapsible secondary panels
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - `ui/court-record/evidence_frame.png` is the native 70×70 evidence-tile border, with exact source pixels and a transparent 64×64 window. It is registered as `ui.json` `evidence_frame`.
+  - One `EvidenceTile` primitive draws it at native size, puts 64×64 content in the window, and shows selection outside the frame.
+  - It is used by the generated-file Court Record (3×2 grid of 70 px tiles), the artifact summon (native-size file icon; state machine unchanged) and the Conversation Record. The static demo evidence view keeps its existing 64 px layout.
+  - `CollapsiblePanel` (`id`, `title`, persisted in settings `expandedPanels`, accessible button header, collapsed bodies unmounted or `hidden` + `inert`) groups out-of-stage panels: Generated files (dev), Dialogue dev tools, Music / Radio, and Imported library / loop editor.
+  - All panels start collapsed. The radio panel is forced open while the radio plays or loads, so the official YouTube player is always visible when it produces sound.
+- **Rationale:** a DS-faithful look with native pixels, and a tidy page that prioritizes the stage.
+
+## D-061 — Data-driven phone ringtone presets
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Extends:** D-057. Phone flow, single-source lease, ducking and cleanup are unchanged.
+- **Decision:**
+  - `audio.json` `ringtones: { default: "phoenix", items: { phoenix, wellington, godot } }`. Each item names a sound with a native loop region.
+  - Sources are byte-identical Sound BOX ringtone MP3s identified by embedded ID3 tags (Ringtone (Phoenix Wright) 2-11, Ringtone (Richard Wellington) 2-02, Ringtone (Godot) 3-34).
+  - Settings stores `ringtoneId`. Unknown or empty ids fall back to the default. The phone reads the selection at ring time, so no restart is needed. Selection happens in `acquireRingtone`, with no UI branches.
+  - Settings provides Ringtone + Preview + Stop. Preview uses the same shared loop lease, does not duck BGM, stops after 20 s, and stops on selection change or when Settings unmounts.
+  - Lazily loaded ringtone events are not preloaded at startup.
+  - The validator checks that the default exists and that items reference real sounds.
+- **Evidence:** ringtone tests, plus a Chrome run in which Godot was selected and the real artifact phone flow played the Godot loop (2.000–38.001 s) as one source with BGM ducked to 0.12. Answering stopped it and restored 1.0 without a track restart. Loops were measured offline and not auditioned.

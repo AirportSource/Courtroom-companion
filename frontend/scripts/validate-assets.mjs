@@ -111,6 +111,22 @@ if (audio) {
       errors.push(`audio.json sounds.${id}: unknown category "${sound.category}"`)
     }
     checkFile(audioDir, sound.src, `audio.json sounds.${id}`)
+    if (sound.loop && (!Number.isFinite(sound.loop.startSeconds) || !Number.isFinite(sound.loop.endSeconds)
+      || sound.loop.startSeconds < 0 || sound.loop.endSeconds <= sound.loop.startSeconds)) {
+      errors.push(`audio.json sounds.${id}: invalid loop seconds`)
+    }
+  }
+  // Ringtone presets (D-059): each references an existing sound; the default must exist.
+  if (audio.ringtones !== undefined) {
+    const items = audio.ringtones?.items ?? {}
+    if (!Object.hasOwn(items, audio.ringtones?.default)) {
+      errors.push(`audio.json ringtones.default: unknown ringtone "${audio.ringtones?.default}"`)
+    }
+    for (const [id, item] of Object.entries(items)) {
+      if (!/^[A-Za-z0-9_-]{1,64}$/.test(id)) errors.push(`audio.json ringtones.items.${id}: invalid id`)
+      if (typeof item?.label !== 'string' || !item.label) errors.push(`audio.json ringtones.items.${id}: missing label`)
+      if (!soundIds.has(item?.sound)) errors.push(`audio.json ringtones.items.${id}: unknown sound id "${item?.sound}"`)
+    }
   }
   for (const [event, soundId] of Object.entries(audio.events ?? {})) {
     if (!soundIds.has(soundId)) errors.push(`audio.json events.${event}: unknown sound id "${soundId}"`)
@@ -255,6 +271,18 @@ for (const [charId, manifestPath] of Object.entries(index?.characters ?? {})) {
     }
     if (target.reaction !== undefined && !reactions[target.reaction]) {
       errors.push(`${where} emotions.${emotion}: unknown reaction "${target.reaction}"`)
+    }
+  }
+  // Optional square record portrait (D-058): file must exist and match its declared size.
+  if (char.courtRecordPortrait !== undefined) {
+    const portrait = char.courtRecordPortrait
+    checkFile(packDir, portrait?.src, `${where} courtRecordPortrait`)
+    const full = join(packDir, portrait?.src ?? '')
+    if (existsSync(full) && /\.png$/i.test(full)) {
+      const { width, height } = pngSize(full)
+      if (width !== portrait.width || height !== portrait.height || width !== height) {
+        errors.push(`${where} courtRecordPortrait: declared ${portrait.width}x${portrait.height}, actual ${width}x${height} (must be square)`)
+      }
     }
   }
   // Optional waiting/thinking pose (D-048): must name a real emotion and animation.

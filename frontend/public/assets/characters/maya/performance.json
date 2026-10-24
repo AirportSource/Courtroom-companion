@@ -13,8 +13,16 @@
   "sfx": {
     "maxPerReply": 1,
     "minIntensity": 0.75,
-    "reactions": { "shocked": "shock" },
-    "emotions": { "surprised": "surprise", "excited": "emphasis", "playful": "comic", "anxious": "tension", "thinking": null }
+    "reactions": {
+      "shocked": "shock",
+      "shock": "shock",
+      "surprise": "surprise",
+      "realization": "realization",
+      "comic": "comic",
+      "emphasis": "emphasis"
+    },
+    "emotions": { "surprised": "surprise", "excited": "emphasis", "playful": "comic", "happy": "comic" },
+    "emotionMinIntensities": { "surprised": 0.55, "excited": 0.60, "playful": 0.70, "happy": 0.70 }
   },
   "gestures": {
     "arms_open": { "animation": "arms_open", "emotions": ["explaining", "excited", "happy", "neutral"] },

@@ -10,6 +10,10 @@ export interface Settings {
   /** Reaction/effect SFX volume 0–1 (separate from blips and music). */
   sfxVolume: number
   sfxMuted: boolean
+  /** Phone ringtone id from audio.json `ringtones`, or '' for the manifest default. */
+  ringtoneId: string
+  /** Ids of out-of-stage panels the user expanded (everything else starts collapsed). */
+  expandedPanels: string[]
   /** Background-music source; 'off' plays nothing. */
   musicSource: MusicSourceSetting
   /** Master BGM volume 0–1, independent from blips/SFX. */
@@ -35,6 +39,8 @@ export const DEFAULT_SETTINGS: Settings = {
   blipsMuted: false,
   sfxVolume: 0.6,
   sfxMuted: false,
+  ringtoneId: '',
+  expandedPanels: [],
   musicSource: 'off',
   musicVolume: 0.5,
   musicMuted: false,
@@ -112,6 +118,10 @@ export function readStoredSettings(): Settings {
       blipsMuted: typeof stored.blipsMuted === 'boolean' ? stored.blipsMuted : DEFAULT_SETTINGS.blipsMuted,
       sfxVolume: unitInterval(stored.sfxVolume, DEFAULT_SETTINGS.sfxVolume),
       sfxMuted: typeof stored.sfxMuted === 'boolean' ? stored.sfxMuted : DEFAULT_SETTINGS.sfxMuted,
+      ringtoneId: storedId(stored.ringtoneId),
+      expandedPanels: Array.isArray(stored.expandedPanels)
+        ? stored.expandedPanels.filter((id): id is string => typeof id === 'string' && SAFE_ID.test(id)).slice(0, 32)
+        : [],
       ...readMusicSettings(stored as Record<string, unknown>),
       aiProvider:
         stored.aiProvider === 'ollama' || stored.aiProvider === 'openai_compatible' ? stored.aiProvider : 'fake',
@@ -142,7 +152,8 @@ export function writeStoredSettings(settings: Settings): void {
     // Explicit allow-list: neither transient profile forms nor credentials can enter storage.
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
       textSpeed: settings.textSpeed, blipVolume: settings.blipVolume, blipsMuted: settings.blipsMuted,
-      sfxVolume: settings.sfxVolume, sfxMuted: settings.sfxMuted, ...musicSnapshot(settings), ...legacy, providerProfilesMigrated: Boolean(previous.providerProfilesMigrated),
+      sfxVolume: settings.sfxVolume, sfxMuted: settings.sfxMuted, ringtoneId: settings.ringtoneId,
+      expandedPanels: settings.expandedPanels, ...musicSnapshot(settings), ...legacy, providerProfilesMigrated: Boolean(previous.providerProfilesMigrated),
     }))
   } catch {
     // Storage unavailable (private mode etc.): settings simply don't persist.
@@ -154,7 +165,8 @@ export function completeProviderMigration(): void {
     const settings = readStoredSettings()
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
       textSpeed: settings.textSpeed, blipVolume: settings.blipVolume, blipsMuted: settings.blipsMuted,
-      sfxVolume: settings.sfxVolume, sfxMuted: settings.sfxMuted, ...musicSnapshot(settings), providerProfilesMigrated: true,
+      sfxVolume: settings.sfxVolume, sfxMuted: settings.sfxMuted, ringtoneId: settings.ringtoneId,
+      expandedPanels: settings.expandedPanels, ...musicSnapshot(settings), providerProfilesMigrated: true,
     }))
   } catch {
     // Server-side migration is idempotent even when browser storage is unavailable.
