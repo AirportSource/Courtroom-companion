@@ -689,3 +689,21 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - Lazily loaded ringtone events are not preloaded at startup.
   - The validator checks that the default exists and that items reference real sounds.
 - **Evidence:** ringtone tests, plus a Chrome run in which Godot was selected and the real artifact phone flow played the Godot loop (2.000–38.001 s) as one source with BGM ducked to 0.12. Answering stopped it and restored 1.0 without a track restart. Loops were measured offline and not auditioned.
+
+## D-062 — Windows standalone build: one in-process loopback server, bundled resources, LocalAppData user data
+- **Status:** Accepted
+- **Date:** 2026-10-24
+- **Decision:**
+  - PyInstaller 6.22.3 (pinned in `backend/requirements-build.txt`) packages `backend/desktop_main.py` with `packaging/CourtroomCompanion.spec`. Debug is a one-directory console build; release is the one-file windowed `CourtroomCompanion.exe` with Windows version metadata and no icon. The entry point is `scripts/build_windows.py`. Development mode is unchanged.
+  - One process hosts Uvicorn in-process on a single pre-bound `127.0.0.1` socket (never `0.0.0.0`). `mount_frontend` serves the built frontend only in desktop mode, after all API routers: SPA fallback for extensionless paths, `/api/*` never shadowed, traversal-safe, explicit MIME types, immutable caching only for hashed bundles.
+  - `app/runtime/paths.py` is the single path authority. Immutable resources come from the repository or `_MEIPASS`. Mutable data goes to `backend/.local` (dev, unchanged) or `%LOCALAPPDATA%\CourtroomCompanion` (frozen), behind explicit env overrides. A mutable path inside the bundle is an error.
+  - The port is remembered in `instance/preferred-port.json`, because localStorage settings are per origin. It falls back to an OS port without overwriting the preference.
+  - Single instance uses a named mutex plus `instance.json` with a health check: a second launch opens the existing URL and exits.
+  - Lifecycle: a desktop-only browser heartbeat (15 s) and watchdog (120 s grace, 600 s if never connected). The one-file child watches its bootloader parent, so killing the bootloader never orphans the server.
+  - Rotating, redacted logs live under `logs/`. Release startup failures show a message box naming the log file.
+  - The copyrighted OST is excluded from the default build; `--with-original-soundtrack` is for personal builds only. API keys are never bundled; the OS CredentialStore is reused.
+- **Evidence:** 500 backend tests (runtime paths, frontend serving, desktop launcher) and 252 frontend tests.
+  - The packaged debug and release builds were exercised in Chrome: chat, Settings, ringtone, the artifact phone flow, Court Record and Conversation Record, download/delete, and Japanese.
+  - The release exe was copied alone to a clean directory and launched without Python or Node on `PATH`. A second instance handed off. Killing the bootloader left no orphan. A restart kept the port, records, artifact and ringtone. The heartbeat shutdown was clean.
+  - Dev Uvicorn + Vite were re-verified.
+- **Rationale:** a double-click experience with no developer tooling, a strict resource/data split, and no change to the application's behaviour.

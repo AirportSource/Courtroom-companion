@@ -897,3 +897,46 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - Scratch configs and launchers were deleted.
 - `backend/.local/outputs` holds two files from 20:15 that were not created by this session (likely the user's own server); they were left untouched.
 - No commit or push.
+
+---
+
+## 2026-10-24 — Windows standalone distribution (D-062)
+
+**Process and models**
+- Lead: Claude Opus 5.5 (medium), covering architecture, contracts, `main.tsx` wiring, review, packaged/clean-directory/persistence validation and docs.
+- Workers: runtime-paths (Sonnet, high), frontend-production (Sonnet, medium), packaging (Sonnet, high).
+
+**Implemented**
+- `backend/app/runtime/paths.py`: one resource/data path authority. The five stores delegate to it, and the dev layout is unchanged.
+- `backend/app/web/frontend.py`: production SPA serving.
+- `backend/app/desktop/` + `backend/desktop_main.py`: launcher, logging, single instance, heartbeat lifecycle, parent watch.
+- `frontend/src/desktop/desktopHeartbeat.ts`: production + desktop only.
+- `packaging/CourtroomCompanion.spec`, `scripts/build_windows.py`, `backend/requirements-build.txt` (PyInstaller 6.22.3), and `.gitignore` entries for `/dist/` and `/build/`.
+
+**Found during lead validation and fixed**
+- **Orphaned server:** `--smoke` on the one-file build left the server child running after its bootloader was terminated, and the locked exe made the next build fail silently. Fixed with a bootloader parent-liveness watch in the child, tree termination in the smoke check, and loud build failures. Verified: killing only the bootloader stops the child within about 0.5 s.
+- **Settings reset on restart:** a random port per launch changed the browser origin, which would reset localStorage settings (including the ringtone) on every restart. Fixed by remembering the first chosen port (`instance/preferred-port.json`).
+- An invalid `\C` escape in the `paths.py` docstring (SyntaxWarning at build time).
+- The successful browser launch was never logged; it is now.
+
+**Packaged validation (real `%LOCALAPPDATA%\CourtroomCompanion`, offline Fake profile only)**
+- **Debug onedir:**
+  - all resource paths resolved inside `_internal` and all data paths under LocalAppData; `WinVaultKeyring`;
+  - title, chat, the thinking pose, Settings (Game music without the OST shows no tracks), Godot ringtone selection, the artifact phone flow fetching the selected ringtone, answering and buffered reply release;
+  - the record/artifact APIs, download;
+  - closing the tab led to a heartbeat shutdown after about 130 s, clean, exit 0, instance file removed.
+- **Release onefile, copied alone to a clean scratch directory and launched with `PATH` limited to Windows directories:**
+  - it served from `%TEMP%\_MEI…`, wrote nothing beside the exe, and saved its port preference;
+  - a second launch exited 0 with one listener;
+  - killing the bootloader left no orphan;
+  - a relaunch reused port 54397, and the 3 records (including Japanese), `hello_maya.py` and ringtone `wellington` all persisted;
+  - the Conversation Record rendered Japanese; artifact deletion returned 204 and then 404.
+- **Auto-open:** `webbrowser.open` was triggered in the real double-click run. The tab in the user's already-running Chrome could not be observed without reading browser history.
+- **Not tested:** Ctrl+C in the debug console, and the failure message box.
+
+**Final checks**
+- Backend 500 passed, 2 skipped. Frontend 252 passed.
+- `validate:assets` 205 / 0 errors. `tsc`, lint and `git diff --check` pass.
+- Final `build_windows.py --mode release --onefile --smoke` (with a fresh `npm run build`) passed with no remaining process.
+- Dev regression: Uvicorn `/api/health` 200, backend `/` 404 (no dev mount), Vite page/module/proxy 200.
+- Leftover `_MEI*` folders from test force-kills were removed. No commit or push.

@@ -33,3 +33,8 @@ __pycache__/
 .env.*
 !.env.example
 backend/.local/
+
+# Packaging output (repo-root scoped; frontend/dist is covered by the "dist" rule above)
+/dist/
+/build/
+packaging/build/

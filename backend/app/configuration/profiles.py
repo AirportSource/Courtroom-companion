@@ -10,6 +10,7 @@ from uuid import uuid4
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from ..llm.base import GenerationSettings
+from ..runtime import paths as runtime_paths
 from ..llm.config import ProviderConfig
 from .credentials import CredentialStore, CredentialStoreError
 
@@ -88,8 +89,7 @@ class ProfileNotFoundError(LookupError):
 
 
 def profile_path() -> Path:
-    directory = Path(os.environ.get("COURTROOM_CONFIG_DIR", Path(__file__).resolve().parents[2] / ".local"))
-    return directory / "provider-profiles.json"
+    return runtime_paths.config_dir() / "provider-profiles.json"
 
 
 def new_profile(draft: ProfileDraft) -> ProviderProfile:

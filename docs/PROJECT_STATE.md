@@ -1,6 +1,6 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-24 (Conversation Record / evidence frame / ringtones / token budgets). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-24 (Windows standalone build). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
@@ -53,6 +53,12 @@ At native size and render scale 1 (D-026), Maya is 146–162 px tall on the 192 
 - Out-of-stage panels are collapsible and start collapsed; the radio panel stays open while it plays.
 - Settings offers Phoenix (default), Richard Wellington and Godot ringtones with Preview/Stop; the phone uses the selection at ring time.
 - Dialogue has a 4096-token output floor. Truncation and context-window errors are detected and distinguished on every provider. LLM history is fitted to a deterministic size budget.
+
+**Windows standalone build (D-062, `docs/WINDOWS_BUILD.md`).**
+- `scripts/build_windows.py` builds `dist/CourtroomCompanion.exe` (one-file, windowed, about 27 MB) or a debug one-directory package.
+- One in-process 127.0.0.1 server serves the API and the built frontend. User data lives under `%LOCALAPPDATA%\CourtroomCompanion`.
+- Single instance, heartbeat shutdown and the remembered port are in place. The OST is excluded by default.
+- Development mode is unchanged.
 
 **Engine tests** run with `npm test` (D-029).
 

@@ -91,6 +91,10 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [x] Selectable ringtone presets (Phoenix default, Wellington, Godot) with Settings preview — D-061; loops not auditioned
 - [ ] Listen to ringtone loops and record/artifact UX on real providers
 
+## Phase 5d — Distribution (2026-10-24)
+- [x] Windows standalone exe: PyInstaller one-file release + debug onedir, loopback-only single server, LocalAppData data, single instance, heartbeat lifecycle — D-062
+- [ ] Installer, code signing, icon, auto-update (not started by design)
+
 ## Phase 6 — Voice input
 - [ ] Microphone / Whisper
 
