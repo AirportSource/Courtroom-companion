@@ -17,6 +17,7 @@ import copy
 import json
 import os
 import shutil
+import subprocess
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -109,21 +110,24 @@ def _clean_env() -> dict[str, str]:
     return env
 
 
-async def run_cli(command: list[str], stdin: str, timeout_s: float, cwd: Path) -> tuple[int, str, str]:
+def _run_blocking(command: list[str], stdin: str, timeout_s: float, cwd: Path) -> tuple[int, str, str]:
     try:
-        process = await asyncio.create_subprocess_exec(
-            *command, cwd=str(cwd), env=_clean_env(),
-            stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+        result = subprocess.run(
+            command, input=stdin.encode("utf-8"), capture_output=True, cwd=str(cwd), env=_clean_env(),
+            timeout=timeout_s, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
         )
     except (FileNotFoundError, PermissionError, OSError):
         raise SubscriptionCliError("cli_not_installed", f"{command[0]} could not be started") from None
-    try:
-        out, err = await asyncio.wait_for(process.communicate(stdin.encode("utf-8")), timeout=timeout_s)
-    except TimeoutError:
-        process.kill()
-        await process.wait()
+    except subprocess.TimeoutExpired:  # subprocess.run has already killed the process
         raise SubscriptionCliError("timeout", "The subscription CLI timed out") from None
-    return process.returncode or 0, out[:OUTPUT_MAX].decode("utf-8", "replace"), err[:OUTPUT_MAX].decode("utf-8", "replace")
+    out, err = result.stdout[:OUTPUT_MAX], result.stderr[:OUTPUT_MAX]
+    return result.returncode, out.decode("utf-8", "replace"), err.decode("utf-8", "replace")
+
+
+async def run_cli(command: list[str], stdin: str, timeout_s: float, cwd: Path) -> tuple[int, str, str]:
+    # A worker thread, not asyncio subprocesses: `uvicorn --reload` on Windows runs a selector event
+    # loop, which cannot start subprocesses (NotImplementedError).
+    return await asyncio.to_thread(_run_blocking, command, stdin, timeout_s, cwd)
 
 
 def _classify(text: str, default: str) -> str:

@@ -3,6 +3,7 @@
 import asyncio
 import json
 import os
+import sys
 from pathlib import Path
 
 import pytest
@@ -13,7 +14,7 @@ from app.llm.base import GenerationRequest, GenerationSettings
 from app.llm.config import ProviderConfig
 from app.llm.gateway import LLMGateway
 from app.llm.providers.subscription_cli import (
-    ClaudeCodeProvider, CodexProvider, SubscriptionCliError, _clean_env, strict_schema, transcript,
+    ClaudeCodeProvider, CodexProvider, SubscriptionCliError, _clean_env, run_cli, strict_schema, transcript,
 )
 from app.llm.schemas import Attachment, ChatMessage
 
@@ -112,6 +113,20 @@ def test_codex_exec_uses_strict_schema_file_and_reads_last_message():
     with pytest.raises(SubscriptionCliError) as error:
         asyncio.run(failed.generate(request()))
     assert error.value.code == "rate_limited"
+
+
+def test_run_cli_works_on_a_selector_event_loop(tmp_path):
+    # `uvicorn --reload` on Windows uses a selector loop, which cannot run asyncio subprocesses.
+    script = "import sys; data = sys.stdin.read(); print(data.upper()); print('warn', file=sys.stderr)"
+    loop = asyncio.SelectorEventLoop()
+    try:
+        code, out, err = loop.run_until_complete(run_cli([sys.executable, "-c", script], "all ok", 30, tmp_path))
+    finally:
+        loop.close()
+    assert code == 0 and out.strip() == "ALL OK" and err.strip() == "warn"
+    with pytest.raises(SubscriptionCliError) as error:
+        asyncio.run(run_cli([sys.executable, "-c", "import time; time.sleep(5)"], "", 0.5, tmp_path))
+    assert error.value.code == "timeout"
 
 
 def test_environment_never_carries_api_keys(monkeypatch):
