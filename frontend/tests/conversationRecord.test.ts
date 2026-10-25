@@ -2,8 +2,8 @@ import assert from 'node:assert/strict'
 import { afterEach, test } from 'node:test'
 import type { GeneratedArtifact } from '../src/artifacts/artifacts.ts'
 import {
-  deleteConversationRecord, getConversationRecord, listConversationRecord, parseConversationRecordEntry,
-  parseConversationRecordList,
+  clearConversationRecord, deleteConversationRecord, deleteConversationRecords, getConversationRecord,
+  listConversationRecord, parseConversationRecordEntry, parseConversationRecordList,
 } from '../src/conversationRecord/api.ts'
 import {
   DETAIL_LINE_HEIGHT, entryLabel, formatEntryDate, mapFileAvailability, maxScrollTop, orderedEntries,
@@ -100,4 +100,25 @@ test('detail scrolling moves in whole lines and clamps', () => {
   assert.equal(scrollByLines(0, -3, max), 0)
   assert.equal(scrollByLines(0, 3, 0), 0)
   assert.deepEqual([-120, 0, 3].map(wheelLines), [-1, 0, 1])
+})
+
+test('bulk delete and delete all use their routes and never throw', async () => {
+  const calls: { method: string; url: string; body: unknown }[] = []
+  mockFetch((url, init) => {
+    calls.push({ method: init?.method ?? 'GET', url, body: init?.body ? JSON.parse(String(init.body)) : null })
+    return init?.method === 'POST' ? new Response(JSON.stringify({ deleted: 2 })) : new Response(null, { status: 204 })
+  })
+  assert.deepEqual(await deleteConversationRecords(['a', 'b']), { ok: true, value: 2 })
+  assert.deepEqual(await clearConversationRecord(), { ok: true, value: true })
+  assert.deepEqual(calls, [
+    { method: 'POST', url: '/api/conversation-record/delete', body: { ids: ['a', 'b'] } },
+    { method: 'DELETE', url: '/api/conversation-record', body: { confirm: true } },
+  ])
+  // Nothing to send, or an invalid id: refused locally without a request.
+  assert.deepEqual(await deleteConversationRecords([]), { ok: false, error: 'unavailable' })
+  assert.deepEqual(await deleteConversationRecords(['../x']), { ok: false, error: 'unavailable' })
+  assert.equal(calls.length, 2)
+  globalThis.fetch = (() => Promise.reject(new Error('offline'))) as typeof fetch
+  assert.deepEqual(await deleteConversationRecords(['a']), { ok: false, error: 'unavailable' })
+  assert.deepEqual(await clearConversationRecord(), { ok: false, error: 'unavailable' })
 })

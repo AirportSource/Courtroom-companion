@@ -77,6 +77,24 @@ def test_ordering_newest_first_and_delete(tmp_path):
         assert entries(client) == []
 
 
+def test_delete_several_entries_at_once(tmp_path):
+    app, _ = make_app(tmp_path)
+    with local(app) as client:
+        for text in ("one", "two", "three", "four"):
+            client.post("/api/chat", json=body(text))
+        ids = {e["userText"]: e["id"] for e in entries(client)}
+        gone = ids["one"]
+        assert client.delete(f"{RECORD}/{gone}").status_code == 204
+        # Already-deleted ids are skipped; the count says what was really removed.
+        response = client.post(f"{RECORD}/delete", json={"ids": [ids["two"], ids["four"], gone]})
+        assert response.status_code == 200 and response.json() == {"deleted": 2}
+        assert [e["userText"] for e in entries(client)] == ["three"]
+        assert client.post(f"{RECORD}/delete", json={"ids": []}).status_code == 422
+        assert client.post(f"{RECORD}/delete", json={"ids": ["../etc"]}).status_code == 404
+        assert client.post(f"{RECORD}/delete", json={"ids": [ids["three"]], "extra": 1}).status_code == 422
+        assert [e["userText"] for e in entries(client)] == ["three"]
+
+
 def test_persistence_and_provider_context_unaffected(tmp_path):
     first, _ = make_app(tmp_path)
     with local(first) as client:

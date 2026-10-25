@@ -30,9 +30,15 @@
 .rec-view button:disabled { color: #81909a; cursor: default; }
 .rec-view button:focus-visible, .rec-view a:focus-visible { outline: 1px solid #ffdd79; outline-offset: 1px; }
 .rec-heading { position: absolute; z-index: 2; inset: 0 0 auto; height: 16px; padding: 0 6px; display: flex; align-items: center; justify-content: space-between; background: #354c60; border-bottom: 1px solid #b5a56c; }
+.rec-heading-actions { display: flex; gap: 4px; }
 .rec-grid { position: absolute; inset: 0; outline: none; }
 .rec-view .rec-slot { position: absolute; display: block; padding: 0; border: 0; background: none; }
 .rec-view .rec-slot:focus-visible { outline: none; }
+/* Selection mode: a check box in the tile's corner; unchecked tiles are dimmed. */
+.rec-slot--selecting:not(.rec-slot--checked) .ev-tile { filter: brightness(0.6); }
+.rec-check { position: absolute; right: 2px; top: 2px; width: 13px; height: 13px; line-height: 12px; text-align: center; color: #1b2a12; background: #e8e3c8; border: 1px solid #263e53; }
+.rec-slot--checked .rec-check { background: #ffdd79; }
+.rec-danger { color: #ffc1a7; }
 .rec-unknown { display: block; width: 64px; height: 64px; color: #8fa3b0; font-size: 24px; line-height: 64px; text-align: center; }
 .rec-empty { position: absolute; left: 12px; top: 72px; width: 232px; padding: 4px; margin: 0; text-align: center; background: #172738; }
 .rec-footer { position: absolute; z-index: 2; inset: auto 0 0; height: 32px; padding: 1px 6px 0; background: #263e53; border-top: 1px solid #9c966c; }

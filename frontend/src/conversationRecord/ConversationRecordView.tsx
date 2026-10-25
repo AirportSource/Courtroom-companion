@@ -7,7 +7,8 @@ import { generatedMove } from '../courtRecord/generatedFiles.ts'
 import { playMenuSound } from '../engine/menuSounds.ts'
 import type { UiImage } from '../engine/manifestTypes.ts'
 import {
-  deleteConversationRecord, getConversationRecord, listConversationRecord, type ConversationRecordEntry,
+  clearConversationRecord, deleteConversationRecord, deleteConversationRecords, getConversationRecord,
+  listConversationRecord, type ConversationRecordEntry,
 } from './api.ts'
 import {
   DETAIL_LINE_HEIGHT, DETAIL_VISIBLE_LINES, RECORD_PAGE_SIZE, entryLabel, mapFileAvailability, maxScrollTop,
@@ -33,6 +34,8 @@ export interface ConversationRecordViewProps {
 }
 
 type Mode = 'list' | 'detail' | 'file'
+/** Pending bulk deletion in selection mode: the checked entries, or every entry. */
+type BulkConfirm = 'some' | 'all' | null
 type Load = { status: 'loading' } | { status: 'ready' } | { status: 'error' }
 type FileView = { id: string; name: string | null; state: 'loading' | 'ready' | 'error'; text: string }
 
@@ -55,6 +58,10 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
   const [confirming, setConfirming] = useState(false)
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
+  // Selection mode: tiles toggle a check instead of opening; Delete removes the checked entries.
+  const [selecting, setSelecting] = useState(false)
+  const [checked, setChecked] = useState<ReadonlySet<string>>(new Set())
+  const [bulkConfirm, setBulkConfirm] = useState<BulkConfirm>(null)
   const root = useRef<HTMLDivElement>(null)
   const grid = useRef<HTMLDivElement>(null)
   const body = useRef<HTMLDivElement>(null)
@@ -104,9 +111,42 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
     })
   }
 
+  const toggleSelecting = () => {
+    if (busy) return
+    if (selecting) feedback.back(); else feedback.confirm()
+    setSelecting(!selecting); setChecked(new Set()); setBulkConfirm(null); setNotice(null)
+  }
+
+  const toggleChecked = (id: string) => {
+    setBulkConfirm(null)
+    setChecked((previous) => {
+      const next = new Set(previous)
+      if (next.has(id)) next.delete(id); else next.add(id)
+      return next
+    })
+  }
+
+  const removeBulk = async (kind: 'some' | 'all') => {
+    if (busy) return
+    feedback.confirm()
+    setBusy(true)
+    const result = kind === 'all' ? await clearConversationRecord() : await deleteConversationRecords([...checked])
+    if (!alive.current) return
+    setBusy(false); setBulkConfirm(null)
+    if (!result.ok) { setNotice(t('record.deleteManyFailed')); return }
+    const remaining = kind === 'all' ? [] : entries.filter((entry) => !checked.has(entry.id))
+    setEntries(remaining)
+    setSelectedId(remaining[Math.min(selectedIndex, remaining.length - 1)]?.id ?? null)
+    setChecked(new Set()); setNotice(null)
+    if (remaining.length === 0) setSelecting(false)
+    onEntriesChanged?.()
+  }
+
   const back = () => {
     feedback.back()
-    if (confirming) setConfirming(false)
+    if (bulkConfirm) setBulkConfirm(null)
+    else if (selecting && mode === 'list') { setSelecting(false); setChecked(new Set()) }
+    else if (confirming) setConfirming(false)
     else if (mode === 'file') setMode('detail')
     else if (mode === 'detail') setMode('list')
     else onClose()
@@ -158,7 +198,11 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
     const onButton = target.tagName === 'BUTTON' || target.tagName === 'A'
     if (mode === 'list') {
       if (NAV_KEYS.includes(key)) { stop(); choose(generatedMove(selectedIndex, entries.length, key)) }
-      else if ((key === 'Enter' || key === ' ') && !onButton) { stop(); open() }
+      else if ((key === 'Enter' || key === ' ') && !onButton) {
+        stop()
+        if (!selecting) open()
+        else if (selected) toggleChecked(selected.id)
+      }
     } else if (key === 'ArrowUp' || key === 'ArrowDown') { stop(); scroll(key === 'ArrowUp' ? -1 : 1) }
     else if (key === 'PageUp' || key === 'PageDown') { stop(); scroll((key === 'PageUp' ? -1 : 1) * (DETAIL_VISIBLE_LINES - 1), true) }
     else if (key === 'Home' || key === 'End') { stop(); scroll((key === 'Home' ? -1 : 1) * 1000, true) }
@@ -175,7 +219,12 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
       onKeyDown={onKey} onClick={(event) => event.stopPropagation()}>
       <header className="rec-heading">
         <strong>{heading}</strong>
-        <button type="button" onClick={back}>{t(mode === 'list' ? 'common.close' : 'common.back')}</button>
+        <span className="rec-heading-actions">
+          {mode === 'list' && entries.length > 0 &&
+            <button type="button" aria-pressed={selecting} disabled={busy} onClick={toggleSelecting}>
+              {t(selecting ? 'record.done' : 'record.select')}</button>}
+          {!selecting && <button type="button" onClick={back}>{t(mode === 'list' ? 'common.close' : 'common.back')}</button>}
+        </span>
       </header>
 
       {mode === 'list' && <>
@@ -190,27 +239,49 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
               <EvidenceTile frame={evidenceFrame} empty />
             </span>
             const portrait = portraitFor(entry.characterId)
-            return <button key={entry.id} type="button" role="option" id={`rec-${entry.id}`} className="rec-slot" style={style}
-              aria-selected={index === selectedIndex} aria-label={`${name(entry.characterId)}: ${entryLabel(entry)}`}
+            const isChecked = selecting && checked.has(entry.id)
+            const slotClass = ['rec-slot', selecting && 'rec-slot--selecting', isChecked && 'rec-slot--checked'].filter(Boolean).join(' ')
+            return <button key={entry.id} type="button" role="option" id={`rec-${entry.id}`} className={slotClass} style={style}
+              aria-selected={index === selectedIndex} aria-checked={selecting ? isChecked : undefined}
+              aria-label={`${name(entry.characterId)}: ${entryLabel(entry)}`}
               title={entryLabel(entry)} tabIndex={-1}
-              onClick={() => { choose(index); grid.current?.focus() }}
-              onDoubleClick={() => { choose(index); open() }}>
+              onClick={() => { choose(index); if (selecting) toggleChecked(entry.id); grid.current?.focus() }}
+              onDoubleClick={() => { if (!selecting) { choose(index); open() } }}>
               <EvidenceTile frame={evidenceFrame} image={portrait} selected={index === selectedIndex}>
                 {portrait ? undefined : <span className="rec-unknown" aria-hidden="true">?</span>}
               </EvidenceTile>
+              {selecting && <span className="rec-check" aria-hidden="true">{isChecked ? '✓' : ''}</span>}
             </button>
           })}
           {entries.length === 0 && <p className="rec-empty" role="status">{emptyText}</p>}
         </div>
         <footer className="rec-footer">
-          <div className="rec-current" title={selected ? entryLabel(selected) : undefined}>
-            {selected ? entryLabel(selected) : t('record.current')}</div>
+          {selecting
+            ? <div className={bulkConfirm ? 'rec-current rec-confirm' : 'rec-current'} role={bulkConfirm ? 'alertdialog' : undefined}>
+              {bulkConfirm === 'all' ? t('record.confirmAll', { count: entries.length })
+                : bulkConfirm === 'some' ? t('record.confirmSome', { count: checked.size })
+                  : checked.size ? t('record.selectedCount', { count: checked.size }) : t('record.selectHint')}</div>
+            : <div className="rec-current" title={selected ? entryLabel(selected) : undefined}>
+              {selected ? entryLabel(selected) : t('record.current')}</div>}
           <div className="rec-paging">
             <button type="button" aria-label={t('common.previousPage')} disabled={page === 0} onClick={() => choose((page - 1) * RECORD_PAGE_SIZE)}>‹</button>
             <span>{page + 1}/{pages}</span>
             <button type="button" aria-label={t('common.nextPage')} disabled={page + 1 >= pages} onClick={() => choose((page + 1) * RECORD_PAGE_SIZE)}>›</button>
-            <button type="button" disabled={!selected} onClick={open}>{t('common.open')}</button>
-            <button type="button" disabled={load.status === 'loading'} onClick={() => { feedback.confirm(); refresh() }}>{t('common.refresh')}</button>
+            {!selecting && <>
+              <button type="button" disabled={!selected} onClick={open}>{t('common.open')}</button>
+              <button type="button" disabled={load.status === 'loading'} onClick={() => { feedback.confirm(); refresh() }}>{t('common.refresh')}</button>
+            </>}
+            {selecting && !bulkConfirm && <>
+              <button type="button" disabled={busy || checked.size === 0} onClick={() => { feedback.confirm(); setBulkConfirm('some') }}>
+                {t('record.deleteSelected')}</button>
+              <button type="button" disabled={busy} onClick={() => { feedback.confirm(); setBulkConfirm('all') }}>
+                {t('record.deleteAll')}</button>
+            </>}
+            {selecting && bulkConfirm && <>
+              <button type="button" autoFocus onClick={() => { feedback.back(); setBulkConfirm(null) }}>{t('record.cancel')}</button>
+              <button type="button" className="rec-danger" disabled={busy} onClick={() => void removeBulk(bulkConfirm)}>
+                {t(busy ? 'common.deleting' : 'common.delete')}</button>
+            </>}
           </div>
         </footer>
       </>}
@@ -241,11 +312,11 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
         <div className="rec-actions">
           {mode === 'file' && file && file.state === 'ready' &&
             <a href={artifactDownloadUrl(file.id)} download={file.name ?? undefined} onClick={() => feedback.confirm()}>Download</a>}
-          {mode === 'detail' && !confirming && <button type="button" disabled={busy} onClick={() => { feedback.confirm(); setConfirming(true) }}>Delete entry</button>}
+          {mode === 'detail' && !confirming && <button type="button" disabled={busy} onClick={() => { feedback.confirm(); setConfirming(true) }}>{t('record.deleteEntry')}</button>}
           {mode === 'detail' && confirming && <>
-            <span className="rec-confirm" role="alertdialog" aria-label="Confirm delete">Delete this entry?</span>
-            <button type="button" autoFocus onClick={() => { feedback.back(); setConfirming(false) }}>Cancel</button>
-            <button type="button" disabled={busy} onClick={() => void remove()}>{busy ? 'Deleting…' : 'Delete'}</button>
+            <span className="rec-confirm" role="alertdialog" aria-label={t('record.confirmOne')}>{t('record.confirmOne')}</span>
+            <button type="button" autoFocus onClick={() => { feedback.back(); setConfirming(false) }}>{t('record.cancel')}</button>
+            <button type="button" disabled={busy} onClick={() => void remove()}>{t(busy ? 'common.deleting' : 'common.delete')}</button>
           </>}
         </div>
       </section>}

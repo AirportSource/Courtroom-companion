@@ -3,7 +3,7 @@
 import re
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..conversation_record.store import ConversationRecordStore, RecordNotFound
 from .artifact_routes import no_store
@@ -23,6 +23,11 @@ def record_id(value: str) -> str:
     return value
 
 
+class DeleteManyRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    ids: list[str] = Field(min_length=1, max_length=1000)
+
+
 class ClearRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     confirm: bool
@@ -31,6 +36,13 @@ class ClearRequest(BaseModel):
 @router.get("")
 def list_records(request: Request):
     return {"entries": store(request).list()}
+
+
+@router.post("/delete")
+def delete_records(body: DeleteManyRequest, request: Request):
+    """Delete several entries at once (the Record's selection mode). Ids already gone are skipped."""
+    ids = [record_id(value) for value in body.ids]
+    return {"deleted": store(request).delete_many(ids)}
 
 
 @router.get("/{entry_id}")

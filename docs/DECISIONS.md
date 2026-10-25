@@ -846,3 +846,12 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Decision:**
   - A presented picture is shown whole (`object-fit: contain`) over a blurred, darkened `cover` copy of itself, in the stage card and in the pending chip. Cropping a wide picture to a square showed only its middle: the owner's 373×135 police logo looked "hyper zoomed". The blurred fill avoids the letterbox bars the owner disliked.
   - Mia's `turn_aside` clip: canvas 92 → 124 px wide and every frame offset x +32, so the centred canvas moves the figure 16 px right. Its head and neck were at stage x≈114 while her other poses sit at x≈128–134 (measured on rows from the top of the figure), so she jumped left whenever she settled into that pose. They are now at x≈130, like `serious_front`. Pixels are unchanged.
+
+## D-078 — Conversation Record: select several entries or delete all
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:**
+  - The Record header has a **Select** button (Done while active). In selection mode, a click or Enter/Space toggles a check on a tile (check box in its corner; unchecked tiles are dimmed), and the footer shows "{n} selected".
+  - **Delete** removes the checked entries; **Delete all** removes every entry. Both ask for confirmation in the footer line ("Delete 2 selected?" / "Delete all 59 entries?", Cancel / Delete). Esc cancels the confirmation, then leaves selection mode.
+  - Server: `POST /api/conversation-record/delete {ids}` removes several entries in one atomic write (unknown ids skipped, returns `{deleted}`). Delete all reuses `DELETE /api/conversation-record {confirm: true}`.
+  - Single-entry delete in the detail view is unchanged; its labels are now translated (5 languages).

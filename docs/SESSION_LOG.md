@@ -1043,3 +1043,9 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - Pictures: contain plus a blurred fill. Checked in a background tab (the owner was using the pane): fit layer `contain`, fill layer `cover` with blur.
 - Mia: a per-pose head/neck centre measurement showed only `turn_aside` off (114 vs ~130). Widened its canvas and shifted the offsets; re-measured at ~130.
 - Checks: backend 473 passed; frontend 263 passed; `tsc`, lint, build, `validate:assets` 369 / 0.
+
+## 2026-10-25 — Delete several conversations or all (D-078)
+
+- The owner asked to delete conversations, by selecting them or with "delete all". Added a selection mode, Delete and Delete all to the Record, plus a bulk delete route.
+- Browser check in a separate background tab, with deletion requests blocked so the owner's history stayed intact (59 entries before and after): select mode, 2 checked, both confirmations, Cancel, Done. EN and FR labels fit the 256 px footer.
+- Tests: backend `test_delete_several_entries_at_once`; frontend API test for bulk delete and clear. Backend 474 passed; frontend 264 passed; `tsc`, lint, build, `validate:assets` 369 / 0.

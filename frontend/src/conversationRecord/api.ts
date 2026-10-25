@@ -73,3 +73,26 @@ export async function deleteConversationRecord(id: string): Promise<RecordResult
     return response.ok || response.status === 404 ? { ok: true, value: true } : unavailable
   } catch { return unavailable }
 }
+
+/** Delete several entries in one request (selection mode); ids already gone are skipped. */
+export async function deleteConversationRecords(ids: string[]): Promise<RecordResult<number>> {
+  if (ids.length === 0 || !ids.every((id) => RECORD_ID.test(id))) return unavailable
+  try {
+    const response = await fetch('/api/conversation-record/delete', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids }),
+    })
+    if (!response.ok) return unavailable
+    const body = await response.json() as { deleted?: unknown }
+    return typeof body.deleted === 'number' ? { ok: true, value: body.deleted } : unavailable
+  } catch { return unavailable }
+}
+
+/** Delete every entry ("Delete all"); the server requires the explicit confirmation flag. */
+export async function clearConversationRecord(): Promise<RecordResult<true>> {
+  try {
+    const response = await fetch('/api/conversation-record', {
+      method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ confirm: true }),
+    })
+    return response.ok ? { ok: true, value: true } : unavailable
+  } catch { return unavailable }
+}

@@ -17,6 +17,7 @@ import os
 import re
 import tempfile
 import time
+from collections.abc import Iterable
 from datetime import datetime, timezone
 from pathlib import Path
 from threading import RLock
@@ -150,6 +151,16 @@ class ConversationRecordStore:
             if len(remaining) == len(self._entries):
                 raise RecordNotFound("Unknown conversation record.")
             self._write(remaining)
+
+    def delete_many(self, entry_ids: Iterable[str]) -> int:
+        """Remove every listed entry in one atomic write; unknown ids are ignored. Returns the count."""
+        wanted = set(entry_ids)
+        with self.lock:
+            remaining = [e for e in self._entries if e["id"] not in wanted]
+            removed = len(self._entries) - len(remaining)
+            if removed:
+                self._write(remaining)
+            return removed
 
     def clear(self) -> None:
         with self.lock:
