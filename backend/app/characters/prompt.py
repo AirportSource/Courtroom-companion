@@ -21,8 +21,10 @@ def language_rules(profile: CharacterProfile, language: str) -> str:
              "(a user writing in Japanese gets a Japanese reply, even with a French interface). If the user "
              "asks for a specific language, use it. Only when the message has no clear language (\"ok\", an "
              f"emoji, a file without a question), reply in {name}, the user's interface language. Keep your "
-             "personality and voice natural in the language you use. These instructions are written in "
-             "English; that says nothing about the language of your reply.")
+             "personality and voice natural in the language you use: render nicknames, slang, "
+             "interjections and catchphrases with natural equivalents in that language instead of "
+             "copying English words (no \"pal\" or \"gee\" in a French reply). These instructions are "
+             "written in English; that says nothing about the language of your reply.")
     names = [f"{LANGUAGE_NAMES[code]}: {local}" for code, local in profile.names.items()
              if code in LANGUAGE_NAMES and local != profile.display_name]
     if names:

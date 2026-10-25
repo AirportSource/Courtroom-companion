@@ -90,14 +90,13 @@
 
 /* ---- Pending evidence: out-of-stage chip above the chat bar (chat-bar frame) ---- */
 
+/* Compact chip inside the conversation status slot (same height as the action buttons). */
 .evidence-pending {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: calc(100% - 32px);
-  max-width: 992px;
-  margin: 0 auto 8px;
-  padding: 4px 8px;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 6px;
   color: #fff;
   background: var(--dialogue-bg);
   border: 2px solid var(--frame-light);
@@ -110,8 +109,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   overflow: hidden;
   font-family: var(--stage-font);
   font-size: var(--stage-font-size);
@@ -137,21 +136,26 @@
   overflow: hidden;
   font-family: var(--stage-font);
   font-size: calc(var(--stage-font-size) * 2);
-  line-height: 1.1;
+  line-height: 1;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .evidence-pending-size {
-  font-size: 12px;
+  overflow: hidden;
+  font-size: 10px;
+  line-height: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: #c8c8d8;
 }
 
 .evidence-pending button {
   flex: none;
-  width: 32px;
-  height: 32px;
-  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: 14px;
   color: #fff;
   background: var(--dialogue-bg);
   border: 2px solid var(--frame-light);
@@ -161,16 +165,6 @@
 
 .evidence-pending button:hover:not(:disabled) {
   background: var(--nameplate-bg);
-}
-
-/* File rejected before sending (type or size): shown where the chip would be. */
-.evidence-error {
-  width: calc(100% - 32px);
-  max-width: 992px;
-  margin: 0 auto 8px;
-  font-family: var(--stage-font);
-  font-size: var(--stage-font-size);
-  color: var(--error);
 }
 
 /* ---- Drop target over the whole conversation column ---- */

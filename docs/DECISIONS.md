@@ -813,3 +813,10 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - **Stage scale:** while a request runs, Cancel takes the Present button's slot instead of adding a fifth button; the extra button wrapped the action row onto a second line, which shrank the stage from ×3 to ×2 during thinking. The English label became "Cancel".
   - **Presented evidence:** an in-stage card with the dialogue box's double frame, the photo cropped to fill the 64×64 window (`object-fit: cover`, no letterbox bars), and the name in a nameplate strip that scrolls long names (OverflowMarquee). The Court Record tile frame is no longer used for this card.
 - **Scope:** shared app code. Character packs (Maya's included) are unchanged.
+
+## D-074 — Localized slang; nothing under the scene may change its height
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:**
+  - The language rule asks the model to render nicknames, slang, interjections and catchphrases with natural equivalents in the reply language (no "pal" in French). Gumshoe's `personality.md` lists his equivalents: FR "mon vieux" / "l'ami", "Euh..."; JA 〜ッス, アンタ; IT "amico"; ES "colega".
+  - The pending evidence chip and the error lines (reply error, rejected file) now live in a fixed slot to the right of the Talk / Court Record / Record / Present buttons (`.conversation-status`). It takes the free width, never wraps onto its own line, and its content is out of flow, so it is exactly as tall as the buttons. Before, they were rows under the scene: the chip (64 px) and a long error (about 100 px) appeared and disappeared during a turn and changed the stage scale (×3 ↔ ×2 in Pixel mode, continuous changes in Fit mode) for every character. `ChatBar` no longer renders errors.

@@ -8,7 +8,6 @@ interface ChatBarProps {
   disabled: boolean
   waiting: boolean
   waitingLabel: string
-  error: string | null
   onSubmit: (message: string) => void
   /** Optional blip while the player types (volume/mute come from the blip settings). */
   typingBlip?: TypingBlipConfig
@@ -21,7 +20,7 @@ interface ChatBarProps {
 const MAX_MESSAGE = 2000
 
 /** Minimal message input under the scene. Focuses itself whenever it becomes available. */
-export function ChatBar({ placeholder, disabled, waiting, waitingLabel, error, onSubmit, typingBlip, allowEmpty = false,
+export function ChatBar({ placeholder, disabled, waiting, waitingLabel, onSubmit, typingBlip, allowEmpty = false,
   submitLabel }: ChatBarProps) {
   const t = useT()
   const [text, setText] = useState('')
@@ -62,11 +61,6 @@ export function ChatBar({ placeholder, disabled, waiting, waitingLabel, error, o
       <button className="chat-send" type="submit" disabled={disabled || (!allowEmpty && !text.trim())}>
         {submitLabel ?? t('chat.send')}
       </button>
-      {error && (
-        <p className="chat-error" role="alert">
-          {t('chat.replyError', { error })}
-        </p>
-      )}
     </form>
   )
 }

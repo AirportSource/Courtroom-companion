@@ -1003,3 +1003,13 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
   - Mia file turn: French "Bien sûr. Laisse-moi faire." first, stage stays ×3 throughout, result-only reply.
   - Evidence card checked with a photo and a text file (name scrolls).
 - **Checks:** backend 471 passed; frontend 262 passed; `tsc`, lint 0, build OK; `validate:assets` 368 / 0.
+
+## 2026-10-25 — Localized slang, stage height (D-074)
+
+- Gumshoe said "pal" in French. A prompt rule plus his per-language equivalents fixed it. Live check (haiku): FR "mon vieux" / "l'ami" / "Euh...", JA 〜ッス, IT "amico", ES "amigo".
+- The owner still saw characters grow and shrink while thinking, for all of them.
+  - Plain turns were stable after D-073 (FR interface, Pixel and Fit, two window sizes, all three characters).
+  - Reproduced with Mia: a presented image (chip, 64 px) rejected by the subscription mode (error, 98 px), then a new message. The stage went 2.45 → 2.08 → 1.95 → 2.45 in Fit mode.
+  - After the fix the same sequence keeps the action row at 54 px and the scale at 2.45.
+- Owner also asked that presented images use "the photo set from the game files". No such asset is in the project or the Downloads folder, and The Spriters Resource is behind a bot check, so this waits for the owner's sheet.
+- **Checks:** backend 471 passed; frontend 262 passed; `tsc`, lint 0, build OK; `validate:assets` 368 / 0.

@@ -696,9 +696,18 @@ export function ConversationScreen({
             attachEvidence(event.target.files?.[0])
             event.target.value = ''
           }} />
+          {/* Fixed-height slot beside the buttons for the file about to be presented and for errors.
+              Rows that appeared under the scene changed its height and so the stage scale mid-turn. */}
+          <div className="conversation-status">
+            {evidence
+              ? <PendingEvidence evidence={evidence} onRemove={removeEvidence} disabled={phase === 'waiting'} />
+              : (evidenceError || chatError) && (
+                <p className="conversation-status-error" role="alert">
+                  {evidenceError ?? t('chat.replyError', { error: chatError ?? '' })}
+                </p>
+              )}
+          </div>
         </div>
-        {evidence && <PendingEvidence evidence={evidence} onRemove={removeEvidence} disabled={phase === 'waiting'} />}
-        {evidenceError && !evidence && <p className="evidence-error" role="alert">{evidenceError}</p>}
         <ChatBar
           placeholder={t(evidence ? 'chat.askAboutEvidence' : 'chat.placeholder', { name: characterName })}
           allowEmpty={Boolean(evidence)}
@@ -706,7 +715,6 @@ export function ConversationScreen({
           disabled={phase !== 'input'}
           waiting={phase === 'waiting'}
           waitingLabel={t('chat.thinking', { name: characterName })}
-          error={chatError}
           onSubmit={submit}
           typingBlip={{ volume: settings.blipVolume, muted: settings.blipsMuted }}
         />

@@ -69,12 +69,6 @@
   cursor: default;
 }
 
-.chat-error {
-  flex-basis: 100%;
-  margin: 0;
-  color: var(--error);
-  font-size: calc(var(--stage-font-size) * 1);
-}
 
 .dev-segments {
   display: block;
@@ -833,7 +827,38 @@
   word-spacing: calc(var(--stage-word-spacing) * 2);
 }
 
-.conversation-actions button {
+/* Takes the free width right of the buttons and never wraps to a line of its own
+   (flex-basis 0, min-width 0), so what it shows cannot change the stage's height. */
+.conversation-status {
+  position: relative;
+  flex: 1 1 0;
+  align-self: stretch;
+  min-width: 0;
+}
+
+/* Out of flow: the slot is exactly as tall as the buttons, whatever its content. */
+.conversation-status > * {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  max-width: 100%;
+}
+
+/* A long error scrolls inside the slot ("safe" keeps its first line reachable). */
+.conversation-status-error {
+  display: flex;
+  align-items: safe center;
+  margin: 0;
+  overflow-y: auto;
+  font-size: var(--stage-font-size);
+  line-height: 12px;
+  letter-spacing: normal;
+  word-spacing: normal;
+  color: var(--error);
+}
+
+.conversation-actions > button {
   white-space: nowrap;
   font: inherit;
   font-size: calc(var(--stage-font-size) * 2);
@@ -847,15 +872,15 @@
   cursor: pointer;
 }
 
-.conversation-actions button:hover:not(:disabled),
-.conversation-actions button:focus-visible {
+.conversation-actions > button:hover:not(:disabled),
+.conversation-actions > button:focus-visible {
   background: var(--nameplate-bg);
   box-shadow: inset 0 0 0 2px var(--nameplate-edge);
   color: #fff8c8;
   outline: none;
 }
 
-.conversation-actions button:disabled {
+.conversation-actions > button:disabled {
   opacity: 0.5;
   cursor: default;
 }
