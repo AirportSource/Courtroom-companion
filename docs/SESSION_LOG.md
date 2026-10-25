@@ -1020,3 +1020,5 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - Cropped the white-bordered black-and-white photo at (795, 504) to `ui/court-record/evidence_photo.png`; registered `court_record_photo`.
 - Browser check: a broken `.png` shows the photo icon in the chip and in the in-stage card; a valid PNG shows the original (blob) image.
 - **Checks:** frontend 262 passed; `tsc`, lint 0, build OK; `validate:assets` 369 / 0.
+
+- 2026-10-25: the owner saw "Couldn't get a reply: Unsupported file…" in the browser pane. It came from my own test: a 10-byte garbage file named `.png` passed the client's extension check, and the server rejected it from its bytes (the only `evidence_unsupported` 422 in the backend log). Fix: the same byte-signature check runs on attach, with a precise "damaged image/PDF" message. Browser check: garbage `.png` is refused at once (no chip); a truncated PNG (valid header) is accepted and shows the photo icon. Frontend 263 passed; `tsc`, lint, build, `validate:assets` 369 / 0.

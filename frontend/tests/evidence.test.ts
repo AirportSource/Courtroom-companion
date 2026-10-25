@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { EVIDENCE_LIMITS, evidenceBadge, evidenceKind, evidenceProblem, formatSize, toBase64 } from '../src/evidence/evidence.ts'
+import { contentMatchesKind, EVIDENCE_LIMITS, evidenceBadge, evidenceKind, evidenceProblem, formatSize, toBase64 } from '../src/evidence/evidence.ts'
 import { generationFailureMessage } from '../src/engine/generation.ts'
 
 test('evidence kind is guessed from MIME type or extension', () => {
@@ -41,4 +41,17 @@ test('badges and sizes', () => {
 
 test('a model that cannot read the file gets an explicit message', () => {
   assert.match(generationFailureMessage('attachment_unsupported') ?? '', /cannot read this file/)
+})
+
+test('damaged or renamed images and PDFs are caught from their bytes, like the server does', () => {
+  const bytes = (...values: (number | string)[]) => new Uint8Array(values.flatMap((v) => typeof v === 'string' ? [...v].map((c) => c.charCodeAt(0)) : [v]))
+  assert.ok(contentMatchesKind('image', bytes(0x89, 'PNG', 0x0d, 0x0a, 0x1a, 0x0a, 0)))
+  assert.ok(contentMatchesKind('image', bytes(0xff, 0xd8, 0xff, 0xe0)))
+  assert.ok(contentMatchesKind('image', bytes('GIF89a')))
+  assert.ok(contentMatchesKind('image', bytes('RIFF', 0, 0, 0, 0, 'WEBP')))
+  assert.ok(!contentMatchesKind('image', bytes(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)))
+  assert.ok(!contentMatchesKind('image', bytes('hello, not a picture')))
+  assert.ok(contentMatchesKind('pdf', bytes('%PDF-1.7')))
+  assert.ok(!contentMatchesKind('pdf', bytes('<html>')))
+  assert.ok(contentMatchesKind('text', bytes('anything')))
 })

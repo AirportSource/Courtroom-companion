@@ -48,6 +48,22 @@ export function evidenceProblem(file: Pick<File, 'name' | 'type' | 'size'>, lang
   return null
 }
 
+/**
+ * Whether the bytes really are what the file claims, with the server's own signature checks
+ * (llm/attachments.py). A damaged or renamed file is refused when it is attached, with a precise
+ * message, instead of after sending as "Unsupported file".
+ */
+export function contentMatchesKind(kind: EvidenceKind, bytes: Uint8Array): boolean {
+  const starts = (...signature: number[]) => signature.every((byte, index) => bytes[index] === byte)
+  const ascii = (text: string, offset = 0) => [...text].every((ch, index) => bytes[offset + index] === ch.charCodeAt(0))
+  if (kind === 'image') {
+    return starts(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a) || starts(0xff, 0xd8, 0xff)
+      || ascii('GIF87a') || ascii('GIF89a') || (ascii('RIFF') && ascii('WEBP', 8))
+  }
+  if (kind === 'pdf') return ascii('%PDF-')
+  return true
+}
+
 /** Base64 of raw bytes, chunked so large files do not overflow the argument limit. */
 export function toBase64(bytes: Uint8Array): string {
   let binary = ''
@@ -59,7 +75,11 @@ export async function readEvidence(file: File, language: Language = 'en'): Promi
   const problem = evidenceProblem(file, language)
   if (problem) throw new Error(problem)
   const kind = evidenceKind(file) as EvidenceKind
-  const data = toBase64(new Uint8Array(await file.arrayBuffer()))
+  const bytes = new Uint8Array(await file.arrayBuffer())
+  if (!contentMatchesKind(kind, bytes)) {
+    throw new Error(translate(language, kind === 'image' ? 'evidence.damagedImage' : 'evidence.damagedPdf'))
+  }
+  const data = toBase64(bytes)
   return { name: file.name, size: file.size, kind, data, previewUrl: kind === 'image' ? URL.createObjectURL(file) : null }
 }
 
