@@ -397,3 +397,5 @@ Source rights and limits are recorded in `docs/ASSET_SOURCES.md`; source archive
 - `validate:assets`: 360 referenced files, 0 errors.
 
 - 2026-10-25: `ui/exclamations/objection_ja.png` registered as `exclamation_objection_ja` (D-070); `validate:assets` 368 / 0.
+
+`ui/ui.json` registers `court_record_photo` at `ui/court-record/evidence_photo.png` (64×64), an exact crop of a photo evidence icon from the owner's evidence sheet at x=795, y=504. It is shown in place of a presented picture that cannot be displayed (D-075).

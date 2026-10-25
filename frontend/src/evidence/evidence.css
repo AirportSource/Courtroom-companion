@@ -66,6 +66,14 @@
   background: #000;
 }
 
+/* Game photo icon standing in for a picture that cannot be shown: pixel art, native size. */
+.evidence-photo-icon {
+  display: block;
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+}
+
 .evidence-file {
   position: relative;
   display: block;

@@ -72,6 +72,11 @@
       "width": 64,
       "height": 64
     },
+    "court_record_photo": {
+      "src": "court-record/evidence_photo.png",
+      "width": 64,
+      "height": 64
+    },
     "evidence_frame": {
       "src": "court-record/evidence_frame.png",
       "width": 70,

@@ -820,3 +820,9 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Decision:**
   - The language rule asks the model to render nicknames, slang, interjections and catchphrases with natural equivalents in the reply language (no "pal" in French). Gumshoe's `personality.md` lists his equivalents: FR "mon vieux" / "l'ami", "Euh..."; JA 〜ッス, アンタ; IT "amico"; ES "colega".
   - The pending evidence chip and the error lines (reply error, rejected file) now live in a fixed slot to the right of the Talk / Court Record / Record / Present buttons (`.conversation-status`). It takes the free width, never wraps onto its own line, and its content is out of flow, so it is exactly as tall as the buttons. Before, they were rows under the scene: the chip (64 px) and a long error (about 100 px) appeared and disappeared during a turn and changed the stage scale (×3 ↔ ×2 in Pixel mode, continuous changes in Fit mode) for every character. `ChatBar` no longer renders errors.
+
+## D-075 — Presented pictures: the original image, else the game's photo icon
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:** the evidence card and the pending chip show the user's own image whenever the browser can display it. If it cannot (broken or unreadable file: the `<img>` fails to load), the game's photo evidence icon (`ui.json` `court_record_photo`, a 64×64 crop from the owner's evidence sheet) takes its place, drawn as pixel art at native size. The type badge is the last fallback when that icon is missing. Text files and PDFs keep the document icon with a type badge.
+- **Rationale:** the owner asked for the photo icons from the game files, then preferred the original image when possible, with the photo asset as the replacement.

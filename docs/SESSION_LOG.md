@@ -1013,3 +1013,10 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
   - After the fix the same sequence keeps the action row at 54 px and the scale at 2.45.
 - Owner also asked that presented images use "the photo set from the game files". No such asset is in the project or the Downloads folder, and The Spriters Resource is behind a bot check, so this waits for the owner's sheet.
 - **Checks:** backend 471 passed; frontend 262 passed; `tsc`, lint 0, build OK; `validate:assets` 368 / 0.
+
+## 2026-10-25 — Photo icon fallback for presented pictures (D-075)
+
+- Owner put the Court Record evidence sheet in Downloads (`assets.png`, the same Shoda sheet as the existing icons) and asked for its photo icons for uploaded images, then preferred the original image when possible.
+- Cropped the white-bordered black-and-white photo at (795, 504) to `ui/court-record/evidence_photo.png`; registered `court_record_photo`.
+- Browser check: a broken `.png` shows the photo icon in the chip and in the in-stage card; a valid PNG shows the original (blob) image.
+- **Checks:** frontend 262 passed; `tsc`, lint 0, build OK; `validate:assets` 369 / 0.

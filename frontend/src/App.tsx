@@ -360,6 +360,7 @@ function App() {
           artifactsError={artifactsError}
           onArtifactsChanged={refreshGeneratedArtifacts}
           fileIcon={catalog.ui.images.court_record_file_document ?? null}
+          photoIcon={catalog.ui.images.court_record_photo ?? null}
           thinkerIcon={catalog.courtRecord?.entries.find((item) => item.id === 'thinker_statue')?.image ?? null}
           phoneIcon={catalog.courtRecord?.entries.find((item) => item.id === 'cellphone_blue')?.image ?? null}
           onExit={toTitle}

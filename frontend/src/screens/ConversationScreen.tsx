@@ -58,6 +58,8 @@ interface ConversationScreenProps {
   artifactsError: string | null
   onArtifactsChanged: () => Promise<void>
   fileIcon: UiImage | null
+  /** Photo evidence icon (ui.images.court_record_photo), shown when a presented picture cannot be. */
+  photoIcon?: UiImage | null
   thinkerIcon: UiImage | null
   phoneIcon: UiImage | null
   onExit: () => void
@@ -115,7 +117,7 @@ function overrideFor(line: DialogueLine): PerformanceOverride {
  */
 export function ConversationScreen({
   character, background, testScript, talkBackdrop, generatedArtifacts, artifactsLoading, artifactsError,
-  onArtifactsChanged, fileIcon, thinkerIcon, phoneIcon, onExit, devTools, onTaskChange,
+  onArtifactsChanged, fileIcon, photoIcon = null, thinkerIcon, phoneIcon, onExit, devTools, onTaskChange,
   evidenceFrame = null, portraitFor, nameFor, exclamations = {},
 }: ConversationScreenProps) {
   const { settings } = useSettings()
@@ -661,7 +663,7 @@ export function ConversationScreen({
               portraitFor={portraitFor} nameFor={nameFor} />
           )}
           {/* The presented file stays on screen while the character thinks, then leaves with the reply. */}
-          {presented && waiting && <PresentedEvidence evidence={presented} fileIcon={fileIcon} />}
+          {presented && waiting && <PresentedEvidence evidence={presented} fileIcon={fileIcon} photoIcon={photoIcon} />}
           {exclamation && <ExclamationBubble kind={exclamation.kind}
             image={bubbleFor(exclamations, exclamation.kind, exclamation.japanese)} />}
           <ArtifactDeliveryOverlay state={delivery}
@@ -700,7 +702,7 @@ export function ConversationScreen({
               Rows that appeared under the scene changed its height and so the stage scale mid-turn. */}
           <div className="conversation-status">
             {evidence
-              ? <PendingEvidence evidence={evidence} onRemove={removeEvidence} disabled={phase === 'waiting'} />
+              ? <PendingEvidence evidence={evidence} photoIcon={photoIcon} onRemove={removeEvidence} disabled={phase === 'waiting'} />
               : (evidenceError || chatError) && (
                 <p className="conversation-status-error" role="alert">
                   {evidenceError ?? t('chat.replyError', { error: chatError ?? '' })}
