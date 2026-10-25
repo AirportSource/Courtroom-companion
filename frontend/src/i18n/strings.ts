@@ -84,7 +84,7 @@ export const EN = {
   'chat.record': 'Record',
   'chat.present': 'Present',
   'chat.presentTitle': 'Present a text file, an image or a PDF (or drop it on the scene)',
-  'chat.cancelRequest': 'Cancel request',
+  'chat.cancelRequest': 'Cancel',
   'chat.placeholder': 'Say something to {name}…',
   'chat.askAboutEvidence': 'Ask {name} about this evidence… (optional)',
   'chat.thinking': '{name} is thinking…',

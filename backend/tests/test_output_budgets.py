@@ -45,6 +45,11 @@ def local_client(app):
     "I need you to export this to a file.", "#artifact-py", "#artifact-md", "#artifact-txt",
     "Écris un fichier texte.", "Peux-tu créer un script Python ?", "Rédige une checklist Markdown.",
     "Pythonのファイルを作成してください。", "hello.py というスクリプトを書いて。",
+    # D-073: polite French forms, Italian and Spanish requests.
+    "Est-ce que tu peux me faire un fichier texte avec une liste de courses ?",
+    "Tu pourrais me préparer une checklist ?", "J'aimerais un fichier avec mes notes.",
+    "Pouvez-vous rédiger un document ?", "Mi puoi scrivere un file di testo?", "Crea una lista in un documento.",
+    "¿Puedes crear un archivo de texto?", "Hazme una lista en un archivo.",
 ])
 def test_explicit_creation_gets_budget_hint_but_hint_is_disabled_without_artifact_capability(message):
     assert expected_workload(message, artifacts_enabled=True) == OutputWorkload.TEXT_ARTIFACT
@@ -56,6 +61,8 @@ def test_explicit_creation_gets_budget_hint_but_hint_is_disabled_without_artifac
     "Can you explain how to save a Markdown file?", "What is hello.py?", "Write a short story.",
     "Do not create a file.", "Comment créer un fichier Python ?", "今日は元気？",
     "Pythonのファイルの作成方法を説明して。",
+    "Est-ce que tu as lu mon fichier ?", "J'aimerais savoir comment créer un fichier.",
+    "Come si crea un file in Python?", "¿Cómo se crea un archivo de texto?",
 ])
 def test_normal_chat_and_questions_about_files_keep_normal_budget(message):
     assert expected_workload(message, artifacts_enabled=True) == OutputWorkload.DIALOGUE

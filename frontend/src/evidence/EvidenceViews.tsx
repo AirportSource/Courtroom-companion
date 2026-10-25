@@ -1,10 +1,10 @@
 import type { UiImage } from '../engine/manifestTypes.ts'
-import { EvidenceTile } from '../courtRecord/EvidenceTile.tsx'
 import { evidenceBadge, formatSize, type EvidenceDraft } from './evidence.ts'
+import { OverflowMarquee } from '../components/OverflowMarquee.tsx'
 import { useT } from '../i18n/useT.ts'
 import './evidence.css'
 
-/** Window content: the photo fitted into 64×64, or the file icon with a type badge. */
+/** Window content: the photo filling 64×64, or the file icon with a type badge. */
 function EvidenceFace({ evidence, fileIcon }: { evidence: EvidenceDraft; fileIcon: UiImage | null }) {
   if (evidence.previewUrl) return <img className="evidence-photo" src={evidence.previewUrl} alt="" draggable={false} />
   return (
@@ -17,17 +17,21 @@ function EvidenceFace({ evidence, fileIcon }: { evidence: EvidenceDraft; fileIco
 
 interface PresentedEvidenceProps {
   evidence: EvidenceDraft
-  frame: UiImage | null
   fileIcon: UiImage | null
 }
 
-/** In-stage box shown while the character examines what the user presented (DS "present" box). */
-export function PresentedEvidence({ evidence, frame, fileIcon }: PresentedEvidenceProps) {
+/**
+ * In-stage card shown while the character examines what the user presented (DS "present" box):
+ * the dialogue box's double border around a 64×64 window, the photo cropped to fill it (no
+ * letterbox bars), and the name in a nameplate strip along the bottom.
+ */
+export function PresentedEvidence({ evidence, fileIcon }: PresentedEvidenceProps) {
   const t = useT()
   return (
     <div className="presented-evidence" role="status" aria-label={t('evidence.presented', { name: evidence.name })}>
-      <EvidenceTile frame={frame}><EvidenceFace evidence={evidence} fileIcon={fileIcon} /></EvidenceTile>
-      <span className="presented-evidence-name">{evidence.name}</span>
+      <span className="presented-evidence-window" aria-hidden="true"><EvidenceFace evidence={evidence} fileIcon={fileIcon} /></span>
+      {/* A long file name scrolls inside the plate instead of staying cut. */}
+      <span className="presented-evidence-name"><OverflowMarquee text={evidence.name} active /></span>
     </div>
   )
 }

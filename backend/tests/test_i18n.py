@@ -21,16 +21,16 @@ def client():
     return TestClient(create_app(ProviderConfig(type="fake")))
 
 
-def test_prompt_states_the_reply_language_and_local_name():
+def test_reply_follows_the_users_language_and_interface_is_only_the_fallback():
+    # D-073: the interface language is a display choice; it must not force the reply language.
     repo = CharacterRepository()
     gumshoe = repo.get("dick_gumshoe")
-    assert "Always reply in English" in build_system_prompt(gumshoe)
     french = build_system_prompt(gumshoe, "fr")
-    assert "Always reply in French" in french and "your name is Dick Tektiv" in french
-    japanese = build_system_prompt(repo.get("maya_fey"), "ja")
-    assert "Always reply in Japanese" in japanese and "綾里真宵" in japanese
-    # Same name as the English one: no redundant sentence.
-    assert "your name is" not in build_system_prompt(repo.get("mia_fey"), "es")
+    assert "Always reply in" not in french and "whatever language the user writes in" not in french
+    assert "language of the user's latest message" in french
+    assert "reply in French, the user's interface language" in french
+    assert "French: Dick Tektiv" in french and "French: Dick Tektiv" in build_system_prompt(gumshoe, "ja")
+    assert "綾里真宵" in build_system_prompt(repo.get("maya_fey"), "fr")
 
 
 def test_every_character_has_names_and_error_lines_in_every_language():

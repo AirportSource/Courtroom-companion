@@ -7,8 +7,13 @@
   z-index: 15;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
+  width: 72px;
+  padding: 3px 3px 0;
+  /* Same double frame as the dialogue box, plus a hard 1px drop shadow to lift it off the scene. */
+  background: var(--dialogue-bg);
+  border: 1px solid var(--frame-light);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--frame-dark), 1px 1px 0 #000;
   animation: presented-evidence-in 180ms steps(6) both;
 }
 
@@ -27,25 +32,36 @@
   }
 }
 
-.presented-evidence-name {
-  max-width: 120px;
-  padding: 0 4px;
+.presented-evidence-window {
+  position: relative;
+  display: block;
+  width: 64px;
+  height: 64px;
   overflow: hidden;
-  line-height: 15px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: #fff;
-  background: var(--nameplate-bg);
-  border: 1px solid var(--nameplate-edge);
-  border-radius: 2px;
+  background: #0b1624;
+  box-shadow: 0 0 0 1px var(--frame-dark);
 }
 
-/* Photos are not pixel art: fit them into the 64×64 window with smooth scaling. */
+/* Nameplate strip under the window, flush with the card's bottom edge. */
+.presented-evidence-name {
+  display: flex;
+  margin: 3px -3px 0;
+  padding: 0 4px;
+  line-height: 13px;
+  text-align: center;
+  color: #fff;
+  background: var(--nameplate-bg);
+  border-top: 1px solid var(--frame-light);
+  border-radius: 0 0 2px 2px;
+  box-shadow: inset 0 0 0 1px var(--nameplate-edge);
+}
+
+/* Photos are not pixel art: smooth scaling. */
 .evidence-photo {
   display: block;
   width: 64px;
   height: 64px;
-  object-fit: contain;
+  object-fit: cover; /* fill the window like a DS evidence picture, no letterbox bars */
   image-rendering: auto;
   background: #000;
 }

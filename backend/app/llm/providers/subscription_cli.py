@@ -67,7 +67,10 @@ def transcript(messages: list[ChatMessage]) -> str:
         speaker = "User" if message.role == "user" else "You (your previous reply)"
         lines.append(f"{speaker}:\n{message.content}")
     history = ("Conversation so far:\n\n" + "\n\n".join(lines) + "\n\n") if lines else ""
-    return f"{history}User's new message:\n{messages[-1].content}\n\nReply now with the JSON object only."
+    # The English framing must not decide the reply language (D-073): say so right before replying.
+    return (f"{history}User's new message:\n{messages[-1].content}\n\nReply now with the JSON object only. "
+            "Write the dialogue in the language of the user's new message above, not in the language of "
+            "these instructions.")
 
 
 def strict_schema(schema: dict[str, Any]) -> dict[str, Any]:

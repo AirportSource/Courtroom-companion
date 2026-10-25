@@ -39,7 +39,7 @@ import {
 import type { GeneratedArtifact, TurnTask } from '../artifacts/artifacts.ts'
 import { readEvidence, releaseEvidence, type EvidenceDraft } from '../evidence/evidence.ts'
 import { PendingEvidence, PresentedEvidence } from '../evidence/EvidenceViews.tsx'
-import { localizedName, type StringKey } from '../i18n/i18n.ts'
+import { guessMessageLanguage, localizedName, type StringKey } from '../i18n/i18n.ts'
 import { useT } from '../i18n/useT.ts'
 import { useEventInbox, type Exclamation } from '../events/eventInbox.ts'
 import { ExclamationBubble } from '../events/ExclamationBubble.tsx'
@@ -357,7 +357,8 @@ export function ConversationScreen({
       const layoutPromise = dialogueTextLayout()
       const acknowledgeTask = (turnId: string) => {
         if (request.acknowledgement) return
-        const local = taskAcknowledgement(character, 'artifact', document.documentElement.lang || 'en', acknowledgementSequence.current++)
+        // In the language the user wrote in, like the reply; the interface language when unclear (D-073).
+        const local = taskAcknowledgement(character, 'artifact', guessMessageLanguage(message, settings.language), acknowledgementSequence.current++)
         dispatchDelivery({ type: 'begin', turnId })
         dispatchDelivery({ type: local ? 'acknowledgement' : 'working', turnId })
         request.acknowledgement = layoutPromise.then((layout) => {
@@ -660,7 +661,7 @@ export function ConversationScreen({
               portraitFor={portraitFor} nameFor={nameFor} />
           )}
           {/* The presented file stays on screen while the character thinks, then leaves with the reply. */}
-          {presented && waiting && <PresentedEvidence evidence={presented} frame={evidenceFrame} fileIcon={fileIcon} />}
+          {presented && waiting && <PresentedEvidence evidence={presented} fileIcon={fileIcon} />}
           {exclamation && <ExclamationBubble kind={exclamation.kind}
             image={bubbleFor(exclamations, exclamation.kind, exclamation.japanese)} />}
           <ArtifactDeliveryOverlay state={delivery}
@@ -675,8 +676,6 @@ export function ConversationScreen({
             onSummonAdvance={() => { void finishSummon() }} />
         </GameScene>
         <div className="conversation-actions">
-          {(waiting || delivery.phase === 'task-acknowledgement') && currentTask?.state === 'working'
-            && <button type="button" onClick={() => void cancel()}>{t('chat.cancelRequest')}</button>}
           <button type="button" disabled={phase !== 'input' || overlay !== null
             || ['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
             onClick={() => { playMenuSound('menu_open'); setOverlay('talk') }}>{t('chat.talk')}</button>
@@ -686,9 +685,13 @@ export function ConversationScreen({
           <button type="button" disabled={phase !== 'input' || overlay !== null
             || ['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
             onClick={() => { playMenuSound('menu_open'); setOverlay('conversation-record') }}>{t('chat.record')}</button>
-          <button type="button" disabled={phase === 'waiting' || overlay !== null}
-            title={t('chat.presentTitle')}
-            onClick={() => evidenceInput.current?.click()}>{t('chat.present')}</button>
+          {/* While a request runs, Cancel takes Present's place (Present is unavailable then), so the
+              row never gains a button, wraps, and shrinks the stage to a smaller scale. */}
+          {(waiting || delivery.phase === 'task-acknowledgement') && currentTask?.state === 'working'
+            ? <button type="button" onClick={() => void cancel()}>{t('chat.cancelRequest')}</button>
+            : <button type="button" disabled={phase === 'waiting' || overlay !== null}
+              title={t('chat.presentTitle')}
+              onClick={() => evidenceInput.current?.click()}>{t('chat.present')}</button>}
           <input ref={evidenceInput} type="file" hidden onChange={(event) => {
             attachEvidence(event.target.files?.[0])
             event.target.value = ''

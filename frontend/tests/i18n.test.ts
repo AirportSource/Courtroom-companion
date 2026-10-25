@@ -51,3 +51,14 @@ test('character packs name every character in every language', () => {
   assert.equal(localizedName({ displayName: 'Dick Gumshoe', names: { fr: 'Dick Tektiv', ja: '糸鋸圭介' } }, 'fr'), 'Dick Tektiv')
   assert.equal(localizedName({ displayName: 'Dick Gumshoe', names: { fr: 'Dick Tektiv' } }, 'es'), 'Dick Gumshoe')
 })
+
+test('message language guess follows what the user wrote, interface language as fallback (D-073)', async () => {
+  const { guessMessageLanguage } = await import('../src/i18n/i18n.ts')
+  assert.equal(guessMessageLanguage('Est-ce que tu peux me faire un fichier texte ?', 'en'), 'fr')
+  assert.equal(guessMessageLanguage('Can you write me a file with my notes?', 'fr'), 'en')
+  assert.equal(guessMessageLanguage('¿Puedes crear un archivo de texto?', 'fr'), 'es')
+  assert.equal(guessMessageLanguage('Mi puoi scrivere un file con questo?', 'en'), 'it')
+  assert.equal(guessMessageLanguage('ファイルを作って', 'fr'), 'ja')
+  assert.equal(guessMessageLanguage('ok', 'fr'), 'fr')
+  assert.equal(guessMessageLanguage('👍', 'it'), 'it')
+})

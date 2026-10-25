@@ -29,6 +29,28 @@ export function detectLanguage(preferred: readonly string[] = globalThis.navigat
   return 'en'
 }
 
+const COMMON_WORDS: Record<Exclude<Language, 'ja'>, Set<string>> = {
+  en: new Set('the a an is are and i you can could please what how for with me my it this that file of to'.split(' ')),
+  fr: new Set("le la les un une des est et je tu peux pourrais pour avec moi mon ma ce cette c'est est-ce que qu'il pas fichier de du j'aimerais bonjour salut".split(' ')),
+  it: new Set('il lo la gli le un una è e io tu puoi potresti per con mi mio mia questo che di del ciao grazie'.split(' ')),
+  es: new Set('el la los las un una es y yo tú puedes podrías para con me mi este esta que de del archivo hola gracias'.split(' ')),
+}
+
+/**
+ * Best guess of the language a chat message is written in (D-073), for the few lines the app
+ * says locally (task acknowledgements); `fallback` (the interface language) when unclear.
+ */
+export function guessMessageLanguage(text: string, fallback: Language): Language {
+  if (/[぀-ヿ一-鿿]/.test(text)) return 'ja'
+  const words = text.toLowerCase().replace(/[’]/g, "'").match(/[\p{L}'-]+/gu) ?? []
+  const scores = Object.entries(COMMON_WORDS).map(([language, common]) => ({
+    language: language as Language,
+    score: words.filter((word) => common.has(word)).length
+      + (language === 'es' && /[ñ¿¡]/.test(text) ? 2 : 0) + (language === 'fr' && /[çêœ]/.test(text) ? 2 : 0),
+  })).sort((a, b) => b.score - a.score)
+  return scores[0].score > 0 && scores[0].score > scores[1].score ? scores[0].language : fallback
+}
+
 export type Translate = (key: StringKey, vars?: Record<string, string | number>) => string
 
 export function translate(language: Language, key: StringKey, vars: Record<string, string | number> = {}): string {

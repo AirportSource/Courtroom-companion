@@ -802,3 +802,14 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - Profiles take no base URL and no key; the model is optional (empty = the CLI's default). Executables are found on PATH (npm wrappers are resolved to the real binary) or set with `COURTROOM_CLAUDE_BIN` / `COURTROOM_CODEX_BIN`.
   - Error codes: `cli_not_installed`, `auth_not_configured` (not logged in), `rate_limited` (plan limit), `context_window_exceeded`, `timeout`, `provider_error`.
 - **Limits:** text evidence only (images and PDFs need an API profile); each reply has the latency of a CLI start (about 3–6 s with haiku here); usage counts against the plan's limits. Use stays within each provider's terms for personal use of one's own subscription.
+
+## D-073 — Reply language follows the user; file turns acknowledge first; stage and evidence fixes
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Amends:** D-066 (the character always replied in the interface language), D-057 (acknowledgement before thinking), D-065 (presented evidence box).
+- **Decision:**
+  - **Language:** the interface language is only a display choice. The prompt tells the model to reply in the language of the user's latest message, to use a language the user asks for, and to fall back to the interface language only when the message has no clear language ("ok", an emoji). It also lists the character's names in the other languages. The subscription transcript (D-072) ends with a reminder that its English framing does not set the reply language; without it Haiku answered French messages in English. The local task acknowledgement uses `guessMessageLanguage(message, interfaceLanguage)` (frontend, common-word scoring, Japanese script detection).
+  - **File turns:** the advisory request heuristic (`artifacts/workload.py`) also recognises polite French forms ("est-ce que tu peux me faire…", "tu pourrais me préparer…", "j'aimerais un fichier…"), Italian and Spanish requests. So the local "I'm on it" line plays before thinking instead of nothing. The artifact contract tells the model that its beats are performed after the file is delivered: speak about the finished result, never announce the work or repeat an acknowledgement.
+  - **Stage scale:** while a request runs, Cancel takes the Present button's slot instead of adding a fifth button; the extra button wrapped the action row onto a second line, which shrank the stage from ×3 to ×2 during thinking. The English label became "Cancel".
+  - **Presented evidence:** an in-stage card with the dialogue box's double frame, the photo cropped to fill the 64×64 window (`object-fit: cover`, no letterbox bars), and the name in a nameplate strip that scrolls long names (OverflowMarquee). The Court Record tile frame is no longer used for this card.
+- **Scope:** shared app code. Character packs (Maya's included) are unchanged.

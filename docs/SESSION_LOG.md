@@ -983,3 +983,23 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - **Not verified:** Codex CLI is not installed on this PC (simulated tests only). The Settings panel was not checked visually.
 - **Checks:** backend 458 passed; frontend 261 passed / 2 skipped; `tsc`, lint 0, build OK; `validate:assets` 368 / 0.
 - **Fix (same day):** in the app, the profile failed with "Generation failed". The main backend runs `uvicorn --reload`, which on Windows uses a selector event loop that cannot start asyncio subprocesses (`NotImplementedError`); the earlier live check used a backend without `--reload`. `run_cli` now runs `subprocess.run` in a worker thread (`CREATE_NO_WINDOW`, timeout kills the CLI). Regression test runs it on a `SelectorEventLoop`. Verified on the main :8000 backend through the app origin: Test Connection `generation_succeeded` (2.7 s), Maya answered in French (9.6 s). Backend 459 passed.
+
+## 2026-10-25 — Language, acknowledgement order, stage scale, evidence card (D-073)
+
+- Owner reports from real use with the Claude subscription (haiku), mostly with Gumshoe:
+  - the scene changes size while he thinks;
+  - after a file is delivered he repeats what he said before;
+  - he thinks first and only then gives "I'm on it" plus the answer;
+  - replies stay in English when the user writes French;
+  - the presented evidence looks like an unframed JPEG square.
+- **Causes, reproduced in the browser pane:**
+  - The Cancel button added during waiting wrapped the action row (54 → 109 px), so the stage went from ×3 to ×2.
+  - "Est-ce que tu peux me faire un fichier…" was not recognised as a file request, so there was no local acknowledgement, and the model's reply after delivery was "Pas de problème ! / Je te prépare… tout de suite. / Voilà, c'est enregistré."
+  - The prompt forced the interface language, and the subscription transcript's English framing pushed Haiku to English.
+  - The evidence card was a thin court-record frame around a letterboxed 64×64 photo.
+- **Verified live (haiku, English interface):**
+  - Gumshoe: French message gives a French reply, Japanese gives Japanese, "ok" with a French interface gives French. Mia: French. Maya: Spanish.
+  - Gumshoe file turn: "Roger that! I'm on the case!", then "Creating your file…", the phone, the Court Record entry, then only "Voilà, c'est classé, pal ! Trois idées de cadeaux bien notées dans le fichier."
+  - Mia file turn: French "Bien sûr. Laisse-moi faire." first, stage stays ×3 throughout, result-only reply.
+  - Evidence card checked with a photo and a text file (name scrolls).
+- **Checks:** backend 471 passed; frontend 262 passed; `tsc`, lint 0, build OK; `validate:assets` 368 / 0.

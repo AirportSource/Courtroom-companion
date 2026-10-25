@@ -75,8 +75,11 @@ Allowed action: {type: "create_text_artifact", filename: "name.txt", format: "tx
 Create at most one small file (64 KiB UTF-8). Supply complete textual content, without an outer
 Markdown fence. Python is inert text: it is never executed, imported or compiled. You have no
 shell, filesystem browsing, path, command, interpreter or execution tool. Do not request them.
-Keep file content out of dialogue beats. Give one short coherent final acknowledgement in
-character; the application saves successfully before presenting it, or replaces it with an
-error response on failure. The backend chooses storage and may sanitize/uniquify the name.
+Keep file content out of dialogue beats. When you create a file, your beats are performed only
+AFTER the file has been saved and handed to the user; the application has already shown a short
+"I'm on it" line before you worked. So the beats speak about the finished result, in the past:
+never announce that you will prepare it, and never repeat an acknowledgement such as "no problem"
+or "leave it to me". One short beat (two at most) in character; the application replaces it with
+an error response on failure. The backend chooses storage and may sanitize/uniquify the name.
 This is the full shared turn schema (supersedes the earlier dialogue-only envelope):
 """ + json.dumps(schema)

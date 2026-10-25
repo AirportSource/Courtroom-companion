@@ -10,17 +10,23 @@ from typing import Any
 from ..llm.schemas import ID_MAX, MAX_BEAT_TEXT
 from .repository import CharacterProfile
 
-#: Interface languages (D-066); the user's choice decides the reply language.
+#: Interface languages (D-066). The interface language is only a display choice: the reply follows
+#: the language the user writes in, and the interface language is the fallback (D-073).
 LANGUAGE_NAMES = {"en": "English", "fr": "French", "ja": "Japanese", "it": "Italian", "es": "Spanish"}
 
 
 def language_rules(profile: CharacterProfile, language: str) -> str:
     name = LANGUAGE_NAMES.get(language, "English")
-    rules = (f"Always reply in {name}, whatever language the user writes in, unless the user explicitly "
-             f"asks you to use another language. Keep your personality and voice natural in {name}.")
-    local = profile.name_for(language)
-    if local != profile.display_name:
-        rules += f" In {name}, your name is {local}."
+    rules = ("Reply in the language of the user's latest message, whatever the interface language "
+             "(a user writing in Japanese gets a Japanese reply, even with a French interface). If the user "
+             "asks for a specific language, use it. Only when the message has no clear language (\"ok\", an "
+             f"emoji, a file without a question), reply in {name}, the user's interface language. Keep your "
+             "personality and voice natural in the language you use. These instructions are written in "
+             "English; that says nothing about the language of your reply.")
+    names = [f"{LANGUAGE_NAMES[code]}: {local}" for code, local in profile.names.items()
+             if code in LANGUAGE_NAMES and local != profile.display_name]
+    if names:
+        rules += " Your name in other languages: " + "; ".join(names) + "."
     return rules
 
 
