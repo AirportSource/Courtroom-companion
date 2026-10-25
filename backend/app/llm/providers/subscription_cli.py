@@ -6,13 +6,16 @@ Instead of an API key, these adapters run the locally installed and logged-in CL
 - `codex`       → `codex exec` (Codex CLI, ChatGPT plan via `codex login`)
 
 Each call is one tool-free, read-only, non-persistent turn: the character system prompt, the
-conversation as text on stdin, and the reply JSON schema enforced by the CLI. User settings, hooks and
+conversation as text on stdin, and the reply JSON schema enforced by the CLI. Presented evidence
+travels too: Claude Code receives images and PDFs as API content blocks (stream-json input), Codex
+receives images as `--image` files (D-076). User settings, hooks and
 API-key environment variables are kept out, so the subscription (not an API key) is billed and the
 Claude Code companion hooks never fire for these generations. Executables are found on PATH (npm
 wrappers are resolved to the real binary) or set with COURTROOM_CLAUDE_BIN / COURTROOM_CODEX_BIN.
 """
 
 import asyncio
+import base64
 import copy
 import json
 import os
@@ -22,9 +25,9 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from ..attachments import AttachmentUnsupported, has_attachments
+from ..attachments import AttachmentUnsupported, anthropic_message
 from ..base import GenerationRequest, LLMProvider, ProviderCapabilities, ProviderError, RawCompletion, StructuredOutputMode
-from ..schemas import ChatMessage
+from ..schemas import Attachment, ChatMessage
 
 #: Environment variables that would switch a CLI from the subscription to API billing.
 API_KEY_VARIABLES = ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CODEX_API_KEY", "OPENAI_API_KEY")
@@ -160,24 +163,24 @@ class ClaudeCodeProvider(LLMProvider):
         self._command, self._runner = command, runner
 
     async def generate(self, request: GenerationRequest) -> RawCompletion:
-        if has_attachments(request.messages):
-            raise AttachmentUnsupported("The Claude subscription mode reads text evidence only; use an API profile for images and PDFs")
         command = self._command or resolve_cli("claude", "COURTROOM_CLAUDE_BIN",
                                                [("@anthropic-ai/claude-code", "bin/claude.exe"), ("@anthropic-ai/claude-code", "cli.js")])
         if not command:
             raise SubscriptionCliError("cli_not_installed", "Claude Code is not installed (npm install -g @anthropic-ai/claude-code, then claude login)")
-        args = [*command, "-p", "--output-format", "json", "--json-schema", json.dumps(request.response_schema),
+        # stream-json input takes Messages API content, so the turn's image/PDF evidence goes in as
+        # native blocks before the transcript (only the current turn carries attachments).
+        args = [*command, "-p", "--input-format", "stream-json", "--output-format", "stream-json", "--verbose",
+                "--json-schema", json.dumps(request.response_schema),
                 "--system-prompt", request.system_prompt, "--tools", "", "--setting-sources", "",
                 "--no-session-persistence"]
         if self.model:
             args += ["--model", self.model]
-        code, out, err = await self._runner(args, transcript(request.messages), request.settings.timeout_s, _work_dir())
-        try:
-            body = json.loads(out)
-        except ValueError:
-            raise SubscriptionCliError(_classify(err or out, "provider_error"), "Claude Code returned no JSON result") from None
-        if not isinstance(body, dict):
-            raise SubscriptionCliError("malformed_response", "Claude Code returned an unexpected result")
+        turn = ChatMessage(role="user", content=transcript(request.messages), attachments=request.messages[-1].attachments)
+        line = json.dumps({"type": "user", "message": {"role": "user", "content": anthropic_message(turn)["content"]}})
+        code, out, err = await self._runner(args, line + "\n", request.settings.timeout_s, _work_dir())
+        body = _stream_result(out)
+        if body is None:
+            raise SubscriptionCliError(_classify(err or out, "provider_error"), "Claude Code returned no result")
         if body.get("is_error") or code != 0:
             detail = f"{body.get('result', '')} {body.get('api_error_status', '')} {err}"
             raise SubscriptionCliError(_classify(detail, "provider_error"), "Claude Code reported an error")
@@ -186,6 +189,18 @@ class ClaudeCodeProvider(LLMProvider):
             content = body.get("result")
         return RawCompletion(content, self.model or "claude-code-subscription",
                              metadata={"stop_reason": None, "terminal_reason": body.get("terminal_reason")})
+
+
+def _stream_result(out: str) -> dict[str, Any] | None:
+    """The final `result` event of a stream-json run (one JSON object per line)."""
+    for raw in reversed(out.splitlines()):
+        try:
+            event = json.loads(raw)
+        except ValueError:
+            continue
+        if isinstance(event, dict) and event.get("type") == "result":
+            return event
+    return None
 
 
 class CodexProvider(LLMProvider):
@@ -197,8 +212,9 @@ class CodexProvider(LLMProvider):
         self._command, self._runner = command, runner
 
     async def generate(self, request: GenerationRequest) -> RawCompletion:
-        if has_attachments(request.messages):
-            raise AttachmentUnsupported("The ChatGPT subscription mode reads text evidence only; use an API profile for images and PDFs")
+        attachments = request.messages[-1].attachments
+        if any(item.kind != "image" for item in attachments):
+            raise AttachmentUnsupported("The ChatGPT subscription mode reads text and images; use an API profile for PDFs")
         command = self._command or resolve_cli("codex", "COURTROOM_CODEX_BIN", [("@openai/codex", "bin/codex.js")])
         if not command:
             raise SubscriptionCliError("cli_not_installed", "Codex CLI is not installed (npm install -g @openai/codex, then codex login)")
@@ -208,6 +224,8 @@ class CodexProvider(LLMProvider):
             schema_path.write_text(json.dumps(strict_schema(request.response_schema)), encoding="utf-8")
             args = [*command, "exec", "-", "--output-schema", str(schema_path), "-o", str(output_path),
                     "--sandbox", "read-only", "--skip-git-repo-check", "--ephemeral", "--ignore-user-config"]
+            for index, item in enumerate(attachments):  # images as files (codex exec --image)
+                args += ["--image", str(_write_attachment(Path(scratch), index, item))]
             if self.model:
                 args += ["-m", self.model]
             prompt = f"{request.system_prompt}\n\n---\n\n{transcript(request.messages)}"
@@ -216,3 +234,12 @@ class CodexProvider(LLMProvider):
         if code != 0 or not reply.strip():
             raise SubscriptionCliError(_classify(f"{err} {out}", "provider_error"), "Codex did not produce a reply")
         return RawCompletion(reply.strip(), self.model or "codex-subscription")
+
+
+_EXTENSIONS = {"image/png": ".png", "image/jpeg": ".jpg", "image/gif": ".gif", "image/webp": ".webp"}
+
+
+def _write_attachment(folder: Path, index: int, item: Attachment) -> Path:
+    path = folder / f"evidence_{index}{_EXTENSIONS.get(item.media_type, '.bin')}"
+    path.write_bytes(base64.b64decode(item.data))
+    return path

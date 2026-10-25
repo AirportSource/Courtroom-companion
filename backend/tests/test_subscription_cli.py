@@ -45,9 +45,20 @@ class Runner:
         return self.code, self.out, self.err
 
 
+def stream(*events):
+    """Claude Code stream-json output: one JSON event per line, the result last."""
+    return "\n".join(json.dumps(event) for event in [{"type": "system", "subtype": "init"}, *events]) + "\n"
+
+
+def sent_content(runner):
+    line = json.loads(runner.calls[0]["stdin"])
+    assert line["type"] == "user" and line["message"]["role"] == "user"
+    return line["message"]["content"]
+
+
 def test_claude_code_runs_headless_with_schema_and_reads_structured_output():
-    runner = Runner(out=json.dumps({"type": "result", "subtype": "success", "is_error": False,
-                                    "result": json.dumps(REPLY), "structured_output": REPLY}))
+    runner = Runner(out=stream({"type": "result", "subtype": "success", "is_error": False,
+                                "result": json.dumps(REPLY), "structured_output": REPLY}))
     provider = ClaudeCodeProvider(model="haiku", command=["claude.exe"], runner=runner)
     history = (ChatMessage(role="user", content="Bonjour"), ChatMessage(role="assistant", content=json.dumps(REPLY)),
                ChatMessage(role="user", content="Ça va ?"))
@@ -55,37 +66,48 @@ def test_claude_code_runs_headless_with_schema_and_reads_structured_output():
     assert raw.content == REPLY
     args = runner.calls[0]["args"]
     assert args[:2] == ["claude.exe", "-p"]
-    for flag in ("--output-format", "--json-schema", "--system-prompt", "--tools", "--setting-sources", "--no-session-persistence"):
+    assert args[args.index("--input-format") + 1] == "stream-json" and args[args.index("--output-format") + 1] == "stream-json"
+    for flag in ("--json-schema", "--system-prompt", "--tools", "--setting-sources", "--no-session-persistence"):
         assert flag in args
     assert args[args.index("--tools") + 1] == "" and args[args.index("--setting-sources") + 1] == ""
     assert json.loads(args[args.index("--json-schema") + 1]) == SCHEMA
     assert args[args.index("--model") + 1] == "haiku"
-    stdin = runner.calls[0]["stdin"]
-    assert "Bonjour" in stdin and stdin.index("Bonjour") < stdin.index("Ça va ?") and "JSON object only" in stdin
+    text = sent_content(runner)  # text-only turn: plain string content
+    assert "Bonjour" in text and text.index("Bonjour") < text.index("Ça va ?") and "JSON object only" in text
+
+
+def test_claude_code_sends_image_and_pdf_evidence_as_content_blocks():
+    # D-076: the subscription mode reads presented images and PDFs too.
+    runner = Runner(out=stream({"type": "result", "is_error": False, "structured_output": REPLY}))
+    image = Attachment(kind="image", name="police.jpg", media_type="image/jpeg", data="AAAA")
+    pdf = Attachment(kind="pdf", name="case.pdf", media_type="application/pdf", data="JVBE")
+    asyncio.run(ClaudeCodeProvider(command=["claude.exe"], runner=runner).generate(
+        request(ChatMessage(role="user", content="Look at these", attachments=[image, pdf]))))
+    blocks = sent_content(runner)
+    assert blocks[0] == {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": "AAAA"}}
+    assert blocks[1]["type"] == "document" and blocks[1]["source"]["data"] == "JVBE" and blocks[1]["title"] == "case.pdf"
+    assert blocks[2]["type"] == "text" and "Look at these" in blocks[2]["text"]
 
 
 @pytest.mark.parametrize("body,code", [
-    ({"is_error": True, "result": "Invalid API key · Please run /login", "api_error_status": 401}, "auth_not_configured"),
-    ({"is_error": True, "result": "Claude usage limit reached", "api_error_status": 429}, "rate_limited"),
-    ({"is_error": True, "result": "Something broke", "api_error_status": 500}, "provider_error"),
+    ({"type": "result", "is_error": True, "result": "Invalid API key · Please run /login", "api_error_status": 401}, "auth_not_configured"),
+    ({"type": "result", "is_error": True, "result": "Claude usage limit reached", "api_error_status": 429}, "rate_limited"),
+    ({"type": "result", "is_error": True, "result": "Something broke", "api_error_status": 500}, "provider_error"),
 ])
 def test_claude_code_error_mapping(body, code):
-    provider = ClaudeCodeProvider(command=["claude.exe"], runner=Runner(code=1, out=json.dumps(body)))
+    provider = ClaudeCodeProvider(command=["claude.exe"], runner=Runner(code=1, out=stream(body)))
     with pytest.raises(SubscriptionCliError) as error:
         asyncio.run(provider.generate(request()))
     assert error.value.code == code
 
 
-def test_not_installed_attachments_and_no_json():
+def test_not_installed_and_no_result():
     with pytest.raises(SubscriptionCliError) as error:
         asyncio.run(ClaudeCodeProvider(command=["definitely-not-installed-cli-xyz"]).generate(request()))
     assert error.value.code == "cli_not_installed"
-    image = Attachment(kind="image", name="a.png", media_type="image/png", data="AAAA")
-    with pytest.raises(AttachmentUnsupported):
-        asyncio.run(ClaudeCodeProvider(command=["claude.exe"], runner=Runner()).generate(
-            request(ChatMessage(role="user", content="look", attachments=[image]))))
-    with pytest.raises(SubscriptionCliError):
+    with pytest.raises(SubscriptionCliError) as error:
         asyncio.run(ClaudeCodeProvider(command=["claude.exe"], runner=Runner(out="not json", err="login required")).generate(request()))
+    assert error.value.code == "auth_not_configured"
 
 
 def test_codex_exec_uses_strict_schema_file_and_reads_last_message():
@@ -109,6 +131,10 @@ def test_codex_exec_uses_strict_schema_file_and_reads_last_message():
     assert sorted(beat["required"]) == ["emotion", "intensity", "reaction", "text"]
     assert {"type": "null"} in beat["properties"]["intensity"]["anyOf"]
     assert "maxLength" not in json.dumps(seen["schema"]) and "minItems" not in json.dumps(seen["schema"])
+    pdf = Attachment(kind="pdf", name="case.pdf", media_type="application/pdf", data="JVBE")
+    with pytest.raises(AttachmentUnsupported):  # Codex takes images, not PDFs
+        asyncio.run(CodexProvider(command=["codex"], runner=runner).generate(
+            request(ChatMessage(role="user", content="read", attachments=[pdf]))))
     failed = CodexProvider(command=["codex"], runner=Runner(code=1, err="You've hit your usage limit"))
     with pytest.raises(SubscriptionCliError) as error:
         asyncio.run(failed.generate(request()))
@@ -127,6 +153,21 @@ def test_run_cli_works_on_a_selector_event_loop(tmp_path):
     with pytest.raises(SubscriptionCliError) as error:
         asyncio.run(run_cli([sys.executable, "-c", "import time; time.sleep(5)"], "", 0.5, tmp_path))
     assert error.value.code == "timeout"
+
+
+def test_codex_passes_images_as_files():
+    seen = {}
+
+    async def runner(args, stdin, timeout_s, cwd):
+        path = Path(args[args.index("--image") + 1])
+        seen["suffix"], seen["bytes"] = path.suffix, path.read_bytes()
+        Path(args[args.index("-o") + 1]).write_text(json.dumps(REPLY), encoding="utf-8")
+        return 0, "", ""
+
+    image = Attachment(kind="image", name="police.jpg", media_type="image/jpeg", data="/9j/4A==")
+    asyncio.run(CodexProvider(command=["codex"], runner=runner).generate(
+        request(ChatMessage(role="user", content="look", attachments=[image]))))
+    assert seen == {"suffix": ".jpg", "bytes": bytes([0xff, 0xd8, 0xff, 0xe0])}
 
 
 def test_environment_never_carries_api_keys(monkeypatch):

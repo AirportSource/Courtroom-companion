@@ -801,7 +801,7 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - Each call is one turn with no tools, no saved session and no user settings, run from an empty temp folder. API-key variables (`ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `CODEX_API_KEY`, `OPENAI_API_KEY`) are removed from the child environment so the plan is billed, not an API account. `COURTROOM_HOOK_DISABLED=1` makes our Claude Code hook (D-067) ignore these runs.
   - Profiles take no base URL and no key; the model is optional (empty = the CLI's default). Executables are found on PATH (npm wrappers are resolved to the real binary) or set with `COURTROOM_CLAUDE_BIN` / `COURTROOM_CODEX_BIN`.
   - Error codes: `cli_not_installed`, `auth_not_configured` (not logged in), `rate_limited` (plan limit), `context_window_exceeded`, `timeout`, `provider_error`.
-- **Limits:** text evidence only (images and PDFs need an API profile); each reply has the latency of a CLI start (about 3–6 s with haiku here); usage counts against the plan's limits. Use stays within each provider's terms for personal use of one's own subscription.
+- **Limits:** ~~text evidence only~~ (superseded by D-076: images and PDFs pass through); each reply has the latency of a CLI start (about 3–6 s with haiku here); usage counts against the plan's limits. Use stays within each provider's terms for personal use of one's own subscription.
 
 ## D-073 — Reply language follows the user; file turns acknowledge first; stage and evidence fixes
 - **Status:** Accepted
@@ -827,3 +827,14 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Decision:** the evidence card and the pending chip show the user's own image whenever the browser can display it. If it cannot (broken or unreadable file: the `<img>` fails to load), the game's photo evidence icon (`ui.json` `court_record_photo`, a 64×64 crop from the owner's evidence sheet) takes its place, drawn as pixel art at native size. The type badge is the last fallback when that icon is missing. Text files and PDFs keep the document icon with a type badge.
 - **Rationale:** the owner asked for the photo icons from the game files, then preferred the original image when possible, with the photo asset as the replacement.
 - **Attach-time check (same day):** `contentMatchesKind` checks an image's or PDF's first bytes with the server's signatures when the file is attached. A renamed or garbage file is refused at once with "This image/PDF can't be read: the file is damaged or isn't really…" (5 languages), instead of being sent and rejected as "Unsupported file". A file with a valid header that the browser still cannot draw (truncated) is accepted, and the photo icon stands in for it.
+
+## D-076 — Subscription profiles read presented images and PDFs
+- **Status:** Accepted (Claude verified live; Codex covered by simulated tests only)
+- **Date:** 2026-10-25
+- **Amends:** D-072 (subscription modes refused images and PDFs).
+- **Decision:**
+  - `claude_code` now always runs `claude -p --input-format stream-json --output-format stream-json --verbose …`. The turn is one stdin line `{"type":"user","message":{"role":"user","content":…}}`. The content is the transcript string, or, when the current turn carries evidence, the same image/document blocks the Anthropic adapter builds (`anthropic_message`) followed by the transcript. The reply is the last `type: "result"` event (`structured_output`).
+  - `codex` writes each presented image to the run's temp folder and passes it as `--image <file>`. A PDF still raises `attachment_unsupported` for Codex.
+- **Verified:**
+  - Haiku through the owner's subscription named the colours of a test PNG and read the suspect's name in a test PDF.
+  - In the app, Gumshoe recognised the Japanese National Police Agency logo from the owner's downloaded image and read 警察庁 correctly.

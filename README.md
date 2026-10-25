@@ -66,7 +66,7 @@ To use your own **Claude** or **ChatGPT** subscription instead of an API key, in
 official CLI once (`npm install -g @anthropic-ai/claude-code` then `claude login`, or
 `npm install -g @openai/codex` then `codex login`), then add a **Claude (subscription)** or
 **ChatGPT / Codex (subscription)** profile. No key is needed; usage counts against your plan. These
-modes read text evidence only (images and PDFs need an API profile).
+modes read presented evidence too: Claude reads text, images and PDFs; ChatGPT/Codex reads text and images.
 
 The built-in **Fake** profile works offline for testing; offline test commands
 include `#remind`, `#reminders`, `#folder`, `#read <path>`, `#search <query>`, `#artifact-md`.

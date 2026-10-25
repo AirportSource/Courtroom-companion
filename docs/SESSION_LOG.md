@@ -1022,3 +1022,11 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - **Checks:** frontend 262 passed; `tsc`, lint 0, build OK; `validate:assets` 369 / 0.
 
 - 2026-10-25: the owner saw "Couldn't get a reply: Unsupported file…" in the browser pane. It came from my own test: a 10-byte garbage file named `.png` passed the client's extension check, and the server rejected it from its bytes (the only `evidence_unsupported` 422 in the backend log). Fix: the same byte-signature check runs on attach, with a precise "damaged image/PDF" message. Browser check: garbage `.png` is refused at once (no chip); a truncated PNG (valid header) is accepted and shows the photo icon. Frontend 263 passed; `tsc`, lint, build, `validate:assets` 369 / 0.
+
+## 2026-10-25 — Images and PDFs in subscription mode (D-076)
+
+- Owner presented a downloaded image (Japanese police logo) to Gumshoe and got "The current model cannot read this file": the D-072 subscription mode refused images and PDFs.
+- Claude Code's stream-json input accepts Messages API content blocks. Tested by hand first (PNG colours, PDF text), then wired into `ClaudeCodeProvider`; Codex gets `--image` files.
+- The `uvicorn --reload` backend got stuck on a reload (old process kept alive, still serving the old code), so I restarted it (new background task).
+- Live check: Gumshoe described the logo in French and read 警察庁 / Keisatsu-chō.
+- Tests: `test_subscription_cli.py` 12 passed (content blocks, Codex image files, Codex PDF refusal, stream-json parsing).
