@@ -217,10 +217,11 @@ function App() {
     }
   }, [catalog, characterId, loaded])
 
-  // The Conversation Record shows every character's portrait: load packs on demand (once each).
+  // The Conversation Record shows every character's portrait: it asks for all packs when it opens,
+  // from the title menu or from inside a conversation (once each).
   const requestedPacks = useRef(new Set<CharacterId>())
-  useEffect(() => {
-    if (catalog.status !== 'ready' || screen !== 'conversation-record') return
+  const loadAllPacks = useCallback(() => {
+    if (catalog.status !== 'ready') return
     for (const summary of catalog.characters) {
       if (requestedPacks.current.has(summary.id)) continue
       requestedPacks.current.add(summary.id)
@@ -229,7 +230,7 @@ function App() {
         () => {}, // a missing pack only means a fallback slot, never a broken screen
       )
     }
-  }, [catalog, screen])
+  }, [catalog])
 
   if (catalog.status === 'loading') return <StageMessage text={t('common.loading')} />
   if (catalog.status === 'error') return <StageMessage text={t('app.assetsFailed', { error: catalog.message })} error />
@@ -379,6 +380,7 @@ function App() {
           }}
           portraitFor={portraitFor}
           nameFor={nameFor}
+          onRecordOpen={loadAllPacks}
         />
       ))
     case 'court-record':
@@ -393,7 +395,7 @@ function App() {
       return (
         <PixelStage>
           <ConversationRecordView onClose={toTitle} evidenceFrame={evidenceFrame}
-            portraitFor={portraitFor} nameFor={nameFor} />
+            portraitFor={portraitFor} nameFor={nameFor} onOpen={loadAllPacks} />
         </PixelStage>
       )
     case 'animation-test':

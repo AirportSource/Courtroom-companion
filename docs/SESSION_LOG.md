@@ -1030,3 +1030,9 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - The `uvicorn --reload` backend got stuck on a reload (old process kept alive, still serving the old code), so I restarted it (new background task).
 - Live check: Gumshoe described the logo in French and read 警察庁 / Keisatsu-chō.
 - Tests: `test_subscription_cli.py` 12 passed (content blocks, Codex image files, Codex PDF refusal, stream-json parsing).
+
+## 2026-10-25 — Record portraits from inside a conversation
+
+- Owner saw "?" tiles in the Record opened from a conversation, for exchanges with other characters. Other character packs were only loaded when the Record was opened from the title menu (`screen === 'conversation-record'`). The in-conversation overlay only knew the current character.
+- `App.loadAllPacks` is now passed to `ConversationRecordView` as `onOpen` (title menu) and through `ConversationScreen.onRecordOpen` (overlay). It is called once when the Record opens, and each pack is still loaded only once.
+- Browser check: Record opened from a Gumshoe conversation, 12 pages: Gumshoe, Maya and Mia all show portraits, no "?". Frontend 263 passed; `tsc`, lint, build, `validate:assets` 369 / 0.

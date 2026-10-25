@@ -28,6 +28,8 @@ export interface ConversationRecordViewProps {
   loadArtifacts?: () => Promise<GeneratedArtifact[]>
   /** Called after an entry was deleted on the server. */
   onEntriesChanged?: () => void
+  /** Called once when the record opens, e.g. to load every character's portrait. */
+  onOpen?: () => void
 }
 
 type Mode = 'list' | 'detail' | 'file'
@@ -39,8 +41,10 @@ const BACK_KEYS = ['Escape', 'Backspace', 'x', 'X']
 
 /** In-stage (256×192) Conversation Record: one portrait slot per saved exchange. */
 export function ConversationRecordView({ onClose, evidenceFrame = null, portraitFor, nameFor,
-  loadArtifacts = listArtifacts, onEntriesChanged }: ConversationRecordViewProps) {
+  loadArtifacts = listArtifacts, onEntriesChanged, onOpen }: ConversationRecordViewProps) {
   const t = useT()
+  const opened = useRef(onOpen)
+  useEffect(() => { opened.current?.() }, [])
   const [entries, setEntries] = useState<ConversationRecordEntry[]>([])
   const [load, setLoad] = useState<Load>({ status: 'loading' })
   const [selectedId, setSelectedId] = useState<string | null>(null)

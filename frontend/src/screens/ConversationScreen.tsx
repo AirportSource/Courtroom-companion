@@ -69,6 +69,8 @@ interface ConversationScreenProps {
   exclamations?: ExclamationImages
   portraitFor: (characterId: string) => UiImage | null
   nameFor: (characterId: string) => string | null
+  /** The in-conversation Record opened: load what it needs (every character's portrait). */
+  onRecordOpen?: () => void
   /** Show temporary developer controls. */
   devTools: boolean
   onTaskChange?: (task: TurnTask | null) => void
@@ -118,7 +120,7 @@ function overrideFor(line: DialogueLine): PerformanceOverride {
 export function ConversationScreen({
   character, background, testScript, talkBackdrop, generatedArtifacts, artifactsLoading, artifactsError,
   onArtifactsChanged, fileIcon, photoIcon = null, thinkerIcon, phoneIcon, onExit, devTools, onTaskChange,
-  evidenceFrame = null, portraitFor, nameFor, exclamations = {},
+  evidenceFrame = null, portraitFor, nameFor, exclamations = {}, onRecordOpen,
 }: ConversationScreenProps) {
   const { settings } = useSettings()
   const t = useT()
@@ -660,7 +662,7 @@ export function ConversationScreen({
           )}
           {overlay === 'conversation-record' && (
             <ConversationRecordView onClose={() => setOverlay(null)} evidenceFrame={evidenceFrame}
-              portraitFor={portraitFor} nameFor={nameFor} />
+              portraitFor={portraitFor} nameFor={nameFor} onOpen={onRecordOpen} />
           )}
           {/* The presented file stays on screen while the character thinks, then leaves with the reply. */}
           {presented && waiting && <PresentedEvidence evidence={presented} fileIcon={fileIcon} photoIcon={photoIcon} />}
