@@ -1036,3 +1036,10 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - Owner saw "?" tiles in the Record opened from a conversation, for exchanges with other characters. Other character packs were only loaded when the Record was opened from the title menu (`screen === 'conversation-record'`). The in-conversation overlay only knew the current character.
 - `App.loadAllPacks` is now passed to `ConversationRecordView` as `onOpen` (title menu) and through `ConversationScreen.onRecordOpen` (overlay). It is called once when the Record opens, and each pack is still loaded only once.
 - Browser check: Record opened from a Gumshoe conversation, 12 pages: Gumshoe, Maya and Mia all show portraits, no "?". Frontend 263 passed; `tsc`, lint, build, `validate:assets` 369 / 0.
+
+## 2026-10-25 — Picture fit and Mia alignment (D-077)
+
+- The owner found presented pictures "not scaled, sometimes hyper zoomed" (police logo 373×135, cropped to its central square), and Mia offset to the left.
+- Pictures: contain plus a blurred fill. Checked in a background tab (the owner was using the pane): fit layer `contain`, fill layer `cover` with blur.
+- Mia: a per-pose head/neck centre measurement showed only `turn_aside` off (114 vs ~130). Widened its canvas and shifted the offsets; re-measured at ~130.
+- Checks: backend 473 passed; frontend 263 passed; `tsc`, lint, build, `validate:assets` 369 / 0.

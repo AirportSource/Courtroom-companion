@@ -838,3 +838,11 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Verified:**
   - Haiku through the owner's subscription named the colours of a test PNG and read the suspect's name in a test PDF.
   - In the app, Gumshoe recognised the Japanese National Police Agency logo from the owner's downloaded image and read 警察庁 correctly.
+
+## D-077 — Presented pictures fit whole; Mia's turn_aside realigned
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Amends:** D-073 (presented photo cropped with `object-fit: cover`).
+- **Decision:**
+  - A presented picture is shown whole (`object-fit: contain`) over a blurred, darkened `cover` copy of itself, in the stage card and in the pending chip. Cropping a wide picture to a square showed only its middle: the owner's 373×135 police logo looked "hyper zoomed". The blurred fill avoids the letterbox bars the owner disliked.
+  - Mia's `turn_aside` clip: canvas 92 → 124 px wide and every frame offset x +32, so the centred canvas moves the figure 16 px right. Its head and neck were at stage x≈114 while her other poses sit at x≈128–134 (measured on rows from the top of the figure), so she jumped left whenever she settled into that pose. They are now at x≈130, like `serious_front`. Pixels are unchanged.

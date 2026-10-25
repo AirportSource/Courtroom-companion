@@ -56,14 +56,33 @@
   box-shadow: inset 0 0 0 1px var(--nameplate-edge);
 }
 
-/* Photos are not pixel art: smooth scaling. */
+/* Photos are not pixel art: smooth scaling. The picture fits whole in the window; a blurred,
+   darkened copy of it fills the rest, so there is neither cropping nor letterbox bars. */
 .evidence-photo {
+  position: relative;
   display: block;
-  width: 64px;
-  height: 64px;
-  object-fit: cover; /* fill the window like a DS evidence picture, no letterbox bars */
-  image-rendering: auto;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   background: #000;
+}
+
+.evidence-photo > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: auto;
+}
+
+.evidence-photo-fill {
+  object-fit: cover;
+  filter: blur(3px) brightness(0.45);
+  transform: scale(1.15);
+}
+
+.evidence-photo-fit {
+  object-fit: contain;
 }
 
 /* Game photo icon standing in for a picture that cannot be shown: pixel art, native size. */
@@ -127,7 +146,8 @@
   border: 1px solid var(--nameplate-edge);
 }
 
-.evidence-pending-thumb img {
+/* Direct child only (the photo icon fallback); a real picture brings its own fit/fill layers. */
+.evidence-pending-thumb > img {
   width: 100%;
   height: 100%;
   object-fit: cover;

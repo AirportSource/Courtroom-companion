@@ -9,13 +9,18 @@ import './evidence.css'
  * The presented picture itself; if the browser cannot show it (unreadable or broken file), the
  * game's photo evidence icon takes its place (D-075), and the type badge only without that icon.
  */
-function EvidencePicture({ evidence, photoIcon, className }: {
-  evidence: EvidenceDraft; photoIcon: UiImage | null; className?: string
-}) {
+function EvidencePicture({ evidence, photoIcon }: { evidence: EvidenceDraft; photoIcon: UiImage | null }) {
   const [failed, setFailed] = useState<string | null>(null)
   if (evidence.previewUrl && failed !== evidence.previewUrl) {
     const url = evidence.previewUrl
-    return <img className={className} src={url} alt="" draggable={false} onError={() => setFailed(url)} />
+    // The whole picture, scaled to fit (a wide logo is never cropped into a zoomed detail); a
+    // blurred, darkened copy fills the space around it instead of letterbox bars.
+    return (
+      <span className="evidence-photo">
+        <img className="evidence-photo-fill" src={url} alt="" draggable={false} />
+        <img className="evidence-photo-fit" src={url} alt="" draggable={false} onError={() => setFailed(url)} />
+      </span>
+    )
   }
   if (photoIcon) return <img className="evidence-photo-icon" src={photoIcon.url} alt="" draggable={false} />
   return <span>{evidenceBadge(evidence.kind, evidence.name)}</span>
@@ -25,7 +30,7 @@ function EvidencePicture({ evidence, photoIcon, className }: {
 function EvidenceFace({ evidence, fileIcon, photoIcon }: {
   evidence: EvidenceDraft; fileIcon: UiImage | null; photoIcon: UiImage | null
 }) {
-  if (evidence.kind === 'image') return <EvidencePicture evidence={evidence} photoIcon={photoIcon} className="evidence-photo" />
+  if (evidence.kind === 'image') return <EvidencePicture evidence={evidence} photoIcon={photoIcon} />
   return (
     <span className="evidence-file">
       {fileIcon && <img src={fileIcon.url} width={fileIcon.width} height={fileIcon.height} alt="" draggable={false} />}
