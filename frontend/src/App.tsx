@@ -38,11 +38,12 @@ import { ConversationScreen } from './screens/ConversationScreen.tsx'
 import { LocationSelectScreen } from './screens/LocationSelectScreen.tsx'
 import { SettingsScreen } from './screens/SettingsScreen.tsx'
 import { TitleScreen } from './screens/TitleScreen.tsx'
+import { CharacterStudio } from './studio/CharacterStudio.tsx'
 
 const DEV_TOOLS = import.meta.env.DEV
 
 type Screen = 'title' | 'characters' | 'locations' | 'settings' | 'conversation' | 'court-record'
-  | 'conversation-record' | 'animation-test'
+  | 'conversation-record' | 'animation-test' | 'character-studio'
 
 interface Catalog {
   characters: CharacterSummary[]
@@ -345,7 +346,20 @@ function App() {
           soundtrack={catalog.soundtrack}
           importedTracks={importLibrary.tracks.filter((track) => track.available)}
           onBack={toTitle}
+          onCharacterStudio={() => setScreen('character-studio')}
           backdrop={catalog.ui.images.menu_bottom_screen ?? null}
+        />
+      )
+    case 'character-studio':
+      return (
+        <CharacterStudio
+          characters={catalog.characters.map((summary) => ({ id: summary.id, name: localizedName(summary, appSettings.language) }))}
+          onBack={() => setScreen('settings')}
+          onTalk={(id) => {
+            setLoadError(null)
+            setCharacterId(id)
+            setScreen('locations')
+          }}
         />
       )
     case 'conversation':

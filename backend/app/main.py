@@ -16,6 +16,10 @@ from fastapi.responses import JSONResponse
 from .api.routes import router
 from .api.profile_routes import router as profile_router
 from .api.music_routes import router as music_router
+from .api.document_routes import router as document_router
+from .api.knowledge_routes import router as knowledge_router
+from .documents.jobs import ExtractionJobs
+from .lore.jobs import AnalysisJobs
 from .api.artifact_routes import router as artifact_router
 from .api.event_routes import router as event_router
 from .api.tool_routes import router as tool_router
@@ -66,6 +70,7 @@ def create_app(
     profile_store: ProfileStore | None = None,
     credential_store: CredentialStore | None = None,
     music_library: MusicLibrary | None = None,
+    document_extractions: ExtractionJobs | None = None,
     conversation_record: ConversationRecordStore | None = None,
     artifact_store: ArtifactStore | None = None,
     tool_context: ToolContext | None = None,
@@ -81,6 +86,10 @@ def create_app(
     app.state.music_library = music_library or MusicLibrary(music_dir())
     app.state.artifact_store = artifact_store or ArtifactStore(outputs_dir())
     app.state.artifact_turns = TurnRegistry()
+    # Character Lore Builder PDF import jobs (D-100): in memory only, local OCR.
+    app.state.document_extractions = document_extractions or ExtractionJobs()
+    # Lore analysis proposals (D-101): in memory only; nothing is written to character files.
+    app.state.lore_analyses = AnalysisJobs()
     # Things a character may comment on without a user message (D-067).
     app.state.event_inbox = EventInbox()
     # Character tools: reminders, authorized folders, web search (D-067).
@@ -120,6 +129,8 @@ def create_app(
     app.include_router(router)
     app.include_router(profile_router)
     app.include_router(music_router)
+    app.include_router(document_router)
+    app.include_router(knowledge_router)
     app.include_router(artifact_router)
     app.include_router(event_router)
     app.include_router(tool_router)

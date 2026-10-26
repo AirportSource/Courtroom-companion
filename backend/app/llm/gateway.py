@@ -5,12 +5,13 @@ Callers only see CharacterReply (or a failure they must degrade gracefully from)
 """
 
 import asyncio
+import json
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from .base import GenerationRequest, LLMProvider, OutputWorkload, ProviderError
+from .base import GenerationRequest, GenerationSettings, LLMProvider, OutputWorkload, ProviderError
 from .budgets import settings_for_workload
 from .errors import CONTEXT_EXCEEDED, OUTPUT_TRUNCATED, failure_class, normalize_stop_reason
 from .config import DEFAULT_OLLAMA_BASE_URL, ProviderConfig
@@ -134,3 +135,73 @@ class LLMGateway:
         if repaired.reply is None:
             return GatewayResult(None, repaired.warnings, error="invalid_reply", generation=generation)
         return GatewayResult(repaired.reply, repaired.warnings, generation=generation, raw_data=raw_data)
+
+
+#: Output budget for non-dialogue structured tasks (e.g. lore extraction, D-101). Same cap as text
+#: artifacts would be wasteful; one chunk's facts fit comfortably in 8k tokens.
+STRUCTURED_OUTPUT_TOKENS = 8192
+STRUCTURED_TEMPERATURE = 0.2
+
+
+@dataclass
+class StructuredResult:
+    """A decoded JSON object for a caller-defined schema; the CALLER validates it (never trusted)."""
+
+    data: dict[str, Any] | None
+    warnings: list[str] = field(default_factory=list)
+    error: str | None = None
+    generation: dict[str, Any] = field(default_factory=dict)
+
+
+def decode_json_object(content: str | dict[str, Any] | None) -> dict[str, Any] | None:
+    """A JSON object from a dict, a JSON string, fenced JSON, or JSON embedded in prose."""
+    if isinstance(content, dict):
+        return content
+    if not isinstance(content, str):
+        return None
+    text = content.strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[-1].rsplit("```", 1)[0]
+    for candidate in (text, text[text.find("{"):text.rfind("}") + 1] if "{" in text else ""):
+        try:
+            value = json.loads(candidate)
+        except (json.JSONDecodeError, ValueError):
+            continue
+        if isinstance(value, dict):
+            return value
+    return None
+
+
+async def generate_structured(
+    gateway: "LLMGateway", system_prompt: str, messages: list[ChatMessage], response_schema: dict[str, Any],
+    *, max_tokens: int = STRUCTURED_OUTPUT_TOKENS, temperature: float = STRUCTURED_TEMPERATURE,
+) -> StructuredResult:
+    """Same providers, timeout, truncation guard and failure isolation as `generate_reply`, for a
+    caller-supplied schema. The conversation CharacterReply contract is not involved."""
+    values = gateway.config.settings.model_dump()
+    values.update(max_tokens=max(int(values["max_tokens"]), max_tokens), temperature=temperature)
+    settings = GenerationSettings.model_validate(values)
+    request = GenerationRequest(system_prompt, messages, response_schema, settings, OutputWorkload.TEXT_ARTIFACT)
+    generation: dict[str, Any] = {"maxOutputTokens": settings.max_tokens}
+    try:
+        raw = await asyncio.wait_for(gateway.provider.generate(request), timeout=settings.timeout_s)
+    except TimeoutError:
+        return StructuredResult(None, ["provider timed out"], "timeout", generation)
+    except ProviderError as error:
+        logger.warning("LLM provider %s failed: %s", gateway.config.type, error)
+        return StructuredResult(None, [str(error)], error.code, generation)
+    except Exception:  # isolate any adapter/vendor failure from the app
+        logger.exception("LLM provider %s failed", gateway.config.type)
+        return StructuredResult(None, ["provider failed"], "provider_error", generation)
+    stop = normalize_stop_reason(raw.metadata.get("stop_reason"))
+    if stop:
+        generation["stopReason"] = stop
+    if stop == "max_tokens":
+        return StructuredResult(None, [f"Output reached the {settings.max_tokens}-token budget; incomplete output was discarded"],
+                                OUTPUT_TRUNCATED, generation)
+    if stop == "model_context_window_exceeded":
+        return StructuredResult(None, ["The model context window was exceeded"], CONTEXT_EXCEEDED, generation)
+    data = decode_json_object(raw.content)
+    if data is None:
+        return StructuredResult(None, ["the model did not return a JSON object"], "invalid_json", generation)
+    return StructuredResult(data, [], None, generation)

@@ -193,6 +193,8 @@ export const EN = {
   'tools.save': "Save key",
   'tools.reminders': "Reminders",
   'tools.noReminders': "None pending",
+  'settings.characterStudio': "Character Studio",
+  'settings.characterStudioOpen': "Open (advanced)",
 } as const
 
 export type StringKey = keyof typeof EN
@@ -377,6 +379,8 @@ export const FR: Strings = {
   'tools.save': "Enregistrer la clé",
   'tools.reminders': "Rappels",
   'tools.noReminders': "Aucun en attente",
+  'settings.characterStudio': "Atelier des personnages",
+  'settings.characterStudioOpen': "Ouvrir (avancé)",
 }
 
 export const JA: Strings = {
@@ -558,6 +562,8 @@ export const JA: Strings = {
   'tools.save': "キーを保存",
   'tools.reminders': "リマインダー",
   'tools.noReminders': "予定なし",
+  'settings.characterStudio': "キャラクタースタジオ",
+  'settings.characterStudioOpen': "開く（上級者向け）",
 }
 
 export const IT: Strings = {
@@ -739,6 +745,8 @@ export const IT: Strings = {
   'tools.save': "Salva chiave",
   'tools.reminders': "Promemoria",
   'tools.noReminders': "Nessuno in attesa",
+  'settings.characterStudio': "Studio personaggi",
+  'settings.characterStudioOpen': "Apri (avanzato)",
 }
 
 export const ES: Strings = {
@@ -920,4 +928,6 @@ export const ES: Strings = {
   'tools.save': "Guardar clave",
   'tools.reminders': "Recordatorios",
   'tools.noReminders': "Ninguno pendiente",
+  'settings.characterStudio': "Estudio de personajes",
+  'settings.characterStudioOpen': "Abrir (avanzado)",
 }

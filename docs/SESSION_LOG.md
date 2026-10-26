@@ -1116,3 +1116,37 @@ Final validation: backend629 passed/2 skipped, frontend327 passed, source tests4
 - Full checks completed before interruption: backend 688 passed / 2 skipped, one pytest cache warning; frontend 354 passed; assets 1074 / 0; TypeScript, lint, production build and diff check passed. No application code changed after those successful checks.
 - Browser QA captured Iris selection and 1x/3x conversation rendering, three location previews and the actual file-ready phone flow using an isolated fake-provider backend. Phone report: no browser exceptions, native 64x64 image; screenshot shows no grey matte. Six-expression contact sheets were inspected at 1x/3x. Scratch captures/config/history remain ignored under build/. Audio was not auditioned.
 - P0 stabilization is deferred at the owner's request. Two scoped content commits are being created and pushed without rewriting history.
+
+## 2026-10-26 — Character Lore Builder, Phase A (D-099)
+
+- Branch `feat/character-lore-builder` from main 42d2b7e. Untracked `assets/` and `docs/personnality_documents/` left untouched.
+- Diagnosed Iris denying Dahlia/Phoenix: no canonical facts in the prompt plus an anti-guessing instruction; provider adapters and character switching were correct.
+- Added optional `lore.md` / `speech_examples.md` loading, `IDENTITY_RULES`/`LORE_RULES` prompt sections, `CharacterRepository.invalidate()`, Iris `lore.md` (from Iris.pdf, page-cited) and two personality fixes. Iris system prompt 15.4k chars (lore 6.5k); other packs ~7-9k and unchanged apart from the identity rule.
+- Tests: new `test_character_lore.py` (10) and lore-leak check in the isolation test. Backend 697 passed / 2 skipped / 1 failed (`test_subscription_cli::test_run_cli_works_on_a_selector_event_loop`: the sandbox blocks spawning python.exe; untouched code). Asset validation 1074 / 0. No real-model run yet. Nothing committed.
+
+## 2026-10-26 — Character Lore Builder, Phase B (D-100)
+
+- Phase A follow-ups: three-tier memory rules, context-size measurement/warning, budget strategy and the sandbox-only `test_subscription_cli` failure documented in `docs/CHARACTER_LORE.md` (test left unchanged).
+- Added `app/documents/` (pdf, tesseract, jobs), `/api/documents` routes, `pypdf`/`pypdfium2` in `requirements.txt` (installed in the venv: 6.21.2 / 5.14.0).
+- Owner added `tesseract/` at the repo root mid-session: it is the 5.5.3 source tree, not a binary; left untouched and untracked. Discovery will use a binary placed there.
+- Real Iris.pdf: 8 pages, no text layer; all pages reported `ocr_required` / `tesseract_missing` (6 s). No OCR success is claimed.
+- Tests: `test_documents.py` 28 passed, 3 skipped (real Tesseract absent); backend 728 passed / 5 skipped / 1 failed (same sandbox subprocess limitation). No servers started. Nothing committed.
+
+## 2026-10-26 — Character Lore Builder, Phase B validation + Phase C (D-101)
+
+- Start: branch `feat/character-lore-builder`, HEAD 42d2b7e, Phase A/B uncommitted; unrelated uncommitted Japanese typography/reading frontend work present and untouched.
+- Tesseract 5.5.3 at `C:\Program Files\Tesseract-OCR` (124 languages incl. eng/fra/jpn) discovered by the backend. Real OCR of Iris.pdf: 8/8 pages, 22 s, confidence 91.9. Fixed infobox/body line merging in TSV rebuild; added sparse-text-over-image OCR trigger. Real-engine tests now run (eng, fra, jpn with DotGothic16, full Iris.pdf).
+- Phase C: `app/lore/` (cleaning, grounding, merge, schemas, service, jobs), `generate_structured` in the gateway, analysis routes with remote-consent gate. Iris pilot on real OCR text with scripted model output (no real LLM: Ollama not running, no paid calls authorised); pilot drove fixes to fuzzy containment matching, full-name detection and lore comparison.
+- Tests: backend 760 passed / 2 skipped (symlink privilege); `test_subscription_cli` passed this run. Frontend not run: no frontend file changed by this work. `git diff --check` clean. No servers started. Nothing staged or committed.
+
+## 2026-10-26 — Character Lore Builder, Phase D (D-102)
+
+- Real-model pilot attempted with the owner's local Ollama (`qwen3:4b`): context 4,096 tokens, partial GPU; no chunk completed in 10 min, run stopped at the owner's request (owner will test with the Claude subscription). Agent process verified gone; Ollama server (owner's) untouched.
+- Phase D: `app/lore/knowledge.py`, `app/lore/approval.py`, `app/api/knowledge_routes.py`, `runtime_paths.knowledge_dir()`, repository effective profile (`has_knowledge_overlay`). Tests: `test_knowledge_overlay.py` 8 passed; backend 768 passed / 2 skipped. `git diff --check` clean. No frontend changes. Nothing staged or committed.
+
+## 2026-10-26 — Character Lore Builder, Phase E (D-103)
+
+- Added `frontend/src/studio/` (studioApi, studioState, CharacterStudio, character-studio.css), `character-studio` screen in App, Settings entry (5 languages), `tests/characterStudio.test.ts` (7 tests). Preserved the unrelated uncommitted Japanese typography edits in App.tsx/SettingsScreen.tsx/strings.ts.
+- Checks: frontend 389 tests passed, `tsc -b` clean, oxlint clean, production build OK, assets 1074/0.
+- Browser QA with an isolated QA backend (scratch data dir, real Tesseract, scripted "remote" model) + Vite: full import → OCR → consent → review → edit/approve → remove → factory reset → talk flow verified. Port 8765 was held by a pre-existing process from another session (PID 24144) and was left untouched; QA used 8791/5199. All agent-started processes stopped and ports verified free.
+- Nothing staged or committed.

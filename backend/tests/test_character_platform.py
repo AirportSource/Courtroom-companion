@@ -289,9 +289,12 @@ def test_each_prompt_contains_only_its_own_personality():
             assert paragraphs
             assert other.personality.strip() not in prompt
             assert all(p not in prompt for p in paragraphs), f"{other.id} text leaked into {profile.id}"
+            # Nor any of its canonical lore (D-099).
+            lore_paragraphs = [p.strip() for p in other.lore.split("\n\n") if len(p.strip()) >= 60]
+            assert all(p not in prompt for p in lore_paragraphs), f"{other.id} lore leaked into {profile.id}"
             # Another character's id never appears; a display name only if the persona itself mentions it.
             assert other.id not in prompt
-            if other.display_name not in profile.personality:
+            if other.display_name not in profile.personality + profile.lore:
                 assert other.display_name not in prompt, f"{other.display_name} appears in {profile.id}'s prompt"
 
 

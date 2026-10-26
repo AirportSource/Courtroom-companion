@@ -3,7 +3,15 @@
 Sources per character, in its pack folder under the assets root:
 - character.json   (required) emotions, animations, reactions — shared with the frontend
 - performance.json (optional) director settings, gestures, intensity variants, aliases
-- personality.md   (optional) character bible for the system prompt
+- personality.md   (optional) character bible for the system prompt: how the character behaves
+- lore.md          (optional) canonical knowledge: what the character knows about their own life
+                   and world, from a declared narrative reference point (D-099)
+- speech_examples.md (optional) short original dialogue-style illustrations (never canon quotes)
+
+lore.md and speech_examples.md never affect readiness; a pack without them loads as before.
+
+User-approved knowledge (D-102) is appended from the overlay in the user-data directory; the pack
+itself is never modified, and a corrupt overlay is ignored with a warning.
 
 Every reference in performance.json is checked against character.json; invalid entries are
 dropped with a warning, so bad data can never reach the director as a valid capability.
@@ -17,6 +25,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from ..lore.knowledge import KnowledgeStore
 from ..runtime import paths as runtime_paths
 
 logger = logging.getLogger(__name__)
@@ -64,6 +73,11 @@ READINESS_LEVELS = ("asset-only", "partial", "ready")
 
 #: Environment switch that lets "partial" packs chat (development only).
 ALLOW_PARTIAL_ENV = "COURTROOM_ALLOW_PARTIAL_CHARACTERS"
+
+#: Lore/speech text beyond this many characters is still sent whole, but a warning is recorded
+#: so oversized knowledge is noticed (it is never silently truncated: identity facts must survive).
+LORE_WARN_CHARS = 12000
+SPEECH_EXAMPLES_WARN_CHARS = 3000
 
 SIGNATURE_ID = re.compile(r"^[a-z][a-z0-9_]{1,31}$")
 MAX_SIGNATURES = 4
@@ -198,6 +212,12 @@ class CharacterProfile:
     error_text: str = "..."
     error_emotion: str | None = None
     personality: str = ""
+    #: Canonical knowledge (lore.md); empty when the pack has none.
+    lore: str = ""
+    #: Optional dialogue-style illustrations (speech_examples.md).
+    speech_examples: str = ""
+    #: True when user-approved knowledge (overlay) is part of `lore`/`personality`.
+    has_knowledge_overlay: bool = False
     warnings: list[str] = field(default_factory=list)
     #: Name per interface language (character.json `names`, D-066); display_name otherwise.
     names: dict[str, str] = field(default_factory=dict)
@@ -265,9 +285,14 @@ def _clamp01(value: Any, default: float) -> float:
 
 
 class CharacterRepository:
-    def __init__(self, assets_dir: Path | None = None) -> None:
+    def __init__(self, assets_dir: Path | None = None, knowledge_dir: Path | None = None) -> None:
         self.assets_dir = Path(assets_dir or runtime_paths.assets_dir())
+        self._knowledge_dir = knowledge_dir
         self._cache: dict[str, CharacterProfile] = {}
+
+    def knowledge_store(self) -> KnowledgeStore:
+        """User-approved knowledge overlay (resolved at call time, like every user-data path)."""
+        return KnowledgeStore(self._knowledge_dir or runtime_paths.knowledge_dir())
 
     def _index(self) -> dict[str, str]:
         index = _read_json(self.assets_dir / "characters" / "index.json")
@@ -287,6 +312,13 @@ class CharacterRepository:
     def all_ids(self) -> list[str]:
         """Every registered id regardless of readiness."""
         return sorted(self._index())
+
+    def invalidate(self, character_id: str | None = None) -> None:
+        """Forget cached profiles (one, or all) so the next `get` re-reads the pack files."""
+        if character_id is None:
+            self._cache.clear()
+        else:
+            self._cache.pop(character_id, None)
 
     def get_for_chat(self, character_id: str) -> CharacterProfile:
         """`get`, but raises CharacterNotReadyError for packs that must not reach the model."""
@@ -375,7 +407,16 @@ class CharacterRepository:
         error = perf.get("errorLine") or {}
         personality_path = pack_dir / "personality.md"
         personality = personality_path.read_text(encoding="utf-8") if personality_path.exists() else ""
+        lore = self._optional_text(pack_dir / "lore.md", LORE_WARN_CHARS, warnings)
+        speech_examples = self._optional_text(pack_dir / "speech_examples.md", SPEECH_EXAMPLES_WARN_CHARS, warnings)
         readiness = self._readiness(manifest.get("readiness"), bool(personality.strip()), bool(perf), warnings)
+        # Effective profile = built-in pack, then approved additions (appended, never replacing).
+        lore_extra, personality_extra, overlay_warnings = self.knowledge_store().overlay_text(character_id)
+        warnings.extend(overlay_warnings)
+        if lore_extra:
+            lore = "\n\n".join(filter(None, [lore, lore_extra]))
+        if personality_extra:
+            personality = "\n\n".join(filter(None, [personality.rstrip(), personality_extra]))
         return CharacterProfile(
             id=character_id,
             display_name=str(manifest.get("displayName") or character_id),
@@ -393,6 +434,9 @@ class CharacterRepository:
             error_text=str(error.get("text") or "..."),
             error_emotion=error.get("emotion") if error.get("emotion") in emotions else None,
             personality=personality,
+            lore=lore,
+            speech_examples=speech_examples,
+            has_knowledge_overlay=bool(lore_extra or personality_extra),
             warnings=warnings,
             names=_text_map(manifest.get("names")),
             error_texts=_text_map(error.get("translations")),
@@ -400,6 +444,20 @@ class CharacterRepository:
             tools=[t for t in perf["tools"] if t in ("reminders", "folders", "web_search")] if isinstance(perf.get("tools"), list) else None,
             readiness=readiness,
         )
+
+    @staticmethod
+    def _optional_text(path: Path, warn_chars: int, warnings: list[str]) -> str:
+        """An optional Markdown file; missing or unreadable is never fatal (empty text)."""
+        if not path.is_file():
+            return ""
+        try:
+            text = path.read_text(encoding="utf-8").strip()
+        except (OSError, UnicodeDecodeError) as error:
+            warnings.append(f"{path.name} could not be read ({type(error).__name__}); ignored")
+            return ""
+        if len(text) > warn_chars:
+            warnings.append(f"{path.name} is {len(text)} characters (over {warn_chars}); consider condensing it")
+        return text
 
     @staticmethod
     def _readiness(declared: Any, has_personality: bool, has_performance: bool, warnings: list[str]) -> str:
