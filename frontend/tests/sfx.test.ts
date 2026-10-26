@@ -35,12 +35,16 @@ test('key semantic sounds have distinct intended runtime mappings', () => {
   assert.equal(new Set(Object.values(expected)).size, Object.keys(expected).length)
 })
 
+// SHA-256 of the requested cue `docs/sfx general/sfx-lightbulb.wav`. That source library is
+// gitignored (local only), so the digest is pinned here and a clean checkout can still verify it.
+const REQUESTED_LIGHTBULB_SHA256 = 'd21b1e310c0edb23c51d98e7fee649526d707118611a2d9870cdaa0222ac9821'
+
 test('realization uses the exact requested lightbulb cue and preserves the older source', () => {
   const src = audio.sounds[audio.events.sfx_realization].src
-  const actual = readFileSync(new URL(src, root))
-  const requested = readFileSync(new URL('../../docs/sfx general/sfx-lightbulb.wav', import.meta.url))
   const digest = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex')
-  assert.equal(digest(actual), digest(requested))
+  assert.equal(digest(readFileSync(new URL(src, root))), REQUESTED_LIGHTBULB_SHA256)
+  const requested = new URL('../../docs/sfx general/sfx-lightbulb.wav', import.meta.url)
+  if (existsSync(requested)) assert.equal(digest(readFileSync(requested)), REQUESTED_LIGHTBULB_SHA256)
   assert.ok(existsSync(new URL('dialogue/realization/realization.wav', root)))
 })
 
