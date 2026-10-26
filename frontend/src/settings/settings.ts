@@ -8,6 +8,10 @@ export type StageScaling = 'pixel' | 'fit'
 export interface Settings {
   /** Interface and reply language (D-066). */
   language: Language
+  /** Optional offline word readings, active only for Japanese dialogue. */
+  japaneseReadingAssistant: boolean
+  /** Gloss language while reading Japanese; English remains the fallback. */
+  japaneseDefinitionLanguage: 'fr' | 'en'
   /** Language of voiced shouts ("Igiari!" / "Objection!"), independent of the interface (D-068). */
   shoutLanguage: 'ja' | 'en'
   /** Text reveal speed multiplier (1 = normal). */
@@ -45,6 +49,8 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   language: detectLanguage(),
+  japaneseReadingAssistant: false,
+  japaneseDefinitionLanguage: 'fr',
   shoutLanguage: 'ja',
   textSpeed: 1,
   stageScaling: 'fit',
@@ -127,6 +133,8 @@ export function readStoredSettings(): Settings {
     const stored = JSON.parse(raw) as Partial<Settings>
     return {
       language: isLanguage(stored.language) ? stored.language : DEFAULT_SETTINGS.language,
+      japaneseReadingAssistant: stored.japaneseReadingAssistant === true,
+      japaneseDefinitionLanguage: stored.japaneseDefinitionLanguage === 'en' ? 'en' : 'fr',
       shoutLanguage: stored.shoutLanguage === 'en' ? 'en' : 'ja',
       textSpeed: typeof stored.textSpeed === 'number' ? stored.textSpeed : DEFAULT_SETTINGS.textSpeed,
       stageScaling: stored.stageScaling === 'pixel' || stored.stageScaling === 'fit'
@@ -171,6 +179,8 @@ export function writeStoredSettings(settings: Settings): void {
       language: settings.language, shoutLanguage: settings.shoutLanguage, textSpeed: settings.textSpeed, stageScaling: settings.stageScaling, blipVolume: settings.blipVolume, blipsMuted: settings.blipsMuted,
       sfxVolume: settings.sfxVolume, sfxMuted: settings.sfxMuted, ringtoneId: settings.ringtoneId,
       expandedPanels: settings.expandedPanels, ...musicSnapshot(settings), ...legacy, providerProfilesMigrated: Boolean(previous.providerProfilesMigrated),
+      japaneseReadingAssistant: settings.japaneseReadingAssistant,
+      japaneseDefinitionLanguage: settings.japaneseDefinitionLanguage,
     }))
   } catch {
     // Storage unavailable (private mode etc.): settings simply don't persist.
@@ -184,6 +194,8 @@ export function completeProviderMigration(): void {
       language: settings.language, shoutLanguage: settings.shoutLanguage, textSpeed: settings.textSpeed, stageScaling: settings.stageScaling, blipVolume: settings.blipVolume, blipsMuted: settings.blipsMuted,
       sfxVolume: settings.sfxVolume, sfxMuted: settings.sfxMuted, ringtoneId: settings.ringtoneId,
       expandedPanels: settings.expandedPanels, ...musicSnapshot(settings), providerProfilesMigrated: true,
+      japaneseReadingAssistant: settings.japaneseReadingAssistant,
+      japaneseDefinitionLanguage: settings.japaneseDefinitionLanguage,
     }))
   } catch {
     // Server-side migration is idempotent even when browser storage is unavailable.

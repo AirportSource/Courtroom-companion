@@ -1,5 +1,8 @@
-import { DIALOGUE_TEXT, DIALOGUE_TEXT_HEIGHT } from '../engine/dialogueLayout.ts'
+import { DIALOGUE_TEXT } from '../engine/dialogueLayout.ts'
 import { TypewriterText } from './TypewriterText.tsx'
+import { JapaneseReadingText } from '../reading/JapaneseReadingText.tsx'
+import { readingEnabled } from '../reading/japaneseReading.ts'
+import { useSettings } from '../settings/settings.ts'
 
 interface DialogueBoxProps {
   speakerName: string | null
@@ -15,6 +18,7 @@ interface DialogueBoxProps {
  * available (see docs/ASSET_SOURCES.md); text is always live text, never baked into images.
  */
 export function DialogueBox({ speakerName, text, visibleCount, showContinue }: DialogueBoxProps) {
+  const { settings } = useSettings()
   return (
     <div className="dialogue" aria-live="polite">
       {speakerName && <div className="dialogue-nameplate">{speakerName}</div>}
@@ -24,12 +28,14 @@ export function DialogueBox({ speakerName, text, visibleCount, showContinue }: D
           className="dialogue-text"
           style={{
             width: DIALOGUE_TEXT.width + 2 * DIALOGUE_TEXT.paddingX,
-            height: DIALOGUE_TEXT_HEIGHT,
+            height: `calc(var(--dialogue-line-height, ${DIALOGUE_TEXT.lineHeight}px) * ${DIALOGUE_TEXT.maxLines} + ${DIALOGUE_TEXT.paddingTop}px)`,
             padding: `${DIALOGUE_TEXT.paddingTop}px ${DIALOGUE_TEXT.paddingX}px 0`,
-            lineHeight: `${DIALOGUE_TEXT.lineHeight}px`,
+            lineHeight: `var(--dialogue-line-height, ${DIALOGUE_TEXT.lineHeight}px)`,
           }}
         >
-          <TypewriterText text={text} visibleCount={visibleCount} />
+          {readingEnabled(settings.japaneseReadingAssistant, settings.language)
+            ? <JapaneseReadingText text={text} visibleCount={visibleCount} />
+            : <TypewriterText text={text} visibleCount={visibleCount} />}
         </p>
         {showContinue && <div className="dialogue-continue" aria-label="Continue" />}
       </div>

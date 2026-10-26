@@ -11,10 +11,11 @@ import {
   listConversationRecord, type ConversationRecordEntry,
 } from './api.ts'
 import {
-  DETAIL_LINE_HEIGHT, DETAIL_VISIBLE_LINES, RECORD_PAGE_SIZE, entryLabel, mapFileAvailability, maxScrollTop,
+  detailLineHeight, DETAIL_VISIBLE_LINES, RECORD_PAGE_SIZE, entryLabel, mapFileAvailability, maxScrollTop,
   orderedEntries, recordPageCount, recordPageOf, scrollByLines, selectionAfterDelete, wheelLines,
 } from './conversationRecord.ts'
 import { useT } from '../i18n/useT.ts'
+import { useSettings } from '../settings/settings.ts'
 import './conversation-record.css'
 
 export interface ConversationRecordViewProps {
@@ -46,6 +47,8 @@ const BACK_KEYS = ['Escape', 'Backspace', 'x', 'X']
 export function ConversationRecordView({ onClose, evidenceFrame = null, portraitFor, nameFor,
   loadArtifacts = listArtifacts, onEntriesChanged, onOpen }: ConversationRecordViewProps) {
   const t = useT()
+  const { settings } = useSettings()
+  const lineHeight = detailLineHeight(settings.language)
   const opened = useRef(onOpen)
   useEffect(() => { opened.current?.() }, [])
   const [entries, setEntries] = useState<ConversationRecordEntry[]>([])
@@ -186,7 +189,7 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
   const scroll = (lines: number, sound = false) => {
     const el = body.current
     if (!el) return
-    const next = scrollByLines(el.scrollTop, lines, maxScrollTop(el.scrollHeight, el.clientHeight))
+    const next = scrollByLines(el.scrollTop, lines, maxScrollTop(el.scrollHeight, el.clientHeight, lineHeight), lineHeight)
     if (next !== el.scrollTop) { el.scrollTop = next; if (sound) playMenuSound('menu_page') }
   }
 
@@ -292,7 +295,7 @@ export function ConversationRecordView({ onClose, evidenceFrame = null, portrait
           onWheel={(event) => scroll(wheelLines(event.deltaY))}
           onScroll={(event) => {
             const el = event.currentTarget
-            const snapped = Math.round(el.scrollTop / DETAIL_LINE_HEIGHT) * DETAIL_LINE_HEIGHT
+            const snapped = Math.round(el.scrollTop / lineHeight) * lineHeight
             if (snapped !== el.scrollTop) el.scrollTop = snapped
           }}>
           {mode === 'detail' ? <>

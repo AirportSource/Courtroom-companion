@@ -2,6 +2,8 @@
 // All values are logical stage pixels: display scale (1×/3×/auto) never affects pagination.
 // DialogueBox applies these same constants, so layout and pagination cannot drift apart.
 
+import { graphemes } from './unicodeText.ts'
+
 /** Box 256 wide, 1px border each side, 6px horizontal padding → 242px of text width. */
 export const DIALOGUE_TEXT = {
   width: 242,
@@ -76,9 +78,10 @@ function stageFontSpec(): FontSpec {
 function canvasMeasure(spec: FontSpec): MeasureText | null {
   const context = document.createElement('canvas').getContext('2d')
   if (!context) return null
+  context.fontKerning = 'none'
   context.font = `${spec.sizePx}px ${spec.family}`
   return (text) => {
-    const chars = [...text].length
+    const chars = graphemes(text).length
     const spaces = (text.match(/ /g) ?? []).length
     return context.measureText(text).width + chars * spec.letterSpacingPx + spaces * spec.wordSpacingPx
   }
@@ -92,7 +95,7 @@ function canvasMeasure(spec: FontSpec): MeasureText | null {
 export async function dialogueTextLayout(locale = document.documentElement.lang || 'en'): Promise<TextLayout> {
   const spec = stageFontSpec()
   try {
-    await document.fonts.load(`${spec.sizePx}px ${spec.family}`)
+    await document.fonts.load(`${spec.sizePx}px ${spec.family}`, 'あア漢証拠ＡA０0。、！？')
   } catch {
     // Font loading API unavailable: measure with whatever is active.
   }

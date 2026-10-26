@@ -44,7 +44,7 @@
 .gcr-metadata { color: #c8d8e3; font-size: 8px; line-height: 10px; }
 .gcr-metadata span, .gcr-metadata time { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .gcr-inert { margin: 2px 0; color: #ffdd79; font-size: 8px; }
-.gcr-inspector pre { height: 61px; margin: 2px 0 4px; padding: 3px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #101e2b; color: #fff; font: 8px/10px monospace; user-select: text; }
+.gcr-inspector pre { height: 61px; margin: 2px 0 4px; padding: 3px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #101e2b; color: #fff; font: 8px/10px var(--mono); user-select: text; }
 .gcr-actions { display: flex; gap: 4px; align-items: center; }
 .gcr-actions button, .gcr-actions a { font-size: 8px; }
 .gcr-action-error { margin: 2px 0; font-size: 8px; line-height: 9px; color: #ffc1a7; }

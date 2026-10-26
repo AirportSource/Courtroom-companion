@@ -188,9 +188,9 @@
 .dialogue {
   position: absolute;
   left: 0;
-  top: 131px;
+  bottom: 0;
   width: 256px;
-  height: 61px;
+  height: calc(var(--dialogue-line-height, 15px) * 3 + 16px);
 }
 
 .dialogue-box {
@@ -198,7 +198,7 @@
   left: 0;
   top: 13px;
   width: 256px;
-  height: 48px;
+  height: calc(var(--dialogue-line-height, 15px) * 3 + 3px);
   background: var(--dialogue-bg);
   border: 1px solid var(--frame-light);
   border-radius: 3px;
@@ -225,12 +225,20 @@
   /* width / height / padding / line-height come from engine/dialogueLayout.ts */
   margin: 0;
   overflow: hidden;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
+  /* Paginator owns line breaks, including across the visible/hidden reveal spans. */
+  white-space: pre;
+  overflow-wrap: normal;
+  font-kerning: none;
+  font-variant-ligatures: none;
 }
 
 .typewriter-hidden {
   visibility: hidden;
+}
+
+:root:lang(ja) .dialogue-nameplate {
+  height: 17px;
+  line-height: 15px;
 }
 
 /* Continue indicator: small right-pointing arrow, blinking in two steps. */

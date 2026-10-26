@@ -1,3 +1,5 @@
+import { revealParts } from '../engine/unicodeText.ts'
+
 interface TypewriterTextProps {
   text: string
   visibleCount: number
@@ -8,11 +10,12 @@ interface TypewriterTextProps {
  * word wrapping is final from the first character and words never jump between lines.
  */
 export function TypewriterText({ text, visibleCount }: TypewriterTextProps) {
+  const [visible, hidden] = revealParts(text, visibleCount)
   return (
     <>
-      <span>{text.slice(0, visibleCount)}</span>
+      <span>{visible}</span>
       <span className="typewriter-hidden" aria-hidden="true">
-        {text.slice(visibleCount)}
+        {hidden}
       </span>
     </>
   )

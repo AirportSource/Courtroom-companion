@@ -56,3 +56,8 @@
 .rec-actions { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 5px; height: 17px; }
 .rec-confirm { color: #ffc1a7; }
 .rec-notice { position: absolute; z-index: 3; left: 4px; top: 17px; right: 4px; margin: 0; padding: 1px 3px; background: #5a2c2b; color: #fff; }
+
+/* Eight complete native Japanese rows; JS scrolling uses detailLineHeight(language). */
+:root:lang(ja) .rec-body { height: 128px; line-height: 16px; }
+:root:lang(ja) .rec-character { height: 16px; line-height: 16px; }
+:root:lang(ja) .rec-current { height: 16px; line-height: 16px; }

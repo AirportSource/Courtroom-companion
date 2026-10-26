@@ -25,6 +25,8 @@ import { nextPhase, waitingOverride, waitingPerformance, type Phase } from '../e
 import { useBlips } from '../engine/useBlips.ts'
 import { useCharacterPlayback, useReactionGate } from '../engine/useCharacterAnimation.ts'
 import { lengthSpeedFactor, useTypewriter } from '../engine/useTypewriter.ts'
+import { graphemes } from '../engine/unicodeText.ts'
+import { paginateDialogueLines } from '../engine/performance.ts'
 import { useSettings } from '../settings/settings.ts'
 import { cancelTurn } from '../artifacts/artifacts.ts'
 import { ChatError } from '../engine/performance.ts'
@@ -250,9 +252,9 @@ export function ConversationScreen({
 
   const gate = useReactionGate(character, emotion, lineKey, override)
   // Every page of a reply types at the same pace, set by the reply's total length.
-  const replyChars = useMemo(() => lines.reduce((total, page) => total + page.text.length, 0), [lines])
+  const replyChars = useMemo(() => lines.reduce((total, page) => total + graphemes(page.text).length, 0), [lines])
   const textSpeed = settings.textSpeed * lengthSpeedFactor(replyChars)
-  const typewriter = useTypewriter(line?.text ?? '', lineKey, Boolean(line) && !gate.pending, textSpeed, onReveal)
+  const typewriter = useTypewriter(line?.text ?? '', lineKey, Boolean(line) && !gate.pending, textSpeed, onReveal, settings.language)
   const mode = line && typewriter.state === 'revealing' ? 'talking' : 'idle'
   const animation = useCharacterPlayback(character, emotion, mode, gate, override)
   // A reaction's one-shot effect (overlay + sound cues) runs from the reaction's start and is
@@ -797,7 +799,11 @@ export function ConversationScreen({
           voiceOverride={voiceOverride}
           onVoiceOverrideChange={setVoiceOverride}
           lastResponse={lastResponse}
-          onPlayTestScript={() => play(testScript)}
+          onPlayTestScript={() => {
+            void dialogueTextLayout(settings.language).then((layout) => {
+              if (mounted.current) play(paginateDialogueLines(testScript, layout))
+            })
+          }}
           onReplayLine={(forced) => {
             if (!lines.length) return
             setVoiceOverride(forced)

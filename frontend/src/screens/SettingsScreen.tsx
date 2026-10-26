@@ -111,6 +111,25 @@ export function SettingsScreen({
           </div>
         </div>
 
+        <div className="settings-row settings-row-field">
+          <span>{t('reading.setting')}</span>
+          <button type="button" role="switch" aria-label={t('reading.setting')}
+            aria-checked={settings.japaneseReadingAssistant}
+            onClick={() => update({ japaneseReadingAssistant: !settings.japaneseReadingAssistant })}>
+            {t(settings.japaneseReadingAssistant ? 'reading.on' : 'reading.off')}
+          </button>
+        </div>
+
+        {settings.japaneseReadingAssistant && <div className="settings-row settings-row-field">
+          <span>{t('reading.definitions')}</span>
+          <StageSelect label={t('reading.definitions')} value={settings.japaneseDefinitionLanguage}
+            options={[{value:'fr', label:'Français'}, {value:'en', label:'English'}]}
+            onChange={value => update({japaneseDefinitionLanguage: value === 'en' ? 'en' : 'fr'})} />
+        </div>}
+        <div className="settings-row settings-row-field">
+          <a href={`${import.meta.env.BASE_URL}assets/jmdict/NOTICE.html`} target="_blank" rel="noreferrer">JMdict · EDRDG · CC BY-SA</a>
+        </div>
+
         <ProviderProfilesPanel characterId={testCharacterId} />
         <ToolsPanel />
 
