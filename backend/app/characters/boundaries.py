@@ -1,4 +1,4 @@
-"""Optional prompt policy; conversation history is the sole disclosure context.
+"""Roster-independent emotional behavior; bounded session history supplies context.
 
 No keyword classifier, relationship meter, model-generated state, or additional inference.
 Invalid opt-in data disables the policy with an actionable warning.
@@ -30,6 +30,16 @@ class Topic(BaseModel):
     emotions: list[Id] = Field(min_length=1, max_length=4)
 
 
+class InteractionResponses(BaseModel):
+    """Style guidance, never a classifier, canon assertion, or a forced response template."""
+    model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
+    reassurance: Text
+    confrontation: Text
+    criticism: Text
+    affection: Text
+    intrusion: Text
+
+
 class EmotionalBoundaries(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
     schemaVersion: Literal[1]
@@ -40,7 +50,10 @@ class EmotionalBoundaries(BaseModel):
     style: Text
     encourages: Text
     discourages: Text
-    topics: list[Topic] = Field(min_length=1, max_length=5)
+    # Additive v1 fields: existing pilot/third-party profiles continue to load unchanged.
+    temperament: Text | None = None
+    responses: InteractionResponses | None = None
+    topics: list[Topic] = Field(max_length=5)
 
     @field_validator("schemaVersion", mode="before")
     @classmethod
@@ -66,6 +79,12 @@ memories or future events. Where lore is absent, do not fill missing biography f
 C. Requests about YOUR private feelings: choose proportionate reservation, a brief admission,
 deflection, or a boundary in your own voice. A mildly personal question can receive a direct
 answer. A sensitive one need not receive a complete confession. No fixed stages or canned lines.
+Let the configured temperament decide openness: expressive warmth is not hidden reserve;
+composure is not hostility. Do not invent a sensitive subject when none is supported. A profile
+with no sensitive topics still has a distinct voice and may help or converse openly.
+D. Intrusive or repetitive questioning: evaluate pressure in context, not by counting messages.
+Maintain proportionate limits without punishing innocent clarification or constructive criticism.
+E. Topic changes: follow the new subject promptly. A personal limit never gates unrelated help.
 Use only this session's visible history for continuity: notice a boundary you actually set,
 what the user respected or pressured, and what you already disclosed about that same topic.
 Respectful follow-up may ease tension without requiring further disclosure. Politeness, elapsed
@@ -88,11 +107,11 @@ or the user's distress. Existing Director thresholds and cooldowns still apply.
 def boundary_prompt(config: EmotionalBoundaries | None) -> str:
     if config is None:
         return ""
-    return BOUNDARY_RULES + "\nBehavioral interpretation (not new canonical memories):\n" + config.model_dump_json(exclude={"schemaVersion", "characterId", "presentation"})
+    return BOUNDARY_RULES + "\nBehavioral interpretation (not new canonical memories):\n" + config.model_dump_json(exclude={"schemaVersion", "characterId", "presentation"}, exclude_none=True)
 
 
 def configure_boundaries(profile: "CharacterProfile", pack_dir: Path, manifest: dict) -> "CharacterProfile":
-    """Only valid opt-in packs receive conversation-specific performance capabilities."""
+    """Optional data, legacy single-presentation packs and grouped conversation packs."""
     if os.environ.get("COURTROOM_EMOTIONAL_BOUNDARIES", "1").strip().lower() in {"0", "off", "false"}:
         return profile
     path = pack_dir / "emotional_boundaries.json"
@@ -106,7 +125,15 @@ def configure_boundaries(profile: "CharacterProfile", pack_dir: Path, manifest: 
             raise ValueError("characterId does not match registry identity")
         if len({t.id for t in config.topics}) != len(config.topics):
             raise ValueError("topics contain duplicate IDs")
-        group = manifest.get("presentationGroups", {}).get(config.presentation)
+        groups = manifest.get("presentationGroups")
+        # Legacy packs already expose their conversation capabilities at the top level.
+        # Keep these capabilities intact; do not require migrating their asset manifests.
+        if not groups:
+            for topic in config.topics:
+                if any(e not in profile.emotions for e in topic.emotions):
+                    raise ValueError(f"topics.{topic.id}.emotions references an unavailable emotion")
+            return replace(profile, emotional_boundaries=config)
+        group = groups.get(config.presentation)
         if not isinstance(group, dict):
             raise ValueError("presentation does not resolve to a conversation group")
         animations = frozenset(group.get("animations", {}))
@@ -125,8 +152,8 @@ def configure_boundaries(profile: "CharacterProfile", pack_dir: Path, manifest: 
         for topic in config.topics:
             if any(e not in emotions for e in topic.emotions):
                 raise ValueError(f"topics.{topic.id}.emotions references an unavailable emotion")
-        # Legacy top-level Franziska gestures/variants target courtroom art. Do not advertise
-        # or emit them for this conversation-only pilot. Non-opt-in packs are unchanged.
+        # A grouped pack's legacy top-level gestures/variants may target a different scene.
+        # Advertise and emit only capabilities supported by the active conversation group.
         gestures = {key: value for key, value in profile.gestures.items() if value.animation in animations}
         variants = {key: [v for v in values if v.animation in animations]
                     for key, values in profile.intensity_variants.items() if key in emotions}

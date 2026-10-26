@@ -1026,3 +1026,9 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - Use optional validated pack policy plus existing bounded session/character history, not a numerical trust meter or another inference model. Keep provider reply schemas and canonical/approved lore unchanged.
 - Restrict valid opted-in profiles to conversation-group performance capabilities; do not advertise legacy courtroom gestures during this pilot. Non-opt-in packs retain previous behavior.
 - Behavioral quality remains unverified until owner-run live evaluation. Detailed rationale, disable flag and limitations: `EMOTIONAL_CHARACTER_REALISM_EXPERIMENT.md`.
+
+## Emotional behavior generalization — 2026-10-26
+
+- Extend the existing optional v1 profile with optional temperament and five interaction-response styles; allow an empty sensitive-topic list when sources are insufficient. All current ready characters have dedicated, personality-grounded data. No new biography, schema v2, model call, trust score or frontend subsystem.
+- Support legacy top-level presentation capabilities without migration; grouped packs expose only the conversation capabilities. Missing/disabled/invalid optional profiles preserve the previous fallback.
+- Retain bounded per-session/per-character history. Its six-exchange limit can lose a boundary; no inferred emotional ledger or extra sensitive-data retention is justified by current partial live evaluation. See `CHARACTER_EMOTIONAL_BEHAVIOR.md` for limitations and coverage.

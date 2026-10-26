@@ -1,8 +1,9 @@
 # Project State — Courtroom Companion
 
-Experimental prototype (2026-10-26): Iris/Franziska optional emotional-boundary policies are
-implemented; conversation testing with a real LLM remains partial and behavioral acceptance open.
-See [the experiment guide](EMOTIONAL_CHARACTER_REALISM_EXPERIMENT.md) for the disable flag and limits.
+Experimental emotional behavior (2026-10-26): all eight registered characters have distinct,
+optional grounded profiles. Legacy and missing-profile fallback remain supported; real-LLM
+behavioral validation is partial. See [the architecture guide](CHARACTER_EMOTIONAL_BEHAVIOR.md)
+for configuration, coverage, the disable flag and bounded-history limitations.
 
 _Last updated: 2026-10-26 (asset expansion milestone, D-079–D-086). Source of truth is the filesystem; update this file when the actual state changes._
 

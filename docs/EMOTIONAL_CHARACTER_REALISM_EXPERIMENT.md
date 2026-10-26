@@ -1,5 +1,9 @@
 # Emotional Character Realism — Iris / Franziska pilot
 
+The implementation now supports the full roster. The current format, character coverage and
+compatibility rules are documented in [Character Emotional Behavior](CHARACTER_EMOTIONAL_BEHAVIOR.md).
+The pilot decisions and original evaluation procedure below remain useful historical context.
+
 Experimental branch: `feat/emotional-character-realism`, based on verified `origin/main`
 `2065e03` (26 October 2026). The owner authorized publication of this prototype through a
 reviewed PR after automated validation. Real-LLM conversational evaluation remains partial;
