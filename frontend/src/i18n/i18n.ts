@@ -67,4 +67,12 @@ export function localizedName(character: { displayName: string; names?: Partial<
   return character.names?.[language] ?? character.displayName
 }
 
+/** A location's label in this language, falling back to its English description then id. */
+export function localizedLocationName(
+  location: { id: string; description: string; names?: Partial<Record<string, string>> },
+  language: Language,
+): string {
+  return (location.names?.[language] ?? location.names?.en ?? location.description) || location.id
+}
+
 export type { StringKey }

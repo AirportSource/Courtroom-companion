@@ -451,3 +451,9 @@ Each has `character.json`, `performance.json`, `personality.md` and a 64×64 sta
 ## Iris runtime pack (2026-10-26, D-098)
 
 `characters/iris/`: 48 exact-pixel sprite PNGs in `sprites/{normal,blush,crying,serious,surprised,thinking}/`, `portraits/court_record.png` (64x64), `portraits/selection.png` (170x170), `character.json`, `performance.json`, `personality.md` and `source.json` (source hashes, frame counts/timing, crop metrics and output hashes). `scripts/build_iris_pack.py --check` reconstructs GIF disposal and verifies all 50 generated images. The previous 3DS-derived sprite groups and portraits are absent from runtime; hooded variants remain source-only.
+
+## Locations and telephone correction (2026-10-26)
+
+- `backgrounds/background_50_256x192.png`, `background_51_256x192.png`, `background_52_256x192.png`: exact copies of the supplied meditation room, courthouse hallway and Kurain road PNGs. Registered as `bg_50`–`bg_52`; 52 existing/new choices in total.
+- `court-record/evidence/cellphone_blue.png`: 64x64 RGBA; 2766 boundary-connected matte pixels made transparent, all RGB pixels preserved. Rebuild with `scripts/fix_phone_evidence_transparency.py`.
+- Combined validation: 1074 referenced files, 0 errors.

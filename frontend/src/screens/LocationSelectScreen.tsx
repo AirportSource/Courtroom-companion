@@ -1,10 +1,12 @@
 import { useT } from '../i18n/useT.ts'
+import { localizedLocationName } from '../i18n/i18n.ts'
 import { useState } from 'react'
 import { BackgroundRenderer } from '../components/BackgroundRenderer.tsx'
 import { MenuList } from '../components/MenuList.tsx'
 import { PixelStage } from '../components/PixelStage.tsx'
 import type { Background, BackgroundId } from '../engine/manifestTypes.ts'
 import { STAGE_HEIGHT, STAGE_WIDTH } from '../engine/stage.ts'
+import { useSettings } from '../settings/settings.ts'
 
 interface LocationSelectScreenProps {
   backgrounds: Background[]
@@ -13,14 +15,15 @@ interface LocationSelectScreenProps {
   onBack: () => void
 }
 
-function label(background: Background): string {
-  const text = background.description || background.id
+function label(background: Background, language: Parameters<typeof localizedLocationName>[1]): string {
+  const text = localizedLocationName(background, language)
   return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
 /** Lists backgrounds.json; the highlighted location is previewed behind the menu. */
 export function LocationSelectScreen({ backgrounds, selectedId, onSelect, onBack }: LocationSelectScreenProps) {
   const t = useT()
+  const { settings } = useSettings()
   const [previewId, setPreviewId] = useState<BackgroundId | null>(selectedId ?? backgrounds[0]?.id ?? null)
   const preview = backgrounds.find((bg) => bg.id === previewId) ?? null
 
@@ -30,7 +33,7 @@ export function LocationSelectScreen({ backgrounds, selectedId, onSelect, onBack
       <div className="menu-screen menu-screen-overlay">
         <h1 className="menu-heading">{t('select.location')}</h1>
         <MenuList
-          items={backgrounds.map((bg) => ({ id: bg.id, label: label(bg), sound: 'menu_start' as const }))}
+          items={backgrounds.map((bg) => ({ id: bg.id, label: label(bg, settings.language), sound: 'menu_start' as const }))}
           initialId={selectedId ?? undefined}
           onSelect={onSelect}
           onBack={onBack}

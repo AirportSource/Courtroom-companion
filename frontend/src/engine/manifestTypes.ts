@@ -128,6 +128,8 @@ export interface BackgroundEntryManifest {
   width: number
   height: number
   description?: string
+  /** Display label per interface language; description is the English/fallback label. */
+  names?: Record<string, string>
   notes?: string
   /** Optional layer drawn in front of the character (same size as the plate), e.g. a counter. */
   foreground?: string
@@ -291,6 +293,7 @@ export interface Background {
   width: number
   height: number
   description: string
+  names?: Record<string, string>
   notes?: string
   /** Layer in front of the character, placed exactly like the plate; null = none (D-096). */
   foregroundUrl?: string | null

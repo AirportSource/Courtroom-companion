@@ -178,3 +178,10 @@ Details: [targeted correction report](TARGETED_CORRECTIONS.md). The earlier Fran
 - [x] Preserve personality, five-language lines, ten-emotion contract and restrained SFX; keep the pack `ready`.
 - [x] Deterministic 50-file rebuild, focused source/manifest tests, and 1x/3x contact-sheet QA.
 - [ ] Optional: a ten-turn real-model session with Iris (isolated `COURTROOM_CONFIG_DIR`), and an Iris theme if a fitting track is imported later.
+
+## Content milestone completion (2026-10-26)
+
+- [x] Three supplied 256x192 locations selectable, localized and validated (`bg_50`–`bg_52`).
+- [x] Phone evidence exterior matte transparent; handset details/frame/placement preserved; regression test added.
+- [x] Full backend/frontend checks and focused browser QA passed; exact counts in PROJECT_STATE.
+- [ ] Character Platform Stabilization P0: explicitly deferred to a future session.

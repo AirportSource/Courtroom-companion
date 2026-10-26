@@ -264,3 +264,11 @@ Checks: backend629 passed/2 skipped; frontend327 passed; source-asset tests4 pas
 ## Iris (2026-10-26, D-098)
 
 Eight playable characters: Iris (`iris`, aa3) joins as ready. Her rejected 3DS-derived runtime conversion has been replaced completely by the owner-supplied pixel-art GIF set: six normal-outfit poses, preserved GIF timing/blinks/talking motion, 48 native-pixel runtime frames, and matching native-pixel portrait/selection art. The hooded costume remains source-only so emotions cannot change outfits. Source provenance is deliberately conservative: the files are supplied pixel art, but their original game/platform has not been independently verified. Iris keeps her existing personality, ten-emotion contract, restrained sounds, no signature and no theme.
+
+## Locations and telephone transparency (2026-10-26)
+
+The location selector now offers 52 backgrounds, adding `bg_50` Meditation Room, `bg_51` Courthouse Hallway and `bg_52` Kurain Village Road. Each is an exact 256x192 source copy with project labels in EN/FR/JA/IT/ES and generic locale fallbacks. They have no detention foreground layer.
+
+The file-ready telephone's grey rectangle was baked into its opaque evidence PNG. The runtime icon now has binary RGBA transparency for the boundary-connected matte, preserving handset RGB detail, 64x64 dimensions, frame and placement. The renderer is unchanged.
+
+Combined milestone checks: backend 688 passed / 2 skipped (one pytest cache warning); frontend 354 passed; asset validation 1074 references / 0 errors; TypeScript, lint, production build and diff check passed. Browser QA inspected Iris selection and 1x/3x conversation rendering, all three location previews and the real fake-provider phone-ready flow. Pose contact sheets cover six expressions at 1x/3x. P0 stabilization is deferred to a future session.

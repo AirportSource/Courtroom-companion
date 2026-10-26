@@ -445,6 +445,9 @@ export async function loadBackgrounds(): Promise<Background[]> {
       width: typeof bg.width === 'number' ? bg.width : 0,
       height: typeof bg.height === 'number' ? bg.height : 0,
       description: bg.description ?? '',
+      names: isRecord(bg.names)
+        ? Object.fromEntries(Object.entries(bg.names).filter(([, name]) => typeof name === 'string' && name.trim())) as Record<string, string>
+        : undefined,
       notes: bg.notes,
       foregroundUrl: typeof bg.foreground === 'string' && bg.foreground ? new URL(bg.foreground, manifestUrl).href : null,
       characterOffsetY: typeof bg.characterOffsetY === 'number' && Number.isFinite(bg.characterOffsetY)

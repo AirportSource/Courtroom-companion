@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
-import { detectLanguage, LANGUAGES, localizedName, STRINGS, translate } from '../src/i18n/i18n.ts'
+import { detectLanguage, LANGUAGES, localizedLocationName, localizedName, STRINGS, translate } from '../src/i18n/i18n.ts'
 import { EN } from '../src/i18n/strings.ts'
 
 const placeholders = (text: string) => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort()
@@ -50,6 +50,13 @@ test('character packs name every character in every language', () => {
   }
   assert.equal(localizedName({ displayName: 'Dick Gumshoe', names: { fr: 'Dick Tektiv', ja: '糸鋸圭介' } }, 'fr'), 'Dick Tektiv')
   assert.equal(localizedName({ displayName: 'Dick Gumshoe', names: { fr: 'Dick Tektiv' } }, 'es'), 'Dick Gumshoe')
+})
+
+test('location names use localized labels with English and manifest fallbacks', () => {
+  const location = { id: 'bg_50', description: 'Meditation Room', names: { en: 'Meditation Room', fr: 'Salle de méditation' } }
+  assert.equal(localizedLocationName(location, 'fr'), 'Salle de méditation')
+  assert.equal(localizedLocationName(location, 'ja'), 'Meditation Room')
+  assert.equal(localizedLocationName({ id: 'bg_legacy', description: 'Legacy room' }, 'fr'), 'Legacy room')
 })
 
 test('message language guess follows what the user wrote, interface language as fallback (D-073)', async () => {

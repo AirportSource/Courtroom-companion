@@ -49,6 +49,9 @@
     "bg_46": { "src": "background_46_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - Heavenly Hall (T&T)", "notes": "Converted from Trilogy HD plate bg506u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
     "bg_47": { "src": "background_47_683x192.png", "width": 683, "height": 192, "description": "Hazakura Temple - inner temple (wide) (T&T)", "notes": "Converted from Trilogy HD plate bg507u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
     "bg_48": { "src": "background_48_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - training hall (T&T)", "notes": "Converted from Trilogy HD plate bg509.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
-    "bg_49": { "src": "background_49_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - garden (T&T)", "notes": "Converted from Trilogy HD plate bg50au.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" }
+    "bg_49": { "src": "background_49_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - garden (T&T)", "notes": "Converted from Trilogy HD plate bg50au.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_50": { "src": "background_50_256x192.png", "width": 256, "height": 192, "description": "Meditation Room", "names": { "en": "Meditation Room", "fr": "Salle de méditation", "ja": "瞑想の間", "it": "Sala di meditazione", "es": "Sala de meditación" } },
+    "bg_51": { "src": "background_51_256x192.png", "width": 256, "height": 192, "description": "Courthouse Hallway", "names": { "en": "Courthouse Hallway", "fr": "Couloir du tribunal", "ja": "裁判所の廊下", "it": "Corridoio del tribunale", "es": "Pasillo del tribunal" } },
+    "bg_52": { "src": "background_52_256x192.png", "width": 256, "height": 192, "description": "Kurain Village Road", "names": { "en": "Kurain Village Road", "fr": "Chemin de Kurain", "ja": "倉院の里への道", "it": "Strada del villaggio di Kurain", "es": "Camino de la aldea Kurain" } }
   }
 }

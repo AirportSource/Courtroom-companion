@@ -84,7 +84,7 @@ test('the icon sheet is not referenced by any runtime path (no sheet coordinates
 
 // ---- Pixel identity with the source sheets ----
 
-test('native icons are pixel-identical to their sheet rectangles', { skip: sourceSheetMissing }, () => {
+test('native icon RGB pixels are identical to their sheet rectangles', { skip: sourceSheetMissing }, () => {
   const sheet = decodePng(readFileSync(SHEET_PATH))
   assert.equal(sheet.width, 1008)
   assert.equal(sheet.height, 711)
@@ -100,6 +100,34 @@ test('native icons are pixel-identical to their sheet rectangles', { skip: sourc
     assert.equal(differences, 0, `${entry.id}: ${differences} channel differences`)
   }
   assert.equal(compared, liveEntries.length * 64 * 64)
+})
+
+test('phone evidence clears the exterior slot matte without erasing the handset', () => {
+  const phone = decodePng(readFileSync(`${crDir}evidence/cellphone_blue.png`))
+  assert.equal(phone.colorType, 6, 'phone must be a genuine RGBA PNG')
+  let transparent = 0
+  let opaque = 0
+  let semiTransparent = 0
+  for (let i = 3; i < phone.rgba.length; i += 4) {
+    if (phone.rgba[i] === 0) transparent++
+    else if (phone.rgba[i] === 255) opaque++
+    else semiTransparent++
+  }
+  assert.equal(semiTransparent, 0, 'pixel-art edges must remain binary-alpha')
+  assert.ok(transparent > phone.width * phone.height / 2, 'the surrounding matte must be transparent')
+  assert.ok(opaque > 500, 'the detailed handset must remain visible')
+  const alphaAt = (x: number, y: number) => phone.rgba[(y * phone.width + x) * 4 + 3]
+  for (const [x, y] of [[0, 0], [phone.width - 1, 0], [0, phone.height - 1], [phone.width - 1, phone.height - 1]]) {
+    assert.equal(alphaAt(x, y), 0, `corner ${x},${y} must reveal the evidence window`)
+  }
+  const perimeter = [
+    ...Array.from({ length: phone.width }, (_, x) => alphaAt(x, 0)),
+    ...Array.from({ length: phone.width }, (_, x) => alphaAt(x, phone.height - 1)),
+    ...Array.from({ length: phone.height - 2 }, (_, y) => alphaAt(0, y + 1)),
+    ...Array.from({ length: phone.height - 2 }, (_, y) => alphaAt(phone.width - 1, y + 1)),
+  ]
+  assert.ok(perimeter.filter((alpha) => alpha === 0).length > perimeter.length * 0.9,
+    'the exterior must not be an opaque rectangular matte')
 })
 
 test('the Thinker enlarged reference is the sheet tile at row 1, column 7 (exact 1:1 window)', { skip: sourceSheetMissing || (existsSync(THINKER_REF_PATH) ? false : 'penseur.png is absent') }, () => {

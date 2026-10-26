@@ -1108,3 +1108,11 @@ Final validation: backend629 passed/2 skipped, frontend327 passed, source tests4
 - Iris was initially integrated from a converted 3DS sheet, then fully migrated to 16 owner-supplied pixel-art GIFs before commit. Six normal-outfit poses produce 48 exact-pixel frames plus native-pixel portrait/preview; the two hooded poses are inventoried but source-only. No active runtime image references the former conversion.
 - The builder preserves GIF disposal/order/timing without scaling or recolouring. `iris-thinking(b).gif` has a truncated final data block; explicit Pillow truncated decoding recovers its 37 frames deterministically and is recorded in provenance.
 - Focused verification: 8 backend Iris tests passed; builder check matched all 50 generated images; 1x/3x pose contact sheets show crisp alignment and no halos. Full milestone validation follows before commit.
+
+## 2026-10-26 — Iris, locations and phone milestone secured
+
+- Resumed from the staged Iris checkpoint at HEAD 788ad68; preserved the full intentional Iris integration. Added `bg_50`–`bg_52` as byte-identical 256x192 copies with generic localized labels. Root source archive remains untracked/read-only.
+- Phone cause: opaque grey slot matte in the runtime PNG. The deterministic rebuild clears only boundary-connected matte alpha and retains every RGB value; dimensions, placement and evidence frame stay unchanged. Added an RGBA/perimeter/handset regression test.
+- Full checks completed before interruption: backend 688 passed / 2 skipped, one pytest cache warning; frontend 354 passed; assets 1074 / 0; TypeScript, lint, production build and diff check passed. No application code changed after those successful checks.
+- Browser QA captured Iris selection and 1x/3x conversation rendering, three location previews and the actual file-ready phone flow using an isolated fake-provider backend. Phone report: no browser exceptions, native 64x64 image; screenshot shows no grey matte. Six-expression contact sheets were inspected at 1x/3x. Scratch captures/config/history remain ignored under build/. Audio was not auditioned.
+- P0 stabilization is deferred at the owner's request. Two scoped content commits are being created and pushed without rewriting history.
