@@ -23,7 +23,10 @@ import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .boundaries import EmotionalBoundaries
 
 from ..lore.knowledge import KnowledgeStore
 from ..runtime import paths as runtime_paths
@@ -212,6 +215,8 @@ class CharacterProfile:
     error_text: str = "..."
     error_emotion: str | None = None
     personality: str = ""
+    #: Optional experimental behavior; not lore, persistent memory, or provider metadata.
+    emotional_boundaries: "EmotionalBoundaries | None" = None
     #: Canonical knowledge (lore.md); empty when the pack has none.
     lore: str = ""
     #: Optional dialogue-style illustrations (speech_examples.md).
@@ -417,7 +422,7 @@ class CharacterRepository:
             lore = "\n\n".join(filter(None, [lore, lore_extra]))
         if personality_extra:
             personality = "\n\n".join(filter(None, [personality.rstrip(), personality_extra]))
-        return CharacterProfile(
+        profile = CharacterProfile(
             id=character_id,
             display_name=str(manifest.get("displayName") or character_id),
             default_emotion=default,
@@ -444,6 +449,8 @@ class CharacterRepository:
             tools=[t for t in perf["tools"] if t in ("reminders", "folders", "web_search")] if isinstance(perf.get("tools"), list) else None,
             readiness=readiness,
         )
+        from .boundaries import configure_boundaries
+        return configure_boundaries(profile, pack_dir, manifest)
 
     @staticmethod
     def _optional_text(path: Path, warn_chars: int, warnings: list[str]) -> str:

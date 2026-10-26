@@ -14,6 +14,7 @@ from typing import Any
 from ..llm.schemas import ID_MAX, MAX_BEAT_TEXT
 from .context import text_cost
 from .repository import CharacterProfile
+from .boundaries import boundary_prompt
 
 logger = logging.getLogger(__name__)
 
@@ -140,6 +141,7 @@ def build_system_prompt(profile: CharacterProfile, language: str = "en") -> str:
         profile.personality.strip(),
         *(["## Canonical memories", LORE_RULES, profile.lore] if profile.lore else []),
         *(["## Speech style examples", SPEECH_RULES, profile.speech_examples] if profile.speech_examples else []),
+        boundary_prompt(profile.emotional_boundaries),
         "## Language",
         language_rules(profile, language),
         "## Performance capabilities",
