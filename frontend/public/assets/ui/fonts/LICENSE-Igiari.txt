@@ -1,0 +1,16 @@
+Igiari by Caveras / Cliff Modes (2014)
+Source distribution: docs/references/igiari/
+Creator: http://fontstruct.com/fontstructors/caveras
+
+License for Igiari font
+
+This font was created by Caveras with FontStruct and is licensed
+under a Creative Commons Attribution Non-commercial Share Alike
+license.
+
+http://fontstruct.com/fontstructors/caveras
+http://creativecommons.org/licenses/by-nc-sa/3.0/
+
+The existing font is retained unchanged. This notice does not relicense it
+under the SIL OFL used by DotGothic16. Commercial redistribution requires
+separate review of Igiari's noncommercial restriction.

@@ -21,7 +21,7 @@ test('browser settings retain migration metadata until import, then persist only
   assert.deepEqual(JSON.parse(storage.get(storageKey)!), {
     language: DEFAULT_SETTINGS.language, shoutLanguage: 'ja', textSpeed: 2, stageScaling: 'fit', blipVolume: 0.6, blipsMuted: false, sfxVolume: 0.6, sfxMuted: false, ringtoneId: '', expandedPanels: [],
     musicSource: 'off', musicVolume: 0.5, musicMuted: false, originalTrackId: '', importedTrackId: '', radioVideoId: '',
-    providerProfilesMigrated: true,
+    providerProfilesMigrated: true, japaneseReadingAssistant: false, japaneseDefinitionLanguage: 'fr',
   })
 })
 

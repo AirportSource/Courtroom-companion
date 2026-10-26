@@ -9,6 +9,7 @@ import { PixelStage } from './components/PixelStage.tsx'
 import { loadCourtRecord, type LoadedCourtRecord } from './courtRecord/courtRecord.ts'
 import { TEST_CONVERSATION } from './dev/testConversation.ts'
 import { audioEngine } from './engine/audioEngine.ts'
+import { stageFontProperties } from './engine/fontMetrics.ts'
 import { localizedName } from './i18n/i18n.ts'
 import { useT } from './i18n/useT.ts'
 import {
@@ -70,14 +71,8 @@ const EMPTY_UI: LoadedUi = { fonts: {}, images: {} }
 async function loadAndApplyUi(): Promise<LoadedUi> {
   try {
     const ui = await loadUi()
-    const font = ui.fonts.dialogue
-    if (font) {
-      const root = document.documentElement.style
-      const bundledStack = [font.family, ...font.fallbackFamilies].map((family) => JSON.stringify(family)).join(', ')
-      root.setProperty('--stage-font', `${bundledStack}, var(--stage-font-fallback)`)
-      root.setProperty('--stage-font-size', `${font.pixelSize}px`)
-      root.setProperty('--stage-letter-spacing', `${font.letterSpacing}px`)
-      root.setProperty('--stage-word-spacing', `${font.wordSpacing}px`)
+    for (const [property, value] of Object.entries(stageFontProperties(ui.fonts))) {
+      document.documentElement.style.setProperty(property, value)
     }
     return ui
   } catch (error) {

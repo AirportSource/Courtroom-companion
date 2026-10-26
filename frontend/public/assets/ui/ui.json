@@ -1,6 +1,13 @@
 {
   "schemaVersion": 1,
   "fonts": {
+    "japanese": {
+      "src": "fonts/DotGothic16-Regular.ttf",
+      "family": "DotGothic16 JP",
+      "pixelSize": 16,
+      "letterSpacing": 0,
+      "wordSpacing": 0
+    },
     "dialogue": {
       "src": "fonts/Igiari.woff2",
       "family": "Igiari",

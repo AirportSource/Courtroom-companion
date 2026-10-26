@@ -1,7 +1,23 @@
 // CSS font metric descriptors for bundled fallback fonts (ui.json `fallbacks[].sizeAdjust`...).
 // The face is registered through an @font-face rule so DOM text and the paginator's canvas
 // measurer (same family, same face) get identical effective metrics, with no per-script code.
-import type { FontMetricDescriptors } from './manifestTypes.ts'
+import type { FontMetricDescriptors, UiFont } from './manifestTypes.ts'
+
+/** Shared DOM/canvas font configuration; fonts have finished loading before this is applied. */
+export function stageFontProperties(fonts: Record<string, UiFont>): Record<string, string> {
+  const font = fonts.dialogue
+  if (!font) return {}
+  const stack = [font.family, ...font.fallbackFamilies].map((family) => JSON.stringify(family)).join(', ')
+  const properties: Record<string, string> = {
+    '--stage-font-default': `${stack}, var(--stage-font-fallback)`,
+    '--stage-font-size': `${font.pixelSize}px`,
+    '--stage-letter-spacing': `${font.letterSpacing}px`,
+    '--stage-word-spacing': `${font.wordSpacing}px`,
+  }
+  if (fonts.japanese) properties['--stage-font-japanese'] =
+    `${JSON.stringify(fonts.japanese.family)}, ${JSON.stringify(font.family)}, var(--stage-font-fallback)`
+  return properties
+}
 
 const KEYS = ['sizeAdjust', 'ascentOverride', 'descentOverride', 'lineGapOverride'] as const
 const CSS_NAMES: Record<(typeof KEYS)[number], string> = {

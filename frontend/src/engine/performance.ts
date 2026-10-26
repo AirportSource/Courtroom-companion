@@ -3,6 +3,7 @@
 // dialogue engine's DialogueLine format. No rendering, no provider knowledge.
 import type { TextLayout } from './dialogueLayout.ts'
 import type { DialogueLine } from './dialogueTypes.ts'
+import { graphemes } from './unicodeText.ts'
 import { initializeProviderProfiles } from '../settings/providerProfiles.ts'
 import { cancelTurn, parseArtifact, parseTurnTask, watchTurn, type GeneratedArtifact, type TurnTask } from '../artifacts/artifacts.ts'
 import { parseGeneration, type GenerationDiagnostics } from './generation.ts'
@@ -134,14 +135,17 @@ export function parseChatResponse(raw: unknown): ChatResponse {
 // words, then graphemes, never leaving a stubby page just to fill the box.
 
 /** Characters that must not start a line (punctuation hanging after a word). */
-const NO_LINE_START = new Set([...'!?.,;:)]}»…、。，．！？：；）」』】〉》ー々'])
+const NO_LINE_START = new Set([...'!?.,;:)]}»…、。，．！？：；）」』】〉》ー々ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶゝゞヽヾ'])
 /** Characters that must not end a line (opening brackets/quotes). */
-const NO_LINE_END = new Set([...'([{«「『【〈《'])
+const NO_LINE_END = new Set([...'([{«（「『【〈《'])
 const CJK = /[぀-ヿ㐀-鿿豈-﫿＀-￯]/
 const STRONG_CLAUSE = /[;:—–；：]/
 const SOFT_CLAUSE = /[,、，]/
 /** Ordinary breakable whitespace (no-break spaces, used before French ?!:;, are excluded). */
 const BREAKABLE_SPACE = /[ \t\n]/
+// U+3000 ideographic space and French no-break spaces are content, not layout padding.
+const trimLayoutSpace = (text: string) => text.replace(/^[ \t\r\n]+|[ \t\r\n]+$/g, '')
+const trimLayoutEnd = (text: string) => text.replace(/[ \t\r\n]+$/g, '')
 
 const segmenters = new Map<string, Intl.Segmenter>()
 
@@ -152,7 +156,7 @@ function segment(text: string, granularity: 'grapheme' | 'sentence', locale?: st
     if (!segmenter) segmenters.set(key, (segmenter = new Intl.Segmenter(locale, { granularity })))
     return [...segmenter.segment(text)].map((s) => s.segment)
   }
-  if (granularity === 'grapheme') return [...text]
+  if (granularity === 'grapheme') return graphemes(text)
   return text.match(/[^.!?。！？]+[.!?。！？]*\s*|.+$/g) ?? [text]
 }
 
@@ -195,7 +199,7 @@ export function wrapLines(text: string, layout: TextLayout): string[] {
     while (start < text.length && BREAKABLE_SPACE.test(text[start])) start++
     if (start >= text.length) break
     const width = layout.lineWidths[Math.min(lines.length, layout.lineWidths.length - 1)]
-    const fits = (end: number) => layout.measure(text.slice(start, end).trimEnd()) <= width
+    const fits = (end: number) => layout.measure(trimLayoutEnd(text.slice(start, end))) <= width
     let end = 0
     for (const b of opportunities) {
       if (b <= start) continue
@@ -210,7 +214,7 @@ export function wrapLines(text: string, layout: TextLayout): string[] {
         else break
       }
     }
-    lines.push(text.slice(start, end).trim())
+    lines.push(trimLayoutSpace(text.slice(start, end)))
     start = end
   }
   return lines
@@ -251,12 +255,12 @@ function splitOverlong(text: string, layout: TextLayout): [string, string] {
     const fits: number[] = []
     for (const o of offsets) {
       if (o <= 0) continue
-      if (!fitsPage(text.slice(0, o).trim(), layout)) break
+      if (!fitsPage(trimLayoutSpace(text.slice(0, o)), layout)) break
       fits.push(o)
     }
     return fits
   }
-  const split = (o: number): [string, string] => [text.slice(0, o).trim(), text.slice(o).trim()]
+  const split = (o: number): [string, string] => [trimLayoutSpace(text.slice(0, o)), trimLayoutSpace(text.slice(o))]
   const words = fitting(lineBreakOpportunities(text, layout.locale).filter((o) => o < text.length))
   const graphemes = fitting(graphemeEnds(text, layout.locale).filter((o) => o < text.length))
   const breaks = words.length ? words : graphemes
@@ -268,10 +272,10 @@ function splitOverlong(text: string, layout: TextLayout): [string, string] {
     if (clause) return split(clause)
   }
   for (const candidates of clauses) {
-    const clause = candidates.filter((o) => o >= furthest / 3 && fitsPage(text.slice(o).trim(), layout)).at(-1)
+    const clause = candidates.filter((o) => o >= furthest / 3 && fitsPage(trimLayoutSpace(text.slice(o)), layout)).at(-1)
     if (clause) return split(clause)
   }
-  const tailGraphemes = (o: number) => segment(text.slice(o).trim(), 'grapheme', layout.locale).length
+  const tailGraphemes = (o: number) => segment(trimLayoutSpace(text.slice(o)), 'grapheme', layout.locale).length
   const unorphaned = breaks.filter((o) => tailGraphemes(o) >= MIN_TAIL_GRAPHEMES).at(-1)
   return split(tailGraphemes(furthest) < MIN_TAIL_GRAPHEMES && unorphaned ? unorphaned : furthest)
 }
@@ -282,21 +286,21 @@ function splitOverlong(text: string, layout: TextLayout): [string, string] {
  * remaining space.
  */
 export function paginate(text: string, layout: TextLayout): string[] {
-  const normalized = text.replace(/[ \t\r\n]+/g, ' ').trim()
+  const normalized = trimLayoutSpace(text.replace(/[ \t\r\n]+/g, ' '))
   if (!normalized) return []
   const pages: string[] = []
   let current = ''
   const flush = () => {
-    if (current.trim()) pages.push(wrapLines(current.trim(), layout).join('\n'))
+    if (trimLayoutSpace(current)) pages.push(wrapLines(trimLayoutSpace(current), layout).join('\n'))
     current = ''
   }
   for (const sentence of segment(normalized, 'sentence', layout.locale)) {
-    if (fitsPage((current + sentence).trim(), layout)) {
+    if (fitsPage(trimLayoutSpace(current + sentence), layout)) {
       current += sentence
       continue
     }
     flush()
-    let rest = sentence.trim()
+    let rest = trimLayoutSpace(sentence)
     while (rest && !fitsPage(rest, layout)) {
       const [head, tail] = splitOverlong(rest, layout)
       pages.push(wrapLines(head, layout).join('\n'))
@@ -314,6 +318,14 @@ export function paginate(text: string, layout: TextLayout): string[] {
  * director's emotion and pose; the segment's reaction and sound play only on its first page, so
  * advancing pages never re-triggers it. The director is not re-run.
  */
+/** Local developer scripts must obey the same no-DOM-rewrap contract as provider replies. */
+export function paginateDialogueLines(lines: DialogueLine[], layout: TextLayout): DialogueLine[] {
+  return lines.flatMap((line) => paginate(line.text, layout).map((text, page) => ({
+    ...line, text,
+    ...(page > 0 ? { reaction: null, sfx: null } : {}),
+  })))
+}
+
 export function timelineToLines(timeline: PerformanceTimeline, layout: TextLayout): DialogueLine[] {
   return timeline.segments.flatMap((segment) =>
     paginate(segment.text, layout).map((page, i) => ({

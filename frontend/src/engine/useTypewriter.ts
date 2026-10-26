@@ -1,17 +1,30 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { revealSteps } from './unicodeText.ts'
 
 export type TypewriterState = 'waiting' | 'revealing' | 'complete'
 
 /** Base delay per character at speed 1×, in ms. */
 const BASE_CHAR_MS = 30
 
+/** Locale timing policy; Latin locales retain their existing whitespace-aware pacing. */
+export const PUNCTUATION_TIMING = {
+  ja: { sentence: '。！？…', clause: '、，', closers: '」』）】', sentenceMs: 350, clauseMs: 180 },
+} as const
+
 /**
  * Extra pause (ms at 1×) after the character at `index`. Punctuation only pauses when it
  * ends a word, so "W-Wait" and "?!" don't stutter; consecutive dots ("...") pause briefly.
  */
-export function pauseAfter(text: string, index: number): number {
+export function pauseAfter(text: string, index: number, locale = 'en'): number {
   const char = text[index]
   const next = text[index + 1]
+  const policy = locale.split('-')[0] === 'ja' ? PUNCTUATION_TIMING.ja : null
+  if (policy) {
+    if (policy.sentence.includes(char) && !(policy.sentence + policy.closers).includes(next ?? '\0')) return policy.sentenceMs
+    if (policy.closers.includes(char) && /[。！？…][」』）】]*$/.test(text.slice(0, index))
+      && !policy.closers.includes(next ?? '\0')) return policy.sentenceMs
+    if (policy.clause.includes(char)) return policy.clauseMs
+  }
   if (char === '.' && next === '.') return 120
   if (next !== undefined && !/\s/.test(next)) return 0
   if ('.!?…'.includes(char)) return 350
@@ -60,9 +73,11 @@ export function useTypewriter(
   active: boolean,
   speed: number,
   onReveal?: (char: string) => void,
+  locale = 'en',
 ): Typewriter {
   const [progress, setProgress] = useState({ lineKey, count: 0 })
   const count = progress.lineKey === lineKey ? progress.count : 0
+  const clusters = useMemo(() => revealSteps(text), [text])
   const onRevealRef = useRef(onReveal)
   useEffect(() => {
     onRevealRef.current = onReveal
@@ -71,13 +86,15 @@ export function useTypewriter(
   useEffect(() => {
     if (!active || count >= text.length) return
     const factor = 1 / Math.max(speed, 0.1)
-    const pause = count > 0 ? pauseAfter(text, count - 1) : 0
+    const pause = count > 0 ? pauseAfter(text, count - 1, locale) : 0
+    const next = clusters.find((cluster) => cluster.start >= count)
+    if (!next) return
     const timer = window.setTimeout(() => {
-      setProgress({ lineKey, count: count + 1 })
-      onRevealRef.current?.(text[count])
+      setProgress({ lineKey, count: next.end })
+      onRevealRef.current?.(next.char)
     }, (BASE_CHAR_MS + pause) * factor)
     return () => window.clearTimeout(timer)
-  }, [active, count, text, lineKey, speed])
+  }, [active, count, text, clusters, lineKey, speed, locale])
 
   const skip = useCallback(() => setProgress({ lineKey, count: text.length }), [lineKey, text])
 

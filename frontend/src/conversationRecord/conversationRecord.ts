@@ -9,6 +9,9 @@ export const RECORD_PAGE_SIZE = TILE_GRID.pageSize
 export const DETAIL_LINE_HEIGHT = 15
 export const DETAIL_VISIBLE_LINES = 8
 
+/** Keep record scrolling on the same native line grid as the selected stage font. */
+export const detailLineHeight = (language: string): number => language.split('-')[0] === 'ja' ? 16 : DETAIL_LINE_HEIGHT
+
 /** Entries keep the server's order (newest first); repeated ids are dropped, nothing is re-sorted. */
 export function orderedEntries(entries: readonly ConversationRecordEntry[]): ConversationRecordEntry[] {
   const seen = new Set<string>()

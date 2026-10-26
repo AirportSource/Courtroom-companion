@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-10-26",
+  "sources": {
+    "stage": "https://prtimes.jp/a/?c=12949&f=d12949-1060-pdf-0.pdf&r=1060",
+    "anime": "https://www.animax.co.jp/sites/jp/animax/files/press-release/20260213.pdf",
+    "pearl": "https://bgm.tv/character/399",
+    "iris": "https://www.ytv.co.jp/animegyakuten/story/21.html",
+    "localizations": "https://www.ne.jp/asahi/game/gyakusai/data/name03.html"
+  },
+  "titleSuffixes": ["検事", "弁護士", "刑事", "先生", "所長"],
+  "entries": [
+    {"surface":"成歩堂龍一","reading":"なるほどうりゅういち","english":"Phoenix Wright","entityType":"person","source":"anime","alternativeForms":["成歩堂 龍一","成歩堂　龍一"]},
+    {"surface":"成歩堂","reading":"なるほどう","english":"Phoenix Wright","entityType":"person","source":"stage"},
+    {"surface":"御剣怜侍","reading":"みつるぎれいじ","english":"Miles Edgeworth","entityType":"person","source":"anime","alternativeForms":["御剣 怜侍","御剣　怜侍"]},
+    {"surface":"御剣","reading":"みつるぎ","english":"Miles Edgeworth","entityType":"person","source":"stage"},
+    {"surface":"綾里真宵","reading":"あやさとまよい","english":"Maya Fey","entityType":"person","source":"anime","alternativeForms":["綾里 真宵","綾里　真宵"]},
+    {"surface":"綾里千尋","reading":"あやさとちひろ","english":"Mia Fey","entityType":"person","source":"anime","alternativeForms":["綾里 千尋","綾里　千尋"]},
+    {"surface":"綾里春美","reading":"あやさとはるみ","english":"Pearl Fey","entityType":"person","source":"pearl","alternativeForms":["綾里 春美","綾里　春美"]},
+    {"surface":"狩魔冥","reading":"かるまめい","english":"Franziska von Karma","entityType":"person","source":"stage","alternativeForms":["狩魔 冥","狩魔　冥"]},
+    {"surface":"糸鋸圭介","reading":"いとのこぎりけいすけ","english":"Dick Gumshoe","entityType":"person","source":"stage","alternativeForms":["糸鋸 圭介","糸鋸　圭介"]},
+    {"surface":"矢張政志","reading":"やはりまさし","english":"Larry Butz","entityType":"person","source":"stage","alternativeForms":["矢張 政志","矢張　政志"]},
+    {"surface":"あやめ","reading":"あやめ","english":"Iris","entityType":"person","source":"iris","match":"isolated-or-honorific","notes":"Canonical Japanese name is already kana; do not reinterpret the flower in ordinary vocabulary."},
+    {"surface":"ゴドー","reading":"ごどー","english":"Godot","entityType":"person","source":"localizations","match":"isolated-or-honorific"}
+  ]
+}
