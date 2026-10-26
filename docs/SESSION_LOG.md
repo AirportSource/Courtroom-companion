@@ -1150,3 +1150,17 @@ Final validation: backend629 passed/2 skipped, frontend327 passed, source tests4
 - Checks: frontend 389 tests passed, `tsc -b` clean, oxlint clean, production build OK, assets 1074/0.
 - Browser QA with an isolated QA backend (scratch data dir, real Tesseract, scripted "remote" model) + Vite: full import → OCR → consent → review → edit/approve → remove → factory reset → talk flow verified. Port 8765 was held by a pre-existing process from another session (PID 24144) and was left untouched; QA used 8791/5199. All agent-started processes stopped and ports verified free.
 - Nothing staged or committed.
+
+## 2026-10-26 — Emotional character realism pilot (isolated experiment)
+
+- Created `feat/emotional-character-realism` at verified origin/main `2065e03` in a managed worktree; primary checkout and private archives left untouched.
+- Added optional strict boundary policies for Iris/Franziska, prompt-only contextual disclosure guidance and opt-in conversation capability filtering. Existing history, Director, providers and artifact flow reused. No personality/lore, typography, Japanese reader or Studio edits.
+- Added 27 deterministic checks, 16 multi-turn scenarios, a bounded opt-in live runner and a focused guide. Prompt export/baseline dry runs made zero model calls. Owner chose to do live testing later; no empirical behavioral scores claimed.
+- Validation: backend 793 passed / 4 skipped; frontend 396 passed; TypeScript, lint, assets 990 references / 0 errors, build and diff whitespace checks passed. Optional local soundtrack assets are absent in this clean worktree. A deterministic test created/read an actual Markdown artifact after an emotional fixture.
+- No development servers or browsers were started. Nothing staged, committed, pushed or published; experiment retained for owner review.
+
+## 2026-10-26 — Emotional realism prototype publication preparation
+
+- Owner authorized a scoped commit, PR and merge after review and automated validation. Real-LLM conversation testing remains partial; unit tests are not evidence of emotional realism.
+- Reran validation: backend 793 passed / 4 skipped (private-PDF and Windows-symlink prerequisites), frontend 396 passed, TypeScript/lint/build clean, assets 990 references / 0 errors, diff whitespace clean. Optional soundtrack files were not installed in the isolated checkout.
+- Reviewed only the prototype's 13 source/config/test/documentation files for publication. Private archives, wiki PDFs, user knowledge, credentials, local histories and ignored manual-test launch files are excluded. The experimental worktree is retained.

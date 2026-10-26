@@ -185,3 +185,9 @@ Details: [targeted correction report](TARGETED_CORRECTIONS.md). The earlier Fran
 - [x] Phone evidence exterior matte transparent; handset details/frame/placement preserved; regression test added.
 - [x] Full backend/frontend checks and focused browser QA passed; exact counts in PROJECT_STATE.
 - [ ] Character Platform Stabilization P0: explicitly deferred to a future session.
+
+## Experimental emotional realism prototype (2026-10-26)
+
+- [x] Optional validated Iris/Franziska boundary profiles, prompt integration and conversation-safe capabilities.
+- [x] Automated isolation/contract/artifact regressions and reproducible multi-turn evaluation pack.
+- [ ] Complete real-LLM behavioral evaluation and refinement; automated checks do not establish emotional realism.

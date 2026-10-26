@@ -1020,3 +1020,9 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
 - **Decision:** the Lore Builder UI is a dedicated app screen (`character-studio`) rendered outside the DS `PixelStage`, reached from one Settings row ("Character Studio · Open (advanced)"). Fact review with evidence, page tables and text previews does not fit the 256×192 stage; the out-of-stage pattern already exists (music dock / import library). Content is English (developer-panel convention in `strings.ts`); only the Settings entry is localized in all five languages.
 - **UX rules:** stages and progress shown only from backend state (no fake progress); remote analysis requires an explicit consent box built from the backend's `remote_consent_required` answer; nothing is pre-approved except suggested items (proposed, conflict-free, new) and the user can change everything; conflicting/known items need "Approve anyway"; factory reset needs an inline confirmation. Workflow logic lives in pure `studioState.ts` (unit-tested), network in `studioApi.ts`.
 - **Rejected:** putting the Studio inside the DS settings menu (unreadable at stage scale); auto-approving `proposed` items; translating the whole developer panel now (can follow when the feature leaves "advanced").
+
+## Experimental note — Emotional character realism (2026-10-26, not a stable-main decision)
+
+- Use optional validated pack policy plus existing bounded session/character history, not a numerical trust meter or another inference model. Keep provider reply schemas and canonical/approved lore unchanged.
+- Restrict valid opted-in profiles to conversation-group performance capabilities; do not advertise legacy courtroom gestures during this pilot. Non-opt-in packs retain previous behavior.
+- Behavioral quality remains unverified until owner-run live evaluation. Detailed rationale, disable flag and limitations: `EMOTIONAL_CHARACTER_REALISM_EXPERIMENT.md`.
