@@ -347,6 +347,33 @@ export function createWebAudioSource(kind: 'original' | 'imported', resolver: Tr
       return stopInternal(Math.max(0, options?.fadeOutMs ?? 0))
     },
 
+    seek(seconds) {
+      const current = chain
+      if (!current || !Number.isFinite(seconds)) return
+      const at = Math.min(Math.max(0, seconds), Math.max(0, current.buffer.duration - 0.05))
+      if (current.node) {
+        const old = current.node
+        startNode(current, at, PAUSE_RAMP_S)
+        try {
+          old.stop()
+        } catch {
+          // already stopped
+        }
+      } else if (current.pausedAt !== null) {
+        current.pausedAt = at // paused: resume() continues from here
+      }
+    },
+
+    getPlaybackInfo() {
+      const current = chain
+      if (!current) return null
+      return {
+        position: current.node ? position(current) : (current.pausedAt ?? 0),
+        duration: current.buffer.duration,
+        loop: current.loop ? { ...current.loop } : null,
+      }
+    },
+
     setVolume(next) {
       volume = clamp01(next)
       if (!chain) return

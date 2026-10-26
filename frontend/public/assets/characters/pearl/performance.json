@@ -1,0 +1,447 @@
+{
+  "schemaVersion": 1,
+  "director": {
+    "expressiveness": 0.6,
+    "maxBeatsPerReply": 2,
+    "maxReactionsPerReply": 1,
+    "reactionCooldownMs": 9000,
+    "reactionMinIntensity": 0.65,
+    "minPoseHoldMs": 1400,
+    "strongChangeIntensity": 0.7,
+    "msPerChar": 44
+  },
+  "sfx": {
+    "maxPerReply": 1,
+    "minIntensity": 0.6,
+    "categoryCooldownTurns": 1,
+    "fallbackCooldownTurns": 1,
+    "droughtTurns": 3,
+    "droughtBonus": 0.1,
+    "reactions": {
+      "shock": "surprise",
+      "surprise": "surprise",
+      "realization": "realization",
+      "gasp": "surprise",
+      "cheer": "soft_transition",
+      "celebrate": "soft_transition",
+      "cheers": "soft_transition",
+      "comic": "comic",
+      "you_can_do_it": "encouragement",
+      "scared": "shock"
+    },
+    "emotions": {
+      "surprised": "surprise",
+      "happy": "soft_transition",
+      "excited": "soft_transition",
+      "grateful": "soft_transition",
+      "playful": "comic",
+      "laughing": "comic",
+      "anxious": "shock",
+      "embarrassed": "flabbergasted",
+      "determined": "encouragement",
+      "angry": "angry"
+    },
+    "emotionMinIntensities": {
+      "surprised": 0.5,
+      "happy": 0.55,
+      "excited": 0.55,
+      "grateful": 0.6,
+      "playful": 0.5,
+      "laughing": 0.5,
+      "anxious": 0.55,
+      "embarrassed": 0.5,
+      "determined": 0.55,
+      "angry": 0.5
+    }
+  },
+  "gestures": {
+    "happy_arms": {
+      "animation": "happy_arms",
+      "emotions": [
+        "happy",
+        "excited",
+        "laughing",
+        "playful"
+      ]
+    },
+    "worried_hands": {
+      "animation": "hands_worried",
+      "emotions": [
+        "anxious",
+        "thinking",
+        "sad",
+        "embarrassed"
+      ]
+    },
+    "hand_over_mouth": {
+      "animation": "hand_over_mouth",
+      "emotions": [
+        "surprised",
+        "embarrassed",
+        "laughing"
+      ]
+    },
+    "blush": {
+      "animation": "cheeks_blush",
+      "emotions": [
+        "grateful",
+        "embarrassed",
+        "happy",
+        "polite"
+      ]
+    },
+    "pout": {
+      "animation": "pout",
+      "emotions": [
+        "serious",
+        "determined",
+        "angry"
+      ]
+    },
+    "curious": {
+      "animation": "curious",
+      "emotions": [
+        "explaining",
+        "polite",
+        "thinking",
+        "neutral"
+      ]
+    },
+    "sad_clasped": {
+      "animation": "sad_clasped",
+      "emotions": [
+        "sad",
+        "anxious"
+      ]
+    },
+    "tears": {
+      "animation": "crying",
+      "emotions": [
+        "sad",
+        "crying"
+      ]
+    }
+  },
+  "intensityVariants": {
+    "sad": [
+      {
+        "maxIntensity": 0.55,
+        "animation": "sad_clasped"
+      },
+      {
+        "maxIntensity": 1,
+        "animation": "crying"
+      }
+    ]
+  },
+  "emotionAliases": {
+    "joy": "happy",
+    "joyful": "happy",
+    "cheerful": "happy",
+    "delighted": "happy",
+    "pleased": "happy",
+    "worried": "anxious",
+    "nervous": "anxious",
+    "scared": "anxious",
+    "afraid": "anxious",
+    "shy": "embarrassed",
+    "flustered": "embarrassed",
+    "curious": "thinking",
+    "pondering": "thinking",
+    "shocked": "surprised",
+    "astonished": "surprised",
+    "teasing": "playful",
+    "amused": "playful",
+    "thankful": "grateful",
+    "touched": "grateful",
+    "calm": "relaxed",
+    "stern": "serious",
+    "focused": "serious",
+    "resolute": "determined",
+    "upset": "sad",
+    "unhappy": "sad",
+    "tearful": "crying",
+    "irritated": "angry",
+    "annoyed": "angry",
+    "mad": "angry"
+  },
+  "reactionAliases": {
+    "shock": "gasp",
+    "shocked": "gasp",
+    "surprise": "gasp",
+    "startle": "gasp",
+    "celebrate": "cheer",
+    "cheers": "cheer"
+  },
+  "errorLine": {
+    "text": "Um... I'm sorry, I got a little mixed up. Could you please say that again?",
+    "emotion": "anxious",
+    "translations": {
+      "fr": "Euh... pardon, je me suis un peu perdue. Tu peux répéter, s'il te plaît ?",
+      "ja": "あの…ごめんなさい、ちょっとわからなくなっちゃいました。もう一度お願いします。",
+      "it": "Ehm... scusa, mi sono confusa un po'. Puoi ripetere, per favore?",
+      "es": "Eh... perdona, me he confundido un poquito. ¿Puedes repetirlo, por favor?"
+    }
+  },
+  "eventLines": {
+    "task_finished": {
+      "en": [
+        {
+          "text": "Um, the task is all done! I hope it turned out well!",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ],
+      "fr": [
+        {
+          "text": "Euh, la tâche est terminée ! J'espère que c'est bien !",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ],
+      "ja": [
+        {
+          "text": "あの、作業が全部終わりました！ うまくいってるといいです！",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ],
+      "it": [
+        {
+          "text": "Ehm, il lavoro è finito! Spero sia venuto bene!",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ],
+      "es": [
+        {
+          "text": "Eh, ¡la tarea ya está lista! ¡Espero que haya salido bien!",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ]
+    },
+    "needs_attention": {
+      "en": [
+        {
+          "text": "Excuse me... Claude Code is waiting for you!",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ],
+      "fr": [
+        {
+          "text": "Excuse-moi... Claude Code t'attend !",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ],
+      "ja": [
+        {
+          "text": "あの…Claude Codeが待っていますよ！",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ],
+      "it": [
+        {
+          "text": "Scusa... Claude Code ti sta aspettando!",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ],
+      "es": [
+        {
+          "text": "Perdona... ¡Claude Code te está esperando!",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ]
+    },
+    "tests_passed": {
+      "en": [
+        {
+          "text": "The tests all passed! Yay!",
+          "emotion": "happy",
+          "intensity": 0.65
+        }
+      ],
+      "fr": [
+        {
+          "text": "Tous les tests sont passés ! Youpi !",
+          "emotion": "happy",
+          "intensity": 0.65
+        }
+      ],
+      "ja": [
+        {
+          "text": "テスト、ぜんぶ通りました！ やったあ！",
+          "emotion": "happy",
+          "intensity": 0.65
+        }
+      ],
+      "it": [
+        {
+          "text": "I test sono passati tutti! Evviva!",
+          "emotion": "happy",
+          "intensity": 0.65
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Todos los tests han pasado! ¡Yupi!",
+          "emotion": "happy",
+          "intensity": 0.65
+        }
+      ]
+    },
+    "tests_failed": {
+      "en": [
+        {
+          "text": "Oh no... some of the tests failed. Don't worry, we can fix it.",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ],
+      "fr": [
+        {
+          "text": "Oh non... certains tests ont échoué. Ne t'inquiète pas, on peut arranger ça.",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ],
+      "ja": [
+        {
+          "text": "ああ…テストがいくつか失敗しちゃいました。大丈夫、直せますよ。",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ],
+      "it": [
+        {
+          "text": "Oh no... alcuni test sono falliti. Non preoccuparti, si può sistemare.",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ],
+      "es": [
+        {
+          "text": "Oh, no... algunos tests han fallado. No te preocupes, se puede arreglar.",
+          "emotion": "anxious",
+          "intensity": 0.65
+        }
+      ]
+    },
+    "build_failed": {
+      "en": [
+        {
+          "text": "Oh no! The build didn't work... Um, shall we look at it together?",
+          "emotion": "anxious",
+          "intensity": 0.75
+        }
+      ],
+      "fr": [
+        {
+          "text": "Oh non ! La compilation n'a pas marché... Euh, on regarde ça ensemble ?",
+          "emotion": "anxious",
+          "intensity": 0.75
+        }
+      ],
+      "ja": [
+        {
+          "text": "たいへん！ ビルドがうまくいきませんでした…いっしょに見てみましょうか？",
+          "emotion": "anxious",
+          "intensity": 0.75
+        }
+      ],
+      "it": [
+        {
+          "text": "Oh no! La compilazione non ha funzionato... Ehm, vediamo insieme?",
+          "emotion": "anxious",
+          "intensity": 0.75
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Oh, no! La compilación no ha funcionado... Eh, ¿lo miramos juntos?",
+          "emotion": "anxious",
+          "intensity": 0.75
+        }
+      ]
+    },
+    "session_started": {
+      "en": [
+        {
+          "text": "A new session! I'll do my best!",
+          "emotion": "determined",
+          "intensity": 0.5
+        }
+      ],
+      "fr": [
+        {
+          "text": "Une nouvelle session ! Je ferai de mon mieux !",
+          "emotion": "determined",
+          "intensity": 0.5
+        }
+      ],
+      "ja": [
+        {
+          "text": "新しいセッションですね！ がんばります！",
+          "emotion": "determined",
+          "intensity": 0.5
+        }
+      ],
+      "it": [
+        {
+          "text": "Una nuova sessione! Farò del mio meglio!",
+          "emotion": "determined",
+          "intensity": 0.5
+        }
+      ],
+      "es": [
+        {
+          "text": "¡Una nueva sesión! ¡Haré todo lo posible!",
+          "emotion": "determined",
+          "intensity": 0.5
+        }
+      ]
+    },
+    "reminder_due": {
+      "en": [
+        {
+          "text": "Um, excuse me! A reminder for you: {text}",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ],
+      "fr": [
+        {
+          "text": "Euh, excuse-moi ! Un rappel pour toi : {text}",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ],
+      "ja": [
+        {
+          "text": "あの、すみません！ お知らせです：{text}",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ],
+      "it": [
+        {
+          "text": "Ehm, scusa! Un promemoria per te: {text}",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ],
+      "es": [
+        {
+          "text": "Eh, ¡perdona! Un recordatorio para ti: {text}",
+          "emotion": "happy",
+          "intensity": 0.55
+        }
+      ]
+    }
+  }
+}

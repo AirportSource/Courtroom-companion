@@ -11,7 +11,7 @@ const artifact: GeneratedArtifact = { id: 'b'.repeat(32), displayName: 'opening_
 const scoped = <T extends 'working' | 'response-buffered' | 'phone-acknowledged' | 'summon-finished' | 'cancelled' | 'response-finished'>(type: T) => ({ type, turnId })
 const begin = () => reduce(initialArtifactDelivery(), { type: 'begin', turnId })
 const ready = (state: ArtifactDeliveryState) => reduce(state, { type: 'ready', turnId, artifact })
-const phoneWait = () => ready(reduce(reduce(begin(), scoped('working')), { type: 'working-presented', turnId }))
+const phoneWait = () => reduce(ready(reduce(reduce(begin(), scoped('working')), { type: 'working-presented', turnId })), { type: 'done-presented', turnId })
 
 test('ready waits for explicit phone acknowledgement before releasing the buffered response', () => {
   let state = reduce(begin(), scoped('working'))
@@ -21,6 +21,10 @@ test('ready waits for explicit phone acknowledgement before releasing the buffer
   state = ready(state)
   assert.equal(state.phase, 'artifact-working')
   state = reduce(state, { type: 'working-presented', turnId })
+  // The checked magnifier beat sits between the saved file and the phone.
+  assert.equal(state.phase, 'artifact-done')
+  assert.equal(reduce(state, scoped('phone-acknowledged')), state)
+  state = reduce(state, { type: 'done-presented', turnId })
   assert.equal(state.phase, 'waiting-for-phone-acknowledgement')
   // A timer cannot bypass acknowledgement, even when the response is already buffered.
   assert.equal(reduce(state, scoped('summon-finished')), state)
@@ -79,6 +83,8 @@ test('a fast artifact result waits behind local acknowledgement and a visible wo
   state = reduce(state, { type: 'acknowledgement-finished', turnId })
   assert.equal(state.phase, 'artifact-working')
   state = reduce(state, { type: 'working-presented', turnId })
+  assert.equal(state.phase, 'artifact-done')
+  state = reduce(state, { type: 'done-presented', turnId })
   assert.equal(state.phase, 'waiting-for-phone-acknowledgement')
   assert.equal(reduce(state, { type: 'acknowledgement-finished', turnId }), state)
 })

@@ -63,6 +63,10 @@
       "category": "effect",
       "src": "effects/deskslam.wav"
     },
+    "fx_whip": {
+      "category": "effect",
+      "src": "effects/whip_crack.wav"
+    },
     "fx_tension": {
       "category": "effect",
       "src": "effects/dramapound.wav"
@@ -156,7 +160,27 @@
     "voice_en_guest_m3_objection": { "category": "dialogue", "src": "voices/en/guest_m3_objection.wav" },
     "voice_ja_guest_f1_objection": { "category": "dialogue", "src": "voices/ja/guest_f1_objection.wav" },
     "voice_ja_guest_m4_objection": { "category": "dialogue", "src": "voices/ja/guest_m4_objection.wav" },
-    "voice_ja_phoenix_objection": { "category": "dialogue", "src": "voices/ja/phoenix_objection.wav" }
+    "voice_ja_phoenix_objection": { "category": "dialogue", "src": "voices/ja/phoenix_objection.wav" },
+    "fx_lightbulb": {
+      "category": "effect",
+      "src": "effects/lightbulb.wav"
+    },
+    "fx_whip_swing": {
+      "category": "effect",
+      "src": "effects/whip.wav"
+    },
+    "fx_stab_long": {
+      "category": "dialogue",
+      "src": "dialogue/shock/stab.wav"
+    },
+    "fx_shock2": {
+      "category": "dialogue",
+      "src": "dialogue/shock/shock2.wav"
+    },
+    "fx_happyping": {
+      "category": "dialogue",
+      "src": "dialogue/idea/happyping.wav"
+    }
   },
   "ringtones": {
     "default": "phoenix",
@@ -177,12 +201,17 @@
     "user_typing": "blip_male",
     "sfx_surprise": "fx_surprise",
     "sfx_shock": "fx_shock",
-    "sfx_realization": "sfx_realization",
+    "sfx_realization": "fx_lightbulb",
     "sfx_comic": "fx_comic",
     "sfx_emphasis": "fx_emphasis",
     "sfx_tension": "fx_tension",
     "sfx_notification": "fx_notification",
     "sfx_soft_transition": "fx_soft_transition",
+    "whip_swing": "fx_whip_swing",
+    "whip_impact": "fx_whack",
+    "sfx_angry": "fx_smack",
+    "sfx_flabbergasted": "fx_damage",
+    "sfx_encouragement": "sfx_assertive",
     "phone_ring_loop": "fx_phone_ring",
     "phone_answer": "fx_phone_answer",
     "evidence_reveal": "fx_evidence_reveal",
@@ -190,6 +219,13 @@
     "exclamation_objection": "sfx_assertive",
     "exclamation_hold_it": "fx_emphasis",
     "exclamation_take_that": "fx_emphasis"
+  },
+  "semanticSounds": {
+    "angry": ["fx_smack", "fx_stab", "fx_stab_long"],
+    "flabbergasted": ["fx_damage"],
+    "realization": ["fx_lightbulb", "fx_happyping", "sfx_realization"],
+    "shock": ["fx_shock", "fx_shock2"],
+    "encouragement": ["sfx_assertive"]
   },
   "voices": {
     "objection": {

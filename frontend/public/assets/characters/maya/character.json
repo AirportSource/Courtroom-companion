@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "id": "maya_fey",
+  "semanticSounds": {
+    "comic": ["sfx_cute", "fx_comic"]
+  },
+  "readiness": "ready",
+  "group": "aa1",
   "displayName": "Maya Fey",
   "names": { "en": "Maya Fey", "fr": "Maya Fey", "ja": "綾里真宵", "it": "Maya Fey", "es": "Maya Fey" },
   "anchor": "bottom-center",

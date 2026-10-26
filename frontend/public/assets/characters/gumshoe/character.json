@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "dick_gumshoe",
+  "readiness": "ready",
+  "group": "aa1",
   "displayName": "Dick Gumshoe",
   "names": {
     "en": "Dick Gumshoe",

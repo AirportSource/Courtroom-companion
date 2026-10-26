@@ -1,0 +1,909 @@
+{
+  "schemaVersion": 1,
+  "id": "pearl_fey",
+  "displayName": "Pearl Fey",
+  "names": {
+    "en": "Pearl Fey",
+    "fr": "Pearl Fey",
+    "ja": "綾里春美",
+    "it": "Pearl Fey",
+    "es": "Pearl Fey"
+  },
+  "anchor": "bottom-center",
+  "render": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  "voice": {
+    "blip": "blip_female"
+  },
+  "courtRecordPortrait": {
+    "src": "portraits/court_record.png",
+    "width": 64,
+    "height": 64
+  },
+  "waiting": {
+    "emotion": "thinking",
+    "animation": "hands_worried_a"
+  },
+  "taskAcknowledgements": {
+    "artifact": {
+      "emotion": "happy",
+      "lines": {
+        "en": [
+          "Yes! Please leave it to me!",
+          "Okay! I'll do my very best!",
+          "Just a moment, please. I'll make something nice!",
+          "Understood! I'll get it ready for you!"
+        ],
+        "fr": [
+          "Oui ! Laissez-moi faire !",
+          "D'accord ! Je ferai de mon mieux !",
+          "Un instant, s'il vous plaît. Je vais préparer ça !",
+          "Compris ! Je vous prépare ça !"
+        ],
+        "ja": [
+          "はい！私に任せてください！",
+          "わかりました！がんばります！",
+          "少しだけ待ってくださいね。いいものを作ります！",
+          "了解です！すぐ用意しますね！"
+        ],
+        "it": [
+          "Sì! Lasci fare a me!",
+          "Va bene! Farò del mio meglio!",
+          "Un momento, per favore. Preparo qualcosa di bello!",
+          "Capito! Glielo preparo subito!"
+        ],
+        "es": [
+          "¡Sí! ¡Déjemelo a mí!",
+          "¡De acuerdo! ¡Haré lo mejor que pueda!",
+          "Un momento, por favor. ¡Prepararé algo bonito!",
+          "¡Entendido! ¡Se lo preparo enseguida!"
+        ]
+      }
+    }
+  },
+  "defaultEmotion": "neutral",
+  "fallbackEmotion": "neutral",
+  "semanticSounds": {
+    "comic": ["sfx_cute", "fx_comic"],
+    "shock": ["fx_shock2"],
+    "angry": ["fx_smack"]
+  },
+  "readiness": "ready",
+  "group": "aa2",
+  "animations": {
+    "neutral": {
+      "canvas": {
+        "width": 76,
+        "height": 134
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/neutral/idle/pearl_frame_001.png",
+          "sprites/neutral/idle/pearl_frame_002.png",
+          "sprites/neutral/idle/pearl_frame_003.png",
+          "sprites/neutral/idle/pearl_frame_004.png"
+        ],
+        "offsets": [
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/neutral/talking/pearl_frame_005.png",
+          "sprites/neutral/talking/pearl_frame_006.png",
+          "sprites/neutral/talking/pearl_frame_007.png",
+          "sprites/neutral/talking/pearl_frame_008.png"
+        ],
+        "offsets": [
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ]
+        ]
+      }
+    },
+    "hand_over_mouth": {
+      "canvas": {
+        "width": 64,
+        "height": 140
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/hand_over_mouth/idle/pearl_frame_013.png",
+          "sprites/hand_over_mouth/idle/pearl_frame_014.png",
+          "sprites/hand_over_mouth/idle/pearl_frame_015.png",
+          "sprites/hand_over_mouth/idle/pearl_frame_016.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/hand_over_mouth/talking/pearl_frame_017.png",
+          "sprites/hand_over_mouth/talking/pearl_frame_018.png",
+          "sprites/hand_over_mouth/talking/pearl_frame_019.png",
+          "sprites/hand_over_mouth/talking/pearl_frame_020.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "crying": {
+      "canvas": {
+        "width": 96,
+        "height": 127
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140,
+          140
+        ],
+        "holdJitterMs": 0,
+        "frames": [
+          "sprites/crying/idle/pearl_frame_021.png",
+          "sprites/crying/idle/pearl_frame_022.png",
+          "sprites/crying/idle/pearl_frame_023.png",
+          "sprites/crying/idle/pearl_frame_021.png",
+          "sprites/crying/idle/pearl_frame_022.png",
+          "sprites/crying/idle/pearl_frame_023.png",
+          "sprites/crying/idle/pearl_frame_024.png",
+          "sprites/crying/idle/pearl_frame_025.png",
+          "sprites/crying/idle/pearl_frame_026.png",
+          "sprites/crying/idle/pearl_frame_024.png",
+          "sprites/crying/idle/pearl_frame_025.png",
+          "sprites/crying/idle/pearl_frame_026.png"
+        ],
+        "offsets": [
+          [
+            8,
+            0
+          ],
+          [
+            13,
+            0
+          ],
+          [
+            12,
+            0
+          ],
+          [
+            8,
+            0
+          ],
+          [
+            13,
+            0
+          ],
+          [
+            12,
+            0
+          ],
+          [
+            8,
+            0
+          ],
+          [
+            13,
+            0
+          ],
+          [
+            12,
+            0
+          ],
+          [
+            8,
+            0
+          ],
+          [
+            13,
+            0
+          ],
+          [
+            12,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/crying/talking/pearl_frame_027.png",
+          "sprites/crying/talking/pearl_frame_028.png",
+          "sprites/crying/talking/pearl_frame_029.png",
+          "sprites/crying/talking/pearl_frame_030.png"
+        ],
+        "offsets": [
+          [
+            8,
+            0
+          ],
+          [
+            8,
+            0
+          ],
+          [
+            8,
+            0
+          ],
+          [
+            8,
+            0
+          ]
+        ]
+      }
+    },
+    "sad_clasped": {
+      "canvas": {
+        "width": 82,
+        "height": 124
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/sad_clasped/idle/pearl_frame_031.png",
+          "sprites/sad_clasped/idle/pearl_frame_032.png",
+          "sprites/sad_clasped/idle/pearl_frame_033.png",
+          "sprites/sad_clasped/idle/pearl_frame_034.png"
+        ],
+        "offsets": [
+          [
+            17,
+            0
+          ],
+          [
+            17,
+            0
+          ],
+          [
+            17,
+            0
+          ],
+          [
+            17,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/sad_clasped/talking/pearl_frame_035.png",
+          "sprites/sad_clasped/talking/pearl_frame_036.png",
+          "sprites/sad_clasped/talking/pearl_frame_037.png",
+          "sprites/sad_clasped/talking/pearl_frame_038.png"
+        ],
+        "offsets": [
+          [
+            17,
+            0
+          ],
+          [
+            17,
+            0
+          ],
+          [
+            17,
+            0
+          ],
+          [
+            17,
+            0
+          ]
+        ]
+      }
+    },
+    "cheeks_blush": {
+      "canvas": {
+        "width": 80,
+        "height": 133
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/cheeks_blush/idle/pearl_frame_039.png",
+          "sprites/cheeks_blush/idle/pearl_frame_040.png",
+          "sprites/cheeks_blush/idle/pearl_frame_041.png",
+          "sprites/cheeks_blush/idle/pearl_frame_042.png"
+        ],
+        "offsets": [
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/cheeks_blush/talking/pearl_frame_043.png",
+          "sprites/cheeks_blush/talking/pearl_frame_044.png",
+          "sprites/cheeks_blush/talking/pearl_frame_045.png",
+          "sprites/cheeks_blush/talking/pearl_frame_046.png"
+        ],
+        "offsets": [
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ]
+        ]
+      }
+    },
+    "pout": {
+      "canvas": {
+        "width": 78,
+        "height": 134
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/pout/idle/pearl_frame_047.png",
+          "sprites/pout/idle/pearl_frame_048.png",
+          "sprites/pout/idle/pearl_frame_049.png",
+          "sprites/pout/idle/pearl_frame_050.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/pout/talking/pearl_frame_051.png",
+          "sprites/pout/talking/pearl_frame_052.png",
+          "sprites/pout/talking/pearl_frame_053.png",
+          "sprites/pout/talking/pearl_frame_054.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    "curious": {
+      "canvas": {
+        "width": 88,
+        "height": 134
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/curious/idle/pearl_frame_055.png",
+          "sprites/curious/idle/pearl_frame_056.png",
+          "sprites/curious/idle/pearl_frame_057.png",
+          "sprites/curious/idle/pearl_frame_058.png"
+        ],
+        "offsets": [
+          [
+            22,
+            0
+          ],
+          [
+            22,
+            0
+          ],
+          [
+            22,
+            0
+          ],
+          [
+            22,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/curious/talking/pearl_frame_059.png",
+          "sprites/curious/talking/pearl_frame_060.png",
+          "sprites/curious/talking/pearl_frame_061.png",
+          "sprites/curious/talking/pearl_frame_062.png"
+        ],
+        "offsets": [
+          [
+            22,
+            0
+          ],
+          [
+            22,
+            0
+          ],
+          [
+            22,
+            0
+          ],
+          [
+            22,
+            0
+          ]
+        ]
+      }
+    },
+    "hands_worried_a": {
+      "canvas": {
+        "width": 76,
+        "height": 135
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/hands_worried_a/idle/pearl_frame_063.png",
+          "sprites/hands_worried_a/idle/pearl_frame_064.png",
+          "sprites/hands_worried_a/idle/pearl_frame_065.png",
+          "sprites/hands_worried_a/idle/pearl_frame_066.png"
+        ],
+        "offsets": [
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/hands_worried_a/talking/pearl_frame_063.png"
+        ],
+        "offsets": [
+          [
+            14,
+            0
+          ]
+        ]
+      }
+    },
+    "hands_worried": {
+      "canvas": {
+        "width": 76,
+        "height": 135
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/hands_worried/idle/pearl_frame_067.png",
+          "sprites/hands_worried/idle/pearl_frame_068.png",
+          "sprites/hands_worried/idle/pearl_frame_069.png",
+          "sprites/hands_worried/idle/pearl_frame_070.png"
+        ],
+        "offsets": [
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/hands_worried/talking/pearl_frame_071.png",
+          "sprites/hands_worried/talking/pearl_frame_072.png",
+          "sprites/hands_worried/talking/pearl_frame_073.png",
+          "sprites/hands_worried/talking/pearl_frame_074.png"
+        ],
+        "offsets": [
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            0
+          ]
+        ]
+      }
+    },
+    "happy_arms": {
+      "canvas": {
+        "width": 124,
+        "height": 132
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          1000
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/happy_arms/idle/pearl_frame_080.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/happy_arms/talking/pearl_frame_081.png",
+          "sprites/happy_arms/talking/pearl_frame_082.png",
+          "sprites/happy_arms/talking/pearl_frame_083.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "reactions": {
+    "gasp": {
+      "canvas": {
+        "width": 64,
+        "height": 144
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/gasp/reaction/pearl_frame_009.png",
+        "sprites/gasp/reaction/pearl_frame_010.png",
+        "sprites/gasp/reaction/pearl_frame_011.png",
+        "sprites/gasp/reaction/pearl_frame_012.png"
+      ],
+      "offsets": [
+        [
+          1,
+          10
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "cheer": {
+      "canvas": {
+        "width": 166,
+        "height": 146
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/cheer/reaction/pearl_frame_075.png",
+        "sprites/cheer/reaction/pearl_frame_076.png",
+        "sprites/cheer/reaction/pearl_frame_077.png",
+        "sprites/cheer/reaction/pearl_frame_078.png",
+        "sprites/cheer/reaction/pearl_frame_079.png"
+      ],
+      "offsets": [
+        [
+          21,
+          14
+        ],
+        [
+          11,
+          15
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          11,
+          0
+        ],
+        [
+          21,
+          14
+        ]
+      ]
+    }
+  },
+  "emotions": {
+    "neutral": {
+      "animation": "neutral"
+    },
+    "happy": {
+      "animation": "happy_arms"
+    },
+    "excited": {
+      "reaction": "cheer",
+      "animation": "happy_arms"
+    },
+    "thinking": {
+      "animation": "hands_worried_a"
+    },
+    "surprised": {
+      "reaction": "gasp",
+      "animation": "hand_over_mouth"
+    },
+    "sad": {
+      "animation": "sad_clasped"
+    },
+    "anxious": {
+      "animation": "hands_worried"
+    },
+    "playful": {
+      "animation": "happy_arms"
+    },
+    "grateful": {
+      "animation": "cheeks_blush"
+    },
+    "laughing": {
+      "reaction": "cheer",
+      "animation": "happy_arms"
+    },
+    "explaining": {
+      "animation": "curious"
+    },
+    "polite": {
+      "animation": "curious"
+    },
+    "relaxed": {
+      "animation": "neutral"
+    },
+    "serious": {
+      "animation": "pout"
+    },
+    "determined": {
+      "animation": "pout"
+    },
+    "angry": {
+      "animation": "pout"
+    },
+    "embarrassed": {
+      "animation": "cheeks_blush"
+    },
+    "crying": {
+      "animation": "crying"
+    }
+  },
+  "unassignedFrames": []
+}

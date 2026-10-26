@@ -151,3 +151,25 @@ All are owner-supplied Capcom material; sources stay untracked in `docs/`.
 Additional shout clips (2026-10-25, D-069), same archive, byte-identical: EN `mia_take2` 0x27E7C0, `guest_m1` 0x247B60, `guest_m2` 0x24DCC0, `guest_m3` 0x253E20; JA `phoenix` 0xB29A0, `guest_f1` 0x1A38C0, `guest_m4` 0x495A0 (all `objection`; guests are unidentified trilogy characters labelled by ear).
 
 | `exclamation_objection_ja` (ui.json) | `ui/exclamations/objection_ja.png` (256×192 RGBA, 12 colours) | Owner-supplied `igiari.jpeg` (512×512 JPEG, black background; copy in `docs/references/igiari.jpeg`; origin not recorded) | © Capcom. Not pixel-identical: exterior black made transparent (flood fill from the edges), cropped, LANCZOS-scaled to 230×192 and centred, colours snapped to the English bubble's palette (D-070). |
+
+## Asset expansion archive (received 2026-10-25)
+
+The owner's collection `extract_assets_ace` (kept outside the repository; read-only source, D-079) contains Spriters Resource rips (DS/DSi AA1/JFA character sheets, credited in-sheet to their rippers, e.g. "Ripped by Shoda"; 3DS and PC Trilogy HD sheets), Trilogy HD location plates, Trilogy UI (investigation cursor, evidence frame, music player), the Trilogy "Original Soundtrack Remastered" (3 discs, 104 MP3) and artbook scans. All © Capcom. Derived runtime files: the four new character packs, `bg_30`–`bg_49`, `ui/status/*`, `ui/music-player/*`, and the locally installed disc 2/3 MP3s (not in Git). Download URLs of the individual rips were not recorded by the owner.
+
+## 2026-10-26 discussion sprites and DS audio provenance
+
+Read-only owner archive `extract_assets_ace`: Miles discussion uses the AA1 DS/DSi `Miles Edgeworth.png` sheet, separate from `(in Court).png`. Franziska uses ten actual animated WebPs from `characters/Franziska`, including Normal_Forward idle/talking. All are © Capcom; individual download URLs remain unrecorded. Explicit PNG derivatives preserve native source pixels/compositing/timing; source hashes and blend/disposal metadata are in extraction reports.
+
+The supplied `game_soundtrack/convert/wav` folder moved externally during work. Final sources: game-labelled Justice for All MP3s (28 exact copies) and Trials and Tribulations `wav` NCSF123 native/default renders (27 sample-identical FLAC derivatives, 32,728 Hz stereo). No source modification, resampling, effects or remastering. Only 55 confidently mapped expansion additions replaced; 25 older valid tracks and 4 uncertain imports preserved. Relative per-track source provenance/hashes are in `scripts/data/ds_audio_migration.json`, never absolute source paths in runtime manifests. See [report](PRESENTATION_DS_MIGRATION.md).
+
+## Targeted corrections (2026-10-26)
+
+All owner archive inputs remain read-only. Franziska profile is exact native JFA Evidence.png crop[643,75,707,139]; 491690.png was inspected and excluded because it contains HD evidence objects. Selection preview copies the existing native discussion pixels into a centered square. Whip uses retained native DS strike frames composed1:1 onto transparent stage canvases; the HD cyan slash GIF/PNG were inspected and excluded (GIF opaque black,20 zero-delay frames). No exact GIF timing claim.
+
+Compound cue sources are owner-supplied `docs/sfx general/sfx-whip.wav` and `sfx-whack.wav`; impact begins400ms after swing. Lightbulb is a byte-identical copy of `docs/sfx general/sfx-lightbulb.wav`, replacing only the realization event mapping. Source transforms/hashes/gains in `characters/franziska/sprites/whip_crack/timed/source.json`.
+
+Only font material found: GBA GS3(JPN) Font.png atlas in `police_extract`, custom glyph order without a character map. Not imported; no authenticity claim is made for the existing DotGothic16 fallback. [Full report](TARGETED_CORRECTIONS.md).
+
+## Repository source folder `assets/` (2026-10-26)
+
+Root `assets/` is read-only source material, never served at runtime; the validator rejects machine paths and paths into it. Used this pass: `other assets/whip/whip effect gif.gif` (whip overlay, timing inferred) and `most used sounds/{everyone,maya,pearl}` (3 new byte copies, the rest already present). `whip effect.png` (HD layered shapes) was inspected and not used.

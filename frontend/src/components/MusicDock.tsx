@@ -12,6 +12,9 @@ import { useSettings } from '../settings/settings.ts'
 import type { Translate } from '../i18n/i18n.ts'
 import { useT } from '../i18n/useT.ts'
 
+/** Seconds before the loop end that the dev "Seam" button seeks to (hear the wrap-around). */
+export const SEAM_AUDITION_LEAD_S = 5
+
 const SOURCE_LABELS = { original: 'music.game', imported: 'music.imported', radio: 'music.radio' } as const
 
 function statusLine(state: MusicEngineState, soundtrack: SoundtrackManifest | null, trackId: string | null, t: Translate): string {
@@ -68,6 +71,13 @@ export function MusicDock({ soundtrack, importPanel, onAudition }: MusicDockProp
   const canPlay = state.status === 'paused' || state.status === 'blocked' || state.status === 'error'
     || (state.status === 'idle' && source !== 'off' && Boolean(onAudition))
 
+  // Dev only: jump to just before the loop end to audition the seam (built-in/imported tracks with a loop).
+  const loopInfo = import.meta.env.DEV && (state.status === 'playing' || state.status === 'paused') ? engine.getPlaybackInfo() : null
+  const auditionSeam = () => {
+    const info = engine.getPlaybackInfo()
+    if (info?.loop) engine.seek(Math.max(0, info.loop.end - SEAM_AUDITION_LEAD_S))
+  }
+
   return (
     <aside className="music-dock" aria-label="Music">
       <div className="music-dock-bar">
@@ -75,6 +85,14 @@ export function MusicDock({ soundtrack, importPanel, onAudition }: MusicDockProp
         <span className="music-dock-status" role="status">{statusLine(state, soundtrack, state.trackId, t)}</span>
         {canPlay && source !== 'off' && <button type="button" onClick={play}>{t('music.play')}</button>}
         {state.status === 'playing' && <button type="button" onClick={() => engine.pause()}>{t('music.pause')}</button>}
+        {loopInfo && (
+          <button type="button" className="music-dock-seam" disabled={!loopInfo.loop} onClick={auditionSeam}
+            title={loopInfo.loop
+              ? `Dev: play from ${SEAM_AUDITION_LEAD_S} s before the loop end (loop ${loopInfo.loop.start.toFixed(2)}-${loopInfo.loop.end.toFixed(2)} s)`
+              : 'Dev: this track has no loop (it restarts from the beginning)'}>
+            {loopInfo.loop ? `Seam (-${SEAM_AUDITION_LEAD_S}s)` : 'No loop'}
+          </button>
+        )}
       </div>
       {/* Always mounted (the engine stops it when Radio is not the active source). */}
       <div className="music-dock-panel" hidden={source !== 'radio'}>

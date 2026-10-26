@@ -1,0 +1,471 @@
+{
+  "edgeworth": {
+    "source": "DS _ DSi - Phoenix Wright_ Ace Attorney - Characters - Miles Edgeworth.png",
+    "sourceSha256": "ddd58355d21a068c0d306353ab9f4dfbc9c39e2dec404d1934698c4a5c5617b8",
+    "method": "Exact source pixels, integer body registration, one union canvas per idle/talk pose",
+    "poses": {
+      "discussion_neutral": {
+        "canvas": [
+          136,
+          174
+        ],
+        "sourceSprites": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "shifts": {
+          "1": [
+            0,
+            0
+          ],
+          "2": [
+            0,
+            0
+          ],
+          "3": [
+            0,
+            0
+          ],
+          "4": [
+            0,
+            0
+          ],
+          "5": [
+            0,
+            0
+          ],
+          "6": [
+            0,
+            0
+          ],
+          "7": [
+            0,
+            0
+          ],
+          "8": [
+            0,
+            0
+          ]
+        },
+        "maxLowerBodyResidualPixels": 0
+      },
+      "discussion_aside": {
+        "canvas": [
+          136,
+          171
+        ],
+        "sourceSprites": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "shifts": {
+          "9": [
+            0,
+            0
+          ],
+          "10": [
+            0,
+            0
+          ],
+          "11": [
+            0,
+            0
+          ],
+          "12": [
+            0,
+            0
+          ],
+          "13": [
+            0,
+            0
+          ],
+          "14": [
+            0,
+            0
+          ],
+          "15": [
+            0,
+            0
+          ],
+          "16": [
+            0,
+            0
+          ]
+        },
+        "maxLowerBodyResidualPixels": 0
+      },
+      "discussion_stern": {
+        "canvas": [
+          136,
+          170
+        ],
+        "sourceSprites": [
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "shifts": {
+          "17": [
+            0,
+            0
+          ],
+          "18": [
+            0,
+            0
+          ],
+          "19": [
+            0,
+            0
+          ],
+          "20": [
+            0,
+            0
+          ],
+          "21": [
+            0,
+            0
+          ],
+          "22": [
+            0,
+            0
+          ],
+          "23": [
+            0,
+            0
+          ],
+          "24": [
+            0,
+            0
+          ]
+        },
+        "maxLowerBodyResidualPixels": 0
+      },
+      "discussion_thinking": {
+        "canvas": [
+          144,
+          169
+        ],
+        "sourceSprites": [
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32
+        ],
+        "shifts": {
+          "25": [
+            0,
+            0
+          ],
+          "26": [
+            0,
+            0
+          ],
+          "27": [
+            0,
+            0
+          ],
+          "28": [
+            0,
+            0
+          ],
+          "29": [
+            0,
+            0
+          ],
+          "30": [
+            0,
+            0
+          ],
+          "31": [
+            0,
+            0
+          ],
+          "32": [
+            0,
+            0
+          ]
+        },
+        "maxLowerBodyResidualPixels": 0
+      },
+      "discussion_sad": {
+        "canvas": [
+          136,
+          174
+        ],
+        "sourceSprites": [
+          33,
+          34,
+          35,
+          36,
+          39,
+          40,
+          41,
+          42
+        ],
+        "shifts": {
+          "33": [
+            0,
+            0
+          ],
+          "34": [
+            0,
+            0
+          ],
+          "35": [
+            0,
+            0
+          ],
+          "36": [
+            0,
+            0
+          ],
+          "39": [
+            0,
+            0
+          ],
+          "40": [
+            0,
+            0
+          ],
+          "41": [
+            0,
+            0
+          ],
+          "42": [
+            0,
+            0
+          ]
+        },
+        "maxLowerBodyResidualPixels": 0
+      },
+      "discussion_crossed": {
+        "canvas": [
+          142,
+          178
+        ],
+        "sourceSprites": [
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58
+        ],
+        "shifts": {
+          "51": [
+            0,
+            0
+          ],
+          "52": [
+            0,
+            0
+          ],
+          "53": [
+            0,
+            0
+          ],
+          "54": [
+            0,
+            0
+          ],
+          "55": [
+            0,
+            0
+          ],
+          "56": [
+            0,
+            0
+          ],
+          "57": [
+            0,
+            0
+          ],
+          "58": [
+            0,
+            0
+          ]
+        },
+        "maxLowerBodyResidualPixels": 0
+      },
+      "discussion_smirk": {
+        "canvas": [
+          136,
+          170
+        ],
+        "sourceSprites": [
+          63,
+          64,
+          65,
+          66,
+          71,
+          72,
+          73,
+          74
+        ],
+        "shifts": {
+          "63": [
+            0,
+            0
+          ],
+          "64": [
+            0,
+            0
+          ],
+          "65": [
+            0,
+            0
+          ],
+          "66": [
+            0,
+            0
+          ],
+          "71": [
+            0,
+            0
+          ],
+          "72": [
+            0,
+            0
+          ],
+          "73": [
+            0,
+            0
+          ],
+          "74": [
+            0,
+            0
+          ]
+        },
+        "maxLowerBodyResidualPixels": 0
+      }
+    }
+  },
+  "franziska": {
+    "sources": [
+      {
+        "source": "AA_Franziska_von_Karma_Crying_2.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 4,
+        "durationMs": 640
+      },
+      {
+        "source": "AA_Franziska_von_Karma_Distain_1.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 9,
+        "durationMs": 7430
+      },
+      {
+        "source": "AA_Franziska_von_Karma_Mocking_1.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 9,
+        "durationMs": 8270
+      },
+      {
+        "source": "AA_Franziska_von_Karma_Mocking_2.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 28,
+        "durationMs": 4390
+      },
+      {
+        "source": "AA_Franziska_von_Karma_Normal_Forward_1.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 9,
+        "durationMs": 7430
+      },
+      {
+        "source": "AA_Franziska_von_Karma_Normal_Forward_2.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 19,
+        "durationMs": 2560
+      },
+      {
+        "source": "AA_Franziska_von_Karma_Pointing_1.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 9,
+        "durationMs": 8090
+      },
+      {
+        "source": "AA_Franziska_von_Karma_Pointing_2.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 19,
+        "durationMs": 2560
+      },
+      {
+        "source": "Franziska-hmph29.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 19,
+        "durationMs": 2560
+      },
+      {
+        "source": "Franziska_cries.webp",
+        "format": "WEBP",
+        "canvas": {
+          "width": 256,
+          "height": 192
+        },
+        "frames": 5,
+        "durationMs": 3330
+      }
+    ],
+    "method": "Pillow/libwebp source disposal/blend composition; unchanged full 256x192 transparent canvas"
+  }
+}

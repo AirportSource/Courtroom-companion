@@ -117,7 +117,7 @@ def event_performance(profile: CharacterProfile, event: Event, language: str,
     beat = Beat(text=line["text"] or "…", emotion=str(line.get("emotion", "")),
                 intensity=float(line.get("intensity", 0.6)), reaction=line.get("reaction"))
     timeline, _ = (director or CharacterDirector()).direct(CharacterReply(beats=[beat]), profile, DirectorState(),
-                                                           language=language)
+                                                           language=language, signatures=False)
     exclamation = line.get("exclamation")
     return {
         "id": event.id, "type": event.type, "source": event.source, "project": event.project,

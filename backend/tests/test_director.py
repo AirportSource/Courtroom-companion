@@ -295,7 +295,11 @@ def test_maya_sfx_data_is_valid(maya):
     from app.characters.repository import SFX_NAMES
 
     assert not [w for w in maya.warnings if "sfx" in w]
+    from app.characters.repository import SHARED_SFX_REACTIONS
+
+    # Maya's own table on top of the shared "everyone" sounds (D-092).
     assert maya.sfx.reactions == {
+        **SHARED_SFX_REACTIONS,
         "shocked": "shock", "shock": "shock", "surprise": "surprise",
         "realization": "realization", "comic": "comic", "emphasis": "emphasis",
     }
@@ -355,4 +359,5 @@ def test_surprise_emotion_fallback_at_moderate_intensity(maya):
 def test_low_anxiety_is_silent(maya):
     timeline, _ = run(maya, reply({"text": "I am a little worried.", "emotion": "anxious", "intensity": 0.35}))
     assert timeline.segments[0].sfx is None
-    assert "SFX suppressed: emotion 'anxious' has no SFX mapping" in timeline.notes[0]
+    # Maya maps strong fear to the shared shock sound (D-092); low anxiety stays under it.
+    assert "SFX suppressed: intensity 0.35 < 0.75" in timeline.notes[0]

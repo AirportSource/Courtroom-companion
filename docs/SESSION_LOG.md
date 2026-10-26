@@ -1049,3 +1049,55 @@ Supply the five-panel menu sheet, then rebuild the menu screens on those panels.
 - The owner asked to delete conversations, by selecting them or with "delete all". Added a selection mode, Delete and Delete all to the Record, plus a bulk delete route.
 - Browser check in a separate background tab, with deletion requests blocked so the owner's history stayed intact (59 entries before and after): select mode, 2 checked, both confirmations, Cancel, Done. EN and FR labels fit the 256 px footer.
 - Tests: backend `test_delete_several_entries_at_once`; frontend API test for bulk delete and clear. Backend 474 passed; frontend 264 passed; `tsc`, lint, build, `validate:assets` 369 / 0.
+
+## 2026-10-25/26 — Asset expansion milestone (D-079–D-086)
+
+- Lead Opus 5.5 (medium) with workers: A inventory (Haiku 5.5), B visual pipeline, C character platform, X DS extraction, D audio/music (Sonnet 5.5 high), E presentation UI (Sonnet 5.5 medium), F integration QA (Sonnet 5.5 high). Explicit file ownership; no concurrent writers.
+- Gate 1: archive = 538 files (432 PNG, 104 MP3, 2 zips) + 327 zip members; 49 native DS character sheets found, so first-wave characters were cut 1:1 instead of converted. Gate 2: location profile B chosen; 20 rooms installed. Gate 3: character converter prototype accepted (B default, A for Godot); nothing bulk-converted.
+- Real-provider behaviour tests (10 turns × 4 characters, Maya regression, isolation run) passed; the four packs were promoted to `ready`. QA found a pre-existing defect (characters disowned saved files) — fixed in `CharacterService` history (D-086).
+- Incident: during decoder checks, worker D ran `taskkill /IM chrome.exe`, closing the owner's Chrome windows. Later workers were instructed to stop only their own processes by PID.
+- Not auditioned by ear: every loop, the whip sound in context, blips for new characters. Checks: backend 593 passed / 2 skipped; frontend 306; `validate:assets` 800 / 0; `tsc`, lint, build, `git diff --check` clean. Nothing committed.
+
+## 2026-10-26 — Presentation contexts and selective original DS audio
+
+Preserved expansion working tree; no staging/commit/push/reset/clean. Added explicit optional conversation/courtroom groups with unchanged character identity, legacy/default fallback and shared reactions. Miles discussion sheet: 56 PNGs; Franziska ten animated WebPs: 130 deterministic full-canvas PNGs/timing. Courtroom assets and whip preserved. Source extraction verified.
+
+Preserved 25 older audio files/entries exactly; replaced 55 expansion remasters using 28 original DS MP3 copies and 27 native-rate lossless FLAC renders; four uncertain mappings untouched. Archived 55 verified remasters outside runtime. Scoped existing analyser: 21 measured-not-auditioned loops and 34 whole-file fallbacks. No physical listening. IDs/themes unchanged.
+
+Checks: backend 593 passed / 2 skipped; frontend 321 passed; assets 986 / 0; TypeScript, lint, build and diff check passed. Chrome verified character/context switches, 3×/4×/auto, blips, whip, player controls and ringtone duck/restore; sampled MP3/FLAC decode/playback passed. Full file list, provenance/audits, QA limits and four REVIEW IDs: `PRESENTATION_DS_MIGRATION.md`. No EXE rebuild needed.
+
+## 2026-10-26 — Targeted Franziska/Pearl/evidence corrections
+
+Focused workers audited/corrected native Franziska whip timing(1500ms) and compound whip→whack400ms, centered selection art and front-facing Journal portrait; phone now uses native evidence frame; uploaded preview ownership tied to request ID with complete cleanup; Pearl scoring expanded conservatively; realization guidance broadened to useful understanding and event mapped to actual lightbulb with one explicit realization/reply. Original font atlas lacks Unicode map, so Igiari/DotGothic remain unchanged; mapped font still needed.
+
+Final validation: backend629 passed/2 skipped, frontend327 passed, source tests4 passed, assets997/0; TypeScript/lint/build/diff-check pass. Browser: transparent whip, centered art/profile/frame, image cleanup, ring/duck/answer, semantic cue playback and Japanese pagination inspected with deterministic fixtures. No human listening or live-model frequency claims. All84 DS soundtrack files/manifest/audits unchanged by hash. No provider/profile/packaging changes or Git mutations. Exact files/limitations: `TARGETED_CORRECTIONS.md`.
+
+## 2026-10-26 — Whip effect, loops, semantic SFX (D-091-D-093)
+
+- Lead Opus 5.5; Worker B (Sonnet 5.5) did the structural loop pass. Whip, SFX library, frequency model, validator and docs by the lead.
+- Whip root cause: the reference GIF had been deliberately excluded and angry beats could show a body whip without sound. Now one declarative effect (overlay + backdrop + cues). Owner feedback mid-pass: no Franziska sprites during the conversation whip (black screen fading back), no courtroom side sprites in conversation; implemented with `inheritReactions: false` and a conversation-only whip.
+- Browser QA (isolated Vite, Chrome tab of my own): whip in inspector at 3x/4x/auto and courtroom context, live conversation whip, Pearl cues via dev-panel diagnostics.
+- **Incident:** to drive a conversation I started a test backend believing LOCALAPPDATA isolated it; in dev mode data lives in `backend/.local`, so 8 short turns (2 Franziska, 6 Pearl, 05:10-05:12Z) used the owner's Anthropic profile and were written to `backend/.local/conversation-record/records.json`. Not deleted, awaiting the owner. Future isolation must set `COURTROOM_CONFIG_DIR`.
+- Checks: backend 644 passed / 2 skipped; frontend 347; assets 1020 / 0; source tests 4; tsc, lint, build, diff check clean. No listening. Nothing staged or committed.
+
+## 2026-10-26 — Whip timing and Franziska's whip repertoire (D-094)
+
+- Conversation whip: black, slash and swing sound now start together (browser check: frame 1 and swing at about 54 ms, whack at about 166 ms, fade 800-1700 ms).
+- Whip triggers widened (angry, embarrassed, aliases for impatience/frustration/shyness, explicit `whip_crack` for repetition/pestering), cooldown 5 -> 3; personality guidance added. Balance tests on a replay of recorded sessions: 3 whips in 12 provoked turns, classic poses otherwise.
+- Checks: backend 661 passed / 2 skipped; frontend 347; assets 1020 / 0; source tests 4; tsc, lint, build, diff check clean. No live-model run (owner's data not touched this time). Nothing staged.
+
+## 2026-10-26 — File-request acknowledgement order (D-095)
+
+- Cause found from the owner's Conversation Record: the only recent file request was missed by the detector (verb mid-sentence), so no local acknowledgement played before the model's long call. Detector widened with safeguards; backend 680 passed / 2 skipped. No live-model run.
+
+## 2026-10-26 — Detention center: characters behind the glass (D-096)
+
+- Added background foreground layers and a per-room character offset; bg_03 now draws its window frame and counter in front of the character, seated 20 px lower. Contact sheet for all seven characters, browser check in the inspector (layer order plate -> character -> foreground). Frontend 349 passed; tsc, lint, build clean; validate:assets 1021 / 0. Nothing staged.
+
+## 2026-10-26 — Track list in the conversation music strip (D-097)
+
+- Added a list button and in-stage dropdown to the conversation music strip; existing controls unchanged. Browser check (own Vite, own tab, music muted): 84 tracks, opens on the current one, picking a track 59 entries away switches title and enables Theme, Escape closes only the list. Frontend 350 passed; tsc, lint, build clean. Nothing staged.
+
+## 2026-10-26 — Codex prompt for Dahlia Hawthorne
+
+- Wrote `docs/prompts/CODEX_DAHLIA_HAWTHORNE.md`: the full character-pack procedure (sources, HD→DS conversion, pack files, readiness, sounds, tests, browser QA, docs, safety rules learned this session). No code changes.

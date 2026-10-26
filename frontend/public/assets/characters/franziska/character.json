@@ -1,0 +1,2569 @@
+{
+  "schemaVersion": 1,
+  "id": "franziska_von_karma",
+  "displayName": "Franziska von Karma",
+  "names": {
+    "en": "Franziska von Karma",
+    "fr": "Franziska von Karma",
+    "ja": "狩魔冥",
+    "it": "Franziska von Karma",
+    "es": "Franziska von Karma"
+  },
+  "anchor": "bottom-center",
+  "render": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  "voice": {
+    "blip": "blip_female"
+  },
+  "courtRecordPortrait": {
+    "src": "portraits/court_record.png",
+    "width": 64,
+    "height": 64
+  },
+  "waiting": {
+    "emotion": "thinking",
+    "animation": "arms_crossed_aside"
+  },
+  "taskAcknowledgements": {
+    "artifact": {
+      "emotion": "determined",
+      "lines": {
+        "en": [
+          "Hmph. Very well. I will handle it.",
+          "Wait a moment. It will be done perfectly.",
+          "Naturally. I never settle for less than perfect.",
+          "Don't hover. I'll take care of it."
+        ],
+        "fr": [
+          "Hmph. Très bien. Je m'en occupe.",
+          "Un instant. Ce sera parfait.",
+          "Naturellement. Je ne me contente jamais de moins que la perfection.",
+          "Ne restez pas à côté de moi. Je m'en charge."
+        ],
+        "ja": [
+          "ふん、いいわ。私がやってあげる。",
+          "少し待ちなさい。完璧に仕上げるわ。",
+          "当然よ。私に妥協はないの。",
+          "そばで見張らないで。私がやるわ。"
+        ],
+        "it": [
+          "Hmph. Molto bene. Ci penso io.",
+          "Un momento. Sarà fatto alla perfezione.",
+          "Naturalmente. Non mi accontento mai di meno della perfezione.",
+          "Non farmi pressione. Me ne occupo io."
+        ],
+        "es": [
+          "Hmph. Muy bien. Yo me encargo.",
+          "Un momento. Quedará perfecto.",
+          "Naturalmente. Nunca me conformo con menos que la perfección.",
+          "No me presiones. Yo me ocupo."
+        ]
+      }
+    }
+  },
+  "defaultEmotion": "neutral",
+  "fallbackEmotion": "neutral",
+  "readiness": "ready",
+  "group": "aa2",
+  "animations": {
+    "arms_crossed": {
+      "canvas": {
+        "width": 118,
+        "height": 132
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          1800,
+          140,
+          140,
+          140
+        ],
+        "holdJitterMs": 1200,
+        "frames": [
+          "sprites/arms_crossed/idle/franziska_frame_001.png",
+          "sprites/arms_crossed/idle/franziska_frame_002.png",
+          "sprites/arms_crossed/idle/franziska_frame_003.png",
+          "sprites/arms_crossed/idle/franziska_frame_002.png"
+        ],
+        "offsets": [
+          [
+            13,
+            0
+          ],
+          [
+            13,
+            0
+          ],
+          [
+            13,
+            0
+          ],
+          [
+            13,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/arms_crossed/talking/franziska_frame_004.png",
+          "sprites/arms_crossed/talking/franziska_frame_005.png",
+          "sprites/arms_crossed/talking/franziska_frame_006.png",
+          "sprites/arms_crossed/talking/franziska_frame_007.png"
+        ],
+        "offsets": [
+          [
+            13,
+            0
+          ],
+          [
+            13,
+            0
+          ],
+          [
+            13,
+            0
+          ],
+          [
+            13,
+            0
+          ]
+        ]
+      }
+    },
+    "whip_coil": {
+      "canvas": {
+        "width": 172,
+        "height": 131
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/whip_coil/idle/franziska_frame_012.png",
+          "sprites/whip_coil/idle/franziska_frame_013.png",
+          "sprites/whip_coil/idle/franziska_frame_014.png",
+          "sprites/whip_coil/idle/franziska_frame_015.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/whip_coil/talking/franziska_frame_016.png",
+          "sprites/whip_coil/talking/franziska_frame_017.png",
+          "sprites/whip_coil/talking/franziska_frame_018.png",
+          "sprites/whip_coil/talking/franziska_frame_019.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "whip_overhead": {
+      "canvas": {
+        "width": 196,
+        "height": 146
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/whip_overhead/idle/franziska_frame_033.png",
+          "sprites/whip_overhead/idle/franziska_frame_034.png",
+          "sprites/whip_overhead/idle/franziska_frame_035.png",
+          "sprites/whip_overhead/idle/franziska_frame_036.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/whip_overhead/talking/franziska_frame_037.png",
+          "sprites/whip_overhead/talking/franziska_frame_038.png",
+          "sprites/whip_overhead/talking/franziska_frame_039.png",
+          "sprites/whip_overhead/talking/franziska_frame_040.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "reach_out": {
+      "canvas": {
+        "width": 288,
+        "height": 133
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/reach_out/idle/franziska_frame_045.png",
+          "sprites/reach_out/idle/franziska_frame_046.png",
+          "sprites/reach_out/idle/franziska_frame_047.png",
+          "sprites/reach_out/idle/franziska_frame_048.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/reach_out/talking/franziska_frame_049.png",
+          "sprites/reach_out/talking/franziska_frame_050.png",
+          "sprites/reach_out/talking/franziska_frame_051.png",
+          "sprites/reach_out/talking/franziska_frame_052.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "lecture_finger": {
+      "canvas": {
+        "width": 154,
+        "height": 109
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/lecture_finger/idle/franziska_frame_060.png",
+          "sprites/lecture_finger/idle/franziska_frame_061.png",
+          "sprites/lecture_finger/idle/franziska_frame_062.png",
+          "sprites/lecture_finger/idle/franziska_frame_063.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/lecture_finger/talking/franziska_frame_064.png",
+          "sprites/lecture_finger/talking/franziska_frame_065.png",
+          "sprites/lecture_finger/talking/franziska_frame_066.png",
+          "sprites/lecture_finger/talking/franziska_frame_067.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "arms_crossed_aside": {
+      "canvas": {
+        "width": 110,
+        "height": 130
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/arms_crossed_aside/idle/franziska_frame_072.png",
+          "sprites/arms_crossed_aside/idle/franziska_frame_073.png",
+          "sprites/arms_crossed_aside/idle/franziska_frame_074.png",
+          "sprites/arms_crossed_aside/idle/franziska_frame_075.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/arms_crossed_aside/talking/franziska_frame_080.png",
+          "sprites/arms_crossed_aside/talking/franziska_frame_081.png",
+          "sprites/arms_crossed_aside/talking/franziska_frame_082.png",
+          "sprites/arms_crossed_aside/talking/franziska_frame_083.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "angry_fists": {
+      "canvas": {
+        "width": 142,
+        "height": 107
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/angry_fists/idle/franziska_frame_088.png",
+          "sprites/angry_fists/idle/franziska_frame_089.png",
+          "sprites/angry_fists/idle/franziska_frame_090.png",
+          "sprites/angry_fists/idle/franziska_frame_091.png"
+        ],
+        "offsets": [
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/angry_fists/talking/franziska_frame_092.png",
+          "sprites/angry_fists/talking/franziska_frame_093.png",
+          "sprites/angry_fists/talking/franziska_frame_094.png",
+          "sprites/angry_fists/talking/franziska_frame_095.png"
+        ],
+        "offsets": [
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            0
+          ]
+        ]
+      }
+    },
+    "glare_closeup": {
+      "canvas": {
+        "width": 166,
+        "height": 192
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/glare_closeup/idle/franziska_frame_096.png",
+          "sprites/glare_closeup/idle/franziska_frame_097.png",
+          "sprites/glare_closeup/idle/franziska_frame_098.png",
+          "sprites/glare_closeup/idle/franziska_frame_099.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/glare_closeup/talking/franziska_frame_100.png",
+          "sprites/glare_closeup/talking/franziska_frame_101.png",
+          "sprites/glare_closeup/talking/franziska_frame_102.png",
+          "sprites/glare_closeup/talking/franziska_frame_103.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "reactions": {
+    "whip_crack": {
+      "canvas": {
+        "width": 256,
+        "height": 192
+      },
+      "fps": 10,
+      "loop": false,
+      "frameDurations": [
+        100,
+        100,
+        100,
+        100,
+        250,
+        200,
+        200,
+        450
+      ],
+      "frames": [
+        "sprites/whip_crack/timed/frame_000.png",
+        "sprites/whip_crack/timed/frame_001.png",
+        "sprites/whip_crack/timed/frame_002.png",
+        "sprites/whip_crack/timed/frame_003.png",
+        "sprites/whip_crack/timed/frame_004.png",
+        "sprites/whip_crack/timed/frame_005.png",
+        "sprites/whip_crack/timed/frame_006.png",
+        "sprites/whip_crack/timed/frame_007.png"
+      ],
+      "effect": {
+        "overlayStartMs": 300,
+        "overlay": {
+          "canvas": {
+            "width": 256,
+            "height": 192
+          },
+          "fps": 25,
+          "loop": false,
+          "frames": [
+            "effects/whip_slash/frame_000.png",
+            "effects/whip_slash/frame_001.png",
+            "effects/whip_slash/frame_002.png",
+            "effects/whip_slash/frame_003.png",
+            "effects/whip_slash/frame_004.png",
+            "effects/whip_slash/frame_005.png",
+            "effects/whip_slash/frame_006.png",
+            "effects/whip_slash/frame_007.png",
+            "effects/whip_slash/frame_008.png",
+            "effects/whip_slash/frame_009.png",
+            "effects/whip_slash/frame_010.png",
+            "effects/whip_slash/frame_011.png",
+            "effects/whip_slash/frame_012.png",
+            "effects/whip_slash/frame_013.png",
+            "effects/whip_slash/frame_014.png",
+            "effects/whip_slash/frame_015.png",
+            "effects/whip_slash/frame_016.png",
+            "effects/whip_slash/frame_017.png",
+            "effects/whip_slash/frame_018.png",
+            "effects/whip_slash/frame_019.png"
+          ]
+        },
+        "cues": [
+          { "atMs": 300, "event": "whip_swing" },
+          { "atMs": 440, "event": "whip_impact" },
+          { "atMs": 700, "event": "whip_swing" },
+          { "atMs": 840, "event": "whip_impact" }
+        ]
+      }
+    },
+    "whip_raise": {
+      "canvas": {
+        "width": 196,
+        "height": 152
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/whip_raise/reaction/franziska_frame_029.png",
+        "sprites/whip_raise/reaction/franziska_frame_030.png",
+        "sprites/whip_raise/reaction/franziska_frame_031.png",
+        "sprites/whip_raise/reaction/franziska_frame_032.png"
+      ],
+      "offsets": [
+        [
+          12,
+          21
+        ],
+        [
+          42,
+          21
+        ],
+        [
+          29,
+          0
+        ],
+        [
+          0,
+          6
+        ]
+      ]
+    },
+    "whip_twirl": {
+      "canvas": {
+        "width": 192,
+        "height": 131
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/whip_twirl/reaction/franziska_frame_008.png",
+        "sprites/whip_twirl/reaction/franziska_frame_009.png",
+        "sprites/whip_twirl/reaction/franziska_frame_010.png",
+        "sprites/whip_twirl/reaction/franziska_frame_011.png"
+      ],
+      "offsets": [
+        [
+          10,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    "arm_flourish": {
+      "canvas": {
+        "width": 288,
+        "height": 150
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/arm_flourish/reaction/franziska_frame_041.png",
+        "sprites/arm_flourish/reaction/franziska_frame_042.png",
+        "sprites/arm_flourish/reaction/franziska_frame_043.png",
+        "sprites/arm_flourish/reaction/franziska_frame_044.png"
+      ],
+      "offsets": [
+        [
+          76,
+          19
+        ],
+        [
+          52,
+          0
+        ],
+        [
+          8,
+          17
+        ],
+        [
+          0,
+          17
+        ]
+      ]
+    },
+    "fists_clench": {
+      "canvas": {
+        "width": 142,
+        "height": 107
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/fists_clench/reaction/franziska_frame_084.png",
+        "sprites/fists_clench/reaction/franziska_frame_085.png",
+        "sprites/fists_clench/reaction/franziska_frame_086.png",
+        "sprites/fists_clench/reaction/franziska_frame_087.png"
+      ],
+      "offsets": [
+        [
+          18,
+          1
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          18,
+          0
+        ]
+      ]
+    }
+  },
+  "emotions": {
+    "neutral": {
+      "animation": "arms_crossed"
+    },
+    "happy": {
+      "animation": "whip_coil"
+    },
+    "excited": {
+      "reaction": "whip_raise",
+      "animation": "whip_overhead"
+    },
+    "thinking": {
+      "animation": "arms_crossed_aside"
+    },
+    "surprised": {
+      "reaction": "fists_clench",
+      "animation": "angry_fists"
+    },
+    "sad": {
+      "animation": "glare_closeup"
+    },
+    "anxious": {
+      "animation": "arms_crossed_aside"
+    },
+    "playful": {
+      "reaction": "whip_twirl",
+      "animation": "whip_coil"
+    },
+    "grateful": {
+      "animation": "whip_coil"
+    },
+    "laughing": {
+      "animation": "whip_overhead"
+    },
+    "explaining": {
+      "animation": "lecture_finger"
+    },
+    "polite": {
+      "animation": "arms_crossed"
+    },
+    "relaxed": {
+      "animation": "whip_coil"
+    },
+    "serious": {
+      "animation": "arms_crossed_aside"
+    },
+    "determined": {
+      "reaction": "arm_flourish",
+      "animation": "reach_out"
+    },
+    "angry": {
+      "animation": "angry_fists"
+    },
+    "suspicious": {
+      "animation": "arms_crossed_aside"
+    },
+    "embarrassed": {
+      "animation": "angry_fists"
+    }
+  },
+  "unassignedFrames": [
+    "sprites/whip_crack/reaction/franziska_frame_020.png",
+    "sprites/whip_crack/reaction/franziska_frame_021.png",
+    "sprites/whip_crack/reaction/franziska_frame_022.png",
+    "sprites/whip_crack/reaction/franziska_frame_023.png",
+    "sprites/whip_crack/reaction/franziska_frame_024.png",
+    "sprites/whip_crack/reaction/franziska_frame_026.png",
+    "sprites/whip_crack/reaction/franziska_frame_027.png",
+    "sprites/whip_crack/reaction/franziska_frame_028.png"
+  ],
+  "defaultPresentation": "conversation",
+  "presentationGroups": {
+    "conversation": {
+      "inheritReactions": false,
+      "reactions": {
+        "whip_crack": {
+          "canvas": {
+            "width": 256,
+            "height": 192
+          },
+          "fps": 10,
+          "loop": false,
+          "frameDurations": [
+            1700
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ]
+          ],
+          "frames": [
+            "conversation/AA_Franziska_von_Karma_Pointing_1/frame_000.png"
+          ],
+          "effect": {
+            "overlayStartMs": 0,
+            "overlay": {
+              "canvas": {
+                "width": 256,
+                "height": 192
+              },
+              "fps": 25,
+              "loop": false,
+              "frames": [
+                "effects/whip_slash/frame_000.png",
+                "effects/whip_slash/frame_001.png",
+                "effects/whip_slash/frame_002.png",
+                "effects/whip_slash/frame_003.png",
+                "effects/whip_slash/frame_004.png",
+                "effects/whip_slash/frame_005.png",
+                "effects/whip_slash/frame_006.png",
+                "effects/whip_slash/frame_007.png",
+                "effects/whip_slash/frame_008.png",
+                "effects/whip_slash/frame_009.png",
+                "effects/whip_slash/frame_010.png",
+                "effects/whip_slash/frame_011.png",
+                "effects/whip_slash/frame_012.png",
+                "effects/whip_slash/frame_013.png",
+                "effects/whip_slash/frame_014.png",
+                "effects/whip_slash/frame_015.png",
+                "effects/whip_slash/frame_016.png",
+                "effects/whip_slash/frame_017.png",
+                "effects/whip_slash/frame_018.png",
+                "effects/whip_slash/frame_019.png"
+              ]
+            },
+            "backdrop": {
+              "color": "#000000",
+              "fadeStartMs": 800,
+              "fadeMs": 900
+            },
+            "cues": [
+              {
+                "atMs": 0,
+                "event": "whip_swing"
+              },
+              {
+                "atMs": 140,
+                "event": "whip_impact"
+              },
+              {
+                "atMs": 400,
+                "event": "whip_swing"
+              },
+              {
+                "atMs": 540,
+                "event": "whip_impact"
+              }
+            ]
+          }
+        }
+      },
+      "animations": {
+        "discussion_forward": {
+          "canvas": {
+            "width": 256,
+            "height": 192
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_000.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_001.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_002.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_003.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_004.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_005.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_006.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_007.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_008.png"
+            ],
+            "frameDurations": [
+              500,
+              100,
+              100,
+              100,
+              3330,
+              100,
+              100,
+              100,
+              3000
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_000.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_001.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_002.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_003.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_004.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_005.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_006.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_007.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_008.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_009.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_010.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_011.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_012.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_013.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_014.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_015.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_016.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_017.png",
+              "conversation/AA_Franziska_von_Karma_Normal_Forward_2/frame_018.png"
+            ],
+            "frameDurations": [
+              160,
+              160,
+              160,
+              160,
+              160,
+              160,
+              160,
+              100,
+              60,
+              30,
+              100,
+              30,
+              160,
+              160,
+              160,
+              160,
+              160,
+              160,
+              160
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_mocking": {
+          "canvas": {
+            "width": 256,
+            "height": 192
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/AA_Franziska_von_Karma_Mocking_1/frame_000.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_1/frame_001.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_1/frame_002.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_1/frame_003.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_1/frame_004.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_1/frame_005.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_1/frame_006.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_1/frame_007.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_1/frame_008.png"
+            ],
+            "frameDurations": [
+              1160,
+              130,
+              130,
+              130,
+              3330,
+              130,
+              130,
+              130,
+              3000
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_000.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_001.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_002.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_003.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_004.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_005.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_006.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_007.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_008.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_009.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_010.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_011.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_012.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_013.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_014.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_015.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_016.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_017.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_018.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_019.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_020.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_021.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_022.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_023.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_024.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_025.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_026.png",
+              "conversation/AA_Franziska_von_Karma_Mocking_2/frame_027.png"
+            ],
+            "frameDurations": [
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              60,
+              110,
+              100,
+              130,
+              30,
+              100,
+              80,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_pointing": {
+          "canvas": {
+            "width": 256,
+            "height": 192
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/AA_Franziska_von_Karma_Pointing_1/frame_000.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_1/frame_001.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_1/frame_002.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_1/frame_003.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_1/frame_004.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_1/frame_005.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_1/frame_006.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_1/frame_007.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_1/frame_008.png"
+            ],
+            "frameDurations": [
+              1160,
+              100,
+              100,
+              100,
+              3330,
+              100,
+              100,
+              100,
+              3000
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_000.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_001.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_002.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_003.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_004.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_005.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_006.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_007.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_008.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_009.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_010.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_011.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_012.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_013.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_014.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_015.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_016.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_017.png",
+              "conversation/AA_Franziska_von_Karma_Pointing_2/frame_018.png"
+            ],
+            "frameDurations": [
+              160,
+              160,
+              160,
+              160,
+              160,
+              160,
+              160,
+              100,
+              60,
+              30,
+              100,
+              30,
+              160,
+              160,
+              160,
+              160,
+              160,
+              160,
+              160
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_disdain": {
+          "canvas": {
+            "width": 256,
+            "height": 192
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/AA_Franziska_von_Karma_Distain_1/frame_000.png",
+              "conversation/AA_Franziska_von_Karma_Distain_1/frame_001.png",
+              "conversation/AA_Franziska_von_Karma_Distain_1/frame_002.png",
+              "conversation/AA_Franziska_von_Karma_Distain_1/frame_003.png",
+              "conversation/AA_Franziska_von_Karma_Distain_1/frame_004.png",
+              "conversation/AA_Franziska_von_Karma_Distain_1/frame_005.png",
+              "conversation/AA_Franziska_von_Karma_Distain_1/frame_006.png",
+              "conversation/AA_Franziska_von_Karma_Distain_1/frame_007.png",
+              "conversation/AA_Franziska_von_Karma_Distain_1/frame_008.png"
+            ],
+            "frameDurations": [
+              500,
+              100,
+              100,
+              100,
+              3330,
+              100,
+              100,
+              100,
+              3000
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/Franziska-hmph29/frame_000.png",
+              "conversation/Franziska-hmph29/frame_001.png",
+              "conversation/Franziska-hmph29/frame_002.png",
+              "conversation/Franziska-hmph29/frame_003.png",
+              "conversation/Franziska-hmph29/frame_004.png",
+              "conversation/Franziska-hmph29/frame_005.png",
+              "conversation/Franziska-hmph29/frame_006.png",
+              "conversation/Franziska-hmph29/frame_007.png",
+              "conversation/Franziska-hmph29/frame_008.png",
+              "conversation/Franziska-hmph29/frame_009.png",
+              "conversation/Franziska-hmph29/frame_010.png",
+              "conversation/Franziska-hmph29/frame_011.png",
+              "conversation/Franziska-hmph29/frame_012.png",
+              "conversation/Franziska-hmph29/frame_013.png",
+              "conversation/Franziska-hmph29/frame_014.png",
+              "conversation/Franziska-hmph29/frame_015.png",
+              "conversation/Franziska-hmph29/frame_016.png",
+              "conversation/Franziska-hmph29/frame_017.png",
+              "conversation/Franziska-hmph29/frame_018.png"
+            ],
+            "frameDurations": [
+              160,
+              160,
+              160,
+              160,
+              160,
+              160,
+              160,
+              100,
+              60,
+              30,
+              100,
+              30,
+              160,
+              160,
+              160,
+              160,
+              160,
+              160,
+              160
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_crying": {
+          "canvas": {
+            "width": 256,
+            "height": 192
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/Franziska_cries/frame_000.png",
+              "conversation/Franziska_cries/frame_001.png",
+              "conversation/Franziska_cries/frame_002.png",
+              "conversation/Franziska_cries/frame_003.png",
+              "conversation/Franziska_cries/frame_004.png"
+            ],
+            "frameDurations": [
+              130,
+              100,
+              1000,
+              100,
+              2000
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frames": [
+              "conversation/AA_Franziska_von_Karma_Crying_2/frame_000.png",
+              "conversation/AA_Franziska_von_Karma_Crying_2/frame_001.png",
+              "conversation/AA_Franziska_von_Karma_Crying_2/frame_002.png",
+              "conversation/AA_Franziska_von_Karma_Crying_2/frame_003.png"
+            ],
+            "frameDurations": [
+              160,
+              160,
+              160,
+              160
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "emotions": {
+        "neutral": {
+          "animation": "discussion_forward"
+        },
+        "happy": {
+          "animation": "discussion_mocking"
+        },
+        "excited": {
+          "animation": "discussion_pointing"
+        },
+        "thinking": {
+          "animation": "discussion_disdain"
+        },
+        "surprised": {
+          "animation": "discussion_forward"
+        },
+        "sad": {
+          "animation": "discussion_crying"
+        },
+        "anxious": {
+          "animation": "discussion_disdain"
+        },
+        "playful": {
+          "animation": "discussion_mocking"
+        },
+        "grateful": {
+          "animation": "discussion_forward"
+        },
+        "laughing": {
+          "animation": "discussion_mocking"
+        },
+        "explaining": {
+          "animation": "discussion_pointing"
+        },
+        "polite": {
+          "animation": "discussion_forward"
+        },
+        "relaxed": {
+          "animation": "discussion_mocking"
+        },
+        "serious": {
+          "animation": "discussion_forward"
+        },
+        "determined": {
+          "animation": "discussion_pointing"
+        },
+        "angry": {
+          "animation": "discussion_pointing"
+        },
+        "suspicious": {
+          "animation": "discussion_disdain"
+        },
+        "embarrassed": {
+          "animation": "discussion_disdain"
+        }
+      },
+      "waiting": {
+        "emotion": "thinking",
+        "animation": "discussion_disdain"
+      }
+    },
+    "courtroom": {
+      "animations": {
+        "arms_crossed": {
+          "canvas": {
+            "width": 118,
+            "height": 132
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              1800,
+              140,
+              140,
+              140
+            ],
+            "holdJitterMs": 1200,
+            "frames": [
+              "sprites/arms_crossed/idle/franziska_frame_001.png",
+              "sprites/arms_crossed/idle/franziska_frame_002.png",
+              "sprites/arms_crossed/idle/franziska_frame_003.png",
+              "sprites/arms_crossed/idle/franziska_frame_002.png"
+            ],
+            "offsets": [
+              [
+                13,
+                0
+              ],
+              [
+                13,
+                0
+              ],
+              [
+                13,
+                0
+              ],
+              [
+                13,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/arms_crossed/talking/franziska_frame_004.png",
+              "sprites/arms_crossed/talking/franziska_frame_005.png",
+              "sprites/arms_crossed/talking/franziska_frame_006.png",
+              "sprites/arms_crossed/talking/franziska_frame_007.png"
+            ],
+            "offsets": [
+              [
+                13,
+                0
+              ],
+              [
+                13,
+                0
+              ],
+              [
+                13,
+                0
+              ],
+              [
+                13,
+                0
+              ]
+            ]
+          }
+        },
+        "whip_coil": {
+          "canvas": {
+            "width": 172,
+            "height": 131
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/whip_coil/idle/franziska_frame_012.png",
+              "sprites/whip_coil/idle/franziska_frame_013.png",
+              "sprites/whip_coil/idle/franziska_frame_014.png",
+              "sprites/whip_coil/idle/franziska_frame_015.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/whip_coil/talking/franziska_frame_016.png",
+              "sprites/whip_coil/talking/franziska_frame_017.png",
+              "sprites/whip_coil/talking/franziska_frame_018.png",
+              "sprites/whip_coil/talking/franziska_frame_019.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "whip_overhead": {
+          "canvas": {
+            "width": 196,
+            "height": 146
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/whip_overhead/idle/franziska_frame_033.png",
+              "sprites/whip_overhead/idle/franziska_frame_034.png",
+              "sprites/whip_overhead/idle/franziska_frame_035.png",
+              "sprites/whip_overhead/idle/franziska_frame_036.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/whip_overhead/talking/franziska_frame_037.png",
+              "sprites/whip_overhead/talking/franziska_frame_038.png",
+              "sprites/whip_overhead/talking/franziska_frame_039.png",
+              "sprites/whip_overhead/talking/franziska_frame_040.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "reach_out": {
+          "canvas": {
+            "width": 288,
+            "height": 133
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/reach_out/idle/franziska_frame_045.png",
+              "sprites/reach_out/idle/franziska_frame_046.png",
+              "sprites/reach_out/idle/franziska_frame_047.png",
+              "sprites/reach_out/idle/franziska_frame_048.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/reach_out/talking/franziska_frame_049.png",
+              "sprites/reach_out/talking/franziska_frame_050.png",
+              "sprites/reach_out/talking/franziska_frame_051.png",
+              "sprites/reach_out/talking/franziska_frame_052.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "lecture_finger": {
+          "canvas": {
+            "width": 154,
+            "height": 109
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/lecture_finger/idle/franziska_frame_060.png",
+              "sprites/lecture_finger/idle/franziska_frame_061.png",
+              "sprites/lecture_finger/idle/franziska_frame_062.png",
+              "sprites/lecture_finger/idle/franziska_frame_063.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/lecture_finger/talking/franziska_frame_064.png",
+              "sprites/lecture_finger/talking/franziska_frame_065.png",
+              "sprites/lecture_finger/talking/franziska_frame_066.png",
+              "sprites/lecture_finger/talking/franziska_frame_067.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "arms_crossed_aside": {
+          "canvas": {
+            "width": 110,
+            "height": 130
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/arms_crossed_aside/idle/franziska_frame_072.png",
+              "sprites/arms_crossed_aside/idle/franziska_frame_073.png",
+              "sprites/arms_crossed_aside/idle/franziska_frame_074.png",
+              "sprites/arms_crossed_aside/idle/franziska_frame_075.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/arms_crossed_aside/talking/franziska_frame_080.png",
+              "sprites/arms_crossed_aside/talking/franziska_frame_081.png",
+              "sprites/arms_crossed_aside/talking/franziska_frame_082.png",
+              "sprites/arms_crossed_aside/talking/franziska_frame_083.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "angry_fists": {
+          "canvas": {
+            "width": 142,
+            "height": 107
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/angry_fists/idle/franziska_frame_088.png",
+              "sprites/angry_fists/idle/franziska_frame_089.png",
+              "sprites/angry_fists/idle/franziska_frame_090.png",
+              "sprites/angry_fists/idle/franziska_frame_091.png"
+            ],
+            "offsets": [
+              [
+                18,
+                0
+              ],
+              [
+                18,
+                0
+              ],
+              [
+                18,
+                0
+              ],
+              [
+                18,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/angry_fists/talking/franziska_frame_092.png",
+              "sprites/angry_fists/talking/franziska_frame_093.png",
+              "sprites/angry_fists/talking/franziska_frame_094.png",
+              "sprites/angry_fists/talking/franziska_frame_095.png"
+            ],
+            "offsets": [
+              [
+                18,
+                0
+              ],
+              [
+                18,
+                0
+              ],
+              [
+                18,
+                0
+              ],
+              [
+                18,
+                0
+              ]
+            ]
+          }
+        },
+        "glare_closeup": {
+          "canvas": {
+            "width": 166,
+            "height": 192
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/glare_closeup/idle/franziska_frame_096.png",
+              "sprites/glare_closeup/idle/franziska_frame_097.png",
+              "sprites/glare_closeup/idle/franziska_frame_098.png",
+              "sprites/glare_closeup/idle/franziska_frame_099.png"
+            ],
+            "offsets": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/glare_closeup/talking/franziska_frame_100.png",
+              "sprites/glare_closeup/talking/franziska_frame_101.png",
+              "sprites/glare_closeup/talking/franziska_frame_102.png",
+              "sprites/glare_closeup/talking/franziska_frame_103.png"
+            ],
+            "offsets": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "emotions": {
+        "neutral": {
+          "animation": "arms_crossed"
+        },
+        "happy": {
+          "animation": "whip_coil"
+        },
+        "excited": {
+          "reaction": "whip_raise",
+          "animation": "whip_overhead"
+        },
+        "thinking": {
+          "animation": "arms_crossed_aside"
+        },
+        "surprised": {
+          "reaction": "fists_clench",
+          "animation": "angry_fists"
+        },
+        "sad": {
+          "animation": "glare_closeup"
+        },
+        "anxious": {
+          "animation": "arms_crossed_aside"
+        },
+        "playful": {
+          "reaction": "whip_twirl",
+          "animation": "whip_coil"
+        },
+        "grateful": {
+          "animation": "whip_coil"
+        },
+        "laughing": {
+          "animation": "whip_overhead"
+        },
+        "explaining": {
+          "animation": "lecture_finger"
+        },
+        "polite": {
+          "animation": "arms_crossed"
+        },
+        "relaxed": {
+          "animation": "whip_coil"
+        },
+        "serious": {
+          "animation": "arms_crossed_aside"
+        },
+        "determined": {
+          "reaction": "arm_flourish",
+          "animation": "reach_out"
+        },
+        "angry": {
+          "animation": "angry_fists"
+        },
+        "suspicious": {
+          "animation": "arms_crossed_aside"
+        },
+        "embarrassed": {
+          "animation": "angry_fists"
+        }
+      },
+      "waiting": {
+        "emotion": "thinking",
+        "animation": "arms_crossed_aside"
+      }
+    }
+  },
+  "selectionPreview": "portraits/selection.png"
+}

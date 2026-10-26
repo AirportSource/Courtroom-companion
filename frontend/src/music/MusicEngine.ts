@@ -9,7 +9,7 @@
 // two sources are never started concurrently, even with racing requests. A request that was
 // superseded before it ran is skipped; one superseded while loading is aborted and its
 // outcome ('aborted') is never published as an error.
-import type { MusicEngineState, MusicError, MusicSource, MusicSourceKind, MusicSourceSetting, SourceState } from './types.ts'
+import type { MusicEngineState, MusicError, MusicSource, MusicSourceKind, MusicSourceSetting, PlaybackInfo, SourceState } from './types.ts'
 
 export interface MusicEngineOptions {
   fadeInMs?: number
@@ -134,6 +134,16 @@ export class MusicEngine {
 
   resume(): void {
     if (this.state.status === 'paused') this.activeSource()?.resume()
+  }
+
+  /** Dev/audition aid: jump inside the current track. No-op for sources without seeking (radio). */
+  seek(seconds: number): void {
+    if (this.state.status === 'playing' || this.state.status === 'paused') this.activeSource()?.seek?.(seconds)
+  }
+
+  /** Dev/audition aid: position, duration and loop region of the current track (null when unavailable). */
+  getPlaybackInfo(): PlaybackInfo | null {
+    return this.state.status === 'playing' || this.state.status === 'paused' ? (this.activeSource()?.getPlaybackInfo?.() ?? null) : null
   }
 
   /** User-gesture replay after 'blocked' (or a failed load). */

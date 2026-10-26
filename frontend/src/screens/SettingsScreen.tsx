@@ -8,7 +8,7 @@ import { audioEngine } from '../engine/audioEngine.ts'
 import { getRingtoneCatalog, previewRingtone, resolveRingtone } from '../engine/ringtones.ts'
 import { playMenuSound } from '../engine/menuSounds.ts'
 import type { SoundId, UiImage } from '../engine/manifestTypes.ts'
-import { bgmPool, contextualPool, resolveProfileTrack, type SoundtrackManifest } from '../music/soundtrack.ts'
+import { bgmPool, contextualPool, resolveProfileTrack, trackListLabel, type SoundtrackManifest } from '../music/soundtrack.ts'
 import type { MusicSourceSetting } from '../music/types.ts'
 import { TEXT_SPEEDS, useSettings, type StageScaling } from '../settings/settings.ts'
 import { LANGUAGES, type Language, type StringKey } from '../i18n/i18n.ts'
@@ -135,8 +135,8 @@ export function SettingsScreen({
             <StageSelect label="Soundtrack track" value={settings.originalTrackId || ''}
               onChange={(value) => updateSettings({ originalTrackId: value })}
               options={[
-                { value: '', label: t('settings.trackDefault', { title: soundtrack.tracks[resolveProfileTrack(soundtrack) ?? '']?.title ?? '—' }) },
-                ...[...bgmPool(soundtrack), ...contextualPool(soundtrack)].map((id) => ({ value: id, label: soundtrack.tracks[id].title })),
+                { value: '', label: t('settings.trackDefault', { title: (() => { const entry = soundtrack.tracks[resolveProfileTrack(soundtrack) ?? '']; return entry ? trackListLabel(entry) : '—' })() }) },
+                ...[...bgmPool(soundtrack), ...contextualPool(soundtrack)].map((id) => ({ value: id, label: trackListLabel(soundtrack.tracks[id]) })),
               ]} />
           </div>
         )}

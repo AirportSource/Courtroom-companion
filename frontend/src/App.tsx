@@ -353,6 +353,7 @@ function App() {
         <ConversationScreen
           key={c.id}
           character={c}
+          presentationContext="conversation"
           background={background}
           testScript={TEST_CONVERSATION}
           talkBackdrop={catalog.ui.images.menu_talk_option ?? null}
@@ -362,7 +363,17 @@ function App() {
           onArtifactsChanged={refreshGeneratedArtifacts}
           fileIcon={catalog.ui.images.court_record_file_document ?? null}
           photoIcon={catalog.ui.images.court_record_photo ?? null}
-          thinkerIcon={catalog.courtRecord?.entries.find((item) => item.id === 'thinker_statue')?.image ?? null}
+          statusWorking={catalog.ui.images.status_magnifier_working ?? null}
+          statusDone={catalog.ui.images.status_magnifier_done ?? null}
+          musicImages={(() => {
+            const img = catalog.ui.images
+            return {
+              note: img.music_player_note ?? null, play: img.music_player_play ?? null, pause: img.music_player_pause ?? null,
+              next: img.music_player_next ?? null, prev: img.music_player_prev ?? null, playHot: img.music_player_play_hot ?? null,
+              pauseHot: img.music_player_pause_hot ?? null, nextHot: img.music_player_next_hot ?? null,
+              prevHot: img.music_player_prev_hot ?? null,
+            }
+          })()}
           phoneIcon={catalog.courtRecord?.entries.find((item) => item.id === 'cellphone_blue')?.image ?? null}
           onExit={toTitle}
           devTools={DEV_TOOLS}

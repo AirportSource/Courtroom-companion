@@ -855,3 +855,116 @@ Entries D-001–D-007 were reconstructed on 2026-10-24 from the existing reposit
   - **Delete** removes the checked entries; **Delete all** removes every entry. Both ask for confirmation in the footer line ("Delete 2 selected?" / "Delete all 59 entries?", Cancel / Delete). Esc cancels the confirmation, then leaves selection mode.
   - Server: `POST /api/conversation-record/delete {ids}` removes several entries in one atomic write (unknown ids skipped, returns `{deleted}`). Delete all reuses `DELETE /api/conversation-record {confirm: true}`.
   - Single-entry delete in the detail view is unchanged; its labels are now translated (5 languages).
+
+## D-079 — Asset expansion: source archive boundary and native-first extraction
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:** the owner's new archive (`extract_assets_ace`, 538 files + 327 zip members; inventory in `ASSET_EXPANSION_INVENTORY.md`, gaps in `ASSET_EXPANSION_GAPS.md`) is read-only source material. Nothing in the runtime references it; files are copied into `frontend/public/assets/` only when integrated. Distribution policy is unchanged (D-071): sprites, backgrounds, UI and SFX stay in the repository as before; soundtrack MP3s stay git-ignored and are installed locally by `scripts/install_ost.py`.
+- **Native first:** the archive's DS/DSi sheets (49 AA1/JFA sheets: solid background, 26–48 colours, 0 % semi-alpha) are native-resolution rips like the Maya sheet (D-027), so characters that have one are cut 1:1 (`scripts/extract_ds_character.py`), never converted. The HD→DS pipeline is reserved for characters that exist only as HD (3DS/PC Trilogy) art.
+
+## D-080 — Character readiness
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:** `character.json` `readiness` is `asset-only` | `partial` | `ready`, capped by the files present (`ready` needs `personality.md` and `performance.json`; absent value is derived). The backend refuses chat for non-ready packs (`CharacterNotReadyError`, 404 with the reason); `COURTROOM_ALLOW_PARTIAL_CHARACTERS=1` allows `partial` for development. Production menus list `ready` only; dev builds also list `partial` with `[WIP]`; `asset-only` is never listed. Optional `group` (aa1/aa2/…) orders the character menu.
+
+## D-081 — Character signature SFX
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:** `performance.json` `sfx.signature` declares character-own sounds (`id`, triggering `reactions`/`emotions`, `minIntensity`, `cooldownTurns`, `maxPerReply`), played as audio event `sfx_<id>`. Resolution: signature (eligible and out of cooldown) → explicit semantic sound → emotion fallback → none. The cooldown is counted in replies in `DirectorState`, kept per (session, character) by `CharacterService`; stateless callers (inbox event lines) pass `signatures=False`. No character id appears in presentation code; the frontend accepts a sound only if it is global or an `sfx_<id>` event in `audio.json`. First use: Franziska's whip (`whip.wav`, copied from `docs/sfx general/sfx-whip.wav`), min intensity 0.85, cooldown 5 replies.
+
+## D-082 — Character isolation and behaviour framework
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:** the system prompt is built from the active pack only; history and director state are keyed per (session, character), so switching characters carries no persona or private history (tests over every ready pack). New characters follow `docs/CHARACTER_BEHAVIOR_FRAMEWORK.md`, which generalises the Maya lesson (D-056): answer the subject → react in character → keep speech style → quirks occasionally → theatre/SFX only when warranted. First wave: Miles Edgeworth, Franziska von Karma, Larry Butz, Pearl Fey (native DS sprites). No cross-character memory system was added.
+
+## D-083 — HD → DS location and character conversion
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision (locations):** `scripts/convert_hd_locations_to_ds.py` profile **B** after stop-gate review: centre 4:3 crop of 1920×1080 plates (panoramas 3840×1080 keep full width → 683×192), AREA downscale by 1/5.625, adaptive softening only when high-frequency energy is above the measured DS range, 224-colour median-cut + k-means palette with light ordered dither, opaque RGB. Mean SSIM vs the area-downscaled source 0.989; no sharpening or contrast change (measurements did not justify it). No HD plate matches an existing DS room, so the comparison is distribution-level. 20 rooms (Trilogy T&T places; `_u` English-signage variants preferred; other suffixes are localisations) are installed as `bg_30`–`bg_49`.
+- **Decision (characters):** `scripts/convert_hd_characters_to_ds.py` uses one platform scale (3DS sheets 0.71 DS px per HD px, measured on Frank Sahwit/Angel Starr DS↔3DS pairs, ±3.5 %), one anchor and one shared palette per animation, binary alpha, animation-level union bounds (no per-frame autocrop). Default profile B (20 colours); A (32) for fine detail such as Godot's vest and visor. PC Trilogy sheets are part atlases without assembly data and are not convertible into talking animations. Only the prototype (Frank, Angel, Godot) was converted; no HD character is in the runtime yet.
+
+## D-084 — Unified status grammar
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:** one indicator for pending work: a 28×28 DS-scale blue magnifier (top-right of the stage, from the archive investigation cursor, exact 4× box reduction, binary alpha) while a request, artifact generation or tool loop runs; the red-checked magnifier for 750 ms after success; nothing on failure/cancel. Artifacts gain an `artifact-done` phase: acknowledgement → blue → check → phone → summon → reply. It replaces the Thinker prop; the character keeps its waiting pose. The archive evidence frame is a different (Trilogy) design, so the native 70×70 DS frame stays.
+
+## D-085 — Trilogy soundtrack, batch loop analysis, conversation music
+- **Status:** Accepted
+- **Date:** 2026-10-25
+- **Decision:** the archive soundtrack is the 3-disc Trilogy remaster. Discs 2–3 are installed as `original/d2-NN-*` / `d3-NN-*` (git-ignored); disc 1 does not replace the 25 PWAA encodes. 84 runtime tracks, 19 manifest-only. `scripts/analyse_loops.py` re-implements the D-044 metrics; loops carry `method` and `status: "measured_not_auditioned"`, unloopable tracks `loop: null` with a `loopReason`; per-track gain normalises toward −15 LUFS. Re-measurement showed the five D-048 finishing-pass loops do not reproduce their documented metrics: Maya's was replaced by a passing loop, the other four are kept and flagged for listening (D-048 is not rewritten).
+- **Conversation music policy:** live override > Settings fixed track > character theme (`soundtrack.json` profile = character id). The override lasts for that conversation with that character, is never persisted, and applies only to the Game-music source. A compact in-stage strip (note tab above the dialogue box; downscaled Trilogy music-player icons) offers prev / play-pause / next / back-to-theme.
+
+## D-086 — First-wave readiness, saved-file history note, whip tuning
+- **Status:** Accepted
+- **Date:** 2026-10-26
+- **Decision:** after real-provider behaviour tests (10 unrelated turns each, Anthropic Sonnet 5.5) and a Maya→Edgeworth→Franziska→Maya isolation run, Edgeworth, Franziska, Larry and Pearl are `ready`: they answered every subject, showed no catchphrase spam or cross-character bleed, and stayed recognisable. QA found that a character later disowned a file it had saved, because the stored assistant history held only the reply JSON; the history entry now ends with `[File saved and delivered to the user: <name>]` when a turn saved an artifact (affects every character, including Maya). Franziska's whip never fired in 25 natural replies, so `angry` is now a trigger and the threshold is 0.8; the 5-reply cooldown is unchanged. The dev `[WIP]` marker is now a prefix so truncated names keep it.
+
+## D-087 — Identity and explicit presentation context
+- **Status:** Accepted
+- **Date:** 2026-10-26
+- **Decision:** optional `defaultPresentation` and `presentationGroups` extend existing character packs. The app explicitly requests conversation; inspector can select courtroom independently of background. Requested group → default group → legacy pack. Selected-group stable poses remain isolated; group reactions override shared reactions. The existing semantic resolver/player receives a view of the same character ID. Miles and Franziska get discussion groups; courtroom assets, personality, voices, history and director semantics are retained. WebP sources are decoded/composited to explicit PNG frames with original timing and fixed canvas; no browser-controlled animated image playback.
+- **Evidence:** 11 new presentation tests, deterministic extraction verification, Chrome scales/context switching. Details: `PRESENTATION_DS_MIGRATION.md`.
+
+## D-088 — Selective original DS audio migration
+- **Status:** Accepted; human listening pending
+- **Date:** 2026-10-26
+- **Decision:** preserve the current bytes and entire manifest metadata of all 25 pre-expansion runtime tracks. Of 59 expansion remaster imports, 55 have explicit same-game mappings: 28 DS JFA MP3 byte copies and 27 NCSF123 T&T WAV→lossless FLAC derivatives at native 32,728 Hz. Four uncertain mappings remain untouched. Logical IDs and profiles remain unchanged. Exactly 55 superseded remasters are SHA-verified local backups outside runtime. Replacement gains are unity, with remaster normalization/loops discarded. Existing analyser ran only on replacements: 21 measured-not-auditioned loops, 34 whole-file fallbacks. No human listening claim. Source folders are read-only. Full evidence: `scripts/data/ds_audio_migration.json`, `scripts/data/ds_loop_analysis.json`.
+- **Packaging:** existing whole-directory runtime asset copy/exclusion handles the added frames and FLAC; no packaging rewrite or EXE rebuild.
+
+## D-089 — Targeted native presentation and preview lifetime corrections
+- **Status:** Accepted
+- **Date:** 2026-10-26
+- **Decision:** preserve current architecture/presentation groups. Franziska gets an optional generic `selectionPreview` asset, exact native front-facing record portrait, and existing DS whip pixels on a transparent256×192 canvas with authored per-frame durations totaling1500ms. A single deterministic PCM cue contains whip0ms→whack400ms, preserving signature anti-spam without JS timers. Ready phone reuses `EvidenceTile`. Submitted evidence preview is owned by request ID and released on completion/error/cancel/navigation/unmount independently of pending attachments; stale completions cannot release newer previews.
+- **Limits:** the reference GIF has no valid frame delays, so exact DS timing is not claimed; human listening remains pending. See `TARGETED_CORRECTIONS.md`.
+
+## D-090 — Meaningful realization, Pearl scoring and unmapped font safety
+- **Status:** Accepted; official font integration awaiting mapping
+- **Date:** 2026-10-26
+- **Decision:** keep existing semantic sound vocabulary. Meaningful understanding/useful-detail uptake may request realization without theatrical intensity; duplicate explicit realization is capped at one per reply, with other explicit semantics preserved. The event now uses supplied lightbulb WAV instead of the different realization WAV. Pearl-specific thresholds add soft-transition and comic cues while ordinary/sensitive beats remain quiet. No keyword/random trigger system. The supplied font PNG has custom glyph order and no Unicode map; keep Igiari +75% DotGothic16 until an authoritative map or mapped font is available, rather than displaying incorrectly mapped kanji.
+
+## D-091 — Complete whip effect; conversation never shows courtroom side sprites
+- **Status:** Accepted; human listening pending
+- **Date:** 2026-10-26
+- **Root cause of the missing effect:** the D-089 pass inspected the reference `assets/other assets/whip/whip effect gif.gif` and deliberately did not import it (opaque black substrate, zero delays), so only Franziska's body frames played. Separately, `emotions.angry.reaction = whip_crack` made the body whip play on angry beats while the whip sound was gated by the signature rules, so partial whips (body without sound) were possible. The root `assets/` folder was not part of the problem: no runtime path ever pointed there.
+- **Decision:** a reaction can declare an `effect` (character.json): a full-stage overlay clip, an optional `backdrop` (colour layer, opaque then fading out) and sound `cues` (audio events), all timed from the reaction start by one pure schedule (`engine/reactionEffect.ts`) and one timer chain that clears on completion, key change or unmount. The GIF is decoded deterministically (`scripts/extract_whip_effect.py`: composited frames, black to alpha, x0.8 to 256x192, binary alpha, shared 32-colour palette) into `characters/franziska/effects/whip_slash/` (20 frames). Timing is inferred (40 ms per frame; the GIF has no valid delays). Cues: `whip_swing` (sfx-whip) at 300 ms, `whip_impact` (sfx-whack) at 440 ms, again at 700/840 ms for the second lash.
+- **Signature ownership:** `sfx.signature[].performs` names the reaction the signature is performed with. When the signature fires, the director sets that reaction and no separate sound (the cues carry it); when it is not eligible the reaction is dropped, so the whip is always complete or absent. Angry is an emotion, not a whip: no emotion binding implies `whip_crack`.
+- **Conversation vs courtroom (owner feedback):** conversation must never use courtroom side-view sprites. Presentation groups can set `inheritReactions: false` (Franziska, Edgeworth conversation groups), so the shared courtroom reactions are not available in conversation. Franziska's conversation `whip_crack` shows a black screen with the slash, then fades (1100 to 2000 ms, ease-in) back to her front-facing angry pose, like eyes opening again. The courtroom group keeps the side-view whip body with the same overlay and cues.
+- The previous compound `effects/whip_crack.wav` stays on disk and registered as `fx_whip`, but is no longer a semantic event.
+
+## D-092 — Shared semantic SFX library and frequency model
+- **Status:** Accepted; human listening pending
+- **Date:** 2026-10-26
+- **Decision:** global names gain `angry`, `flabbergasted`, `encouragement`; source categories map by alias (`scared`->shock, `insightful`->realization, `you_can_do_it`->encouragement). Every character with an `sfx` block may request the shared names explicitly (character tables add/override; `null` removes). Concrete sound resolution is frontend presentation: character.json `semanticSounds` -> audio.json `semanticSounds` (shared pools) -> global event `sfx_<name>`; pools rotate so a file never repeats back to back.
+- **Frequency (director, deterministic, no randomness):** explicit model requests are strong matches (only the one-realization-per-reply cap applies); emotion fallbacks obey per-emotion thresholds, `maxPerReply`, optional `fallbackCooldownTurns`, optional `categoryCooldownTurns`, and a drought allowance (`droughtTurns`, `droughtBonus`) that lowers thresholds after silent replies. Defaults keep previous behaviour for packs that do not opt in.
+- **Pearl root cause:** live Pearl replies sit at intensity 0.3-0.6, while every Pearl threshold started at 0.65 and anxious/embarrassed/determined/angry had no mapping, so nearly nothing fired. Thresholds now follow her range (0.5-0.6), with fallback cooldown 1, category cooldown 1, drought 3. Pearl: comic -> meow/badum, shock -> shock2, angry -> smack.
+- Maya: comic pool meow/badum, anxious->shock at 0.75, playful 0.65, drought 4. Realization stays model-driven with clearer prompt guidance (corrections, clarifications, missing pieces, deductions).
+
+## D-093 — Structural loop pass for DS-original tracks
+- **Status:** Accepted; not auditioned
+- **Date:** 2026-10-26
+- **Decision:** the D-044 envelope test rejected DS renders that repeat musically but not waveform-identically. A structural analyser (`scripts/analyse_loops_structural.py`, evidence `scripts/data/ds_loop_analysis_v2.json`) finds the repeat lag from chroma self-similarity, prefers the latest musically valid phase that passes a seam gate, and slides points to low-click positions. 51 of 55 DS replacements now loop (4 whole-file with reasons). Turnabout Sisters 2001 moves from 51.50-125.36 s (77.8% heard before the first loop-back) to 73.94-147.80 s (91.7%), the composition's own second return. All new loops are `measured_not_auditioned`. Pre-expansion and REVIEW entries are untouched (evidence only). `scripts/migrate_ds_audio.py --finalize-analysis` still asserts the v1 results and is out of date.
+
+## D-094 — The whip is part of Franziska's repertoire; conversation lash starts at once
+- **Status:** Accepted; live-model frequency not yet measured
+- **Date:** 2026-10-26
+- **Owner feedback:** the black screen arrived before the whip was used; the whip must be part of the character (impatience, anger, shyness/fluster, frustration, being pestered or made to repeat herself), balanced with her classic poses, as in the games.
+- **Timing:** the conversation whip now starts the black backdrop, the first slash frame and the swing sound together (0 ms); impacts at 140/540 ms, second swing at 400 ms; fade 800-1700 ms. The courtroom version keeps its 300 ms body wind-up.
+- **Triggers:** signatures accept `emotionMinIntensities`; Franziska's whip fires on angry >= 0.65 and embarrassed >= 0.6 (aliases: impatient, frustrated, exasperated, fed_up -> angry; shy, bashful, flustered -> embarrassed), on emphasis >= 0.75, and whenever the model requests `whip_crack` itself (repetition, pestering, wasted time), at any intensity. Cooldown 3 silent replies (was 5), max one per reply. Her personality tells the model when to lash and when to stay classic; never at real distress.
+- **Balance evidence:** live recordings show her provoked replies at angry 0.6-0.85 / embarrassed 0.45-0.65, calm ones never angry. A 12-turn provocation replay gives 3 whips and 9 classic beats; calm or mild beats (angry 0.6, serious, explaining, playful, sad) stay classic.
+
+## D-095 — File requests recognised wherever the verb is
+- **Status:** Accepted
+- **Date:** 2026-10-26
+- **Problem (owner):** for file requests the character often thought first, then acknowledged and delivered, so the phone felt pointless. The local acknowledgement (shown before the model call ends) only plays when `artifacts/workload.py` recognises a file request. Its rule required the creation verb at the start of a sentence, so the owner's real request "I need you to find the best police academies in France on the internet and generate an md file to save them" was classed as dialogue: no acknowledgement, the model thought, then the reply arrived with the file.
+- **Decision:** two extra recognition paths, used only when no how-to, explanation, negation or past-work marker is present: (1) a creation verb anywhere with a file target ("... and generate an md file"); (2) an explicit output format on its own ("as a markdown file", "into a file", "dans un fichier", "sous forme de fichier", "in un file", "en un archivo"). Existing request rules and negatives are unchanged; 19 new positive and 9 new negative cases. The owner's recorded history now has the file turn detected and no false positives.
+
+## D-096 — Background foreground layers; seated characters in the detention center
+- **Status:** Accepted
+- **Date:** 2026-10-26
+- **Problem (owner):** in the detention center (bg_03) characters stood in front of the visitor window; they should sit behind it, belly and waist hidden by the glass frame and counter.
+- **Decision:** backgrounds may declare `foreground` (a same-size layer drawn above the character, below effects and UI) and `characterOffsetY` (extra downward shift for that room). bg_03 gets `background_03_foreground.png`, cut 1:1 from the plate by `scripts/make_background_foreground.py` (frame x 0-13 and 240-255, sill/frame/counter from y 153), and `characterOffsetY: 20`, chosen from a contact sheet of all seven characters (waist hidden, shoulders and chest visible, chair back visible behind them). Generic: any room can opt in; others are unchanged.
+
+## D-097 — Track list in the conversation music strip
+- **Status:** Accepted
+- **Date:** 2026-10-26
+- **Decision:** the strip keeps prev / play-pause / next / theme and gains a list button that opens an in-stage track menu (stage pixels, DS frame, above the strip; not a native OS select, which would leave the pixel style). It lists the same selectable pool as next/prev, in player order, with the game suffix; the current track is marked and scrolled into view with keyboard focus, the character's theme is starred. Picking a track uses the existing `select` override policy (no new playback path); arrow keys move, Enter picks, Escape closes the list only. Labels in EN/FR/JA/IT/ES.

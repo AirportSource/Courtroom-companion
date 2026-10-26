@@ -1,0 +1,89 @@
+{
+  "source": "AA_Franziska_von_Karma_Crying_2.webp",
+  "sourceSha256": "3ed5c26eaf238ad101256587f17a24cb5b47625669de5afd7433b0fb4ec38064",
+  "format": "WEBP",
+  "canvas": {
+    "width": 256,
+    "height": 192
+  },
+  "animated": true,
+  "frameCount": 4,
+  "loop": 0,
+  "webpFrameControls": [
+    {
+      "x": 80,
+      "y": 22,
+      "width": 98,
+      "height": 170,
+      "durationMs": 160,
+      "disposeToBackground": false,
+      "blend": false
+    },
+    {
+      "x": 112,
+      "y": 64,
+      "width": 31,
+      "height": 17,
+      "durationMs": 160,
+      "disposeToBackground": false,
+      "blend": true
+    },
+    {
+      "x": 112,
+      "y": 64,
+      "width": 31,
+      "height": 17,
+      "durationMs": 160,
+      "disposeToBackground": false,
+      "blend": true
+    },
+    {
+      "x": 112,
+      "y": 64,
+      "width": 31,
+      "height": 17,
+      "durationMs": 160,
+      "disposeToBackground": false,
+      "blend": true
+    }
+  ],
+  "frames": [
+    {
+      "file": "frame_000.png",
+      "durationMs": 160,
+      "rgbaSha256": "17ce886f897940b1e580ca72836b15047d3e88faa3a94d54618efe1db2473552",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_001.png",
+      "durationMs": 160,
+      "rgbaSha256": "f2b9586a8469003f2b6f7d5e3dac19ed062383b4a8f74500ec2e6ed20e0ead51",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_002.png",
+      "durationMs": 160,
+      "rgbaSha256": "6b008056bdfd1da845d9d9977a8da6eb6414b15d3dd6dc3c14f99a93cd444ae8",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_003.png",
+      "durationMs": 160,
+      "rgbaSha256": "f2b9586a8469003f2b6f7d5e3dac19ed062383b4a8f74500ec2e6ed20e0ead51",
+      "alphaRange": [
+        0,
+        255
+      ]
+    }
+  ],
+  "method": "Pillow composited RGBA full-canvas; no crop or resize"
+}

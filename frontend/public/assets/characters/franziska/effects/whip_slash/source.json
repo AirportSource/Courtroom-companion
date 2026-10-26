@@ -1,0 +1,114 @@
+{
+  "method": "GIF composited per frame (disposal 1), black substrate -> alpha (max RGB, un-premultiplied), premultiplied BOX downscale x0.80 to 320x192, centre 256x192 crop, binary alpha >= 128, shared 32-colour palette",
+  "source": "assets/other assets/whip/whip effect gif.gif",
+  "sourceSha256": "2cc2704ec76b13817fdcaaf50c51355f890a1ac5ad22483188c110ef1981e23b",
+  "sourceCanvas": [
+    400,
+    240
+  ],
+  "sourceFrameDelaysMs": "all 0 (invalid); timing below is inferred",
+  "frameMs": 40,
+  "timingInferred": true,
+  "frames": [
+    {
+      "file": "frame_000.png",
+      "opaquePixels": 352,
+      "sha256": "b8e4d46559af356a70e05738474dc69e7ef6cbb7a3a59307efdbc6f565d33613"
+    },
+    {
+      "file": "frame_001.png",
+      "opaquePixels": 364,
+      "sha256": "b30137ea1c4f9c66c1feceab273b0520ecee47904dbb0e62d0ec65db2708b8a6"
+    },
+    {
+      "file": "frame_002.png",
+      "opaquePixels": 3420,
+      "sha256": "4a7f96d2372791cca0d1429e1b2c4ebb216df189ff2dfdfff717dab189456e94"
+    },
+    {
+      "file": "frame_003.png",
+      "opaquePixels": 3399,
+      "sha256": "d072311e101d73e0db36d60d6b6141e49069c3b234cfe7177afe0ccb79ad6c20"
+    },
+    {
+      "file": "frame_004.png",
+      "opaquePixels": 2702,
+      "sha256": "817985ce1b848d9d06b3fe5964bce802bd2852648591f2e341e71dd1b00e29ac"
+    },
+    {
+      "file": "frame_005.png",
+      "opaquePixels": 2699,
+      "sha256": "a4b704cc5114666edb2658fbf99bc64c77b6ad93a6557a0cf6cd58380772db3b"
+    },
+    {
+      "file": "frame_006.png",
+      "opaquePixels": 259,
+      "sha256": "28a3cd2cf99fe883d0cff30eac4c4e144c771b6a894c357f0449836fe469fbee"
+    },
+    {
+      "file": "frame_007.png",
+      "opaquePixels": 259,
+      "sha256": "28a3cd2cf99fe883d0cff30eac4c4e144c771b6a894c357f0449836fe469fbee"
+    },
+    {
+      "file": "frame_008.png",
+      "opaquePixels": 0,
+      "sha256": "4000e6498556cafd7d63e3369c1449a94f03bcdb11c5606bd2b0a67ae42f0327"
+    },
+    {
+      "file": "frame_009.png",
+      "opaquePixels": 0,
+      "sha256": "4000e6498556cafd7d63e3369c1449a94f03bcdb11c5606bd2b0a67ae42f0327"
+    },
+    {
+      "file": "frame_010.png",
+      "opaquePixels": 352,
+      "sha256": "c7b502a1a459eb7fd14fd14ba545fd2552b226246dd093b2b43a42499ce81694"
+    },
+    {
+      "file": "frame_011.png",
+      "opaquePixels": 3420,
+      "sha256": "f06158927eeb6fc6bcd1731608f79a0285d8b560ad98edcfb55262a808cb9e15"
+    },
+    {
+      "file": "frame_012.png",
+      "opaquePixels": 3422,
+      "sha256": "057cdc194fa74d072d18335719a2fbd7d1ee66aa69d6d487623fcdd6d4936cbb"
+    },
+    {
+      "file": "frame_013.png",
+      "opaquePixels": 2703,
+      "sha256": "40200f60199127dda9c78a3f728424eeef72456c65e718e1ae0ea626959fa2c6"
+    },
+    {
+      "file": "frame_014.png",
+      "opaquePixels": 2701,
+      "sha256": "8aac8f75b2ad9354fb7ff9e39fbabb03d7baa0b0cf93d71eabda081649a48dc4"
+    },
+    {
+      "file": "frame_015.png",
+      "opaquePixels": 258,
+      "sha256": "7cd6a11bc78b77aa2a1d4f3277767344ad9a0e3623a1b23fe4c90f72399f8a25"
+    },
+    {
+      "file": "frame_016.png",
+      "opaquePixels": 258,
+      "sha256": "7cd6a11bc78b77aa2a1d4f3277767344ad9a0e3623a1b23fe4c90f72399f8a25"
+    },
+    {
+      "file": "frame_017.png",
+      "opaquePixels": 210,
+      "sha256": "9f1b21613a51aa08843fb91487fd17c9c43dc83bc71b432dddacce75d3185e84"
+    },
+    {
+      "file": "frame_018.png",
+      "opaquePixels": 0,
+      "sha256": "4000e6498556cafd7d63e3369c1449a94f03bcdb11c5606bd2b0a67ae42f0327"
+    },
+    {
+      "file": "frame_019.png",
+      "opaquePixels": 0,
+      "sha256": "4000e6498556cafd7d63e3369c1449a94f03bcdb11c5606bd2b0a67ae42f0327"
+    }
+  ]
+}

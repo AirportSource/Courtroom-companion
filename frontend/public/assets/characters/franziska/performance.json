@@ -1,0 +1,473 @@
+{
+  "schemaVersion": 1,
+  "director": {
+    "expressiveness": 0.7,
+    "maxBeatsPerReply": 2,
+    "maxReactionsPerReply": 1,
+    "reactionCooldownMs": 18000,
+    "reactionMinIntensity": 0.7,
+    "minPoseHoldMs": 1500,
+    "strongChangeIntensity": 0.7,
+    "msPerChar": 40
+  },
+  "sfx": {
+    "maxPerReply": 1,
+    "minIntensity": 0.8,
+    "reactions": {
+      "shock": "shock",
+      "surprise": "surprise",
+      "realization": "realization",
+      "emphasis": "emphasis"
+    },
+    "emotions": {
+      "surprised": "surprise"
+    },
+    "emotionMinIntensities": {
+      "surprised": 0.7
+    },
+    "signature": [
+      {
+        "id": "whip",
+        "performs": "whip_crack",
+        "reactions": [
+          "whip",
+          "whip_crack",
+          "emphasis"
+        ],
+        "emotions": [
+          "angry",
+          "embarrassed"
+        ],
+        "minIntensity": 0.75,
+        "emotionMinIntensities": {
+          "angry": 0.65,
+          "embarrassed": 0.6
+        },
+        "cooldownTurns": 3,
+        "maxPerReply": 1
+      }
+    ]
+  },
+  "gestures": {
+    "arms_crossed": {
+      "animation": "arms_crossed",
+      "emotions": [
+        "neutral",
+        "polite",
+        "serious",
+        "explaining",
+        "suspicious"
+      ]
+    },
+    "whip_in_hand": {
+      "animation": "whip_coil",
+      "emotions": [
+        "relaxed",
+        "happy",
+        "grateful",
+        "playful",
+        "neutral"
+      ]
+    },
+    "whip_overhead": {
+      "animation": "whip_overhead",
+      "emotions": [
+        "excited",
+        "laughing",
+        "playful"
+      ]
+    },
+    "lecture": {
+      "animation": "lecture_finger",
+      "emotions": [
+        "explaining",
+        "serious",
+        "determined",
+        "neutral"
+      ]
+    },
+    "reach": {
+      "animation": "reach_out",
+      "emotions": [
+        "determined",
+        "explaining",
+        "excited"
+      ]
+    },
+    "look_aside": {
+      "animation": "arms_crossed_aside",
+      "emotions": [
+        "thinking",
+        "suspicious",
+        "serious",
+        "anxious",
+        "embarrassed"
+      ]
+    },
+    "glare": {
+      "animation": "glare_closeup",
+      "emotions": [
+        "angry",
+        "sad",
+        "serious"
+      ]
+    },
+    "clenched_fists": {
+      "animation": "angry_fists",
+      "emotions": [
+        "angry",
+        "embarrassed",
+        "surprised"
+      ]
+    }
+  },
+  "intensityVariants": {
+    "angry": [
+      {
+        "maxIntensity": 0.6,
+        "animation": "arms_crossed"
+      },
+      {
+        "maxIntensity": 1,
+        "animation": "angry_fists"
+      }
+    ],
+    "laughing": [
+      {
+        "maxIntensity": 0.5,
+        "animation": "whip_coil"
+      },
+      {
+        "maxIntensity": 1,
+        "animation": "whip_overhead"
+      }
+    ]
+  },
+  "emotionAliases": {
+    "joy": "happy",
+    "joyful": "happy",
+    "cheerful": "happy",
+    "pleased": "happy",
+    "satisfied": "happy",
+    "proud": "happy",
+    "smug": "playful",
+    "confident": "relaxed",
+    "calm": "neutral",
+    "composed": "neutral",
+    "worried": "anxious",
+    "nervous": "anxious",
+    "scared": "anxious",
+    "afraid": "anxious",
+    "flustered": "embarrassed",
+    "curious": "thinking",
+    "pondering": "thinking",
+    "reflective": "thinking",
+    "shocked": "surprised",
+    "astonished": "surprised",
+    "teasing": "playful",
+    "amused": "playful",
+    "sarcastic": "playful",
+    "mocking": "playful",
+    "thankful": "grateful",
+    "stern": "serious",
+    "focused": "serious",
+    "resolute": "determined",
+    "upset": "sad",
+    "unhappy": "sad",
+    "sorrowful": "sad",
+    "irritated": "angry",
+    "annoyed": "angry",
+    "furious": "angry",
+    "enraged": "angry",
+    "impatient": "angry",
+    "frustrated": "angry",
+    "exasperated": "angry",
+    "fed_up": "angry",
+    "shy": "embarrassed",
+    "bashful": "embarrassed",
+    "doubtful": "suspicious",
+    "skeptical": "suspicious"
+  },
+  "reactionAliases": {
+    "whip": "whip_crack",
+    "lash": "whip_crack",
+    "crack": "whip_crack",
+    "twirl": "whip_twirl",
+    "raise": "whip_raise",
+    "flourish": "arm_flourish",
+    "shock": "fists_clench",
+    "shocked": "fists_clench",
+    "gasp": "fists_clench"
+  },
+  "errorLine": {
+    "text": "What was that? Speak clearly and say it again. I do not repeat myself, and neither should you.",
+    "emotion": "angry",
+    "translations": {
+      "fr": "Quoi ? Parle clairement et répète. Je ne me répète pas, et toi non plus.",
+      "ja": "なによ？ はっきり、もう一度言いなさい。",
+      "it": "Che cosa? Parla chiaro e ripeti. Io non mi ripeto, e nemmeno tu dovresti.",
+      "es": "¿Qué? Habla claro y repítelo. Yo no me repito, y tú tampoco deberías."
+    }
+  },
+  "eventLines": {
+    "task_finished": {
+      "en": [
+        {
+          "text": "Already finished? Hmph. See that it is flawless.",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ],
+      "fr": [
+        {
+          "text": "Déjà fini ? Hmph. Assure-toi que ce soit parfait.",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ],
+      "ja": [
+        {
+          "text": "もう終わったの？ ふん。完璧でしょうね。",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ],
+      "it": [
+        {
+          "text": "Già finito? Hmph. Assicurati che sia impeccabile.",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ],
+      "es": [
+        {
+          "text": "¿Ya terminó? Hmph. Que sea impecable.",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ]
+    },
+    "needs_attention": {
+      "en": [
+        {
+          "text": "Claude Code is waiting for you, you fool. Do not keep it waiting!",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ],
+      "fr": [
+        {
+          "text": "Claude Code t'attend, imbécile. Ne le fais pas attendre !",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ],
+      "ja": [
+        {
+          "text": "Claude Codeが待っているわよ、愚か者。待たせるんじゃないわ！",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ],
+      "it": [
+        {
+          "text": "Claude Code ti sta aspettando, sciocco. Non farlo attendere!",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ],
+      "es": [
+        {
+          "text": "Claude Code te espera, necio. ¡No lo hagas esperar!",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ]
+    },
+    "tests_passed": {
+      "en": [
+        {
+          "text": "The tests passed. Naturally. Perfection is the baseline.",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ],
+      "fr": [
+        {
+          "text": "Les tests sont passés. Naturellement. La perfection est le minimum.",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ],
+      "ja": [
+        {
+          "text": "テストは通ったわ。当然ね。完璧は最低条件よ。",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ],
+      "it": [
+        {
+          "text": "I test sono passati. Naturalmente. La perfezione è il minimo.",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ],
+      "es": [
+        {
+          "text": "Los tests han pasado. Naturalmente. La perfección es lo mínimo.",
+          "emotion": "playful",
+          "intensity": 0.55
+        }
+      ]
+    },
+    "tests_failed": {
+      "en": [
+        {
+          "text": "The tests failed. Unacceptable! Fix it at once.",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ],
+      "fr": [
+        {
+          "text": "Les tests ont échoué. Inacceptable ! Corrige ça immédiatement.",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ],
+      "ja": [
+        {
+          "text": "テストが失敗？ 許されないわ！ すぐに直しなさい。",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ],
+      "it": [
+        {
+          "text": "I test sono falliti. Inaccettabile! Correggi subito.",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ],
+      "es": [
+        {
+          "text": "Los tests han fallado. ¡Inaceptable! Arréglalo de inmediato.",
+          "emotion": "angry",
+          "intensity": 0.7
+        }
+      ]
+    },
+    "build_failed": {
+      "en": [
+        {
+          "text": "The build failed?! That is imperfect. Correct it immediately!",
+          "emotion": "angry",
+          "intensity": 0.75
+        }
+      ],
+      "fr": [
+        {
+          "text": "La compilation a échoué ?! C'est imparfait. Corrige-la immédiatement !",
+          "emotion": "angry",
+          "intensity": 0.75
+        }
+      ],
+      "ja": [
+        {
+          "text": "ビルドが失敗ですって？ 不完全だわ。直ちに直しなさい！",
+          "emotion": "angry",
+          "intensity": 0.75
+        }
+      ],
+      "it": [
+        {
+          "text": "La compilazione è fallita?! È imperfetto. Correggila subito!",
+          "emotion": "angry",
+          "intensity": 0.75
+        }
+      ],
+      "es": [
+        {
+          "text": "¿La compilación ha fallado? ¡Eso es imperfecto! ¡Corrígela de inmediato!",
+          "emotion": "angry",
+          "intensity": 0.75
+        }
+      ]
+    },
+    "session_started": {
+      "en": [
+        {
+          "text": "A new session? Good. Do not waste my time.",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ],
+      "fr": [
+        {
+          "text": "Une nouvelle session ? Bien. Ne me fais pas perdre mon temps.",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ],
+      "ja": [
+        {
+          "text": "新しいセッション？ いいわ。時間を無駄にしないで。",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ],
+      "it": [
+        {
+          "text": "Una nuova sessione? Bene. Non farmi perdere tempo.",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ],
+      "es": [
+        {
+          "text": "¿Una nueva sesión? Bien. No me hagas perder el tiempo.",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ]
+    },
+    "reminder_due": {
+      "en": [
+        {
+          "text": "Listen carefully, I will say this once: {text}",
+          "emotion": "neutral",
+          "intensity": 0.5
+        }
+      ],
+      "fr": [
+        {
+          "text": "Écoute bien, je ne le dirai qu'une fois : {text}",
+          "emotion": "neutral",
+          "intensity": 0.5
+        }
+      ],
+      "ja": [
+        {
+          "text": "よく聞きなさい、一度しか言わないわ：{text}",
+          "emotion": "neutral",
+          "intensity": 0.5
+        }
+      ],
+      "it": [
+        {
+          "text": "Ascolta bene, lo dirò una volta sola: {text}",
+          "emotion": "neutral",
+          "intensity": 0.5
+        }
+      ],
+      "es": [
+        {
+          "text": "Escucha bien, lo diré una sola vez: {text}",
+          "emotion": "neutral",
+          "intensity": 0.5
+        }
+      ]
+    }
+  }
+}

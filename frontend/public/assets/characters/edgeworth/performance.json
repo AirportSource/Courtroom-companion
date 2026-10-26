@@ -1,0 +1,445 @@
+{
+  "schemaVersion": 1,
+  "director": {
+    "expressiveness": 0.25,
+    "maxBeatsPerReply": 2,
+    "maxReactionsPerReply": 1,
+    "reactionCooldownMs": 12000,
+    "reactionMinIntensity": 0.75,
+    "minPoseHoldMs": 2200,
+    "strongChangeIntensity": 0.8,
+    "msPerChar": 42
+  },
+  "sfx": {
+    "maxPerReply": 1,
+    "minIntensity": 0.85,
+    "reactions": {
+      "shock": "shock",
+      "surprise": "surprise",
+      "realization": "realization",
+      "emphasis": "emphasis"
+    },
+    "emotions": {
+      "surprised": "surprise",
+      "determined": "emphasis",
+      "angry": "emphasis"
+    },
+    "emotionMinIntensities": {
+      "surprised": 0.75,
+      "determined": 0.9,
+      "angry": 0.9
+    }
+  },
+  "gestures": {
+    "arms_crossed": {
+      "animation": "arms_crossed",
+      "emotions": [
+        "serious",
+        "neutral",
+        "explaining",
+        "determined",
+        "suspicious",
+        "relaxed"
+      ]
+    },
+    "hand_to_temple": {
+      "animation": "thinking_temple",
+      "emotions": [
+        "thinking",
+        "serious",
+        "suspicious",
+        "neutral"
+      ]
+    },
+    "point": {
+      "animation": "pointing",
+      "emotions": [
+        "explaining",
+        "determined",
+        "excited",
+        "angry",
+        "serious"
+      ]
+    },
+    "document": {
+      "animation": "reading_document",
+      "emotions": [
+        "explaining",
+        "thinking",
+        "neutral"
+      ]
+    },
+    "open_hands": {
+      "animation": "open_hands",
+      "emotions": [
+        "polite",
+        "grateful",
+        "happy",
+        "explaining",
+        "neutral"
+      ]
+    },
+    "smirk": {
+      "animation": "smirk_cuff",
+      "emotions": [
+        "playful",
+        "relaxed",
+        "happy",
+        "neutral"
+      ]
+    }
+  },
+  "intensityVariants": {
+    "happy": [
+      {
+        "maxIntensity": 0.6,
+        "animation": "smirk_cuff"
+      },
+      {
+        "maxIntensity": 1,
+        "animation": "open_hands"
+      }
+    ],
+    "laughing": [
+      {
+        "maxIntensity": 0.5,
+        "animation": "smirk_cuff"
+      },
+      {
+        "maxIntensity": 1,
+        "animation": "laugh"
+      }
+    ],
+    "angry": [
+      {
+        "maxIntensity": 0.7,
+        "animation": "arms_crossed"
+      },
+      {
+        "maxIntensity": 1,
+        "animation": "fists_hunched"
+      }
+    ]
+  },
+  "emotionAliases": {
+    "joy": "happy",
+    "joyful": "happy",
+    "cheerful": "happy",
+    "pleased": "happy",
+    "satisfied": "happy",
+    "proud": "happy",
+    "confident": "relaxed",
+    "calm": "neutral",
+    "composed": "neutral",
+    "worried": "anxious",
+    "nervous": "anxious",
+    "scared": "anxious",
+    "afraid": "anxious",
+    "flustered": "anxious",
+    "embarrassed": "anxious",
+    "curious": "thinking",
+    "pondering": "thinking",
+    "reflective": "thinking",
+    "shocked": "surprised",
+    "astonished": "surprised",
+    "teasing": "playful",
+    "amused": "playful",
+    "smug": "playful",
+    "sarcastic": "playful",
+    "thankful": "grateful",
+    "stern": "serious",
+    "focused": "serious",
+    "resolute": "determined",
+    "upset": "sad",
+    "unhappy": "sad",
+    "sorrowful": "sad",
+    "irritated": "angry",
+    "annoyed": "angry",
+    "furious": "angry",
+    "doubtful": "suspicious",
+    "skeptical": "suspicious"
+  },
+  "reactionAliases": {
+    "ponder": "thinking_gesture",
+    "hmm": "thinking_gesture",
+    "doubt": "finger_tap",
+    "impatient": "finger_tap",
+    "bow": "hands_open_bow"
+  },
+  "errorLine": {
+    "text": "Hmph. I seem to have lost the thread of that. Please state it again.",
+    "emotion": "thinking",
+    "translations": {
+      "fr": "Hmph. J'ai perdu le fil. Veuillez reformuler.",
+      "ja": "ふむ…話の筋を見失ったようだ。もう一度言ってくれ。",
+      "it": "Hmph. Ho perso il filo del discorso. Ripeti, per favore.",
+      "es": "Hmph. He perdido el hilo. Repítelo, por favor."
+    }
+  },
+  "eventLines": {
+    "task_finished": {
+      "en": [
+        {
+          "text": "The task is complete. As expected.",
+          "emotion": "relaxed",
+          "intensity": 0.5
+        }
+      ],
+      "fr": [
+        {
+          "text": "La tâche est terminée. Comme prévu.",
+          "emotion": "relaxed",
+          "intensity": 0.5
+        }
+      ],
+      "ja": [
+        {
+          "text": "作業は完了した。想定どおりだな。",
+          "emotion": "relaxed",
+          "intensity": 0.5
+        }
+      ],
+      "it": [
+        {
+          "text": "Il compito è concluso. Come previsto.",
+          "emotion": "relaxed",
+          "intensity": 0.5
+        }
+      ],
+      "es": [
+        {
+          "text": "La tarea ha concluido. Como era de esperar.",
+          "emotion": "relaxed",
+          "intensity": 0.5
+        }
+      ]
+    },
+    "needs_attention": {
+      "en": [
+        {
+          "text": "Claude Code requires your attention. I would not keep it waiting.",
+          "emotion": "serious",
+          "intensity": 0.6
+        }
+      ],
+      "fr": [
+        {
+          "text": "Claude Code requiert votre attention. Je ne le ferais pas attendre.",
+          "emotion": "serious",
+          "intensity": 0.6
+        }
+      ],
+      "ja": [
+        {
+          "text": "Claude Codeが君を待っている。待たせるべきではないな。",
+          "emotion": "serious",
+          "intensity": 0.6
+        }
+      ],
+      "it": [
+        {
+          "text": "Claude Code richiede la tua attenzione. Non lo farei attendere.",
+          "emotion": "serious",
+          "intensity": 0.6
+        }
+      ],
+      "es": [
+        {
+          "text": "Claude Code requiere tu atención. No lo haría esperar.",
+          "emotion": "serious",
+          "intensity": 0.6
+        }
+      ]
+    },
+    "tests_passed": {
+      "en": [
+        {
+          "text": "The tests have passed. A satisfactory result.",
+          "emotion": "relaxed",
+          "intensity": 0.55
+        }
+      ],
+      "fr": [
+        {
+          "text": "Les tests sont passés. Un résultat satisfaisant.",
+          "emotion": "relaxed",
+          "intensity": 0.55
+        }
+      ],
+      "ja": [
+        {
+          "text": "テストは全て通った。まずまずの結果だ。",
+          "emotion": "relaxed",
+          "intensity": 0.55
+        }
+      ],
+      "it": [
+        {
+          "text": "I test sono passati. Un risultato soddisfacente.",
+          "emotion": "relaxed",
+          "intensity": 0.55
+        }
+      ],
+      "es": [
+        {
+          "text": "Los tests han pasado. Un resultado satisfactorio.",
+          "emotion": "relaxed",
+          "intensity": 0.55
+        }
+      ]
+    },
+    "tests_failed": {
+      "en": [
+        {
+          "text": "The tests have failed. There is a contradiction in this code.",
+          "emotion": "serious",
+          "intensity": 0.65
+        }
+      ],
+      "fr": [
+        {
+          "text": "Les tests ont échoué. Il y a une contradiction dans ce code.",
+          "emotion": "serious",
+          "intensity": 0.65
+        }
+      ],
+      "ja": [
+        {
+          "text": "テストが失敗した。このコードには矛盾がある。",
+          "emotion": "serious",
+          "intensity": 0.65
+        }
+      ],
+      "it": [
+        {
+          "text": "I test sono falliti. C'è una contraddizione in questo codice.",
+          "emotion": "serious",
+          "intensity": 0.65
+        }
+      ],
+      "es": [
+        {
+          "text": "Los tests han fallado. Hay una contradicción en este código.",
+          "emotion": "serious",
+          "intensity": 0.65
+        }
+      ]
+    },
+    "build_failed": {
+      "en": [
+        {
+          "text": "The build has failed. Objection to this result!",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "exclamation": "objection"
+        }
+      ],
+      "fr": [
+        {
+          "text": "La compilation a échoué. Je m'oppose à ce résultat !",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "exclamation": "objection"
+        }
+      ],
+      "ja": [
+        {
+          "text": "ビルドが失敗した。異議あり、だ！",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "exclamation": "objection"
+        }
+      ],
+      "it": [
+        {
+          "text": "La compilazione è fallita. Obietto a questo risultato!",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "exclamation": "objection"
+        }
+      ],
+      "es": [
+        {
+          "text": "¡La compilación ha fallado! ¡Protesto contra este resultado!",
+          "emotion": "surprised",
+          "intensity": 0.8,
+          "exclamation": "objection"
+        }
+      ]
+    },
+    "session_started": {
+      "en": [
+        {
+          "text": "A new session. Very well. Let us begin.",
+          "emotion": "neutral",
+          "intensity": 0.4
+        }
+      ],
+      "fr": [
+        {
+          "text": "Une nouvelle session. Fort bien, commençons.",
+          "emotion": "neutral",
+          "intensity": 0.4
+        }
+      ],
+      "ja": [
+        {
+          "text": "新しいセッションか。いいだろう、始めよう。",
+          "emotion": "neutral",
+          "intensity": 0.4
+        }
+      ],
+      "it": [
+        {
+          "text": "Una nuova sessione. Molto bene, cominciamo.",
+          "emotion": "neutral",
+          "intensity": 0.4
+        }
+      ],
+      "es": [
+        {
+          "text": "Una nueva sesión. Muy bien, comencemos.",
+          "emotion": "neutral",
+          "intensity": 0.4
+        }
+      ]
+    },
+    "reminder_due": {
+      "en": [
+        {
+          "text": "A reminder, as requested: {text}",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ],
+      "fr": [
+        {
+          "text": "Un rappel, comme demandé : {text}",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ],
+      "ja": [
+        {
+          "text": "頼まれていた通知だ：{text}",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ],
+      "it": [
+        {
+          "text": "Un promemoria, come richiesto: {text}",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ],
+      "es": [
+        {
+          "text": "Un recordatorio, como pediste: {text}",
+          "emotion": "neutral",
+          "intensity": 0.45
+        }
+      ]
+    }
+  }
+}

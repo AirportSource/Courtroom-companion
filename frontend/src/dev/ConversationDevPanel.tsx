@@ -7,7 +7,7 @@ import type { Background, CharacterRender, SoundId } from '../engine/manifestTyp
 import type { ChatResponse } from '../engine/performance.ts'
 import type { CharacterAnimationState } from '../engine/useCharacterAnimation.ts'
 import type { TypewriterState } from '../engine/useTypewriter.ts'
-import { SFX_NAMES, type SfxName } from '../engine/sfx.ts'
+import { SFX_NAMES, type SfxDiagnostic, type SfxName } from '../engine/sfx.ts'
 import { DevDisplayControls } from './DevDisplayControls.tsx'
 import { PhoneRingtoneAudition } from './PhoneRingtoneAudition.tsx'
 
@@ -29,7 +29,7 @@ interface ConversationDevPanelProps {
   /** Restart the current line, optionally forcing a voice (null = script/character). */
   onReplayLine: (voice: SoundId | null) => void
   onAuditionSfx: (name: SfxName) => void
-  sfxPlayback: { name: string; event: string; played: boolean; reason: string; source: 'dialogue' | 'audition' }[]
+  sfxPlayback: SfxDiagnostic[]
   onExit: () => void
   canAuditionRingtone: boolean
 }
@@ -147,15 +147,20 @@ export function ConversationDevPanel({
         <h3>Semantic SFX audition</h3>
         {canAuditionRingtone && <PhoneRingtoneAudition />}
         <div className="dev-buttons">
-          {SFX_NAMES.slice(0, 5).map((name) => (
+          {SFX_NAMES.filter((name) => !['tension', 'notification', 'soft_transition'].includes(name)).map((name) => (
             <button key={name} type="button" onClick={() => onAuditionSfx(name)}>{name}</button>
           ))}
         </div>
         {sfxPlayback.length ? sfxPlayback.map((item, index) => (
-          <p className="dev-hint" key={`${item.event}:${index}`}>
-            {item.source} · {item.event} → {item.played ? 'played' : `not played (${item.reason})`}
+          <p className="dev-hint" key={`${item.name}:${index}`}>
+            {item.source} · {item.name} · {item.character ?? '-'} · char:{item.characterCandidate ?? '-'}
+            {' '}· shared:{item.sharedCandidate ?? '-'} → {item.final ?? 'none'}
+            {' '}· {item.played ? 'played' : 'not played'} ({item.reason})
           </p>
         )) : <p className="dev-hint">No semantic SFX playback recorded yet.</p>}
+        {lastResponse && lastResponse.performance.notes.filter((note) => /SFX|signature|cooldown/.test(note)).map((note) => (
+          <p className="dev-hint" key={`sfx-note:${note}`}>director · {note}</p>
+        ))}
       </section>
 
       <DevDisplayControls

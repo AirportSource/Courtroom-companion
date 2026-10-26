@@ -3,7 +3,7 @@
   "backgrounds": {
     "bg_01": { "src": "background_01_256x192.png", "width": 256, "height": 192, "description": "dim blue office / reception at night" },
     "bg_02": { "src": "background_02_512x192.png", "width": 512, "height": 192, "description": "dark office with sofa and desk (wide)" },
-    "bg_03": { "src": "background_03_256x192.png", "width": 256, "height": 192, "description": "detention center visitor room with guard" },
+    "bg_03": { "src": "background_03_256x192.png", "width": 256, "height": 192, "description": "detention center visitor room with guard", "foreground": "background_03_foreground.png", "characterOffsetY": 20, "notes": "Window frame and counter drawn in front of the character, who sits 20 px lower behind the glass (D-096)." },
     "bg_04": { "src": "background_04_256x192.png", "width": 256, "height": 192, "description": "warm room with flowers, table and window" },
     "bg_05": { "src": "background_05_256x192.png", "width": 256, "height": 192, "description": "ornate office with painting and bookshelves" },
     "bg_06": { "src": "background_06_256x192.png", "width": 256, "height": 192, "description": "bright office with plant and window" },
@@ -29,6 +29,26 @@
     "bg_26": { "src": "background_26_256x192.png", "width": 256, "height": 192, "description": "police station entrance" },
     "bg_27": { "src": "background_27_256x192.png", "width": 256, "height": 192, "description": "hallway with cacti and cabinets" },
     "bg_28": { "src": "background_28_512x192.png", "width": 512, "height": 192, "description": "dark locker room (wide)" },
-    "bg_29": { "src": "background_29_512x192.png", "width": 512, "height": 192, "description": "hall with pipe organ (wide)" }
+    "bg_29": { "src": "background_29_512x192.png", "width": 512, "height": 192, "description": "hall with pipe organ (wide)" },
+    "bg_30": { "src": "background_30_256x192.png", "width": 256, "height": 192, "description": "Lordly Tailor - main exhibition hall (T&T)", "notes": "Converted from Trilogy HD plate bg200u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_31": { "src": "background_31_683x192.png", "width": 683, "height": 192, "description": "Lordly Tailor - basement warehouse (T&T)", "notes": "Converted from Trilogy HD plate bg201u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_32": { "src": "background_32_256x192.png", "width": 256, "height": 192, "description": "Mask DeMasque's hideout (T&T)", "notes": "Converted from Trilogy HD plate bg203.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_33": { "src": "background_33_256x192.png", "width": 256, "height": 192, "description": "KB Security - CEO's office (T&T)", "notes": "Converted from Trilogy HD plate bg204u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_34": { "src": "background_34_256x192.png", "width": 256, "height": 192, "description": "KB Security - security room (T&T)", "notes": "Converted from Trilogy HD plate bg205u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_35": { "src": "background_35_683x192.png", "width": 683, "height": 192, "description": "Trés Bien - dining room (T&T)", "notes": "Converted from Trilogy HD plate bg300u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_36": { "src": "background_36_256x192.png", "width": 256, "height": 192, "description": "Trés Bien - kitchen (T&T)", "notes": "Converted from Trilogy HD plate bg301.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_37": { "src": "background_37_256x192.png", "width": 256, "height": 192, "description": "Vitamin Square (T&T)", "notes": "Converted from Trilogy HD plate bg302u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_38": { "src": "background_38_256x192.png", "width": 256, "height": 192, "description": "Blue Screens, Inc. office (T&T)", "notes": "Converted from Trilogy HD plate bg303.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_39": { "src": "background_39_256x192.png", "width": 256, "height": 192, "description": "Tender Lender office (T&T)", "notes": "Converted from Trilogy HD plate bg304u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_40": { "src": "background_40_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - main gate (T&T)", "notes": "Converted from Trilogy HD plate bg500.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_41": { "src": "background_41_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - courtyard (T&T)", "notes": "Converted from Trilogy HD plate bg501.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_42": { "src": "background_42_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - main hall (T&T)", "notes": "Converted from Trilogy HD plate bg502.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_43": { "src": "background_43_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - Dusky Bridge (T&T)", "notes": "Converted from Trilogy HD plate bg503u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_44": { "src": "background_44_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - Dusky Bridge (view 2) (T&T)", "notes": "Converted from Trilogy HD plate bg504u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_45": { "src": "background_45_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - Dusky Bridge at night (T&T)", "notes": "Converted from Trilogy HD plate bg505u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_46": { "src": "background_46_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - Heavenly Hall (T&T)", "notes": "Converted from Trilogy HD plate bg506u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_47": { "src": "background_47_683x192.png", "width": 683, "height": 192, "description": "Hazakura Temple - inner temple (wide) (T&T)", "notes": "Converted from Trilogy HD plate bg507u.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_48": { "src": "background_48_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - training hall (T&T)", "notes": "Converted from Trilogy HD plate bg509.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" },
+    "bg_49": { "src": "background_49_256x192.png", "width": 256, "height": 192, "description": "Hazakura Temple - garden (T&T)", "notes": "Converted from Trilogy HD plate bg50au.png with scripts/convert_hd_locations_to_ds.py --profile B (D-083)" }
   }
 }

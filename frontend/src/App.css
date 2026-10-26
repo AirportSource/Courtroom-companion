@@ -119,6 +119,25 @@
   max-width: none;
 }
 
+/* Inspector: reaction replay buttons stay under the stage. */
+.animation-test-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* One-shot reaction overlay (whip slash): never intercepts stage clicks. */
+.stage-effect,
+.stage-foreground {
+  pointer-events: none;
+}
+
+.stage-effect-backdrop {
+  position: absolute;
+  inset: 0;
+}
+
 /* Dev-only sprite debug overlay (1 logical px lines) */
 .sprite-debug > div {
   position: absolute;

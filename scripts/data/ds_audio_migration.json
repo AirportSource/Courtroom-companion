@@ -1,0 +1,2935 @@
+{
+  "version": 1,
+  "baselineCommit": "06dfe98dea7f346d69f6b6a87d3091e4a13a0973",
+  "policy": "Preserve pre-expansion runtime bytes and current metadata; only explicit expansion mappings replace defaults.",
+  "sourcePolicy": "Read-only original DS JFA MP3 set and NCSF123 native/default T&T WAV renders. No listening claimed.",
+  "profilesBefore": {
+    "maya_fey": {
+      "defaultTrack": "maya_fey_turnabout_sisters_2001",
+      "alternatives": [
+        "initial_investigation_2001",
+        "maya_fey_turnabout_sisters_2002",
+        "kurain_village"
+      ]
+    },
+    "dick_gumshoe": {
+      "defaultTrack": "dick_gumshoe_thats_detective_gumshoe_pal",
+      "alternatives": [
+        "initial_investigation_2001",
+        "heart_of_the_investigation_2001"
+      ]
+    },
+    "mia_fey": {
+      "defaultTrack": "maya_fey_turnabout_sisters_2001",
+      "alternatives": [
+        "court_is_now_in_session",
+        "cross_examination_moderato_2001"
+      ]
+    },
+    "phoenix_wright": {
+      "defaultTrack": "court_is_now_in_session",
+      "alternatives": [
+        "cross_examination_moderato_2001",
+        "tricks_and_deductions"
+      ]
+    },
+    "ema_skye": {
+      "defaultTrack": "ema_skye_turnabout_sisters_2005",
+      "alternatives": [
+        "heart_of_the_investigation_2001",
+        "initial_investigation_2001"
+      ]
+    },
+    "miles_edgeworth": {
+      "defaultTrack": "triumphant_return_miles_edgeworth",
+      "alternatives": [
+        "cross_examination_allegro_2001",
+        "heart_of_the_investigation_2002"
+      ]
+    },
+    "franziska_von_karma": {
+      "defaultTrack": "triumphant_return_franziska_von_karma",
+      "alternatives": [
+        "cross_examination_allegro_2002",
+        "triumphant_return_miles_edgeworth"
+      ]
+    },
+    "larry_butz": {
+      "defaultTrack": "larry_butz_when_something_smells_its_usually_me",
+      "alternatives": [
+        "eccentrics",
+        "simple_folk"
+      ]
+    },
+    "pearl_fey": {
+      "defaultTrack": "pearl_fey_with_pearly",
+      "alternatives": [
+        "kurain_village",
+        "maya_fey_turnabout_sisters_2002"
+      ]
+    },
+    "diego_armando": {
+      "defaultTrack": "godot_the_fragrance_of_darkness_that_is_coffee",
+      "alternatives": [
+        "cross_examination_allegro_2004",
+        "trials_and_tribulations_court_is_now_in_session"
+      ]
+    },
+    "godot": {
+      "defaultTrack": "godot_the_fragrance_of_darkness_that_is_coffee",
+      "alternatives": [
+        "cross_examination_allegro_2004",
+        "trials_and_tribulations_court_is_now_in_session"
+      ]
+    },
+    "marvin_grossberg": {
+      "defaultTrack": "marvin_grossberg_reckonings_and_regrets_of_an_aged_attorney",
+      "alternatives": [
+        "simple_folk"
+      ]
+    },
+    "damon_gant": {
+      "defaultTrack": "damon_gant_swimming_anyone",
+      "alternatives": [
+        "heart_of_the_investigation_2001"
+      ]
+    },
+    "jake_marshall": {
+      "defaultTrack": "jake_marshall_renegade_sheriff",
+      "alternatives": [
+        "simple_folk"
+      ]
+    },
+    "dahlia_hawthorne": {
+      "defaultTrack": "dahlia_hawthorne_the_visage_of_what_once_was",
+      "alternatives": [
+        "hazakura_temple"
+      ]
+    },
+    "shelly_de_killer": {
+      "defaultTrack": "shelly_de_killer_a_deadly_gentlemans_delight",
+      "alternatives": [
+        "hotline_of_fate"
+      ]
+    },
+    "luke_atmey": {
+      "defaultTrack": "luke_atmey_look_at_me",
+      "alternatives": [
+        "mask_demasque_please_listen_to_meeeee"
+      ]
+    },
+    "mask_demasque": {
+      "defaultTrack": "mask_demasque_please_listen_to_meeeee",
+      "alternatives": [
+        "luke_atmey_look_at_me"
+      ]
+    },
+    "victor_kudo": {
+      "defaultTrack": "victor_kudo_martial_anthem_of_misery",
+      "alternatives": [
+        "detention_center_the_prisoners_elegy"
+      ]
+    },
+    "furio_tigre": {
+      "defaultTrack": "furio_tigre_swingin_tiger",
+      "alternatives": [
+        "tres_bien"
+      ]
+    },
+    "elise_deauxnim": {
+      "defaultTrack": "elise_deauxnim_a_gentle_melody",
+      "alternatives": [
+        "hazakura_temple"
+      ]
+    },
+    "default": {
+      "defaultTrack": "maya_fey_turnabout_sisters_2001",
+      "alternatives": [
+        "initial_investigation_2001"
+      ]
+    }
+  },
+  "tracks": {
+    "defendant_lobby_so_it_begins": {
+      "before": {
+        "number": 2,
+        "game": "aa1",
+        "title": "Defendant Lobby - So it Begins",
+        "shortTitle": "Defendant Lobby",
+        "src": "original/02-defendant-lobby-so-it-begins.mp3",
+        "category": "bgm",
+        "tags": [
+          "defendant-lobby",
+          "calm",
+          "pre-trial"
+        ],
+        "gain": 0.92,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 5.82-39.43 s fails: coverage 0.57 < 0.7",
+        "loudnessLufs": -14.3
+      },
+      "beforeSha256": "425b5ee0ecb2183d432701c2c019b23bdf4368680497cc797446b380df9664ef",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "court_is_now_in_session": {
+      "before": {
+        "number": 3,
+        "game": "aa1",
+        "title": "Phoenix Wright: Ace Attorney - Court is Now in Session",
+        "shortTitle": "Court Is Now in Session",
+        "src": "original/03-court-is-now-in-session.mp3",
+        "category": "bgm",
+        "tags": [
+          "courtroom",
+          "trial",
+          "neutral"
+        ],
+        "gain": 0.74,
+        "contextual": false,
+        "loop": {
+          "startSample": 1076040,
+          "endSample": 3193335,
+          "sampleRate": 44100,
+          "confidence": 0.92,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.936 over 47 windows; envelope identity 0.9809; full-rate seam correlation 0.9991; loop 48.0 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -12.4
+      },
+      "beforeSha256": "d1d021678eae3c9fa8f74d3fbf18741b03896401039f0995415833cfb927fff0",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "cross_examination_moderato_2001": {
+      "before": {
+        "number": 4,
+        "game": "aa1",
+        "title": "Cross-Examination - Moderato 2001",
+        "shortTitle": "Cross-Examination: Moderato",
+        "src": "original/04-cross-examination-moderato-2001.mp3",
+        "category": "bgm",
+        "tags": [
+          "courtroom",
+          "cross-examination",
+          "tense"
+        ],
+        "gain": 1.04,
+        "contextual": false,
+        "loop": {
+          "startSample": 541680,
+          "endSample": 2558119,
+          "sampleRate": 44100,
+          "confidence": 0.96,
+          "provenance": "curated-analysis",
+          "note": "Offline multi-scale OST analysis 2026-10-24 (44.1 kHz mono downmix): repeat-window coverage 0.720; post-seam 3 s envelope coverage 1.000 over 66 windows; envelope identity 0.9958; full-rate seam correlation 0.9664. Not an original DS loop point; not verified by listening. Independent re-measure (lag-diagonal+xcorr-v1): coverage 0.00, envelope 0.653, seam 0.928 - below the D-044 thresholds; kept unchanged, needs listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -15.3
+      },
+      "beforeSha256": "2307f1dbe2f7052cd26501dbc86d7fb79b1b61accfd0222c0de31df0b8cfe705",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "tricks_and_deductions": {
+      "before": {
+        "number": 5,
+        "game": "aa1",
+        "title": "Tricks and Deductions",
+        "shortTitle": "Tricks and Deductions",
+        "src": "original/05-tricks-and-deductions.mp3",
+        "category": "bgm",
+        "tags": [
+          "investigation",
+          "playful",
+          "thinking"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 0.50-70.34 s fails: coverage 0.01 < 0.7; envelope identity 0.872 < 0.92; seam correlation 0.918 < 0.95",
+        "loudnessLufs": -15.9
+      },
+      "beforeSha256": "37c811d03daa9d9064734d4c7b7fb84d650b165f36c972b9b92a18bf18b5c2a0",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "objection_2001": {
+      "before": {
+        "number": 6,
+        "game": "aa1",
+        "title": "Phoenix Wright - Objection! 2001",
+        "shortTitle": "Objection!",
+        "src": "original/06-objection-2001.mp3",
+        "category": "contextual",
+        "tags": [
+          "objection",
+          "dramatic",
+          "courtroom"
+        ],
+        "gain": 0.98,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 24.43-36.43 s fails: coverage 0.42 < 0.7",
+        "loudnessLufs": -14.8
+      },
+      "beforeSha256": "f8f5da0134c0ea45e6b8a9b784560232ebc5d9d3e808431f196f285e5f2152d3",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "cross_examination_allegro_2001": {
+      "before": {
+        "number": 7,
+        "game": "aa1",
+        "title": "Cross-Examination - Allegro 2001",
+        "shortTitle": "Cross-Examination: Allegro",
+        "src": "original/07-cross-examination-allegro-2001.mp3",
+        "category": "bgm",
+        "tags": [
+          "courtroom",
+          "cross-examination",
+          "urgent"
+        ],
+        "gain": 0.72,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 28.03-85.36 s fails: coverage 0.02 < 0.7; envelope identity 0.856 < 0.92",
+        "loudnessLufs": -12.1
+      },
+      "beforeSha256": "2f7c97cdf34e275e7750a5a9b2bbd5386e1d0050ae7cb33a1e089688c7b37fd4",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "pursuit_corner_the_culprit": {
+      "before": {
+        "number": 8,
+        "game": "aa1",
+        "title": "Pursuit - Corner the Culprit",
+        "shortTitle": "Pursuit: Corner the Culprit",
+        "src": "original/08-pursuit-corner-the-culprit.mp3",
+        "category": "contextual",
+        "tags": [
+          "pursuit",
+          "confrontation",
+          "urgent"
+        ],
+        "gain": 0.84,
+        "contextual": true,
+        "loop": {
+          "startSample": 370440,
+          "endSample": 2064322,
+          "sampleRate": 44100,
+          "confidence": 0.82,
+          "provenance": "curated-analysis",
+          "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.85, envelope identity 0.966, seam correlation 0.9953. Not an original DS loop point; not verified by listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -13.5
+      },
+      "beforeSha256": "ee285a94684fa38053734ea2a4e6a91a8a62942babb1d345896c5b34e29f30e6",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "the_truth_revealed_2001": {
+      "before": {
+        "number": 9,
+        "game": "aa1",
+        "title": "The Truth Revealed 2001",
+        "shortTitle": "The Truth Revealed",
+        "src": "original/09-the-truth-revealed-2001.mp3",
+        "category": "contextual",
+        "tags": [
+          "revelation",
+          "dramatic"
+        ],
+        "gain": 0.9,
+        "contextual": true,
+        "loop": {
+          "startSample": 908460,
+          "endSample": 2378804,
+          "sampleRate": 44100,
+          "confidence": 0.98,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 25 windows; envelope identity 0.9824; full-rate seam correlation 0.9971; loop 33.3 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -14.1
+      },
+      "beforeSha256": "75fa13d3b642e06373fbaed2d0e9ebe799df1027036b6c46ccd45ce541673600",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "suspense": {
+      "before": {
+        "number": 10,
+        "game": "aa1",
+        "title": "Suspense",
+        "shortTitle": "Suspense",
+        "src": "original/10-suspense.mp3",
+        "category": "bgm",
+        "tags": [
+          "suspense",
+          "tense",
+          "uncertain"
+        ],
+        "gain": 0.87,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 26.40-53.83 s fails: coverage 0.00 < 0.7; envelope identity 0.864 < 0.92; seam correlation 0.722 < 0.95",
+        "loudnessLufs": -13.8
+      },
+      "beforeSha256": "75d0651d493172a71a56f4451f0d2aaa62af22b057100561f5462674fdb6c2a3",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "pursuit_corner_the_culprit_variation": {
+      "before": {
+        "number": 11,
+        "game": "aa1",
+        "title": "Pursuit - Corner the Culprit (Variation)",
+        "shortTitle": "Pursuit: Corner (Variation)",
+        "src": "original/11-pursuit-corner-the-culprit-variation.mp3",
+        "category": "contextual",
+        "tags": [
+          "pursuit",
+          "confrontation",
+          "urgent"
+        ],
+        "gain": 0.85,
+        "contextual": true,
+        "loop": {
+          "startSample": 443282,
+          "endSample": 2136934,
+          "sampleRate": 44100,
+          "confidence": 0.96,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 58 windows; envelope identity 0.9732; full-rate seam correlation 0.9880; loop 38.4 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -13.6
+      },
+      "beforeSha256": "b3a521d56ba67a26e1dc596db287264ed4e110f4de048005d8734cb2be78b29b",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "initial_investigation_2001": {
+      "before": {
+        "number": 13,
+        "game": "aa1",
+        "title": "Initial Investigation 2001",
+        "shortTitle": "Initial Investigation",
+        "src": "original/13-initial-investigation-2001.mp3",
+        "category": "bgm",
+        "tags": [
+          "investigation",
+          "neutral",
+          "curious"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": {
+          "startSample": 101430,
+          "endSample": 2218725,
+          "sampleRate": 44100,
+          "confidence": 0.99,
+          "provenance": "curated-analysis",
+          "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.989, seam correlation 0.999. Not an original DS loop point; not verified by listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -16.0
+      },
+      "beforeSha256": "f24689a9f1e3507d9cf33c5cd1ab92ebce2d10c2fdccb9318da4b957916ba590",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "maya_fey_turnabout_sisters_2001": {
+      "before": {
+        "number": 14,
+        "game": "aa1",
+        "title": "Maya Fey - Turnabout Sisters 2001",
+        "shortTitle": "Maya Fey",
+        "src": "original/14-maya-fey-turnabout-sisters-2001.mp3",
+        "category": "bgm",
+        "tags": [
+          "character-theme",
+          "warm",
+          "friendly"
+        ],
+        "gain": 0.86,
+        "contextual": false,
+        "loop": {
+          "startSample": 2270966,
+          "endSample": 5528236,
+          "sampleRate": 44100,
+          "confidence": 0.67,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.711 over 45 windows; envelope identity 0.9590; full-rate seam correlation 0.9769; loop 73.9 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -13.7
+      },
+      "beforeSha256": "6597c96b464f0ac01168737a563b34fa50de6d53dac9a09b5f0db6fc36f46493",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "detention_center_the_security_guards_elegy": {
+      "before": {
+        "number": 15,
+        "game": "aa1",
+        "title": "Detention Center - The Security Guards' Elegy",
+        "shortTitle": "Detention Center",
+        "src": "original/15-detention-center-the-security-guards-elegy.mp3",
+        "category": "bgm",
+        "tags": [
+          "detention-center",
+          "calm",
+          "melancholy"
+        ],
+        "gain": 1.19,
+        "contextual": false,
+        "loop": {
+          "startSample": 17191,
+          "endSample": 2134488,
+          "sampleRate": 44100,
+          "confidence": 0.99,
+          "provenance": "curated-analysis",
+          "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9999; full-rate seam correlation 0.9902. Shorter of the equivalent phrase-length candidates. Not an original DS loop point; not verified by listening. Independent re-measure (lag-diagonal+xcorr-v1): coverage 0.30, envelope 0.943, seam 0.980 - below the D-044 thresholds; kept unchanged, needs listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -16.5
+      },
+      "beforeSha256": "4587bcb508d320f04d87b27b8488a495780cd95c2e0ec3b571fc79e11efc4a15",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "dick_gumshoe_thats_detective_gumshoe_pal": {
+      "before": {
+        "number": 16,
+        "game": "aa1",
+        "title": "Dick Gumshoe - That's \"Detective Gumshoe,\" Pal!",
+        "shortTitle": "Dick Gumshoe",
+        "src": "original/16-dick-gumshoe-thats-detective-gumshoe-pal.mp3",
+        "category": "bgm",
+        "tags": [
+          "character-theme",
+          "comedic",
+          "playful"
+        ],
+        "gain": 0.97,
+        "contextual": false,
+        "loop": {
+          "startSample": 2285466,
+          "endSample": 4691546,
+          "sampleRate": 44100,
+          "confidence": 0.98,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 4 windows; envelope identity 0.9803; full-rate seam correlation 0.9991; loop 54.6 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -14.7
+      },
+      "beforeSha256": "2f02b5270d2b094534931bf9aa6374ff032c7f50afeb5539ccaf11a1e71b060f",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "reminiscences_mayas_sorrow": {
+      "before": {
+        "number": 17,
+        "game": "aa1",
+        "title": "Reminiscences - Maya's Sorrow",
+        "shortTitle": "Maya's Sorrow",
+        "src": "original/17-reminiscences-mayas-sorrow.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "sad",
+          "emotional"
+        ],
+        "gain": 1.04,
+        "contextual": true,
+        "loop": {
+          "startSample": 39690,
+          "endSample": 5685810,
+          "sampleRate": 44100,
+          "confidence": 0.8,
+          "provenance": "curated-analysis",
+          "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.83, envelope identity 0.967, seam correlation 0.9969. Not an original DS loop point; not verified by listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -15.3
+      },
+      "beforeSha256": "f5e46693dbaf8055a669af3cbb41bc9064cc1b897db7842d556e001531471f2c",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "marvin_grossberg_reckonings_and_regrets_of_an_aged_attorney": {
+      "before": {
+        "number": 18,
+        "game": "aa1",
+        "title": "Marvin Grossberg - Reckonings and Regrets of an Aged Attorney",
+        "shortTitle": "Marvin Grossberg",
+        "src": "original/18-marvin-grossberg-reckonings-and-regrets-of-an-aged-attorney.mp3",
+        "category": "bgm",
+        "tags": [
+          "character-theme",
+          "wistful",
+          "calm"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": {
+          "startSample": 17566,
+          "endSample": 1899605,
+          "sampleRate": 44100,
+          "confidence": 0.99,
+          "provenance": "curated-analysis",
+          "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9965; full-rate seam correlation 0.9916. Not an original DS loop point; not verified by listening. Independent re-measure (lag-diagonal+xcorr-v1): coverage 0.31, envelope 0.908, seam 0.967 - below the D-044 thresholds; kept unchanged, needs listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -15.0
+      },
+      "beforeSha256": "aff4fd36bdce43e66e766bf249b38d2791ca0b7d8c7f22884c9ed7859e51c471",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "simple_folk": {
+      "before": {
+        "number": 19,
+        "game": "aa1",
+        "title": "Simple Folk",
+        "shortTitle": "Simple Folk",
+        "src": "original/19-simple-folk.mp3",
+        "category": "bgm",
+        "tags": [
+          "light",
+          "playful",
+          "calm"
+        ],
+        "gain": 0.82,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 2.99-30.42 s fails: coverage 0.08 < 0.7; envelope identity 0.896 < 0.92",
+        "loudnessLufs": -13.3
+      },
+      "beforeSha256": "439a97c8c5f9d605b02e864e49a31d7dd52a29ea7929c1e36ad77ad0359b7f9c",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "reminiscences_the_two_faces_of_a_studio": {
+      "before": {
+        "number": 20,
+        "game": "aa1",
+        "title": "Reminiscences - The Two Faces of a Studio",
+        "shortTitle": "The Two Faces of a Studio",
+        "src": "original/20-reminiscences-the-two-faces-of-a-studio.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "mysterious"
+        ],
+        "gain": 0.83,
+        "contextual": true,
+        "loop": {
+          "startSample": 1175192,
+          "endSample": 2660929,
+          "sampleRate": 44100,
+          "confidence": 0.89,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.929 over 14 windows; envelope identity 0.9736; full-rate seam correlation 0.9872; loop 33.7 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -13.4
+      },
+      "beforeSha256": "11573be310173a49be6043fefe8f8e80dd68284bd105c8f54e77208682c39b16",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "reminiscences_the_dl_6_incident": {
+      "before": {
+        "number": 22,
+        "game": "aa1",
+        "title": "Reminiscences - The DL-6 Incident",
+        "shortTitle": "The DL-6 Incident",
+        "src": "original/22-reminiscences-the-dl-6-incident.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "somber"
+        ],
+        "gain": 1.12,
+        "contextual": true,
+        "loop": {
+          "startSample": 418950,
+          "endSample": 2889128,
+          "sampleRate": 44100,
+          "confidence": 0.95,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.978 over 91 windows; envelope identity 0.9717; full-rate seam correlation 0.9961; loop 56.0 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -17.0
+      },
+      "beforeSha256": "96e02cc960483b43d6c20d11319d739f7d6e7cd8bf057607da80bbfd2da834b1",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "heart_of_the_investigation_2001": {
+      "before": {
+        "number": 23,
+        "game": "aa1",
+        "title": "Heart of the Investigation 2001",
+        "shortTitle": "Heart of the Investigation",
+        "src": "original/23-heart-of-the-investigation-2001.mp3",
+        "category": "bgm",
+        "tags": [
+          "investigation",
+          "determined",
+          "hopeful"
+        ],
+        "gain": 0.97,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 20.97-72.98 s fails: coverage 0.52 < 0.7",
+        "loudnessLufs": -14.7
+      },
+      "beforeSha256": "ac7bd0ee170703fe71736fb8fbf2419601aa54411727fd7744abcc41aa43dba3",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "reminiscences_the_class_trial": {
+      "before": {
+        "number": 24,
+        "game": "aa1",
+        "title": "Reminiscences - The Class Trial",
+        "shortTitle": "The Class Trial",
+        "src": "original/24-reminiscences-the-class-trial.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "nostalgic"
+        ],
+        "gain": 0.9,
+        "contextual": true,
+        "loop": {
+          "startSample": 15892,
+          "endSample": 1074540,
+          "sampleRate": 44100,
+          "confidence": 0.98,
+          "provenance": "curated-analysis",
+          "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9999; full-rate seam correlation 0.9797. Shorter of the equivalent phrase-length candidates. Not an original DS loop point; not verified by listening. Independent re-measure (lag-diagonal+xcorr-v1): coverage 0.00, envelope 0.773, seam 0.849 - below the D-044 thresholds; kept unchanged, needs listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -14.1
+      },
+      "beforeSha256": "a4d0986fb4865b19ce842cf53f087041cba8ef773f0615113340f15480517238",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "reminiscences_the_sl_9_incident": {
+      "before": {
+        "number": 29,
+        "game": "aa1",
+        "title": "Reminiscences - The SL-9 Incident",
+        "shortTitle": "The SL-9 Incident",
+        "src": "original/29-reminiscences-the-sl-9-incident.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "somber"
+        ],
+        "gain": 1.0,
+        "contextual": true,
+        "loop": {
+          "startSample": 149940,
+          "endSample": 1991086,
+          "sampleRate": 44100,
+          "confidence": 0.99,
+          "provenance": "curated-analysis",
+          "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.99, seam correlation 0.9977. Not an original DS loop point; not verified by listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -16.0
+      },
+      "beforeSha256": "e7eecf9d86a3f47375e3bf64da471c832d0e0b122e7a2d75b1d87d9101dccd96",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "ema_skye_turnabout_sisters_2005": {
+      "before": {
+        "number": 30,
+        "game": "aa1",
+        "title": "Ema Skye - Turnabout Sisters 2005",
+        "shortTitle": "Ema Skye",
+        "src": "original/30-ema-skye-turnabout-sisters-2005.mp3",
+        "category": "bgm",
+        "tags": [
+          "character-theme",
+          "upbeat",
+          "energetic"
+        ],
+        "gain": 1.07,
+        "contextual": false,
+        "loop": {
+          "startSample": 61740,
+          "endSample": 2179035,
+          "sampleRate": 44100,
+          "confidence": 0.98,
+          "provenance": "curated-analysis",
+          "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.986, seam correlation 0.9954. Not an original DS loop point; not verified by listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -15.9
+      },
+      "beforeSha256": "8b793d21fd2c5c838f0b32dad6f0bd513e933003c508718e599c136abd4bf303",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "jake_marshall_renegade_sheriff": {
+      "before": {
+        "number": 32,
+        "game": "aa1",
+        "title": "Jake Marshall - Renegade Sheriff",
+        "shortTitle": "Jake Marshall",
+        "src": "original/32-jake-marshall-renegade-sheriff.mp3",
+        "category": "bgm",
+        "tags": [
+          "character-theme",
+          "western",
+          "bold"
+        ],
+        "gain": 0.85,
+        "contextual": false,
+        "loop": {
+          "startSample": 149940,
+          "endSample": 2097915,
+          "sampleRate": 44100,
+          "confidence": 0.83,
+          "provenance": "curated-analysis",
+          "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.87, envelope identity 0.96, seam correlation 0.9898. Not an original DS loop point; not verified by listening.",
+          "status": "measured_not_auditioned",
+          "method": "curated-chrome-analysis-v1"
+        },
+        "loudnessLufs": -13.6
+      },
+      "beforeSha256": "18a41e756815189d819e91e7f132eaec7d2bfa4fc324694092bcc57ea129a016",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "damon_gant_swimming_anyone": {
+      "before": {
+        "number": 33,
+        "game": "aa1",
+        "title": "Damon Gant - Swimming, Anyone.",
+        "shortTitle": "Damon Gant",
+        "src": "original/33-damon-gant-swimming-anyone.mp3",
+        "category": "bgm",
+        "tags": [
+          "character-theme",
+          "smooth",
+          "suspicious"
+        ],
+        "gain": 1.1,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 30.34-68.57 s fails: coverage 0.18 < 0.7; envelope identity 0.268 < 0.92",
+        "loudnessLufs": -15.8
+      },
+      "beforeSha256": "8858915e6a5c8daf75efb30c01f5dcd27dde9512c7b817a864d288ad8a1dab6b",
+      "action": "KEEP",
+      "confidence": "high",
+      "reason": "Pre-expansion valid runtime track; entire entry and audio preserved."
+    },
+    "defendant_lobby_so_it_begins_again": {
+      "before": {
+        "number": 1,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Defendant Lobby - So it Begins Again",
+        "shortTitle": "Defendant Lobby",
+        "src": "original/d2-01-defendant-lobby-so-it-begins-again.mp3",
+        "category": "bgm",
+        "tags": [
+          "defendant-lobby",
+          "calm",
+          "pre-trial"
+        ],
+        "gain": 0.86,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 55.00-74.20 s fails: coverage 0.42 < 0.7; envelope identity 0.883 < 0.92",
+        "loudnessLufs": -13.7
+      },
+      "beforeSha256": "326661ad06468fea210d4a0f70606c1992fda3a8438787bcfb8cc4e7413afe64",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/03 Courtroom Lounge ~ Overture Again [BGM077].mp3",
+      "sourceSha256": "433a29d422970f08eabc5fbcb20b49a2a02875dfadc275f4534c48a8d34813e8",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-defendant-lobby-so-it-begins-again.mp3",
+      "replacementSha256": "433a29d422970f08eabc5fbcb20b49a2a02875dfadc275f4534c48a8d34813e8",
+      "loopStatus": "whole_file",
+      "durationSeconds": 89.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-01-defendant-lobby-so-it-begins-again.mp3"
+    },
+    "justice_for_all_court_is_now_in_session": {
+      "before": {
+        "number": 2,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Justice for All - Court is Now in Session",
+        "shortTitle": "Court Is Now in Session",
+        "src": "original/d2-02-justice-for-all-court-is-now-in-session.mp3",
+        "category": "bgm",
+        "tags": [
+          "courtroom",
+          "trial",
+          "neutral"
+        ],
+        "gain": 0.72,
+        "contextual": false,
+        "loop": {
+          "startSample": 361620,
+          "endSample": 2478356,
+          "sampleRate": 44100,
+          "confidence": 0.98,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 84 windows; envelope identity 0.9850; full-rate seam correlation 0.9927; loop 48.0 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -12.1
+      },
+      "beforeSha256": "bb3a2da4c731b2d1d334dde997fca5d7e65f467d3883f99350f2cfef09102659",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/04 Trial [BGM069].mp3",
+      "sourceSha256": "9c0f48f1bd4d32313a122929c49196ca803e2931ce3b81644afbdda783fbc331",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-justice-for-all-court-is-now-in-session.mp3",
+      "replacementSha256": "9c0f48f1bd4d32313a122929c49196ca803e2931ce3b81644afbdda783fbc331",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 110.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-02-justice-for-all-court-is-now-in-session.mp3"
+    },
+    "cross_examination_moderato_2002": {
+      "before": {
+        "number": 3,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Cross-Examination - Moderato 2002",
+        "shortTitle": "Cross-Examination: Moderato",
+        "src": "original/d2-03-cross-examination-moderato-2002.mp3",
+        "category": "bgm",
+        "tags": [
+          "courtroom",
+          "cross-examination",
+          "tense"
+        ],
+        "gain": 0.88,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 25.54-64.73 s fails: coverage 0.36 < 0.7; seam correlation 0.790 < 0.95",
+        "loudnessLufs": -13.9
+      },
+      "beforeSha256": "be866cb2dd8acd7348bbd99aa182b339c687ba65bfc798c2d4b6aedee0fb5044",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/05 Examination ~ Moderate 2002 [BGM072].mp3",
+      "sourceSha256": "843c3d7e903b5eebbac4096ed5cb2c7b641784a3fff74e431291470693074e31",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-cross-examination-moderato-2002.mp3",
+      "replacementSha256": "843c3d7e903b5eebbac4096ed5cb2c7b641784a3fff74e431291470693074e31",
+      "loopStatus": "whole_file",
+      "durationSeconds": 88.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-03-cross-examination-moderato-2002.mp3"
+    },
+    "magic_and_tricks": {
+      "before": {
+        "number": 4,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Magic and Tricks",
+        "shortTitle": "Magic and Tricks",
+        "src": "original/d2-04-magic-and-tricks.mp3",
+        "category": "bgm",
+        "tags": [
+          "investigation",
+          "playful",
+          "thinking"
+        ],
+        "gain": 1.27,
+        "contextual": false,
+        "loop": {
+          "startSample": 776160,
+          "endSample": 3195360,
+          "sampleRate": 44100,
+          "confidence": 0.91,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.945 over 73 windows; envelope identity 0.9592; full-rate seam correlation 0.9991; loop 54.9 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -19.7
+      },
+      "beforeSha256": "54f9e1595bfffa0eca70e608ae0b5e7459a541496ad17a8fed2cb3362f62a898",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/06 Trick and Magic [BGM071].mp3",
+      "sourceSha256": "b41db7f6afd7e8cf6f7abbf6656aba5ac2aa0ca69f4d174b3d526ae00ac6f89d",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-magic-and-tricks.mp3",
+      "replacementSha256": "b41db7f6afd7e8cf6f7abbf6656aba5ac2aa0ca69f4d174b3d526ae00ac6f89d",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 119.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-04-magic-and-tricks.mp3"
+    },
+    "objection_2002": {
+      "before": {
+        "number": 5,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Phoenix Wright - Objection! 2002",
+        "shortTitle": "Objection!",
+        "src": "original/d2-05-phoenix-wright-objection-2002.mp3",
+        "category": "contextual",
+        "tags": [
+          "objection",
+          "dramatic"
+        ],
+        "gain": 0.39,
+        "contextual": true,
+        "loop": {
+          "startSample": 1571712,
+          "endSample": 2982912,
+          "sampleRate": 44100,
+          "confidence": 0.81,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.870 over 23 windows; envelope identity 0.9579; full-rate seam correlation 0.9667; loop 32.0 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -6.8
+      },
+      "beforeSha256": "164b75631ef45d7bcfbbdb77968f8a418eb6b018488659f355df4f0cc0733cc7",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/07 Phoenix Wright ~ Objection! 2002 [BGM070].mp3",
+      "sourceSha256": "706ddc9ee37f28970474ac2505036291120fb0a5b30fdf94569015c3d15dfd37",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-objection-2002.mp3",
+      "replacementSha256": "706ddc9ee37f28970474ac2505036291120fb0a5b30fdf94569015c3d15dfd37",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 90.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-05-phoenix-wright-objection-2002.mp3"
+    },
+    "cross_examination_allegro_2002": {
+      "before": {
+        "number": 6,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Cross-Examination - Allegro 2002",
+        "shortTitle": "Cross-Examination: Allegro",
+        "src": "original/d2-06-cross-examination-allegro-2002.mp3",
+        "category": "bgm",
+        "tags": [
+          "courtroom",
+          "cross-examination",
+          "tense",
+          "intense"
+        ],
+        "gain": 0.52,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 42.12-86.69 s fails: seam correlation 0.905 < 0.95",
+        "loudnessLufs": -9.3
+      },
+      "beforeSha256": "e67cf30a4abefe3fcce6add055842ca1d81d9fabdab23683f60f68c3afc4c2b9",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/08 Examination ~ Allegro 2002 [BGM073].mp3",
+      "sourceSha256": "4e0ad0d98b4afab27a7a94b4dec470cac8063f6a53a7c36050290af2833ebf6a",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-cross-examination-allegro-2002.mp3",
+      "replacementSha256": "4e0ad0d98b4afab27a7a94b4dec470cac8063f6a53a7c36050290af2833ebf6a",
+      "loopStatus": "whole_file",
+      "durationSeconds": 99.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-06-cross-examination-allegro-2002.mp3"
+    },
+    "pursuit_confront_the_culprit": {
+      "before": {
+        "number": 7,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Pursuit - Confront the Culprit",
+        "shortTitle": "Pursuit: Confront the Culprit",
+        "src": "original/d2-07-pursuit-confront-the-culprit.mp3",
+        "category": "contextual",
+        "tags": [
+          "pursuit",
+          "tense",
+          "intense"
+        ],
+        "gain": 0.69,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 6.38-38.38 s fails: coverage 0.56 < 0.7",
+        "loudnessLufs": -11.8
+      },
+      "beforeSha256": "36f48249c0c66f48e303d626f5a03110ee31209abf5df95f407c7e07b32cf2af",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/09 Pursuit ~ Cornered [BGM074].mp3",
+      "sourceSha256": "3dbb79baaa3bfa62ab990a776669139b087d4fbf661d516b8b1eb5beabd2ab78",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-pursuit-confront-the-culprit.mp3",
+      "replacementSha256": "3dbb79baaa3bfa62ab990a776669139b087d4fbf661d516b8b1eb5beabd2ab78",
+      "loopStatus": "whole_file",
+      "durationSeconds": 80.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-07-pursuit-confront-the-culprit.mp3"
+    },
+    "the_truth_revealed_2002": {
+      "before": {
+        "number": 8,
+        "disc": 2,
+        "game": "jfa",
+        "title": "The Truth Revealed 2002",
+        "shortTitle": "The Truth Revealed",
+        "src": "original/d2-08-the-truth-revealed-2002.mp3",
+        "category": "contextual",
+        "tags": [
+          "revelation",
+          "dramatic"
+        ],
+        "gain": 0.6,
+        "contextual": true,
+        "loop": {
+          "startSample": 1627720,
+          "endSample": 3509320,
+          "sampleRate": 44100,
+          "confidence": 0.96,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 8 windows; envelope identity 0.9587; full-rate seam correlation 0.9983; loop 42.7 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -10.5
+      },
+      "beforeSha256": "270845a7695061eaab166f14aa5064862a265cad89905fec43707c053975d1b9",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/10 Announce the Truth 2002 [BGM078].mp3",
+      "sourceSha256": "106ed1004b9a9f8284ab35c360e3042c0840967a44701997db3994e160b163b7",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-the-truth-revealed-2002.mp3",
+      "replacementSha256": "106ed1004b9a9f8284ab35c360e3042c0840967a44701997db3994e160b163b7",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 100.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-08-the-truth-revealed-2002.mp3"
+    },
+    "pursuit_confront_the_culprit_variation": {
+      "before": {
+        "number": 10,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Pursuit - Confront the Culprit (Variation)",
+        "shortTitle": "Pursuit: Confront (Variation)",
+        "src": "original/d2-10-pursuit-confront-the-culprit-variation.mp3",
+        "category": "contextual",
+        "tags": [
+          "pursuit",
+          "tense",
+          "intense"
+        ],
+        "gain": 0.64,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 10.84-42.84 s fails: coverage 0.00 < 0.7; envelope identity 0.889 < 0.92; seam correlation 0.768 < 0.95",
+        "loudnessLufs": -11.1
+      },
+      "beforeSha256": "81284f34bfcb7d508193b618aa44feaeb8cd91c3e8ddd20f7c5765b2bb14f906",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/11 Pursuit ~ Cornered (Variation) [BGM075].mp3",
+      "sourceSha256": "bc8228a0df9df0a219d25acc89568de0e85c3e1cc1a65c149d193cfcf76d9769",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-pursuit-confront-the-culprit-variation.mp3",
+      "replacementSha256": "bc8228a0df9df0a219d25acc89568de0e85c3e1cc1a65c149d193cfcf76d9769",
+      "loopStatus": "whole_file",
+      "durationSeconds": 75.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-10-pursuit-confront-the-culprit-variation.mp3"
+    },
+    "psyche_locks": {
+      "before": {
+        "number": 12,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Psyche-Locks",
+        "shortTitle": "Psyche-Locks",
+        "src": "original/d2-12-psyche-locks.mp3",
+        "category": "contextual",
+        "tags": [
+          "psyche-lock",
+          "tense"
+        ],
+        "gain": 0.99,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 20.27-49.53 s fails: coverage 0.00 < 0.7; envelope identity 0.797 < 0.92; seam correlation 0.788 < 0.95",
+        "loudnessLufs": -14.9
+      },
+      "beforeSha256": "b77eb7f687a8ed860f8901350aa8a15739b3d51d2ae272a2e0bad7506126338c",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/13 Psyche Lock [BGM085].mp3",
+      "sourceSha256": "9d82714632523ec31d558623eddc726e2e552757553e11ec09047e36a2ae5b39",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-psyche-locks.mp3",
+      "replacementSha256": "9d82714632523ec31d558623eddc726e2e552757553e11ec09047e36a2ae5b39",
+      "loopStatus": "whole_file",
+      "durationSeconds": 80.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-12-psyche-locks.mp3"
+    },
+    "initial_investigation_2002": {
+      "before": {
+        "number": 13,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Initial Investigation 2002",
+        "shortTitle": "Initial Investigation",
+        "src": "original/d2-13-initial-investigation-2002.mp3",
+        "category": "bgm",
+        "tags": [
+          "investigation",
+          "calm",
+          "thinking"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": {
+          "startSample": 44100,
+          "endSample": 1737540,
+          "sampleRate": 44100,
+          "confidence": 0.74,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.794 over 73 windows; envelope identity 0.9606; full-rate seam correlation 0.9705; loop 38.4 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -15.5
+      },
+      "beforeSha256": "2db3c69300ab0c52aacd594a7a901c8f87c04ad97deeaed50002e57272f3d541",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/14 Search ~ Opening 2002 [BGM065].mp3",
+      "sourceSha256": "642bce919e0edbd0fe08fd422d8287a3e13defb0a2959567efffd1f7c28d2b23",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-initial-investigation-2002.mp3",
+      "replacementSha256": "642bce919e0edbd0fe08fd422d8287a3e13defb0a2959567efffd1f7c28d2b23",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 86.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-13-initial-investigation-2002.mp3"
+    },
+    "maya_fey_turnabout_sisters_2002": {
+      "before": {
+        "number": 14,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Maya Fey - Turnabout Sisters 2002",
+        "shortTitle": "Maya Fey",
+        "src": "original/d2-14-maya-fey-turnabout-sisters-2002.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:maya_fey",
+          "light",
+          "calm"
+        ],
+        "gain": 0.68,
+        "contextual": false,
+        "loop": {
+          "startSample": 2064558,
+          "endSample": 4303644,
+          "sampleRate": 44100,
+          "confidence": 0.76,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.833 over 6 windows; envelope identity 0.9561; full-rate seam correlation 0.9530; loop 50.8 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -11.7
+      },
+      "beforeSha256": "4c45f1dbbbc0498aba2a34505b610a6a7aaa4abc596fb321f97d5d03d948cd9c",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/15 Maya Fey ~ Turnabout Sisters' Theme 2002 [BGM054].mp3",
+      "sourceSha256": "43a32f82781b2aa861528c043c181354c9ac2223edf2e1dcfb8e2041eec61f1f",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-maya-fey-turnabout-sisters-2002.mp3",
+      "replacementSha256": "43a32f82781b2aa861528c043c181354c9ac2223edf2e1dcfb8e2041eec61f1f",
+      "loopStatus": "whole_file",
+      "durationSeconds": 111.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-14-maya-fey-turnabout-sisters-2002.mp3"
+    },
+    "detention_center_the_security_cameras_elegy": {
+      "before": {
+        "number": 15,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Detention Center - The Security Camera's Elegy",
+        "shortTitle": "Detention Center",
+        "src": "original/d2-15-detention-center-the-security-cameras-elegy.mp3",
+        "category": "bgm",
+        "tags": [
+          "detention-center",
+          "calm",
+          "melancholy"
+        ],
+        "gain": 1.27,
+        "contextual": false,
+        "loop": {
+          "startSample": 4410,
+          "endSample": 2615130,
+          "sampleRate": 44100,
+          "confidence": 0.91,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.929 over 112 windows; envelope identity 0.9853; full-rate seam correlation 0.9977; loop 59.2 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -20.1
+      },
+      "beforeSha256": "f4ac8e722db9adceb55f3c54eb3f9b320b8a6a74f3fd2fe4b3ba162a2855466b",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/16 Police Cell ~ Elegy of Surveillance Cameras [BGM058].mp3",
+      "sourceSha256": "9787821332948dbc095ba6b87589884e2c01697614fa7cf9259b854feb80c44e",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-detention-center-the-security-cameras-elegy.mp3",
+      "replacementSha256": "9787821332948dbc095ba6b87589884e2c01697614fa7cf9259b854feb80c44e",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 128.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-15-detention-center-the-security-cameras-elegy.mp3"
+    },
+    "kurain_village": {
+      "before": {
+        "number": 16,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Kurain Village",
+        "shortTitle": "Kurain Village",
+        "src": "original/d2-16-kurain-village.mp3",
+        "category": "bgm",
+        "tags": [
+          "location",
+          "calm",
+          "mystic"
+        ],
+        "gain": 1.24,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 3.92-49.35 s fails: seam correlation 0.905 < 0.95",
+        "loudnessLufs": -19.9
+      },
+      "beforeSha256": "cf95e7450dbf5c1ae0a721bdf43faabd874a279759e9836cc05c0654837f5852",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/17 Kurain Village [BGM057].mp3",
+      "sourceSha256": "8b2e844b9ce19b40722dd7c316181528ee4bcca4a9641f7d66364b0688f25559",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-kurain-village.mp3",
+      "replacementSha256": "8b2e844b9ce19b40722dd7c316181528ee4bcca4a9641f7d66364b0688f25559",
+      "loopStatus": "whole_file",
+      "durationSeconds": 105.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-16-kurain-village.mp3"
+    },
+    "reminiscences_fire_licked_scars": {
+      "before": {
+        "number": 17,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Reminiscences - Fire-Licked Scars",
+        "shortTitle": "Fire-Licked Scars",
+        "src": "original/d2-17-reminiscences-fire-licked-scars.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "dramatic",
+          "melancholy"
+        ],
+        "gain": 0.75,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 63.92-132.49 s fails: coverage 0.50 < 0.7; seam correlation 0.803 < 0.95",
+        "loudnessLufs": -12.5
+      },
+      "beforeSha256": "af8fdcbda263d77cf61f1936d06caad48fcf47a8b62e45d901b780a265e18a97",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/18 Reminiscence ~ Scars Etched by Flame [BGM062].mp3",
+      "sourceSha256": "9570f491ee6c54fe11c864e54333d50400eba988e1ec14b8fd133b6ea8bf4126",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-reminiscences-fire-licked-scars.mp3",
+      "replacementSha256": "9570f491ee6c54fe11c864e54333d50400eba988e1ec14b8fd133b6ea8bf4126",
+      "loopStatus": "whole_file",
+      "durationSeconds": 147.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-17-reminiscences-fire-licked-scars.mp3"
+    },
+    "eccentrics": {
+      "before": {
+        "number": 18,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Eccentrics",
+        "shortTitle": "Eccentrics",
+        "src": "original/d2-18-eccentrics.mp3",
+        "category": "bgm",
+        "tags": [
+          "location",
+          "playful"
+        ],
+        "gain": 0.74,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 21.36-77.36 s fails: coverage 0.26 < 0.7; envelope identity 0.845 < 0.92; seam correlation 0.891 < 0.95",
+        "loudnessLufs": -12.4
+      },
+      "beforeSha256": "c83741858b3ee0ccd9de5e7be3051250a6ea225972bebd6115f1701adf504888",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/19 Eccentric [BGM059].mp3",
+      "sourceSha256": "e051a8bca27223b3a24fd536181e6048dbe8ebdfd28419e8b9524c2720510e0f",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-eccentrics.mp3",
+      "replacementSha256": "e051a8bca27223b3a24fd536181e6048dbe8ebdfd28419e8b9524c2720510e0f",
+      "loopStatus": "whole_file",
+      "durationSeconds": 100.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-18-eccentrics.mp3"
+    },
+    "berry_big_circus": {
+      "before": {
+        "number": 20,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Berry Big Circus",
+        "shortTitle": "Berry Big Circus",
+        "src": "original/d2-20-berry-big-circus.mp3",
+        "category": "bgm",
+        "tags": [
+          "location",
+          "playful",
+          "circus"
+        ],
+        "gain": 0.91,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 14.00-54.07 s fails: coverage 0.21 < 0.7; envelope identity 0.886 < 0.92; seam correlation 0.941 < 0.95",
+        "loudnessLufs": -14.2
+      },
+      "beforeSha256": "7cb466970cb01e404caed9949dd7ecd3e587e97109913acba8bea3d4c2cbd142",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/21 Tachimi - Circus [BGM055].mp3",
+      "sourceSha256": "fddcb0e65c2064cc2b0acfed0db6dfd2907a973623f1b307527f156d2a24b984",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-berry-big-circus.mp3",
+      "replacementSha256": "fddcb0e65c2064cc2b0acfed0db6dfd2907a973623f1b307527f156d2a24b984",
+      "loopStatus": "whole_file",
+      "durationSeconds": 90.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-20-berry-big-circus.mp3"
+    },
+    "more_simple_folk": {
+      "before": {
+        "number": 21,
+        "disc": 2,
+        "game": "jfa",
+        "title": "More Simple Folk",
+        "shortTitle": "More Simple Folk",
+        "src": "original/d2-21-more-simple-folk.mp3",
+        "category": "bgm",
+        "tags": [
+          "location",
+          "calm",
+          "playful"
+        ],
+        "gain": 0.62,
+        "contextual": false,
+        "loop": {
+          "startSample": 1199468,
+          "endSample": 2659307,
+          "sampleRate": 44100,
+          "confidence": 0.65,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.700 over 10 windows; envelope identity 0.9527; full-rate seam correlation 0.9807; loop 33.1 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -10.9
+      },
+      "beforeSha256": "f1540538af1ba310c7d33ff7de1c115449ae9e22850005d5679e43c00524bb7e",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/22 Congratulations Everybody, Again [BGM068].mp3",
+      "sourceSha256": "102f42a14478fd45b974390ae919239586f002641d9d4d9f266fd1cc68d79f22",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-more-simple-folk.mp3",
+      "replacementSha256": "102f42a14478fd45b974390ae919239586f002641d9d4d9f266fd1cc68d79f22",
+      "loopStatus": "whole_file",
+      "durationSeconds": 76.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-21-more-simple-folk.mp3"
+    },
+    "reminiscences_pure_pain": {
+      "before": {
+        "number": 22,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Reminiscences - Pure Pain",
+        "shortTitle": "Pure Pain",
+        "src": "original/d2-22-reminiscences-pure-pain.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "dramatic",
+          "melancholy"
+        ],
+        "gain": 1.15,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 0.00-27.83 s fails: coverage 0.00 < 0.7; envelope identity 0.556 < 0.92; seam correlation 0.749 < 0.95",
+        "loudnessLufs": -16.2
+      },
+      "beforeSha256": "d95463c0dddafb33ccc1e37fca8ba8662190fdbdf05f25a5ae2527ad7f208a85",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/23 Reminiscence ~ True Pain [BGM063].mp3",
+      "sourceSha256": "50312db0dd43a89f6f5c4b1d4197404802936ca955c72d3d22c0228924d16a8c",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-reminiscences-pure-pain.mp3",
+      "replacementSha256": "50312db0dd43a89f6f5c4b1d4197404802936ca955c72d3d22c0228924d16a8c",
+      "loopStatus": "whole_file",
+      "durationSeconds": 149.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-22-reminiscences-pure-pain.mp3"
+    },
+    "shelly_de_killer_a_deadly_gentlemans_delight": {
+      "before": {
+        "number": 23,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Shelly de Killer - A Deadly Gentleman's Delight",
+        "shortTitle": "Shelly de Killer",
+        "src": "original/d2-23-shelly-de-killer-a-deadly-gentlemans-delight.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:shelly_de_killer",
+          "tense",
+          "dramatic"
+        ],
+        "gain": 0.95,
+        "contextual": false,
+        "loop": {
+          "startSample": 4410,
+          "endSample": 3499323,
+          "sampleRate": 44100,
+          "confidence": 0.96,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 4 windows; envelope identity 0.9889; full-rate seam correlation 0.9675; loop 79.2 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -14.6
+      },
+      "beforeSha256": "e245db138e527fbd6de0bab2eb97f7b524a44422a70214d0bc942b4ff4c2c260",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/24 Shelly de Killer ~ The Whim of a Murderous Gentleman [BGM061].mp3",
+      "sourceSha256": "05bc19fe30f6ce5be702372c2a3de677f7e92581480b6176c4976b98f64673bd",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-shelly-de-killer-a-deadly-gentlemans-delight.mp3",
+      "replacementSha256": "05bc19fe30f6ce5be702372c2a3de677f7e92581480b6176c4976b98f64673bd",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 89.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-23-shelly-de-killer-a-deadly-gentlemans-delight.mp3"
+    },
+    "pearl_fey_with_pearly": {
+      "before": {
+        "number": 24,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Pearl Fey - With Pearly",
+        "shortTitle": "Pearl Fey",
+        "src": "original/d2-24-pearl-fey-with-pearly.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:pearl_fey",
+          "light",
+          "playful"
+        ],
+        "gain": 0.91,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 0.00-58.29 s fails: coverage 0.00 < 0.7; envelope identity 0.000 < 0.92; seam correlation 0.418 < 0.95; only 3 windows after the seam",
+        "loudnessLufs": -14.2
+      },
+      "beforeSha256": "4e6a78badebec272680687ba75b861a75149a9c4567a02fcb28fafa60948b714",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/25 Pearl Fey ~ With Pearly [BGM092].mp3",
+      "sourceSha256": "fcc340a1caf27ef687e8ef485bcc145a21204427ed62a9f8e5c4619789ae0d2d",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-pearl-fey-with-pearly.mp3",
+      "replacementSha256": "fcc340a1caf27ef687e8ef485bcc145a21204427ed62a9f8e5c4619789ae0d2d",
+      "loopStatus": "whole_file",
+      "durationSeconds": 70.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-24-pearl-fey-with-pearly.mp3"
+    },
+    "further_investigation_2002": {
+      "before": {
+        "number": 25,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Further Investigation 2002",
+        "shortTitle": "Further Investigation",
+        "src": "original/d2-25-further-investigation-2002.mp3",
+        "category": "bgm",
+        "tags": [
+          "investigation",
+          "thinking"
+        ],
+        "gain": 0.74,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 21.40-67.31 s fails: coverage 0.20 < 0.7; envelope identity 0.898 < 0.92",
+        "loudnessLufs": -12.4
+      },
+      "beforeSha256": "b05adf7b82fdc077fb9db4c856fdb820922961d4e047a41a9d0ea1991245da77",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/26 Search ~ In the Midst 2002 [BGM088].mp3",
+      "sourceSha256": "a23fa96f66b7e42e16b1e01f0d288c89b50600525a61324b52f14d367a816dfb",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-further-investigation-2002.mp3",
+      "replacementSha256": "a23fa96f66b7e42e16b1e01f0d288c89b50600525a61324b52f14d367a816dfb",
+      "loopStatus": "whole_file",
+      "durationSeconds": 101.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-25-further-investigation-2002.mp3"
+    },
+    "triumphant_return_miles_edgeworth": {
+      "before": {
+        "number": 26,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Triumphant Return - Miles Edgeworth",
+        "shortTitle": "Miles Edgeworth",
+        "src": "original/d2-26-triumphant-return-miles-edgeworth.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:miles_edgeworth",
+          "prosecutor",
+          "dramatic"
+        ],
+        "gain": 0.6,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 9.93-43.32 s fails: coverage 0.13 < 0.7; envelope identity 0.806 < 0.92",
+        "loudnessLufs": -10.5
+      },
+      "beforeSha256": "051818888f218f3e8eacf734c42dc441ecfc01ce2409eba1c1da8cb5ca99ac67",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/27 Great Revival ~ Miles Edgeworth [BGM067].mp3",
+      "sourceSha256": "844381aa44b207e734b3b1c4fef8fb16d1afcf0ade9450f64c839c3ba1ef6596",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-triumphant-return-miles-edgeworth.mp3",
+      "replacementSha256": "844381aa44b207e734b3b1c4fef8fb16d1afcf0ade9450f64c839c3ba1ef6596",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 86.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-26-triumphant-return-miles-edgeworth.mp3"
+    },
+    "hotline_of_fate": {
+      "before": {
+        "number": 27,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Hotline of Fate",
+        "shortTitle": "Hotline of Fate",
+        "src": "original/d2-27-hotline-of-fate.mp3",
+        "category": "bgm",
+        "tags": [
+          "tense",
+          "dramatic"
+        ],
+        "gain": 0.63,
+        "contextual": false,
+        "loop": {
+          "startSample": 707474,
+          "endSample": 1554194,
+          "sampleRate": 44100,
+          "confidence": 0.97,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 7 windows; envelope identity 0.9869; full-rate seam correlation 0.9847; loop 19.2 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -11.0
+      },
+      "beforeSha256": "80afa749bb92f991da0ba2e0925aa82db542b29939a8ecd6fa631348388ce0a3",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/28 Hotline of Fate [BGM086].mp3",
+      "sourceSha256": "068057926bb14dcb6555f219e06c72b0fa795b4d2a0d7acf4cfaf504ee7631be",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-hotline-of-fate.mp3",
+      "replacementSha256": "068057926bb14dcb6555f219e06c72b0fa795b4d2a0d7acf4cfaf504ee7631be",
+      "loopStatus": "whole_file",
+      "durationSeconds": 48.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-27-hotline-of-fate.mp3"
+    },
+    "heart_of_the_investigation_2002": {
+      "before": {
+        "number": 28,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Heart of the Investigation 2002",
+        "shortTitle": "Heart of the Investigation",
+        "src": "original/d2-28-heart-of-the-investigation-2002.mp3",
+        "category": "bgm",
+        "tags": [
+          "investigation",
+          "thinking",
+          "determined"
+        ],
+        "gain": 0.92,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 26.00-74.00 s fails: coverage 0.05 < 0.7; envelope identity 0.866 < 0.92; seam correlation 0.748 < 0.95",
+        "loudnessLufs": -14.3
+      },
+      "beforeSha256": "be9cbc4ab9452222a624ac01bd9c50d6a6776e585ab62412e4d9ca7338ee834a",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/29 Search ~ Core 2002 [BGM064].mp3",
+      "sourceSha256": "74952da20e1bb263dd8017a252dac440c825018acc45a4e9492b1a6fa561b331",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-heart-of-the-investigation-2002.mp3",
+      "replacementSha256": "74952da20e1bb263dd8017a252dac440c825018acc45a4e9492b1a6fa561b331",
+      "loopStatus": "whole_file",
+      "durationSeconds": 110.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-28-heart-of-the-investigation-2002.mp3"
+    },
+    "reminiscences_ballad_of_the_steel_samurai": {
+      "before": {
+        "number": 29,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Reminiscences - Ballad of The Steel Samurai",
+        "shortTitle": "Ballad of the Steel Samurai",
+        "src": "original/d2-29-reminiscences-ballad-of-the-steel-samurai.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "dramatic"
+        ],
+        "gain": 1.55,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 1.20-61.80 s fails: coverage 0.14 < 0.7; envelope identity 0.845 < 0.92",
+        "loudnessLufs": -18.8
+      },
+      "beforeSha256": "faaf32c27cda79067a7959470b568c5ff38327caf434b63accaf87b3a81040f1",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/30 Reminiscence ~ Steel Samurai's Ballad [BGM053].mp3",
+      "sourceSha256": "0893b0b953c1d60bb28a488cd1db72d15de04156c281150cb58e8bc0e12eaa77",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-reminiscences-ballad-of-the-steel-samurai.mp3",
+      "replacementSha256": "0893b0b953c1d60bb28a488cd1db72d15de04156c281150cb58e8bc0e12eaa77",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 131.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-29-reminiscences-ballad-of-the-steel-samurai.mp3"
+    },
+    "triumphant_return_franziska_von_karma": {
+      "before": {
+        "number": 30,
+        "disc": 2,
+        "game": "jfa",
+        "title": "Triumphant Return - Franziska von Karma",
+        "shortTitle": "Franziska von Karma",
+        "src": "original/d2-30-triumphant-return-franziska-von-karma.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:franziska_von_karma",
+          "prosecutor",
+          "dramatic"
+        ],
+        "gain": 0.6,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 30.07-63.75 s fails: coverage 0.00 < 0.7; envelope identity 0.777 < 0.92; seam correlation 0.766 < 0.95",
+        "loudnessLufs": -10.5
+      },
+      "beforeSha256": "4f38d8b59906d12644f8fc8a49948183ace18c6610a1e0d9e05024fd85c2a516",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/31 Great Revival ~ Franziska von Karma [BGM087].mp3",
+      "sourceSha256": "9fea0adcf32e4a48f1e38cb4a76e299d5e4fba20c86654f14ef945046bf971f5",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-triumphant-return-franziska-von-karma.mp3",
+      "replacementSha256": "9fea0adcf32e4a48f1e38cb4a76e299d5e4fba20c86654f14ef945046bf971f5",
+      "loopStatus": "whole_file",
+      "durationSeconds": 86.0,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-30-triumphant-return-franziska-von-karma.mp3"
+    },
+    "one_prosecutors_musings_until_we_meet_again": {
+      "before": {
+        "number": 33,
+        "disc": 2,
+        "game": "jfa",
+        "title": "One Prosecutor's Musings - Until We Meet Again",
+        "shortTitle": "Until We Meet Again",
+        "src": "original/d2-33-one-prosecutors-musings-until-we-meet-again.mp3",
+        "category": "contextual",
+        "tags": [
+          "prosecutor",
+          "melancholy"
+        ],
+        "gain": 1.46,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "no repeating section of at least 8 s found (no candidate lag)",
+        "loudnessLufs": -19.1
+      },
+      "beforeSha256": "2b4774d284d477780b823aa182da20375ede5031c76941e4b83e8bbf6a343d99",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Justice for All/35 Prosecutor's Murmur ~ Until we Meet Again [BGM089].mp3",
+      "sourceSha256": "3c7c3678cd2c662cd2c3b1411fbd8fa80f0c4182bd1dce2e254fc961e87ab3f0",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-one-prosecutors-musings-until-we-meet-again.mp3",
+      "replacementSha256": "3c7c3678cd2c662cd2c3b1411fbd8fa80f0c4182bd1dce2e254fc961e87ab3f0",
+      "loopStatus": "whole_file",
+      "durationSeconds": 56.49414965986394,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d2-33-one-prosecutors-musings-until-we-meet-again.mp3"
+    },
+    "bonus_prosecutors_path_miles_and_fran": {
+      "before": {
+        "number": 34,
+        "disc": 2,
+        "game": "jfa",
+        "title": "BONUS - Prosecutor's Path ~ Miles and Fran",
+        "shortTitle": "Prosecutor's Path",
+        "src": "original/d2-34-bonus-prosecutors-path-miles-and-fran.mp3",
+        "category": "contextual",
+        "tags": [
+          "prosecutor",
+          "bonus",
+          "medley"
+        ],
+        "gain": 1.45,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 21.64-70.25 s fails: coverage 0.29 < 0.7",
+        "loudnessLufs": -18.3
+      },
+      "beforeSha256": "fdd60272a751ccc5dd596bc8616165706ef0af58d3c1f26bab3a0a087a62fb83",
+      "action": "REVIEW",
+      "confidence": "uncertain",
+      "reason": "Bonus arrangement not present in original JFA source set."
+    },
+    "defendant_lobby_so_it_will_always_begin": {
+      "before": {
+        "number": 2,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Defendant Lobby - So it Will Always Begin",
+        "shortTitle": "Defendant Lobby",
+        "src": "original/d3-02-defendant-lobby-so-it-will-always-begin.mp3",
+        "category": "bgm",
+        "tags": [
+          "defendant-lobby",
+          "calm",
+          "pre-trial"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 37.36-81.50 s fails: coverage 0.33 < 0.7; seam correlation 0.947 < 0.95",
+        "loudnessLufs": -17.1
+      },
+      "beforeSha256": "0dee2cb1c2c0174ff192bea2870534257c93bd9f0e9708e9c0100deff087f488",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/03 Courtroom Lounge ~ Neverending Overture.wav",
+      "sourceSha256": "3b9f07d7a8dfd1a3f63bf6fbae467cb125b35fc8befa7d14f5b33860acb8d799",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-defendant-lobby-so-it-will-always-begin.flac",
+      "replacementSha256": "0623722a68ac3444f77ea17deadb85ce6477a48580b70e7ac2032fdaeb634078",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 107.00562358276645,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-02-defendant-lobby-so-it-will-always-begin.mp3"
+    },
+    "trials_and_tribulations_court_is_now_in_session": {
+      "before": {
+        "number": 3,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Trials and Tribulations - Court is Now in Session",
+        "shortTitle": "Court Is Now in Session",
+        "src": "original/d3-03-trials-and-tribulations-court-is-now-in-session.mp3",
+        "category": "bgm",
+        "tags": [
+          "courtroom",
+          "trial",
+          "neutral"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 12.75-76.40 s fails: coverage 0.00 < 0.7; envelope identity 0.510 < 0.92; seam correlation 0.614 < 0.95",
+        "loudnessLufs": -15.8
+      },
+      "beforeSha256": "fcd5ddced54fdca608f50af9abe43e28fec53ef9bb66be2569a96d79812bb2c0",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/04 Trial.wav",
+      "sourceSha256": "135858141558177dc836cf7428e131310f4c254bb34716b901de3b8e907f9d89",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-trials-and-tribulations-court-is-now-in-session.flac",
+      "replacementSha256": "00a2773c655d55d3d3d9ffb4342e6c69eb5006ad258094d1d408cfa149928e65",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 138.0073469387755,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-03-trials-and-tribulations-court-is-now-in-session.mp3"
+    },
+    "cross_examination_moderato_2004": {
+      "before": {
+        "number": 4,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Cross-Examination - Moderato 2004",
+        "shortTitle": "Cross-Examination: Moderato",
+        "src": "original/d3-04-cross-examination-moderato-2004.mp3",
+        "category": "bgm",
+        "tags": [
+          "courtroom",
+          "cross-examination",
+          "tense"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 14.24-109.65 s fails: coverage 0.05 < 0.7; envelope identity 0.903 < 0.92",
+        "loudnessLufs": -15.0
+      },
+      "beforeSha256": "035fe15d6ce34f03b5579969f49257660a913dcc24eac626fb5590c2c2dd08bd",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/05 Questioning ~ Moderate 2004.wav",
+      "sourceSha256": "616366ccebb47cbc92663baabf9348b4aac358eca9281d5debc4ee17e5509e06",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-cross-examination-moderato-2004.flac",
+      "replacementSha256": "0173525c53a5dcdb9fc198bca8862cdf7a6fd0b11c1880a5bc728b059937d71e",
+      "loopStatus": "whole_file",
+      "durationSeconds": 201.00514739229024,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-04-cross-examination-moderato-2004.mp3"
+    },
+    "objection_2004": {
+      "before": {
+        "number": 5,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Phoenix Wright - Objection! 2004",
+        "shortTitle": "Objection!",
+        "src": "original/d3-05-phoenix-wright-objection-2004.mp3",
+        "category": "contextual",
+        "tags": [
+          "objection",
+          "dramatic"
+        ],
+        "gain": 0.95,
+        "contextual": true,
+        "loop": {
+          "startSample": 1702994,
+          "endSample": 4084395,
+          "sampleRate": 44100,
+          "confidence": 0.83,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.885 over 26 windows; envelope identity 0.9664; full-rate seam correlation 0.9700; loop 54.0 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -14.6
+      },
+      "beforeSha256": "4feedab26acedf71101d327e5980afcdd21d49dc4e293685c9fcd65e18523d9e",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/06 Phoenix Wright ~ Objection! 2004.wav",
+      "sourceSha256": "55a1a8f96c64912192bdde31fbbe67201382eb9ba35283e93691c0dbc379c60c",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-objection-2004.flac",
+      "replacementSha256": "6d03efca451baf376184a9bc0b0eca2eb358b2409a8de4016409695e46d83fc1",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 119.00857142857143,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-05-phoenix-wright-objection-2004.mp3"
+    },
+    "cross_examination_allegro_2004": {
+      "before": {
+        "number": 6,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Cross-Examination - Allegro 2004",
+        "shortTitle": "Cross-Examination: Allegro",
+        "src": "original/d3-06-cross-examination-allegro-2004.mp3",
+        "category": "bgm",
+        "tags": [
+          "courtroom",
+          "cross-examination",
+          "tense",
+          "intense"
+        ],
+        "gain": 0.5,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 44.88-118.73 s fails: coverage 0.00 < 0.7; envelope identity 0.838 < 0.92; seam correlation 0.666 < 0.95",
+        "loudnessLufs": -8.9
+      },
+      "beforeSha256": "4ceacee81f2e1ea659d50a853cbdb775595a3089d4abce6ede73f5fb86882c64",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/07 Questioning ~ Allegro 2004.wav",
+      "sourceSha256": "4b38d8f83a77f7e56d1d757c3048cfc2d9880c0366fbb61c00a516992438df80",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-cross-examination-allegro-2004.flac",
+      "replacementSha256": "a209316ed835afa27cf5dce02d5f7a474134846c4b3ff505ea6fe499e9999e1b",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 158.00049886621315,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-06-cross-examination-allegro-2004.mp3"
+    },
+    "pursuit_catch_the_culprit": {
+      "before": {
+        "number": 7,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Pursuit - Catch the Culprit",
+        "shortTitle": "Pursuit: Catch the Culprit",
+        "src": "original/d3-07-pursuit-catch-the-culprit.mp3",
+        "category": "contextual",
+        "tags": [
+          "pursuit",
+          "tense",
+          "intense"
+        ],
+        "gain": 0.5,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 30.81-84.32 s fails: coverage 0.00 < 0.7; envelope identity 0.776 < 0.92; seam correlation 0.885 < 0.95",
+        "loudnessLufs": -8.9
+      },
+      "beforeSha256": "fcf4a8998659df2f170e5079882b8d9acd448965b2ab727e4e1ca7e23c78a338",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/08 Pressing Pursuit ~ Cross-Examination.wav",
+      "sourceSha256": "b7874a22a3b43e69e8a837152d8e61cf81917be92581f8bedc5e660781470756",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-pursuit-catch-the-culprit.flac",
+      "replacementSha256": "b4bb08bfb558d2f9d28ff8b56be63b4f66494b8af5b122c4a3dcac0369a3c269",
+      "loopStatus": "whole_file",
+      "durationSeconds": 124.00684807256236,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-07-pursuit-catch-the-culprit.mp3"
+    },
+    "the_truth_revealed_2004": {
+      "before": {
+        "number": 8,
+        "disc": 3,
+        "game": "tnt",
+        "title": "The Truth Revealed 2004",
+        "shortTitle": "The Truth Revealed",
+        "src": "original/d3-08-the-truth-revealed-2004.mp3",
+        "category": "contextual",
+        "tags": [
+          "revelation",
+          "dramatic"
+        ],
+        "gain": 0.79,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 44.28-100.99 s fails: coverage 0.00 < 0.7; envelope identity 0.143 < 0.92; seam correlation 0.210 < 0.95",
+        "loudnessLufs": -12.9
+      },
+      "beforeSha256": "f76e22289a19bac65b076315b961acaf1c1bc48420040d6fd4da55114f05fc59",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/09 Telling the Truth 2004.wav",
+      "sourceSha256": "f0dd7c98bd6b87c49cc6e051aa447334e3d7cff1c3b597939109b9d08772230c",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-the-truth-revealed-2004.flac",
+      "replacementSha256": "a545626dddaca5b5167295b8bd3f2022f92884c001850569713fc64d443aa3f7",
+      "loopStatus": "whole_file",
+      "durationSeconds": 124.00684807256236,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-08-the-truth-revealed-2004.mp3"
+    },
+    "pursuit_catch_the_culprit_variation": {
+      "before": {
+        "number": 9,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Pursuit - Catch the Culprit (Variation)",
+        "shortTitle": "Pursuit: Catch (Variation)",
+        "src": "original/d3-09-pursuit-catch-the-culprit-variation.mp3",
+        "category": "contextual",
+        "tags": [
+          "pursuit",
+          "tense",
+          "intense"
+        ],
+        "gain": 0.47,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 27.65-81.17 s fails: coverage 0.00 < 0.7; envelope identity 0.751 < 0.92; seam correlation 0.565 < 0.95",
+        "loudnessLufs": -8.5
+      },
+      "beforeSha256": "5ef38f017bb5fc806dc6fc8c9f1cfef82e39fe13a25b09323c635cf283555435",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/10 Pressing Pursuit ~ Cross-Examination Variation.wav",
+      "sourceSha256": "5d5c85709ff211e85e6f7aa0ec0c79197b4017691d50b765f049afae0e61f330",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-pursuit-catch-the-culprit-variation.flac",
+      "replacementSha256": "3ca8a78bca714eee33c981d078614c02226f9cdc474ee2fc81607e781ed4b0ab",
+      "loopStatus": "whole_file",
+      "durationSeconds": 118.00539682539683,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-09-pursuit-catch-the-culprit-variation.mp3"
+    },
+    "dahlia_hawthorne_the_visage_of_what_once_was": {
+      "before": {
+        "number": 10,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Dahlia Hawthorne - The Visage of What Once Was",
+        "shortTitle": "Dahlia Hawthorne",
+        "src": "original/d3-10-dahlia-hawthorne-the-visage-of-what-once-was.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:dahlia_hawthorne",
+          "tense",
+          "dramatic"
+        ],
+        "gain": 0.95,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 25.15-94.51 s fails: coverage 0.00 < 0.7; envelope identity 0.348 < 0.92; seam correlation 0.620 < 0.95",
+        "loudnessLufs": -14.6
+      },
+      "beforeSha256": "49136b378c3ba769293d4e368005eb71fcde73063be38f8ac9821f6b452d664c",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/11 Dahlia Hawthorne ~ Distant Trace.wav",
+      "sourceSha256": "29136da5dae2201bd2b5e28380d5bb77b51607d2d1a2d0a2706cac00636ae038",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-dahlia-hawthorne-the-visage-of-what-once-was.flac",
+      "replacementSha256": "61ba9090a71908950cb34c492567785ae07b4c16b79268ab4f670a63bec1f37a",
+      "loopStatus": "whole_file",
+      "durationSeconds": 149.00709750566892,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-10-dahlia-hawthorne-the-visage-of-what-once-was.mp3"
+    },
+    "godot_the_fragrance_of_darkness_that_is_coffee": {
+      "before": {
+        "number": 11,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Godot - The Fragrance of Darkness; That is Coffee",
+        "shortTitle": "Godot",
+        "src": "original/d3-11-godot-the-fragrance-of-darkness-that-is-coffee.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:diego_armando",
+          "prosecutor",
+          "dramatic"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": {
+          "startSample": 1541994,
+          "endSample": 4523405,
+          "sampleRate": 44100,
+          "confidence": 0.96,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 66 windows; envelope identity 0.9614; full-rate seam correlation 0.9940; loop 67.6 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -15.2
+      },
+      "beforeSha256": "02540a031d888918b0921b7d0b1bf1dadb05e1f6c2ace25bd16005dddb53a7b7",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/12 Godot ~ The Fragrance of Dark-Colored Coffee.wav",
+      "sourceSha256": "0a937398fed6530042321a13a48366c5e8bf3df86c06318cce10085f2dbc02cd",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-godot-the-fragrance-of-darkness-that-is-coffee.flac",
+      "replacementSha256": "87f607aaee0ca7af095fab87ad94d1fb9bc474b184bfc6f634522b3245f4ff0d",
+      "loopStatus": "whole_file",
+      "durationSeconds": 147.00074829931972,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-11-godot-the-fragrance-of-darkness-that-is-coffee.mp3"
+    },
+    "initial_investigation_2004": {
+      "before": {
+        "number": 13,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Initial Investigation 2004",
+        "shortTitle": "Initial Investigation",
+        "src": "original/d3-13-initial-investigation-2004.mp3",
+        "category": "bgm",
+        "tags": [
+          "investigation",
+          "calm",
+          "thinking"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 22.40-76.59 s fails: coverage 0.15 < 0.7; envelope identity 0.919 < 0.92",
+        "loudnessLufs": -16.8
+      },
+      "beforeSha256": "934ab1e801e3942111aa2ff8cda04f2536ab30e885efc8ad01190d70f4393f00",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/14 Investigation ~ Opening 2004.wav",
+      "sourceSha256": "a0f68e6f1612cd65d69b7e051fa4134ed5a769cfba7c6ca23f474411e327b615",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-initial-investigation-2004.flac",
+      "replacementSha256": "c1304ae8d8c7895722b95ecc0fc5dc68cb67ad87cf31d68ad7b3ea06b5984dcb",
+      "loopStatus": "whole_file",
+      "durationSeconds": 119.00857142857143,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-13-initial-investigation-2004.mp3"
+    },
+    "the_stolen_turnabout": {
+      "before": {
+        "number": 14,
+        "disc": 3,
+        "game": "tnt",
+        "title": "The Stolen Turnabout",
+        "shortTitle": "The Stolen Turnabout",
+        "src": "original/d3-14-the-stolen-turnabout.mp3",
+        "category": "bgm",
+        "tags": [
+          "case-theme",
+          "dramatic"
+        ],
+        "gain": 0.8,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "no repeating section of at least 8 s found (no candidate lag)",
+        "loudnessLufs": -13.1
+      },
+      "beforeSha256": "34105fa2e208c093f9ab296b3c67584c3370794d5b0cf6db10754b457d6c65e2",
+      "action": "REVIEW",
+      "confidence": "uncertain",
+      "reason": "DS has two separately rendered opening parts; OST correspondence/arrangement needs listening."
+    },
+    "lordly_tailor": {
+      "before": {
+        "number": 15,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Lordly Tailor",
+        "shortTitle": "Lordly Tailor",
+        "src": "original/d3-15-lordly-tailor.mp3",
+        "category": "bgm",
+        "tags": [
+          "character",
+          "playful"
+        ],
+        "gain": 1.6,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 31.23-92.51 s fails: coverage 0.08 < 0.7; envelope identity 0.864 < 0.92; seam correlation 0.882 < 0.95",
+        "loudnessLufs": -19.1
+      },
+      "beforeSha256": "7737acd1eed59f21b1b409936e9145409d3a5bd396ed3fc98adf7de52307e500",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/17 Lordly Tailor Department Store.wav",
+      "sourceSha256": "b39237759460795d797cf7842099db9f776e012c2c4db9c3f9c41d8a342e9b11",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-lordly-tailor.flac",
+      "replacementSha256": "b3993d7b6235a833dbca996e333e7dba50b2c3db007fe477d90cd13477d059a6",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 133.00024943310657,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-15-lordly-tailor.mp3"
+    },
+    "detention_center_the_prisoners_elegy": {
+      "before": {
+        "number": 16,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Detention Center - The Prisoner's Elegy",
+        "shortTitle": "Detention Center",
+        "src": "original/d3-16-detention-center-the-prisoners-elegy.mp3",
+        "category": "bgm",
+        "tags": [
+          "detention-center",
+          "calm",
+          "melancholy"
+        ],
+        "gain": 1.5,
+        "contextual": false,
+        "loop": {
+          "startSample": 26460,
+          "endSample": 2713168,
+          "sampleRate": 44100,
+          "confidence": 0.83,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.857 over 119 windows; envelope identity 0.9639; full-rate seam correlation 0.9994; loop 60.9 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -20.5
+      },
+      "beforeSha256": "143870cd3c2791b67c18f42bae80f7fc961644055eca684227bf20c1608eaac2",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/18 Detention Center ~ Elegy of the Captured.wav",
+      "sourceSha256": "af77ba20c01570dd437bf11bc117f1d9306ed4861308282a5ebefde92b8647f6",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-detention-center-the-prisoners-elegy.flac",
+      "replacementSha256": "167f9ad6c39922ff43edf89f8a4f5c73b2bc0afe57f606aecf4c38509e73ddf4",
+      "loopStatus": "whole_file",
+      "durationSeconds": 132.00587301587302,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-16-detention-center-the-prisoners-elegy.mp3"
+    },
+    "mask_demasque_please_listen_to_meeeee": {
+      "before": {
+        "number": 17,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Mask☆DeMasque - Please Listen to Meeeee!",
+        "shortTitle": "Mask DeMasque",
+        "src": "original/d3-17-maskdemasque-please-listen-to-meeeee.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:mask_demasque",
+          "playful"
+        ],
+        "gain": 0.94,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 27.61-68.75 s fails: coverage 0.49 < 0.7",
+        "loudnessLufs": -14.5
+      },
+      "beforeSha256": "a684cf405ed24bf876f9121d31cb321b57ff0df3d06d1dc4125511d4e9f69a61",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/19 Mask De Masque ~ Please Listen!.wav",
+      "sourceSha256": "ed1dc94a7f416387fad83dd10be5353bfcdfd24b1ccc84f6c3c974043055a05f",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-mask-demasque-please-listen-to-meeeee.flac",
+      "replacementSha256": "16db6c14fc9e4df3b40fdafbbddb2c0725060c81095bf02ee46f0e6b42dfc985",
+      "loopStatus": "whole_file",
+      "durationSeconds": 98.00342403628117,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-17-maskdemasque-please-listen-to-meeeee.mp3"
+    },
+    "luke_atmey_look_at_me": {
+      "before": {
+        "number": 18,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Luke Atmey - Look at Me",
+        "shortTitle": "Luke Atmey",
+        "src": "original/d3-18-luke-atmey-look-at-me.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:luke_atmey",
+          "playful"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": {
+          "startSample": 564292,
+          "endSample": 4092292,
+          "sampleRate": 44100,
+          "confidence": 0.97,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 4 windows; envelope identity 0.9693; full-rate seam correlation 0.9980; loop 80.0 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -15.4
+      },
+      "beforeSha256": "09fd6df0eb038566f3bce45314d4b599b42eeb614f014ec8f84ddf080089e017",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/20 Luke Atmey ~ I Just Want Love.wav",
+      "sourceSha256": "d3f6724de5b3fd887c087b61fd7775ad291508aca76ce906fb2e1b23104ae8ef",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-luke-atmey-look-at-me.flac",
+      "replacementSha256": "f65ca97d3900bb15377adc28d3f031bbe14c54b59e2a04af30a5b6f2e8e8305d",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 102.00734693877551,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-18-luke-atmey-look-at-me.mp3"
+    },
+    "larry_butz_when_something_smells_its_usually_me": {
+      "before": {
+        "number": 19,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Larry Butz - When Something Smells, It's Usually Me",
+        "shortTitle": "Larry Butz",
+        "src": "original/d3-19-larry-butz-when-something-smells-its-usually-me.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:larry_butz",
+          "playful",
+          "light"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 50.35-102.71 s fails: coverage 0.50 < 0.7; seam correlation 0.781 < 0.95",
+        "loudnessLufs": -15.6
+      },
+      "beforeSha256": "317edab38406b5cf7f2d835f4af9cd8062dc0ac84c05e33568bb2b09541d552d",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/21 Larry Butz ~ Still in the Shadow of the Incident.wav",
+      "sourceSha256": "7ff947c5fb0f1f72856ffe9ecba470894a69b6698854a8a6606ed0a3bb370714",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-larry-butz-when-something-smells-its-usually-me.flac",
+      "replacementSha256": "f23c5c59f050c378eaee58004b55b7b7b184d89d4dde2058be7263a427f99186",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 116.0078231292517,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-19-larry-butz-when-something-smells-its-usually-me.mp3"
+    },
+    "recipe_for_turnabout": {
+      "before": {
+        "number": 20,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Recipe for Turnabout",
+        "shortTitle": "Recipe for Turnabout",
+        "src": "original/d3-20-recipe-for-turnabout.mp3",
+        "category": "bgm",
+        "tags": [
+          "case-theme",
+          "playful"
+        ],
+        "gain": 0.79,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "no repeating section of at least 8 s found (no candidate lag)",
+        "loudnessLufs": -13.0
+      },
+      "beforeSha256": "bf8af2c6bb41c619f9adf5ec19f824f5f37ccabf22a49209e807df1dc86d608a",
+      "action": "REVIEW",
+      "confidence": "uncertain",
+      "reason": "No confidently labelled corresponding DS render; unknown source files are not guessed."
+    },
+    "tres_bien": {
+      "before": {
+        "number": 21,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Trés Bien",
+        "shortTitle": "Trés Bien",
+        "src": "original/d3-21-tres-bien.mp3",
+        "category": "bgm",
+        "tags": [
+          "location",
+          "playful"
+        ],
+        "gain": 1.11,
+        "contextual": false,
+        "loop": {
+          "startSample": 1853464,
+          "endSample": 3970264,
+          "sampleRate": 44100,
+          "confidence": 0.93,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 10 windows; envelope identity 0.9650; full-rate seam correlation 0.9649; loop 48.0 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -17.4
+      },
+      "beforeSha256": "023da908d6f1c2b2aa616fc83555ef364d4ad8af283e8a3b6c7b1c7bd47f7387",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/22 Beauty Hermitage.wav",
+      "sourceSha256": "faf859fa859bd55aa36ac662652e450d2c08e45232b4eb83a1a300be58d0636e",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-tres-bien.flac",
+      "replacementSha256": "8520ab37ac003b96cb521d9871a1f80bd7a4e6191f973125009df0143ca1b59d",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 113.00709750566894,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-21-tres-bien.mp3"
+    },
+    "victor_kudo_martial_anthem_of_misery": {
+      "before": {
+        "number": 22,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Victor Kudo - Martial Anthem of Misery",
+        "shortTitle": "Victor Kudo",
+        "src": "original/d3-22-victor-kudo-martial-anthem-of-misery.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:victor_kudo",
+          "tense",
+          "dramatic"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 22.50-67.98 s fails: coverage 0.06 < 0.7; envelope identity 0.911 < 0.92; seam correlation 0.936 < 0.95",
+        "loudnessLufs": -16.1
+      },
+      "beforeSha256": "6036201fc05759cf2706b63b21b4a9e7bdc3d6e15ae2dc0f60554dfc350bb446",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/23 Victor Kudo ~ War Song Must Inspect.wav",
+      "sourceSha256": "8efceafbe325096ed8ee1105a8d4a5a7d35f94a0c079211a3262f2b2c6713426",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-victor-kudo-martial-anthem-of-misery.flac",
+      "replacementSha256": "81d732a0b8b367f26f79b9746b21e944655bc88bbf947e11a8104a8b51cfa300",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 107.00562358276645,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-22-victor-kudo-martial-anthem-of-misery.mp3"
+    },
+    "furio_tigre_swingin_tiger": {
+      "before": {
+        "number": 23,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Furio Tigre - Swingin' Tiger",
+        "shortTitle": "Furio Tigre",
+        "src": "original/d3-23-furio-tigre-swingin-tiger.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:furio_tigre",
+          "playful"
+        ],
+        "gain": 0.65,
+        "contextual": false,
+        "loop": {
+          "startSample": 1253658,
+          "endSample": 3194058,
+          "sampleRate": 44100,
+          "confidence": 0.97,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 43 windows; envelope identity 0.9767; full-rate seam correlation 0.9882; loop 44.0 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -11.2
+      },
+      "beforeSha256": "3d301932ccb59cb35663ffeb43ed1e5449bb3a73d37dd26fd130f95a181dadb9",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/24 Furio Tigre ~ Swingin' Tiger.wav",
+      "sourceSha256": "9ca34f82e88e8cb943340bdaeee133f7baace0358cdcc68b69a3f12be3cf0636",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-furio-tigre-swingin-tiger.flac",
+      "replacementSha256": "c282e603b8d6dc17a61be765c4ae5546855d2595b73ca3cfe4cdc82d4b3f8ed3",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 104.00489795918368,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-23-furio-tigre-swingin-tiger.mp3"
+    },
+    "reminiscences_violetta_vitriol": {
+      "before": {
+        "number": 24,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Reminiscences - Violetta Vitriol",
+        "shortTitle": "Violetta Vitriol",
+        "src": "original/d3-24-reminiscences-violetta-vitriol.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "dramatic",
+          "melancholy"
+        ],
+        "gain": 0.92,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 0.20-78.89 s fails: coverage 0.03 < 0.7; envelope identity 0.701 < 0.92",
+        "loudnessLufs": -14.3
+      },
+      "beforeSha256": "98cb9ff6f8bb3276be389c5acb7357707d68ac0851f31a730cd1c1f9e42f8060",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/25 Recollection ~ What the Others Have Seen.wav",
+      "sourceSha256": "d67d179d40174ab975af7ff76ed6a0b7bdcf58302eb44dda55c7fbd4cd1f5cf3",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-reminiscences-violetta-vitriol.flac",
+      "replacementSha256": "97dbb4e7140a87557eb5a6a11edafdbded807a7dfb1591e96fcfdb2a596e8723",
+      "loopStatus": "whole_file",
+      "durationSeconds": 168.00587301587302,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-24-reminiscences-violetta-vitriol.mp3"
+    },
+    "turnabout_beginnings": {
+      "before": {
+        "number": 25,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Turnabout Beginnings",
+        "shortTitle": "Turnabout Beginnings",
+        "src": "original/d3-25-turnabout-beginnings.mp3",
+        "category": "bgm",
+        "tags": [
+          "case-theme",
+          "calm"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "no repeating section of at least 8 s found (no candidate lag)",
+        "loudnessLufs": -18.7
+      },
+      "beforeSha256": "4c294a72d8dc97328c0d4aa5b4efccd269ff6915045283d06586b585e16d337e",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/26 Case 4 - ''Turnabout Beginnings''.wav",
+      "sourceSha256": "4ba6c959b941fafbba19301c2a0a79151c8924768b3e5fe21c5f2ff22a85fe40",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-turnabout-beginnings.flac",
+      "replacementSha256": "11ab22eeea2b47df692a58fa7e4fff3d7994c86d138b5912765112d5d05eb4a3",
+      "loopStatus": "whole_file",
+      "durationSeconds": 50.00049886621315,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-25-turnabout-beginnings.mp3"
+    },
+    "reminiscences_the_view_from_dusky_bridge": {
+      "before": {
+        "number": 26,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Reminiscences - The View from Dusky Bridge",
+        "shortTitle": "The View from Dusky Bridge",
+        "src": "original/d3-26-reminiscences-the-view-from-dusky-bridge.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "dramatic",
+          "melancholy"
+        ],
+        "gain": 1.14,
+        "contextual": true,
+        "loop": {
+          "startSample": 17640,
+          "endSample": 9521640,
+          "sampleRate": 44100,
+          "confidence": 0.97,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 10 windows; envelope identity 0.9715; full-rate seam correlation 0.9996; loop 215.5 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -18.6
+      },
+      "beforeSha256": "6d2609ade65a85c2555a3c5e5a7a79a1588bd8354574e11d95c45a287ebe1f4a",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/27 Recollection ~ Scenery Where the Hazy Bridge is Seen.wav",
+      "sourceSha256": "8fe2e0de4a5b7fd9f9f96b0ff7f5a8a802df2364d7e6a84f63a2d96e089e4d0f",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-reminiscences-the-view-from-dusky-bridge.flac",
+      "replacementSha256": "1685dc554d7adfcb9d5a3ca3056548ee849a1d1e2f106b20e6d4c3d1783235ed",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 226.00539682539682,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-26-reminiscences-the-view-from-dusky-bridge.mp3"
+    },
+    "hazakura_temple": {
+      "before": {
+        "number": 28,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Hazakura Temple",
+        "shortTitle": "Hazakura Temple",
+        "src": "original/d3-28-hazakura-temple.mp3",
+        "category": "bgm",
+        "tags": [
+          "location",
+          "calm",
+          "mystic"
+        ],
+        "gain": 1.1,
+        "contextual": false,
+        "loop": {
+          "startSample": 3434136,
+          "endSample": 6898613,
+          "sampleRate": 44100,
+          "confidence": 0.98,
+          "provenance": "curated-analysis",
+          "method": "lag-diagonal+xcorr-v1",
+          "status": "measured_not_auditioned",
+          "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 7 windows; envelope identity 0.9894; full-rate seam correlation 0.9855; loop 78.6 s. Not an original DS loop point; not verified by listening."
+        },
+        "loudnessLufs": -17.8
+      },
+      "beforeSha256": "831e61144981a2db83a6e82511e9ce71c3e23d656ecf8266d861dc8d6f69d1d8",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/29 Hazakurain.wav",
+      "sourceSha256": "06b89c8cb0ec313e56921a4d11a1d197392799e8deca6163fc219bf53710a4c9",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-hazakura-temple.flac",
+      "replacementSha256": "077884aef76d8d9ced3d79fa3f4a77bc5ead7eb7abcc1ec3085cb98bdc53e935",
+      "loopStatus": "whole_file",
+      "durationSeconds": 177.00807256235828,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-28-hazakura-temple.mp3"
+    },
+    "elise_deauxnim_a_gentle_melody": {
+      "before": {
+        "number": 29,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Elise Deauxnim - A Gentle Melody",
+        "shortTitle": "Elise Deauxnim",
+        "src": "original/d3-29-elise-deauxnim-a-gentle-melody.mp3",
+        "category": "bgm",
+        "tags": [
+          "character:elise_deauxnim",
+          "calm",
+          "melancholy"
+        ],
+        "gain": 1.0,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 41.86-115.99 s fails: coverage 0.00 < 0.7; envelope identity 0.660 < 0.92; seam correlation 0.721 < 0.95",
+        "loudnessLufs": -15.6
+      },
+      "beforeSha256": "9d570d262d754262966c12b643082663afc99dd57e5f776aed010815c6b2647e",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/30 Elise Deauxnim ~ Simple Melody.wav",
+      "sourceSha256": "f109539d79e5c46525b51474d7321d05818a3130a2323d3ae460e034e92171b6",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-elise-deauxnim-a-gentle-melody.flac",
+      "replacementSha256": "3da17c4c847368edece7415218656c5cee85894fa2558f5175beaf326b36b21d",
+      "loopStatus": "whole_file",
+      "durationSeconds": 159.00367346938776,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-29-elise-deauxnim-a-gentle-melody.mp3"
+    },
+    "further_investigation_2004": {
+      "before": {
+        "number": 30,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Further Investigation 2004",
+        "shortTitle": "Further Investigation",
+        "src": "original/d3-30-further-investigation-2004.mp3",
+        "category": "bgm",
+        "tags": [
+          "investigation",
+          "thinking"
+        ],
+        "gain": 0.81,
+        "contextual": false,
+        "loop": null,
+        "loopReason": "best candidate 16.32-73.92 s fails: coverage 0.62 < 0.7",
+        "loudnessLufs": -13.2
+      },
+      "beforeSha256": "a1221e0e57a850d584066dffdaf7b09fba0041f983ff9033de08324e490ae350",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/31 Investigation ~ Middle Stage 2004.wav",
+      "sourceSha256": "bcdb6c91ca1d86c92debff15e0735e59d59a0303ccfcee8c9b3dbb1ebd68753a",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-further-investigation-2004.flac",
+      "replacementSha256": "5abfc368492e2c8392f377f33c5ea0539dee15a72116bd2bd37c696a913e9776",
+      "loopStatus": "measured_not_auditioned",
+      "durationSeconds": 138.0073469387755,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-30-further-investigation-2004.mp3"
+    },
+    "reminiscences_the_bitterness_of_truth": {
+      "before": {
+        "number": 31,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Reminiscences - The Bitterness of Truth",
+        "shortTitle": "The Bitterness of Truth",
+        "src": "original/d3-31-reminiscences-the-bitterness-of-truth.mp3",
+        "category": "contextual",
+        "tags": [
+          "reminiscence",
+          "dramatic",
+          "melancholy"
+        ],
+        "gain": 0.92,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 29.42-99.57 s fails: coverage 0.00 < 0.7; envelope identity 0.771 < 0.92; seam correlation 0.715 < 0.95",
+        "loudnessLufs": -14.3
+      },
+      "beforeSha256": "7c34a9737715e6fafd2959d3e8015f80f60b5a957b508d1290d5569c7e0aaedd",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/32 Recollection ~ The Bitter Taste of Truth.wav",
+      "sourceSha256": "e50b623a2681964d4f8277cbc113f6422196307e3500ca626cbc1700c107bf7b",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-reminiscences-the-bitterness-of-truth.flac",
+      "replacementSha256": "2ea0efeef4e1c4fb9fda235f2d68707aee98298d26231dd66472615098def619",
+      "loopStatus": "whole_file",
+      "durationSeconds": 153.00222222222223,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-31-reminiscences-the-bitterness-of-truth.mp3"
+    },
+    "pursuit_corner_the_culprit_2004": {
+      "before": {
+        "number": 32,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Pursuit - Corner the Culprit 2004",
+        "shortTitle": "Pursuit: Corner the Culprit",
+        "src": "original/d3-32-pursuit-corner-the-culprit-2004.mp3",
+        "category": "contextual",
+        "tags": [
+          "pursuit",
+          "tense",
+          "intense"
+        ],
+        "gain": 0.45,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 6.48-44.88 s fails: coverage 0.00 < 0.7; envelope identity 0.874 < 0.92; seam correlation 0.706 < 0.95",
+        "loudnessLufs": -8.0
+      },
+      "beforeSha256": "1e7863e92dd6ace32fa377f3a8dd9ee7a5de3783d6f295ea91f635cc4ef3d663",
+      "action": "REPLACE",
+      "confidence": "high",
+      "source": "Phoenix Wright - Ace Attorney Trials and Tribulations/wav/33 Pressing Pursuit ~ Cornered 2004.wav",
+      "sourceSha256": "52e830cde06585a68c26cd3d5b400b8a35723ea877d64f123311a50edcd7912f",
+      "reason": "Explicit same-game title/localization mapping; not fuzzy matching.",
+      "replacement": "original/ds-pursuit-corner-the-culprit-2004.flac",
+      "replacementSha256": "b97068b1d1ed8e8e56106df3aa56fc6da8e9b154f857bcb190114af7d393e614",
+      "loopStatus": "whole_file",
+      "durationSeconds": 94.00832199546485,
+      "auditioned": false,
+      "archivedRemaster": "backend/.local/audio-migration/remaster-backup/d3-32-pursuit-corner-the-culprit-2004.mp3"
+    },
+    "pursuit_corner_the_culprit_2004_variation": {
+      "before": {
+        "number": 33,
+        "disc": 3,
+        "game": "tnt",
+        "title": "Pursuit - Corner the Culprit 2004 (Variation)",
+        "shortTitle": "Pursuit: Corner (Variation)",
+        "src": "original/d3-33-pursuit-corner-the-culprit-2004-variation.mp3",
+        "category": "contextual",
+        "tags": [
+          "pursuit",
+          "tense",
+          "intense"
+        ],
+        "gain": 0.43,
+        "contextual": true,
+        "loop": null,
+        "loopReason": "best candidate 10.75-49.15 s fails: coverage 0.00 < 0.7; envelope identity 0.901 < 0.92; seam correlation 0.638 < 0.95",
+        "loudnessLufs": -7.7
+      },
+      "beforeSha256": "d99df23e916bd64655788256dbc4adf872b91f8fca87f1c165024f458100e660",
+      "action": "REVIEW",
+      "confidence": "uncertain",
+      "reason": "No explicitly labelled 2004 variation; 99 PW1 variation is not assumed equivalent."
+    }
+  },
+  "summary": {
+    "preserved": 25,
+    "expansionImports": 59,
+    "replaced": 55,
+    "review": 4,
+    "measured_not_auditioned": 21,
+    "whole_file": 34
+  }
+}

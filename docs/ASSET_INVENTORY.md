@@ -399,3 +399,51 @@ Source rights and limits are recorded in `docs/ASSET_SOURCES.md`; source archive
 - 2026-10-25: `ui/exclamations/objection_ja.png` registered as `exclamation_objection_ja` (D-070); `validate:assets` 368 / 0.
 
 `ui/ui.json` registers `court_record_photo` at `ui/court-record/evidence_photo.png` (64×64), an exact crop of a photo evidence icon from the owner's evidence sheet at x=795, y=504. It is shown in place of a presented picture that cannot be displayed (D-075).
+
+## Update 2026-10-25 (asset expansion milestone, D-079–D-085)
+
+Source archive inventory: `ASSET_EXPANSION_INVENTORY.md` (and `ASSET_EXPANSION_GAPS.md`). Runtime additions:
+
+### Character packs (native DS, cut 1:1 by `scripts/extract_ds_character.py`)
+| Pack | id | Sheet | Animations / reactions | PNG frames | Readiness |
+|---|---|---|---|---|---|
+| `characters/edgeworth/` | miles_edgeworth | AA1 "Miles Edgeworth (in Court)" | 11 / 3 | 80 | see PROJECT_STATE |
+| `characters/franziska/` | franziska_von_karma | JFA "Franziska (Courtroom)" (whip) | 8 / 5 | 87 | see PROJECT_STATE |
+| `characters/larry/` | larry_butz | AA1 "Larry Butz" | 9 / 3 | 77 | see PROJECT_STATE |
+| `characters/pearl/` | pearl_fey | JFA "Pearl Fey" | 10 / 2 | 83 | see PROJECT_STATE |
+Each has `character.json`, `performance.json`, `personality.md` and a 64×64 stand-in `portraits/court_record.png` (1:1 head crop). Edgeworth/Franziska standing sheets are unused (different scale from the chosen sheets).
+
+### Backgrounds `bg_30`–`bg_49` (HD → DS, profile B, D-083)
+20 Trials-and-Tribulations rooms: Lordly Tailor (hall, basement — wide 683), Mask☆DeMasque hideout, KB Security (CEO office, security room), Trés Bien (dining room — wide 683, kitchen), Vitamin Square, Blue Screens Inc., Tender Lender, Hazakura Temple (main gate, courtyard, main hall, Dusky Bridge ×3, Heavenly Hall, inner temple — wide 683, training hall, garden). Each manifest entry names its source plate in `notes`.
+
+### UI
+- `ui/status/magnifier_working.png`, `magnifier_done.png` (28×28; D-084).
+- `ui/music-player/` play, pause, next, prev (17×17, + `_hot`), note (14×20). All via `scripts/extract_ui_assets.py`.
+
+### Audio
+- `audio/effects/whip.wav` (copy of `docs/sfx general/sfx-whip.wav`), event `sfx_whip`.
+- Music: 59 Trilogy disc 2/3 tracks (`music/original/d2-*`, `d3-*`, git-ignored, local install); `soundtrack.json` now 103 entries (84 runtime). Details in `MUSIC.md`.
+
+## 2026-10-26 presentation and DS migration additions
+
+- Miles: 56 discussion PNGs in `characters/edgeworth/conversation/`, seven native-sheet poses.
+- Franziska: 130 explicit PNGs in `characters/franziska/conversation/`, ten source metadata JSON reports, original 256×192 canvas/timing. Both character manifests add conversation/courtroom groups; all prior character assets retained.
+- Shared extraction audit: `characters/conversation-extraction.json`. Exact paths live in the character manifests/reports.
+- Runtime music: 25 older files preserved; 55 added DS defaults (28 MP3, 27 native-rate FLAC); 55 confidently superseded MP3s moved to ignored `backend/.local/audio-migration/remaster-backup/`; 4 REVIEW files retained. Exact original/replacement/backup paths and SHA-256 in `scripts/data/ds_audio_migration.json`.
+- Validation: 986 referenced files, 0 errors. [Migration and QA report](PRESENTATION_DS_MIGRATION.md).
+
+## 2026-10-26 targeted asset corrections
+
+- Franziska: new `portraits/selection.png`170×170 centered native crop/pad; `portraits/court_record.png` replaced with exact64×64 front-facing native JFA profile; eight `sprites/whip_crack/timed/frame_000.png`–`frame_007.png`256×192 transparent frames plus provenance/timing report. Existing source frames retained.
+- Audio: new `effects/whip_crack.wav` (compound whip→whack400ms) and byte-identical `effects/lightbulb.wav`; old whip/realization assets retained. Event IDs stable. No soundtrack changes.
+- Source font atlas inspected but not imported:128×3072, custom order, no Unicode mapping. Current fonts retained.
+- Validation997 referenced files/0 errors. Exact paths/source choices: [targeted report](TARGETED_CORRECTIONS.md).
+
+## Whip effect and shared SFX (2026-10-26, D-091/D-092)
+
+- `characters/franziska/effects/whip_slash/frame_000..019.png` + `source.json`: 256x192 RGBA overlay frames from `assets/other assets/whip/whip effect gif.gif` (`scripts/extract_whip_effect.py`, re-check with `--check`).
+- Audio added (byte copies from `assets/most used sounds/everyone`): `dialogue/shock/stab.wav` (`fx_stab_long`), `dialogue/shock/shock2.wav` (`fx_shock2`), `dialogue/idea/happyping.wav` (`fx_happyping`). Reused by hash: smack, stab2, damage2, lightbulb, realization, supershock, objection, meow (Maya and Pearl copies are identical to `dialogue/cute/meow.wav`).
+- New events: `whip_swing`, `whip_impact`, `sfx_angry`, `sfx_flabbergasted`, `sfx_encouragement`; `sfx_whip` removed (the compound `effects/whip_crack.wav` stays registered as `fx_whip`, unused). New `semanticSounds` pools in audio.json, Maya and Pearl character.json.
+- Validation: 1020 referenced files, 0 errors.
+
+- 2026-10-26 (D-096): `backgrounds/background_03_foreground.png` (256x192 RGBA, window frame + counter of bg_03, cut 1:1 by `scripts/make_background_foreground.py`); bg_03 also sets `characterOffsetY: 20`. Validation 1021 files / 0 errors.

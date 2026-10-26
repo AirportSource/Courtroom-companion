@@ -78,7 +78,7 @@ class CharacterService:
         language: str = "en",
         tool_context: ToolContext | None = None,
     ) -> ChatResult:
-        profile = self.repository.get(character_id)  # raises CharacterNotFoundError
+        profile = self.repository.get_for_chat(character_id)  # raises CharacterNotFoundError / CharacterNotReadyError
         session = self._sessions.setdefault((session_id, character_id), _Session())
         # Presented evidence: the current turn carries the file (text inlined, binaries attached);
         # history keeps text evidence (bounded by fit_history) but never resends binaries.
@@ -137,9 +137,13 @@ class CharacterService:
 
         session.history.append(ChatMessage(role="user", content=history_message(evidence, message) if evidence else message))
         if result.reply is not None:
-            session.history.append(
-                ChatMessage(role="assistant", content=result.reply.model_dump_json(by_alias=True))
-            )
+            content = result.reply.model_dump_json(by_alias=True)
+            # The artifact action is not part of the reply JSON; without this note later turns see
+            # "here is your file" with no file behind it and the model disowns the work.
+            saved = ", ".join(str(a.get("displayName", "")) for a in artifacts if a.get("displayName"))
+            if saved:
+                content += f"\n[File saved and delivered to the user: {saved}]"
+            session.history.append(ChatMessage(role="assistant", content=content))
         warnings = list(result.warnings)
         if result.error:
             warnings.append(f"provider failure: {result.error}")

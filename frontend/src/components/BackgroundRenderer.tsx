@@ -4,15 +4,18 @@ interface BackgroundRendererProps {
   background: Background | null
   stageWidth: number
   stageHeight: number
+  /** Draw the background's foreground layer (in front of the character) instead of the plate. */
+  layer?: 'plate' | 'foreground'
 }
 
 /** Draws a background at native resolution, centred on the stage (wide ones are cropped). */
-export function BackgroundRenderer({ background, stageWidth, stageHeight }: BackgroundRendererProps) {
-  if (!background) return null
+export function BackgroundRenderer({ background, stageWidth, stageHeight, layer = 'plate' }: BackgroundRendererProps) {
+  const src = layer === 'foreground' ? background?.foregroundUrl : background?.url
+  if (!background || !src) return null
   return (
     <img
-      className="stage-layer"
-      src={background.url}
+      className={layer === 'foreground' ? 'stage-layer stage-foreground' : 'stage-layer'}
+      src={src}
       width={background.width}
       height={background.height}
       style={{

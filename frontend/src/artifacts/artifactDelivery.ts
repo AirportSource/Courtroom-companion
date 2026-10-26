@@ -4,11 +4,14 @@ export const ARTIFACT_SUMMON_MIN_MS = 1200
 export const ARTIFACT_SUMMON_AUTO_MS = 2500
 export const TASK_ACKNOWLEDGEMENT_HOLD_MS = 500
 export const ARTIFACT_WORKING_MIN_MS = 350
+/** The checked magnifier shown between "file saved" and the phone (D-079): transitional, never a gate on input. */
+export const ARTIFACT_DONE_MS = 750
 
 export type ArtifactDeliveryPhase =
   | 'idle'
   | 'task-acknowledgement'
   | 'artifact-working'
+  | 'artifact-done'
   | 'waiting-for-phone-acknowledgement'
   | 'evidence-summon'
   | 'response-release'
@@ -32,6 +35,7 @@ export type ArtifactDeliveryEvent =
   | { type: 'acknowledgement'; turnId: string }
   | { type: 'acknowledgement-finished'; turnId: string }
   | { type: 'working-presented'; turnId: string }
+  | { type: 'done-presented'; turnId: string }
   | { type: 'working'; turnId: string }
   | { type: 'ready'; turnId: string; artifact: GeneratedArtifact }
   | { type: 'response-buffered'; turnId: string; withoutArtifact?: boolean }
@@ -76,14 +80,16 @@ export function artifactDeliveryReducer(state: ArtifactDeliveryState, event: Art
         : state.error ? 'failed' : 'artifact-working' }
     case 'working-presented':
       return state.phase === 'artifact-working' ? { ...state, workingPresented: true,
-        phase: state.artifact ? 'waiting-for-phone-acknowledgement' : state.phase } : state
+        phase: state.artifact ? 'artifact-done' : state.phase } : state
+    case 'done-presented':
+      return state.phase === 'artifact-done' ? { ...state, phase: 'waiting-for-phone-acknowledgement' } : state
     case 'working':
       return state.phase === 'idle' ? { ...state, phase: 'artifact-working' } : state
     case 'ready':
       if (!['idle', 'task-acknowledgement', 'artifact-working'].includes(state.phase) || state.artifact
         || state.error || event.artifact.status !== 'ready') return state
       return { ...state, phase: state.phase === 'task-acknowledgement' ? state.phase
-        : state.workingPresented ? 'waiting-for-phone-acknowledgement' : 'artifact-working', artifact: event.artifact }
+        : state.workingPresented ? 'artifact-done' : 'artifact-working', artifact: event.artifact }
     case 'response-buffered':
       if (state.responseBuffered) return state
       return { ...state, responseBuffered: true, responseWithoutArtifact: !!event.withoutArtifact,

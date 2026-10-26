@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { existsSync, readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { playSfx, SFX_EVENTS, SFX_NAMES, sfxEvent } from '../src/engine/sfx.ts'
@@ -7,7 +8,7 @@ const root = new URL('../public/assets/audio/', import.meta.url)
 const audio = JSON.parse(readFileSync(new URL('audio.json', root), 'utf8'))
 
 test('every semantic sfx name maps to an existing sound file', () => {
-  assert.equal(SFX_NAMES.length, 8)
+  assert.equal(SFX_NAMES.length, 11) // 8 original + shared angry / flabbergasted / encouragement (D-092)
   for (const name of SFX_NAMES) {
     const sound = audio.sounds[audio.events[SFX_EVENTS[name]]]
     assert.ok(sound, `${name} has no sound`)
@@ -23,7 +24,7 @@ test('key semantic sounds have distinct intended runtime mappings', () => {
   const expected = {
     shock: 'effects/supershock.wav',
     surprise: 'effects/shock.wav',
-    realization: 'dialogue/realization/realization.wav',
+    realization: 'effects/lightbulb.wav',
     comic: 'effects/badum.wav',
     emphasis: 'effects/deskslam.wav',
   }
@@ -32,6 +33,15 @@ test('key semantic sounds have distinct intended runtime mappings', () => {
     assert.equal(sound.src, src)
   }
   assert.equal(new Set(Object.values(expected)).size, Object.keys(expected).length)
+})
+
+test('realization uses the exact requested lightbulb cue and preserves the older source', () => {
+  const src = audio.sounds[audio.events.sfx_realization].src
+  const actual = readFileSync(new URL(src, root))
+  const requested = readFileSync(new URL('../../docs/sfx general/sfx-lightbulb.wav', import.meta.url))
+  const digest = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex')
+  assert.equal(digest(actual), digest(requested))
+  assert.ok(existsSync(new URL('dialogue/realization/realization.wav', root)))
 })
 
 test('user_typing maps to the male blip', () => {

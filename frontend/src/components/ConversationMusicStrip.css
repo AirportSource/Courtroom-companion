@@ -1,0 +1,170 @@
+/* Stage pixels (256x192). Sits just above the dialogue box (top edge y=144); never over the top corners
+   that the presented-evidence card and the status magnifier use. */
+.music-strip,
+.music-strip__tab {
+  position: absolute;
+  z-index: 14;
+  font-family: var(--stage-font);
+  font-size: var(--stage-font-size);
+  letter-spacing: var(--stage-letter-spacing);
+  word-spacing: var(--stage-word-spacing);
+  image-rendering: pixelated;
+}
+
+.music-strip {
+  left: 0;
+  top: 121px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  width: 256px;
+  height: 22px;
+  padding: 0 3px;
+  color: inherit;
+  background: var(--dialogue-bg);
+  border: 1px solid var(--frame-light);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--frame-dark);
+}
+
+.music-strip__tab {
+  right: 3px;
+  top: 121px;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  background: var(--dialogue-bg);
+  border: 1px solid var(--frame-light);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--frame-dark);
+  cursor: pointer;
+}
+
+/* In the open strip the tab is the inline note (collapse) button, not a floating one. */
+.music-strip__tab--close {
+  position: static;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
+.music-strip__tab img { display: block; max-height: 18px; width: auto; height: auto; }
+
+.music-strip__title { flex: 1; display: flex; min-width: 0; line-height: 15px; }
+
+.music-strip__button {
+  position: relative;
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  padding: 0;
+  display: block;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.music-strip__glyph { display: block; image-rendering: pixelated; }
+.music-strip__button:disabled { opacity: 0.4; cursor: default; }
+
+/* The yellow "pressed" sprite of the Trilogy button replaces the blue one while held or focused. */
+.music-strip__button:not(:disabled):active::after,
+.music-strip__button:not(:disabled):focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--hot) no-repeat 0 0 / 17px 17px;
+  image-rendering: pixelated;
+}
+
+.music-strip__theme {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 3px;
+  color: inherit;
+  background: var(--nameplate-bg);
+  border: 1px solid var(--frame-light);
+  border-radius: 2px;
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  line-height: 13px;
+  cursor: pointer;
+}
+
+.music-strip__theme:disabled { opacity: 0.4; cursor: default; }
+.music-strip button:focus-visible,
+.music-strip__tab:focus-visible { outline: 1px solid #ffdf7d; outline-offset: 1px; }
+
+/* Track list (dropdown): opens upward from the strip, over the scene, never past the stage top. */
+.music-strip__list-toggle {
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  background: var(--nameplate-bg);
+  border: 1px solid var(--frame-light);
+  border-radius: 2px;
+  font: inherit;
+  line-height: 13px;
+  cursor: pointer;
+}
+
+.music-strip__list-toggle[aria-expanded='true'] { background: var(--frame-light); color: var(--dialogue-bg); }
+.music-strip__list-toggle:disabled { opacity: 0.4; cursor: default; }
+
+.music-strip__list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 21px;
+  box-sizing: border-box;
+  max-height: 112px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px;
+  background: var(--dialogue-bg);
+  border: 1px solid var(--frame-light);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--frame-dark);
+  scrollbar-width: thin;
+}
+
+.music-strip__item {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  min-height: 15px;
+  margin: 0;
+  padding: 0 2px;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 2px;
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  line-height: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.music-strip__item-mark { flex: 0 0 8px; color: #ffdf7d; }
+.music-strip__item-label { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.music-strip__item-theme { flex: 0 0 auto; color: #ffdf7d; }
+.music-strip__item[aria-selected='true'] { color: #ffdf7d; }
+.music-strip__item:hover,
+.music-strip__item:focus-visible { background: var(--nameplate-bg); outline: none; }

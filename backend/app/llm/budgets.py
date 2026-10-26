@@ -1,7 +1,7 @@
 """Shared per-request output budget policy. Profiles retain their normal chat settings.
 
 Arithmetic (see docs/DECISIONS.md D-058):
-- Dialogue: a reply is at most `maxBeatsPerReply` (3 for Maya) beats of <= 600 characters plus JSON
+- Dialogue: a reply is at most `maxBeatsPerReply` (per character, typically 2-3) beats of <= 600 characters plus JSON
   keys. Worst case Japanese (~1-1.5 tokens/character) is ~2.7k tokens, plus ~150 JSON-overhead
   tokens; reasoning models (Gemini/OpenAI-compatible, Claude with thinking) also spend reasoning
   tokens from the same cap. 600 was therefore a truncation hazard, so dialogue is requested with

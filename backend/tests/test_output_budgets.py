@@ -50,6 +50,13 @@ def local_client(app):
     "Tu pourrais me préparer une checklist ?", "J'aimerais un fichier avec mes notes.",
     "Pouvez-vous rédiger un document ?", "Mi puoi scrivere un file di testo?", "Crea una lista in un documento.",
     "¿Puedes crear un archivo de texto?", "Hazme una lista en un archivo.",
+    # Real miss from the owner's session: the verb comes after another clause.
+    "I need you to find the best police academies in France on the internet and generate an md file to save them",
+    "Look up three recipes and then write them in a file for me.",
+    "Summarize our chat as a markdown file.", "Could I get that list as a text file?",
+    "Put the steps into a file please.", "Trouve les meilleures écoles et mets-les dans un fichier.",
+    "Résume la conversation sous forme de fichier.", "J'ai besoin d'un fichier md avec le planning.",
+    "Cerca le ricette e poi scrivi un file di testo.", "Busca tres libros y guárdalos en un archivo.",
 ])
 def test_explicit_creation_gets_budget_hint_but_hint_is_disabled_without_artifact_capability(message):
     assert expected_workload(message, artifacts_enabled=True) == OutputWorkload.TEXT_ARTIFACT
@@ -63,6 +70,10 @@ def test_explicit_creation_gets_budget_hint_but_hint_is_disabled_without_artifac
     "Pythonのファイルの作成方法を説明して。",
     "Est-ce que tu as lu mon fichier ?", "J'aimerais savoir comment créer un fichier.",
     "Come si crea un file in Python?", "¿Cómo se crea un archivo de texto?",
+    # Widened detection (verb anywhere / explicit format) must still ignore these.
+    "Did you save the file?", "Have you already written the markdown file?", "Never write a text file for me.",
+    "What is a markdown file?", "As-tu enregistré le fichier ?", "Pourquoi as-tu créé un fichier ?",
+    "I don't want an md file, just tell me.", "Thanks for the file yesterday!", "I made a list of groceries.",
 ])
 def test_normal_chat_and_questions_about_files_keep_normal_budget(message):
     assert expected_workload(message, artifacts_enabled=True) == OutputWorkload.DIALOGUE

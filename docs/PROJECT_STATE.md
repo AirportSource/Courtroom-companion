@@ -1,6 +1,6 @@
 # Project State — Courtroom Companion
 
-_Last updated: 2026-10-25 (agents, events, tools, voiced shouts, D-067/D-068). Source of truth is the filesystem; update this file when the actual state changes._
+_Last updated: 2026-10-26 (asset expansion milestone, D-079–D-086). Source of truth is the filesystem; update this file when the actual state changes._
 
 ## Summary
 
@@ -59,6 +59,16 @@ At native size and render scale 1 (D-026), Maya is 146–162 px tall on the 192 
 - Out-of-stage panels are collapsible and start collapsed; the radio panel stays open while it plays.
 - Settings offers Phoenix (default), Richard Wellington and Godot ringtones with Preview/Stop; the phone uses the selection at ring time.
 - Dialogue has a 4096-token output floor. Truncation and context-window errors are detected and distinguished on every provider. LLM history is fitted to a deterministic size budget.
+
+**Asset expansion milestone (D-079–D-086, 2026-10-26).**
+- Seven selectable characters: Maya, Gumshoe, Mia + Miles Edgeworth, Franziska von Karma, Larry Butz, Pearl Fey (native DS sprites cut 1:1; all `ready`). Packs declare `readiness` (asset-only / partial / ready); non-ready packs are refused by the backend and hidden in production menus.
+- Signature SFX are data-driven (`performance.json` `sfx.signature`, per-session/character cooldown); first use: Franziska's whip.
+- Prompts and history are isolated per character (tested). Writing guide: `docs/CHARACTER_BEHAVIOR_FRAMEWORK.md`.
+- 49 backgrounds: `bg_30`–`bg_49` are Trilogy HD plates reduced by `scripts/convert_hd_locations_to_ds.py` (profile B). The HD→DS character converter exists (prototype: Frank, Angel, Godot) but no HD character is in the runtime.
+- One status grammar: blue magnifier while working, red-check magnifier for 750 ms on success (replaces the Thinker prop).
+- 84-track soundtrack (Trilogy discs 2–3 installed locally, git-ignored), 35 measured loops (`measured_not_auditioned`), loudness-normalised gains; in-conversation music strip with prev/play/next/back-to-theme; live override lasts for the conversation.
+- Source archive inventory: `docs/ASSET_EXPANSION_INVENTORY.md`, gaps: `docs/ASSET_EXPANSION_GAPS.md`.
+- Checks 2026-10-26: backend 593 passed / 2 skipped; frontend 306 passed; `validate:assets` 800 / 0; `tsc`, lint, build, `git diff --check` clean.
 
 **Engine tests** run with `npm test` (D-029).
 
@@ -197,7 +207,7 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 - The original static Court Record retains three demo evidence entries; the generated-file Court Record is separate and contains only generated artifacts. Talk topics are static dev samples; no case logic.
 - Ollama, generic OpenAI-compatible and native Anthropic providers plus local profile/credential management are implemented. No application streaming or persistent memory yet.
 - The chat UX is minimal (single input under the scene, no history view).
-- Three selectable characters (Maya Fey, Dick Gumshoe, Mia Fey; D-064), one on screen at a time. Gumshoe and Mia use stand-in portraits. Wide backgrounds are centre-cropped (no panning).
+- Seven selectable characters (D-064, D-086), one on screen at a time. Gumshoe, Mia and the four new packs use stand-in 1:1 portraits. Franziska's court-sheet poses sit lower than Maya's and one talking pose is ~16 px lower than its idle (eyeball check pending). Re-running `extract_ds_character.py` resets `readiness`/`group` in the generated character.json. Wide backgrounds are centre-cropped (no panning).
 - Sheet rows 14–17 (Maya side poses) are not extracted yet.
 
 ## Known problems / ambiguities
@@ -227,3 +237,26 @@ See `docs/LLM_ARCHITECTURE.md` and `docs/CHARACTER_DIRECTOR.md`. Start with `cd 
 2. Listen across loop boundaries of the curated tracks and correct the unlooped ones (start with Maya Fey).
 3. Add a configured Anthropic profile for a real live smoke test; no cloud call was made during this milestone.
 4. Application streaming remains a later generic gateway/API milestone.
+
+## Presentation contexts and original DS migration (2026-10-26, D-087/D-088)
+
+Character identity is independent of explicit `conversation`/`courtroom` presentation. Miles and Franziska now default to discussion assets (186 new deterministic PNG frames), with courtroom groups and shared reactions retained. Maya is unchanged. New groups are optional; legacy packs work as before.
+
+The 84 runtime tracks now comprise 25 preserved older tracks, 55 confidently mapped original DS replacements and 4 untouched REVIEW imports. Of the replacements, 21 have fresh `measured_not_auditioned` loops and 34 use whole-file playback. No human listening was performed. Superseded remasters are SHA-verified backups outside runtime. IDs/themes and old gains/loops are preserved. See [complete report](PRESENTATION_DS_MIGRATION.md) and `scripts/data/ds_audio_migration.json`.
+
+Final checks: backend 593 passed / 2 skipped; frontend 321 passed; assets 986 / 0 errors; TypeScript, lint, production build and diff whitespace check pass. Chrome verified 3×/4×/auto presentation, character/context switching, dialogue/user blip playback, whip, player controls and ringtone duck/restore. Human loop audition and four uncertain mappings remain.
+
+## Targeted character/presentation corrections (2026-10-26, D-089/D-090)
+
+Franziska now has native transparent 1.5s whip timing with whip→whack impact at400ms, a centered selection thumbnail and a native front-facing Journal portrait. Ready phone uses the native evidence frame. Uploaded-image previews are request-scoped and released after response/error/cancel/navigation, preventing unrelated-turn reappearance. Pearl gains restrained positive/playful semantic cues; realization guidance includes meaningful understanding and maps to the actual lightbulb WAV, with duplicate explicit realization limited to one per reply.
+
+The supplied kanji font is a custom-order PNG atlas without a Unicode map. It was inspected but not integrated; Igiari +75% DotGothic16 remain unchanged. A mapped font or authoritative mapping is still required. Full source/asset choices, exact changed files, worker ownership and remaining listening/font limits: [targeted report](TARGETED_CORRECTIONS.md).
+
+Checks: backend629 passed/2 skipped; frontend327 passed; source-asset tests4 passed; assets997/0; TypeScript, lint, build and diff check pass. Browser inspected whip/thumbnail/portrait/phone, preview cleanup and Japanese pagination. All84 soundtrack files, manifest and migration audits retain their pre-pass hashes. No provider/profile/packaging code changed; no commit/push/staging/reset/clean.
+
+## Whip effect, loops and semantic SFX (2026-10-26, D-091-D-093)
+
+- Franziska's whip is complete or absent: body (courtroom) or black screen fading back to her front-facing pose (conversation), slash overlay from the reference GIF, whip then whack cues. Conversation groups no longer inherit courtroom side-view reactions (Franziska, Edgeworth).
+- Shared semantic SFX library (angry, flabbergasted, encouragement + aliases), character pools, rotation, deterministic frequency model; Pearl calibrated to her real intensity range.
+- 51/55 DS-original tracks now loop; Turnabout Sisters 2001 loops at its second return (91.7% heard).
+- Checks: backend 644 passed / 2 skipped; frontend 347; validate:assets 1020 / 0; source tests 4; tsc, lint, build, diff check clean. Nothing auditioned by ear.

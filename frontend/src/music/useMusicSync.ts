@@ -1,4 +1,6 @@
 import { useEffect, useSyncExternalStore } from 'react'
+import { activeOverrideTrack, reconcileOverride } from './conversationMusic.ts'
+import { conversationMusicStore } from './conversationMusicStore.ts'
 import { useSettings } from '../settings/settings.ts'
 import { musicRuntime, syncMusic, type MusicContext } from './musicRuntime.ts'
 import type { SoundtrackManifest } from './soundtrack.ts'
@@ -15,11 +17,20 @@ export function useMusicSync(soundtrack: SoundtrackManifest | null, context: Mus
   const characterId = context.scene === 'conversation' ? context.characterId : ''
   const audition = context.scene === 'menu' && context.audition === true
   const { settings } = useSettings()
+  const { override } = useSyncExternalStore(conversationMusicStore.subscribe, conversationMusicStore.getSnapshot)
+  const overrideTrackId = scene === 'conversation' ? activeOverrideTrack(override, characterId, soundtrack) : null
   const { musicSource, musicVolume, musicMuted, originalTrackId, importedTrackId, radioVideoId } = settings
 
   useEffect(() => {
     if (soundtrack) musicRuntime().setSoundtrack(soundtrack)
+    conversationMusicStore.setSoundtrack(soundtrack)
   }, [soundtrack])
+
+  // A live track choice lives only as long as this conversation (same scene, same character).
+  useEffect(() => {
+    const kept = reconcileOverride(conversationMusicStore.getSnapshot().override, scene, characterId)
+    conversationMusicStore.setOverride(kept)
+  }, [scene, characterId, override])
 
   useEffect(() => {
     const { engine } = musicRuntime()
@@ -29,11 +40,11 @@ export function useMusicSync(soundtrack: SoundtrackManifest | null, context: Mus
 
   useEffect(() => {
     const settingsForSync = { musicSource, musicVolume, musicMuted, originalTrackId, importedTrackId, radioVideoId }
-    const current: MusicContext = scene === 'conversation' ? { scene, characterId } : { scene, audition }
+    const current: MusicContext = scene === 'conversation' ? { scene, characterId, trackOverride: overrideTrackId } : { scene, audition }
     void syncMusic(musicRuntime().engine, settingsForSync, soundtrack, current)
     // Volume/mute are applied by the effect above; re-syncing on them would be a no-op anyway.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [musicSource, originalTrackId, importedTrackId, radioVideoId, soundtrack, scene, characterId, audition])
+  }, [musicSource, originalTrackId, importedTrackId, radioVideoId, soundtrack, scene, characterId, audition, overrideTrackId])
 }
 
 /** Live engine state for UI (status line, Play-after-blocked button). */

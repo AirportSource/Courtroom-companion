@@ -3,6 +3,10 @@
   "characters": {
     "maya_fey": "maya/character.json",
     "dick_gumshoe": "gumshoe/character.json",
-    "mia_fey": "mia/character.json"
+    "mia_fey": "mia/character.json",
+    "miles_edgeworth": "edgeworth/character.json",
+    "franziska_von_karma": "franziska/character.json",
+    "larry_butz": "larry/character.json",
+    "pearl_fey": "pearl/character.json"
   }
 }

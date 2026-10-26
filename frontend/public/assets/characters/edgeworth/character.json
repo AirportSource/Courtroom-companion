@@ -1,0 +1,2223 @@
+{
+  "schemaVersion": 1,
+  "id": "miles_edgeworth",
+  "displayName": "Miles Edgeworth",
+  "names": {
+    "en": "Miles Edgeworth",
+    "fr": "Miles Edgeworth",
+    "ja": "御剣怜侍",
+    "it": "Miles Edgeworth",
+    "es": "Miles Edgeworth"
+  },
+  "anchor": "bottom-center",
+  "render": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  "voice": {
+    "blip": "blip_male",
+    "shout": "edgeworth"
+  },
+  "courtRecordPortrait": {
+    "src": "portraits/court_record.png",
+    "width": 64,
+    "height": 64
+  },
+  "waiting": {
+    "emotion": "thinking",
+    "animation": "thinking_temple"
+  },
+  "taskAcknowledgements": {
+    "artifact": {
+      "emotion": "determined",
+      "lines": {
+        "en": [
+          "Very well. I'll take care of it.",
+          "Leave it to me. It will be done properly.",
+          "Give me a moment. I'll see to it.",
+          "Understood. I'll put it together."
+        ],
+        "fr": [
+          "Très bien. Je m'en occupe.",
+          "Laissez-moi faire. Ce sera fait correctement.",
+          "Un instant. Je m'en charge.",
+          "Compris. Je vais préparer cela."
+        ],
+        "ja": [
+          "いいだろう。私が引き受けよう。",
+          "任せておけ。きちんと仕上げる。",
+          "少し待て。私が対応する。",
+          "了解した。用意しよう。"
+        ],
+        "it": [
+          "Molto bene. Me ne occupo io.",
+          "Lascia fare a me. Sarà fatto come si deve.",
+          "Un momento. Ci penso io.",
+          "Capito. Lo preparo subito."
+        ],
+        "es": [
+          "Muy bien. Yo me encargo.",
+          "Déjamelo a mí. Se hará como es debido.",
+          "Un momento. Yo me ocupo.",
+          "Entendido. Lo prepararé."
+        ]
+      }
+    }
+  },
+  "defaultEmotion": "neutral",
+  "fallbackEmotion": "neutral",
+  "readiness": "ready",
+  "group": "aa1",
+  "animations": {
+    "neutral_stand": {
+      "canvas": {
+        "width": 104,
+        "height": 143
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/neutral_stand/idle/edgeworth_frame_001.png",
+          "sprites/neutral_stand/idle/edgeworth_frame_002.png",
+          "sprites/neutral_stand/idle/edgeworth_frame_003.png",
+          "sprites/neutral_stand/idle/edgeworth_frame_004.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/neutral_stand/talking/edgeworth_frame_005.png",
+          "sprites/neutral_stand/talking/edgeworth_frame_006.png",
+          "sprites/neutral_stand/talking/edgeworth_frame_007.png",
+          "sprites/neutral_stand/talking/edgeworth_frame_008.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "pointing": {
+      "canvas": {
+        "width": 164,
+        "height": 145
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/pointing/idle/edgeworth_frame_025.png",
+          "sprites/pointing/idle/edgeworth_frame_026.png",
+          "sprites/pointing/idle/edgeworth_frame_027.png",
+          "sprites/pointing/idle/edgeworth_frame_028.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/pointing/talking/edgeworth_frame_029.png",
+          "sprites/pointing/talking/edgeworth_frame_030.png",
+          "sprites/pointing/talking/edgeworth_frame_031.png",
+          "sprites/pointing/talking/edgeworth_frame_032.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "open_hands": {
+      "canvas": {
+        "width": 186,
+        "height": 149
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/open_hands/idle/edgeworth_frame_042.png",
+          "sprites/open_hands/idle/edgeworth_frame_043.png",
+          "sprites/open_hands/idle/edgeworth_frame_044.png",
+          "sprites/open_hands/idle/edgeworth_frame_045.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/open_hands/talking/edgeworth_frame_046.png",
+          "sprites/open_hands/talking/edgeworth_frame_047.png",
+          "sprites/open_hands/talking/edgeworth_frame_048.png",
+          "sprites/open_hands/talking/edgeworth_frame_049.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "arms_crossed": {
+      "canvas": {
+        "width": 134,
+        "height": 145
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/arms_crossed/idle/edgeworth_frame_054.png",
+          "sprites/arms_crossed/idle/edgeworth_frame_055.png",
+          "sprites/arms_crossed/idle/edgeworth_frame_056.png",
+          "sprites/arms_crossed/idle/edgeworth_frame_057.png"
+        ],
+        "offsets": [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/arms_crossed/talking/edgeworth_frame_058.png",
+          "sprites/arms_crossed/talking/edgeworth_frame_059.png",
+          "sprites/arms_crossed/talking/edgeworth_frame_060.png",
+          "sprites/arms_crossed/talking/edgeworth_frame_061.png"
+        ],
+        "offsets": [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ]
+      }
+    },
+    "thinking_temple": {
+      "canvas": {
+        "width": 146,
+        "height": 142
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/thinking_temple/idle/edgeworth_frame_064.png",
+          "sprites/thinking_temple/idle/edgeworth_frame_066.png",
+          "sprites/thinking_temple/idle/edgeworth_frame_067.png",
+          "sprites/thinking_temple/idle/edgeworth_frame_066.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/thinking_temple/talking/edgeworth_frame_064.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "reading_document": {
+      "canvas": {
+        "width": 172,
+        "height": 143
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/reading_document/idle/edgeworth_frame_070.png",
+          "sprites/reading_document/idle/edgeworth_frame_071.png",
+          "sprites/reading_document/idle/edgeworth_frame_072.png",
+          "sprites/reading_document/idle/edgeworth_frame_073.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/reading_document/talking/edgeworth_frame_074.png",
+          "sprites/reading_document/talking/edgeworth_frame_075.png",
+          "sprites/reading_document/talking/edgeworth_frame_076.png",
+          "sprites/reading_document/talking/edgeworth_frame_077.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "fists_hunched": {
+      "canvas": {
+        "width": 170,
+        "height": 115
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/fists_hunched/idle/edgeworth_frame_081.png",
+          "sprites/fists_hunched/idle/edgeworth_frame_082.png",
+          "sprites/fists_hunched/idle/edgeworth_frame_083.png",
+          "sprites/fists_hunched/idle/edgeworth_frame_084.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/fists_hunched/talking/edgeworth_frame_085.png",
+          "sprites/fists_hunched/talking/edgeworth_frame_086.png",
+          "sprites/fists_hunched/talking/edgeworth_frame_087.png",
+          "sprites/fists_hunched/talking/edgeworth_frame_088.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    "anguish_closeup": {
+      "canvas": {
+        "width": 228,
+        "height": 192
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/anguish_closeup/idle/edgeworth_frame_089.png",
+          "sprites/anguish_closeup/idle/edgeworth_frame_090.png",
+          "sprites/anguish_closeup/idle/edgeworth_frame_091.png",
+          "sprites/anguish_closeup/idle/edgeworth_frame_092.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/anguish_closeup/talking/edgeworth_frame_093.png",
+          "sprites/anguish_closeup/talking/edgeworth_frame_094.png",
+          "sprites/anguish_closeup/talking/edgeworth_frame_095.png",
+          "sprites/anguish_closeup/talking/edgeworth_frame_096.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "startled": {
+      "canvas": {
+        "width": 104,
+        "height": 143
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          1000
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/startled/idle/edgeworth_frame_078.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/startled/talking/edgeworth_frame_078.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "laugh": {
+      "canvas": {
+        "width": 184,
+        "height": 146
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          1000
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/laugh/idle/edgeworth_frame_079.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/laugh/talking/edgeworth_frame_079.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "smirk_cuff": {
+      "canvas": {
+        "width": 158,
+        "height": 138
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          1000
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/smirk_cuff/idle/edgeworth_frame_080.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/smirk_cuff/talking/edgeworth_frame_080.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "reactions": {
+    "thinking_gesture": {
+      "canvas": {
+        "width": 146,
+        "height": 142
+      },
+      "fps": 10,
+      "loop": false,
+      "frames": [
+        "sprites/thinking_gesture/reaction/edgeworth_frame_062.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_063.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_064.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_065.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_064.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_065.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_064.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_065.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_066.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_067.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_068.png",
+        "sprites/thinking_gesture/reaction/edgeworth_frame_069.png"
+      ],
+      "offsets": [
+        [
+          21,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    "finger_tap": {
+      "canvas": {
+        "width": 134,
+        "height": 145
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/finger_tap/reaction/edgeworth_frame_050.png",
+        "sprites/finger_tap/reaction/edgeworth_frame_051.png",
+        "sprites/finger_tap/reaction/edgeworth_frame_052.png",
+        "sprites/finger_tap/reaction/edgeworth_frame_053.png",
+        "sprites/finger_tap/reaction/edgeworth_frame_050.png",
+        "sprites/finger_tap/reaction/edgeworth_frame_051.png",
+        "sprites/finger_tap/reaction/edgeworth_frame_052.png",
+        "sprites/finger_tap/reaction/edgeworth_frame_053.png"
+      ],
+      "offsets": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ]
+      ]
+    },
+    "hands_open_bow": {
+      "canvas": {
+        "width": 186,
+        "height": 149
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/hands_open_bow/reaction/edgeworth_frame_036.png",
+        "sprites/hands_open_bow/reaction/edgeworth_frame_037.png",
+        "sprites/hands_open_bow/reaction/edgeworth_frame_038.png",
+        "sprites/hands_open_bow/reaction/edgeworth_frame_039.png",
+        "sprites/hands_open_bow/reaction/edgeworth_frame_040.png",
+        "sprites/hands_open_bow/reaction/edgeworth_frame_041.png",
+        "sprites/hands_open_bow/reaction/edgeworth_frame_038.png",
+        "sprites/hands_open_bow/reaction/edgeworth_frame_039.png",
+        "sprites/hands_open_bow/reaction/edgeworth_frame_040.png",
+        "sprites/hands_open_bow/reaction/edgeworth_frame_041.png"
+      ],
+      "offsets": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          6
+        ]
+      ]
+    }
+  },
+  "emotions": {
+    "neutral": {
+      "animation": "neutral_stand"
+    },
+    "happy": {
+      "animation": "open_hands"
+    },
+    "excited": {
+      "animation": "pointing"
+    },
+    "thinking": {
+      "reaction": "thinking_gesture",
+      "animation": "thinking_temple"
+    },
+    "surprised": {
+      "animation": "startled"
+    },
+    "sad": {
+      "animation": "anguish_closeup"
+    },
+    "anxious": {
+      "animation": "fists_hunched"
+    },
+    "playful": {
+      "animation": "smirk_cuff"
+    },
+    "grateful": {
+      "reaction": "hands_open_bow",
+      "animation": "open_hands"
+    },
+    "laughing": {
+      "animation": "laugh"
+    },
+    "explaining": {
+      "animation": "reading_document"
+    },
+    "polite": {
+      "reaction": "hands_open_bow",
+      "animation": "open_hands"
+    },
+    "relaxed": {
+      "animation": "smirk_cuff"
+    },
+    "serious": {
+      "animation": "arms_crossed"
+    },
+    "determined": {
+      "animation": "pointing"
+    },
+    "angry": {
+      "animation": "fists_hunched"
+    },
+    "suspicious": {
+      "reaction": "finger_tap",
+      "animation": "arms_crossed"
+    }
+  },
+  "unassignedFrames": [],
+  "defaultPresentation": "conversation",
+  "presentationGroups": {
+    "conversation": {
+      "inheritReactions": false,
+      "animations": {
+        "discussion_neutral": {
+          "canvas": {
+            "width": 136,
+            "height": 174
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_neutral/idle/frame_001.png",
+              "conversation/discussion_neutral/idle/frame_002.png",
+              "conversation/discussion_neutral/idle/frame_003.png",
+              "conversation/discussion_neutral/idle/frame_004.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_neutral/talking/frame_005.png",
+              "conversation/discussion_neutral/talking/frame_006.png",
+              "conversation/discussion_neutral/talking/frame_007.png",
+              "conversation/discussion_neutral/talking/frame_008.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_aside": {
+          "canvas": {
+            "width": 136,
+            "height": 171
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_aside/idle/frame_009.png",
+              "conversation/discussion_aside/idle/frame_010.png",
+              "conversation/discussion_aside/idle/frame_011.png",
+              "conversation/discussion_aside/idle/frame_012.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_aside/talking/frame_013.png",
+              "conversation/discussion_aside/talking/frame_014.png",
+              "conversation/discussion_aside/talking/frame_015.png",
+              "conversation/discussion_aside/talking/frame_016.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_stern": {
+          "canvas": {
+            "width": 136,
+            "height": 170
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_stern/idle/frame_017.png",
+              "conversation/discussion_stern/idle/frame_018.png",
+              "conversation/discussion_stern/idle/frame_019.png",
+              "conversation/discussion_stern/idle/frame_020.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_stern/talking/frame_021.png",
+              "conversation/discussion_stern/talking/frame_022.png",
+              "conversation/discussion_stern/talking/frame_023.png",
+              "conversation/discussion_stern/talking/frame_024.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_thinking": {
+          "canvas": {
+            "width": 144,
+            "height": 169
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_thinking/idle/frame_025.png",
+              "conversation/discussion_thinking/idle/frame_026.png",
+              "conversation/discussion_thinking/idle/frame_027.png",
+              "conversation/discussion_thinking/idle/frame_028.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_thinking/talking/frame_029.png",
+              "conversation/discussion_thinking/talking/frame_030.png",
+              "conversation/discussion_thinking/talking/frame_031.png",
+              "conversation/discussion_thinking/talking/frame_032.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_sad": {
+          "canvas": {
+            "width": 136,
+            "height": 174
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_sad/idle/frame_033.png",
+              "conversation/discussion_sad/idle/frame_034.png",
+              "conversation/discussion_sad/idle/frame_035.png",
+              "conversation/discussion_sad/idle/frame_036.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_sad/talking/frame_039.png",
+              "conversation/discussion_sad/talking/frame_040.png",
+              "conversation/discussion_sad/talking/frame_041.png",
+              "conversation/discussion_sad/talking/frame_042.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_crossed": {
+          "canvas": {
+            "width": 142,
+            "height": 178
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_crossed/idle/frame_051.png",
+              "conversation/discussion_crossed/idle/frame_052.png",
+              "conversation/discussion_crossed/idle/frame_053.png",
+              "conversation/discussion_crossed/idle/frame_054.png"
+            ],
+            "offsets": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_crossed/talking/frame_055.png",
+              "conversation/discussion_crossed/talking/frame_056.png",
+              "conversation/discussion_crossed/talking/frame_057.png",
+              "conversation/discussion_crossed/talking/frame_058.png"
+            ],
+            "offsets": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          }
+        },
+        "discussion_smirk": {
+          "canvas": {
+            "width": 136,
+            "height": 170
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_smirk/idle/frame_063.png",
+              "conversation/discussion_smirk/idle/frame_064.png",
+              "conversation/discussion_smirk/idle/frame_065.png",
+              "conversation/discussion_smirk/idle/frame_066.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "conversation/discussion_smirk/talking/frame_071.png",
+              "conversation/discussion_smirk/talking/frame_072.png",
+              "conversation/discussion_smirk/talking/frame_073.png",
+              "conversation/discussion_smirk/talking/frame_074.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "emotions": {
+        "neutral": {
+          "animation": "discussion_neutral"
+        },
+        "happy": {
+          "animation": "discussion_smirk"
+        },
+        "excited": {
+          "animation": "discussion_smirk"
+        },
+        "thinking": {
+          "animation": "discussion_thinking"
+        },
+        "surprised": {
+          "animation": "discussion_aside"
+        },
+        "sad": {
+          "animation": "discussion_sad"
+        },
+        "anxious": {
+          "animation": "discussion_sad"
+        },
+        "playful": {
+          "animation": "discussion_smirk"
+        },
+        "grateful": {
+          "animation": "discussion_neutral"
+        },
+        "laughing": {
+          "animation": "discussion_smirk"
+        },
+        "explaining": {
+          "animation": "discussion_neutral"
+        },
+        "polite": {
+          "animation": "discussion_neutral"
+        },
+        "relaxed": {
+          "animation": "discussion_smirk"
+        },
+        "serious": {
+          "animation": "discussion_stern"
+        },
+        "determined": {
+          "animation": "discussion_stern"
+        },
+        "angry": {
+          "animation": "discussion_crossed"
+        },
+        "suspicious": {
+          "animation": "discussion_crossed"
+        }
+      },
+      "waiting": {
+        "emotion": "thinking",
+        "animation": "discussion_thinking"
+      }
+    },
+    "courtroom": {
+      "animations": {
+        "neutral_stand": {
+          "canvas": {
+            "width": 104,
+            "height": 143
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/neutral_stand/idle/edgeworth_frame_001.png",
+              "sprites/neutral_stand/idle/edgeworth_frame_002.png",
+              "sprites/neutral_stand/idle/edgeworth_frame_003.png",
+              "sprites/neutral_stand/idle/edgeworth_frame_004.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/neutral_stand/talking/edgeworth_frame_005.png",
+              "sprites/neutral_stand/talking/edgeworth_frame_006.png",
+              "sprites/neutral_stand/talking/edgeworth_frame_007.png",
+              "sprites/neutral_stand/talking/edgeworth_frame_008.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "pointing": {
+          "canvas": {
+            "width": 164,
+            "height": 145
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/pointing/idle/edgeworth_frame_025.png",
+              "sprites/pointing/idle/edgeworth_frame_026.png",
+              "sprites/pointing/idle/edgeworth_frame_027.png",
+              "sprites/pointing/idle/edgeworth_frame_028.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/pointing/talking/edgeworth_frame_029.png",
+              "sprites/pointing/talking/edgeworth_frame_030.png",
+              "sprites/pointing/talking/edgeworth_frame_031.png",
+              "sprites/pointing/talking/edgeworth_frame_032.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "open_hands": {
+          "canvas": {
+            "width": 186,
+            "height": 149
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/open_hands/idle/edgeworth_frame_042.png",
+              "sprites/open_hands/idle/edgeworth_frame_043.png",
+              "sprites/open_hands/idle/edgeworth_frame_044.png",
+              "sprites/open_hands/idle/edgeworth_frame_045.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/open_hands/talking/edgeworth_frame_046.png",
+              "sprites/open_hands/talking/edgeworth_frame_047.png",
+              "sprites/open_hands/talking/edgeworth_frame_048.png",
+              "sprites/open_hands/talking/edgeworth_frame_049.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "arms_crossed": {
+          "canvas": {
+            "width": 134,
+            "height": 145
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/arms_crossed/idle/edgeworth_frame_054.png",
+              "sprites/arms_crossed/idle/edgeworth_frame_055.png",
+              "sprites/arms_crossed/idle/edgeworth_frame_056.png",
+              "sprites/arms_crossed/idle/edgeworth_frame_057.png"
+            ],
+            "offsets": [
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/arms_crossed/talking/edgeworth_frame_058.png",
+              "sprites/arms_crossed/talking/edgeworth_frame_059.png",
+              "sprites/arms_crossed/talking/edgeworth_frame_060.png",
+              "sprites/arms_crossed/talking/edgeworth_frame_061.png"
+            ],
+            "offsets": [
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                4,
+                0
+              ]
+            ]
+          }
+        },
+        "thinking_temple": {
+          "canvas": {
+            "width": 146,
+            "height": 142
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/thinking_temple/idle/edgeworth_frame_064.png",
+              "sprites/thinking_temple/idle/edgeworth_frame_066.png",
+              "sprites/thinking_temple/idle/edgeworth_frame_067.png",
+              "sprites/thinking_temple/idle/edgeworth_frame_066.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/thinking_temple/talking/edgeworth_frame_064.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "reading_document": {
+          "canvas": {
+            "width": 172,
+            "height": 143
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/reading_document/idle/edgeworth_frame_070.png",
+              "sprites/reading_document/idle/edgeworth_frame_071.png",
+              "sprites/reading_document/idle/edgeworth_frame_072.png",
+              "sprites/reading_document/idle/edgeworth_frame_073.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/reading_document/talking/edgeworth_frame_074.png",
+              "sprites/reading_document/talking/edgeworth_frame_075.png",
+              "sprites/reading_document/talking/edgeworth_frame_076.png",
+              "sprites/reading_document/talking/edgeworth_frame_077.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "fists_hunched": {
+          "canvas": {
+            "width": 170,
+            "height": 115
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/fists_hunched/idle/edgeworth_frame_081.png",
+              "sprites/fists_hunched/idle/edgeworth_frame_082.png",
+              "sprites/fists_hunched/idle/edgeworth_frame_083.png",
+              "sprites/fists_hunched/idle/edgeworth_frame_084.png"
+            ],
+            "offsets": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/fists_hunched/talking/edgeworth_frame_085.png",
+              "sprites/fists_hunched/talking/edgeworth_frame_086.png",
+              "sprites/fists_hunched/talking/edgeworth_frame_087.png",
+              "sprites/fists_hunched/talking/edgeworth_frame_088.png"
+            ],
+            "offsets": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          }
+        },
+        "anguish_closeup": {
+          "canvas": {
+            "width": 228,
+            "height": 192
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              2600,
+              70,
+              90,
+              70
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/anguish_closeup/idle/edgeworth_frame_089.png",
+              "sprites/anguish_closeup/idle/edgeworth_frame_090.png",
+              "sprites/anguish_closeup/idle/edgeworth_frame_091.png",
+              "sprites/anguish_closeup/idle/edgeworth_frame_092.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/anguish_closeup/talking/edgeworth_frame_093.png",
+              "sprites/anguish_closeup/talking/edgeworth_frame_094.png",
+              "sprites/anguish_closeup/talking/edgeworth_frame_095.png",
+              "sprites/anguish_closeup/talking/edgeworth_frame_096.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "startled": {
+          "canvas": {
+            "width": 104,
+            "height": 143
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              1000
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/startled/idle/edgeworth_frame_078.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/startled/talking/edgeworth_frame_078.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "laugh": {
+          "canvas": {
+            "width": 184,
+            "height": 146
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              1000
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/laugh/idle/edgeworth_frame_079.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/laugh/talking/edgeworth_frame_079.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "smirk_cuff": {
+          "canvas": {
+            "width": 158,
+            "height": 138
+          },
+          "idle": {
+            "fps": 6,
+            "loop": true,
+            "frameDurations": [
+              1000
+            ],
+            "holdJitterMs": 1800,
+            "frames": [
+              "sprites/smirk_cuff/idle/edgeworth_frame_080.png"
+            ],
+            "offsets": [
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 6,
+            "loop": true,
+            "frames": [
+              "sprites/smirk_cuff/talking/edgeworth_frame_080.png"
+            ],
+            "offsets": [
+              [
+                1,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "emotions": {
+        "neutral": {
+          "animation": "neutral_stand"
+        },
+        "happy": {
+          "animation": "open_hands"
+        },
+        "excited": {
+          "animation": "pointing"
+        },
+        "thinking": {
+          "reaction": "thinking_gesture",
+          "animation": "thinking_temple"
+        },
+        "surprised": {
+          "animation": "startled"
+        },
+        "sad": {
+          "animation": "anguish_closeup"
+        },
+        "anxious": {
+          "animation": "fists_hunched"
+        },
+        "playful": {
+          "animation": "smirk_cuff"
+        },
+        "grateful": {
+          "reaction": "hands_open_bow",
+          "animation": "open_hands"
+        },
+        "laughing": {
+          "animation": "laugh"
+        },
+        "explaining": {
+          "animation": "reading_document"
+        },
+        "polite": {
+          "reaction": "hands_open_bow",
+          "animation": "open_hands"
+        },
+        "relaxed": {
+          "animation": "smirk_cuff"
+        },
+        "serious": {
+          "animation": "arms_crossed"
+        },
+        "determined": {
+          "animation": "pointing"
+        },
+        "angry": {
+          "animation": "fists_hunched"
+        },
+        "suspicious": {
+          "reaction": "finger_tap",
+          "animation": "arms_crossed"
+        }
+      },
+      "waiting": {
+        "emotion": "thinking",
+        "animation": "thinking_temple"
+      }
+    }
+  }
+}

@@ -169,3 +169,80 @@ The frontend plays audio.json event `sfx_<name>` once, on the segment's first pa
 ## Waiting performance (D-049)
 
 `character.json` `waiting` names the pose shown while a reply is generated (Maya: `thinking` / `thinking_side`, idle loop, no reaction).
+
+## Signature SFX (character-specific sounds)
+
+A character may own a sound that is not in the global set, for example a whip crack. It is data in
+`performance.json` `sfx.signature` (at most 4 per character), with no character names in code:
+
+```json
+"sfx": {
+  "reactions": { "emphasis": "emphasis" },
+  "signature": [
+    { "id": "whip", "reactions": ["whip_crack", "emphasis"], "emotions": [],
+      "minIntensity": 0.85, "cooldownTurns": 5, "maxPerReply": 1 }
+  ]
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `id` | `^[a-z][a-z0-9_]{1,31}$`, never one of the global names. The frontend plays audio.json event `sfx_<id>`. |
+| `reactions` / `emotions` | Triggers (OR): the reaction the model asked for is listed, **or the visual one-shot that survived the reaction rules is** (so the sound syncs with the animation, e.g. `whip_crack`), or the beat's resolved emotion is. At least one valid trigger is required. |
+| `minIntensity` | The beat needs this intensity (default 0.7). |
+| `cooldownTurns` | Replies that must stay free of this sound after a use (default 3). With 4 it plays on replies 1, 6, 11. |
+| `maxPerReply` | Uses per reply (default 1). |
+
+Resolution per beat: **signature override** (eligible and out of cooldown) -> explicit semantic
+reaction sound -> emotion fallback sound -> silence. While a signature is cooling down the beat
+falls back to the character's ordinary semantic sound, so a strong beat still has some feedback.
+`notes` records every signature decision (used, skipped for intensity, per reply, cooldown).
+
+**Where the cooldown lives.** The director stays a pure function of `(reply, profile, state)`.
+`DirectorState` gained `turn` and `signature_last_turn`; `CharacterService` keeps it in
+`_sessions[(session_id, character_id)]` next to the existing reaction-cooldown state, so the
+cooldown is per conversation and per character, needs no history replay and is reset with the
+backend process (as the reaction cooldown is). `direct(..., signatures=False)` is for stateless
+callers.
+
+**Frontend.** The director emits the id as `sfx`. `engine/sfx.ts` accepts a name only if it is a
+global semantic name or a registered signature: `loadAudio()` registers every audio.json event
+named `sfx_<id>` that is not global. Unknown, malformed or unmapped names are dropped by the
+parser and are silent no-ops. `validate-assets` checks that each `signature` id has the audio
+event and that triggers resolve.
+
+## Readiness
+
+`character.json` `"readiness": "asset-only" | "partial" | "ready"`.
+
+- Backend (`CharacterRepository`): declared level, capped by the files (`ready` needs both
+  `personality.md` and `performance.json`; if absent the level is derived the same way).
+  `service.chat` uses `get_for_chat` and refuses anything not chat-allowed with
+  `CharacterNotReadyError` (a `CharacterNotFoundError`, so the API answers 404); `ids()` lists
+  chat-allowed packs. `partial` packs chat only with `COURTROOM_ALLOW_PARTIAL_CHARACTERS=1`;
+  `asset-only` never does. `capabilities` includes `readiness`.
+- Frontend: a missing/unknown value counts as `partial` (the browser cannot see the other
+  files). `loadCharacterSummaries` and `CharacterSelectScreen` list `ready` only in production;
+  development builds also list `partial` with a `[WIP]` marker; `asset-only` is never listed.
+  Optional `group` (e.g. `"aa1"`) orders the menu by game.
+- The select list scrolls (`MenuList`, `maxHeight = visibleRows x rowHeight`), so the number of
+  characters is not limited by the 256x192 screen.
+- Music: a character's theme stays in `music/soundtrack.json` `profiles`, keyed by character id;
+  nothing about music is stored in `character.json`.
+
+## Presentation context integration (D-087, 2026-10-26)
+
+Character identity ≠ presentation context. The Director still emits semantic emotion/animation/reaction IDs for the same character. Frontend `selectPresentation` projects explicit conversation/courtroom group data before the existing resolver. Unavailable stable poses fall back inside that group; reactions use group → shared character collection → existing semantic fallback. No source paths enter the Director. Waiting and render placement may vary by group. Legacy packs including Maya are unchanged. Franziska's shared whip reaction, signature sound, anger trigger and cooldown remain intact. Schema, sources and regression evidence: [migration report](PRESENTATION_DS_MIGRATION.md).
+
+## Restrained realization and Pearl SFX tuning (2026-10-26, D-090)
+
+Semantic realization now includes actual understanding of a useful clarification/detail, without requiring a theatrical beat. Routine acknowledgment or correction alone stays quiet; no keyword classifier was introduced. Prompt guidance chooses one clear realization, and the Director suppresses repeated explicit realization SFX within the same reply while retaining other explicit semantic behavior. Frontend realization event selects the supplied lightbulb WAV.
+
+Pearl remains data-driven: strong positive states→soft_transition; strong playful/laughing→comic; original surprise fallback retained. The one-fallback-per-reply limit and sensitive/low-intensity quiet cases remain. Franziska signature threshold/cooldown unchanged; its single event now contains timed swing+impact. Tests, exact thresholds and listening limitations: `TARGETED_CORRECTIONS.md`.
+
+## Whip ownership, shared sounds and frequency (2026-10-26, D-091/D-092)
+
+- A signature with `performs` owns that reaction: firing sets the reaction (its effect cues play whip then whack), not eligible drops it. Inbox events (`signatures=False`) never perform it.
+- Resolution of WHICH sound: character `semanticSounds` -> shared audio.json pools -> global `sfx_<name>`. WHEN: explicit request (strong) or emotion fallback (threshold, `maxPerReply`, `fallbackCooldownTurns`, `categoryCooldownTurns`, drought allowance).
+- Shared names for every character: surprise, shock, realization, comic, emphasis, angry, flabbergasted, encouragement (+ aliases scared, insightful, you_can_do_it).
+- Dev panel lines show requested name, character, character/shared candidates, final sound, played or why not, plus the director's SFX notes (cooldowns).

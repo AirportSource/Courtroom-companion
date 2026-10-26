@@ -1,0 +1,868 @@
+{
+  "schemaVersion": 1,
+  "id": "larry_butz",
+  "displayName": "Larry Butz",
+  "names": {
+    "en": "Larry Butz",
+    "fr": "Larry Butz",
+    "ja": "矢張政志",
+    "it": "Larry Butz",
+    "es": "Larry Butz"
+  },
+  "anchor": "bottom-center",
+  "render": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  "voice": {
+    "blip": "blip_male"
+  },
+  "courtRecordPortrait": {
+    "src": "portraits/court_record.png",
+    "width": 64,
+    "height": 64
+  },
+  "waiting": {
+    "emotion": "thinking",
+    "animation": "thinking_chin"
+  },
+  "taskAcknowledgements": {
+    "artifact": {
+      "emotion": "excited",
+      "lines": {
+        "en": [
+          "You got it, pal! Leave it to me!",
+          "Sure thing! Gimme a sec!",
+          "On it! This'll be awesome!",
+          "No problem, I'll whip something up!"
+        ],
+        "fr": [
+          "Ça marche, mon pote ! Laisse-moi faire !",
+          "Pas de souci ! Une petite seconde !",
+          "J'm'en occupe ! Ça va être génial !",
+          "Aucun problème, je te prépare ça !"
+        ],
+        "ja": [
+          "任せろって！俺に任せとけ！",
+          "オッケー！ちょっと待っててくれよ！",
+          "まっかせて！めちゃくちゃいいの作るぜ！",
+          "問題なし！すぐ用意するからさ！"
+        ],
+        "it": [
+          "Ricevuto, amico! Lascia fare a me!",
+          "Certo! Dammi un secondo!",
+          "Ci penso io! Sarà fantastico!",
+          "Nessun problema, ti preparo qualcosa!"
+        ],
+        "es": [
+          "¡Hecho, amigo! ¡Déjamelo a mí!",
+          "¡Claro! ¡Dame un segundo!",
+          "¡Voy! ¡Va a quedar genial!",
+          "¡Sin problema, te preparo algo!"
+        ]
+      }
+    }
+  },
+  "defaultEmotion": "neutral",
+  "fallbackEmotion": "neutral",
+  "readiness": "ready",
+  "group": "aa1",
+  "animations": {
+    "neutral": {
+      "canvas": {
+        "width": 156,
+        "height": 178
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/neutral/idle/larry_frame_001.png",
+          "sprites/neutral/idle/larry_frame_002.png",
+          "sprites/neutral/idle/larry_frame_003.png",
+          "sprites/neutral/idle/larry_frame_004.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/neutral/talking/larry_frame_005.png",
+          "sprites/neutral/talking/larry_frame_006.png",
+          "sprites/neutral/talking/larry_frame_007.png",
+          "sprites/neutral/talking/larry_frame_008.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "smug_hips": {
+      "canvas": {
+        "width": 162,
+        "height": 183
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/smug_hips/idle/larry_frame_009.png",
+          "sprites/smug_hips/idle/larry_frame_012.png",
+          "sprites/smug_hips/idle/larry_frame_013.png",
+          "sprites/smug_hips/idle/larry_frame_014.png"
+        ],
+        "offsets": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/smug_hips/talking/larry_frame_015.png",
+          "sprites/smug_hips/talking/larry_frame_016.png",
+          "sprites/smug_hips/talking/larry_frame_017.png",
+          "sprites/smug_hips/talking/larry_frame_018.png"
+        ],
+        "offsets": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ]
+      }
+    },
+    "blush": {
+      "canvas": {
+        "width": 156,
+        "height": 178
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          90
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/blush/idle/larry_frame_019.png",
+          "sprites/blush/idle/larry_frame_024.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/blush/talking/larry_frame_020.png",
+          "sprites/blush/talking/larry_frame_021.png",
+          "sprites/blush/talking/larry_frame_022.png",
+          "sprites/blush/talking/larry_frame_023.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "thumbs_up": {
+      "canvas": {
+        "width": 168,
+        "height": 178
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/thumbs_up/idle/larry_frame_039.png",
+          "sprites/thumbs_up/idle/larry_frame_043.png",
+          "sprites/thumbs_up/idle/larry_frame_044.png",
+          "sprites/thumbs_up/idle/larry_frame_045.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/thumbs_up/talking/larry_frame_046.png",
+          "sprites/thumbs_up/talking/larry_frame_047.png",
+          "sprites/thumbs_up/talking/larry_frame_048.png",
+          "sprites/thumbs_up/talking/larry_frame_049.png",
+          "sprites/thumbs_up/talking/larry_frame_050.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "cheer_grin": {
+      "canvas": {
+        "width": 166,
+        "height": 178
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          1000
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/cheer_grin/idle/larry_frame_051.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/cheer_grin/talking/larry_frame_059.png",
+          "sprites/cheer_grin/talking/larry_frame_060.png",
+          "sprites/cheer_grin/talking/larry_frame_061.png",
+          "sprites/cheer_grin/talking/larry_frame_062.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "furious": {
+      "canvas": {
+        "width": 170,
+        "height": 167
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          200,
+          200,
+          200,
+          200
+        ],
+        "holdJitterMs": 0,
+        "frames": [
+          "sprites/furious/idle/larry_frame_025.png",
+          "sprites/furious/idle/larry_frame_026.png",
+          "sprites/furious/idle/larry_frame_027.png",
+          "sprites/furious/idle/larry_frame_028.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/furious/talking/larry_frame_025.png",
+          "sprites/furious/talking/larry_frame_026.png",
+          "sprites/furious/talking/larry_frame_027.png",
+          "sprites/furious/talking/larry_frame_028.png"
+        ],
+        "offsets": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    "sob": {
+      "canvas": {
+        "width": 100,
+        "height": 178
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/sob/idle/larry_frame_031.png",
+          "sprites/sob/idle/larry_frame_032.png",
+          "sprites/sob/idle/larry_frame_033.png",
+          "sprites/sob/idle/larry_frame_034.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/sob/talking/larry_frame_035.png",
+          "sprites/sob/talking/larry_frame_036.png",
+          "sprites/sob/talking/larry_frame_037.png",
+          "sprites/sob/talking/larry_frame_038.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "head_scratch": {
+      "canvas": {
+        "width": 202,
+        "height": 178
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          1000
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/head_scratch/idle/larry_frame_063.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/head_scratch/talking/larry_frame_065.png",
+          "sprites/head_scratch/talking/larry_frame_066.png",
+          "sprites/head_scratch/talking/larry_frame_067.png",
+          "sprites/head_scratch/talking/larry_frame_068.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "thinking_chin": {
+      "canvas": {
+        "width": 116,
+        "height": 153
+      },
+      "idle": {
+        "fps": 6,
+        "loop": true,
+        "frameDurations": [
+          2600,
+          70,
+          90,
+          70
+        ],
+        "holdJitterMs": 1800,
+        "frames": [
+          "sprites/thinking_chin/idle/larry_frame_069.png",
+          "sprites/thinking_chin/idle/larry_frame_070.png",
+          "sprites/thinking_chin/idle/larry_frame_071.png",
+          "sprites/thinking_chin/idle/larry_frame_072.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 6,
+        "loop": true,
+        "frames": [
+          "sprites/thinking_chin/talking/larry_frame_073.png",
+          "sprites/thinking_chin/talking/larry_frame_074.png",
+          "sprites/thinking_chin/talking/larry_frame_075.png",
+          "sprites/thinking_chin/talking/larry_frame_076.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "reactions": {
+    "rage": {
+      "canvas": {
+        "width": 172,
+        "height": 167
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/rage/reaction/larry_frame_025.png",
+        "sprites/rage/reaction/larry_frame_026.png",
+        "sprites/rage/reaction/larry_frame_025.png",
+        "sprites/rage/reaction/larry_frame_026.png",
+        "sprites/rage/reaction/larry_frame_027.png",
+        "sprites/rage/reaction/larry_frame_028.png",
+        "sprites/rage/reaction/larry_frame_027.png",
+        "sprites/rage/reaction/larry_frame_028.png",
+        "sprites/rage/reaction/larry_frame_029.png",
+        "sprites/rage/reaction/larry_frame_030.png"
+      ],
+      "offsets": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    "cheer": {
+      "canvas": {
+        "width": 174,
+        "height": 178
+      },
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        "sprites/cheer/reaction/larry_frame_051.png",
+        "sprites/cheer/reaction/larry_frame_052.png",
+        "sprites/cheer/reaction/larry_frame_053.png",
+        "sprites/cheer/reaction/larry_frame_054.png",
+        "sprites/cheer/reaction/larry_frame_055.png",
+        "sprites/cheer/reaction/larry_frame_056.png",
+        "sprites/cheer/reaction/larry_frame_057.png",
+        "sprites/cheer/reaction/larry_frame_058.png"
+      ],
+      "offsets": [
+        [
+          5,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ]
+      ]
+    },
+    "scratch": {
+      "canvas": {
+        "width": 202,
+        "height": 178
+      },
+      "fps": 6,
+      "loop": false,
+      "frames": [
+        "sprites/scratch/reaction/larry_frame_063.png",
+        "sprites/scratch/reaction/larry_frame_064.png",
+        "sprites/scratch/reaction/larry_frame_063.png",
+        "sprites/scratch/reaction/larry_frame_064.png",
+        "sprites/scratch/reaction/larry_frame_063.png",
+        "sprites/scratch/reaction/larry_frame_064.png"
+      ],
+      "offsets": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  "emotions": {
+    "neutral": {
+      "animation": "neutral"
+    },
+    "happy": {
+      "animation": "cheer_grin"
+    },
+    "excited": {
+      "reaction": "cheer",
+      "animation": "thumbs_up"
+    },
+    "thinking": {
+      "animation": "thinking_chin"
+    },
+    "surprised": {
+      "animation": "blush"
+    },
+    "sad": {
+      "animation": "sob"
+    },
+    "anxious": {
+      "reaction": "scratch",
+      "animation": "head_scratch"
+    },
+    "playful": {
+      "animation": "smug_hips"
+    },
+    "grateful": {
+      "animation": "blush"
+    },
+    "laughing": {
+      "reaction": "cheer",
+      "animation": "cheer_grin"
+    },
+    "explaining": {
+      "animation": "smug_hips"
+    },
+    "polite": {
+      "animation": "neutral"
+    },
+    "relaxed": {
+      "animation": "smug_hips"
+    },
+    "serious": {
+      "animation": "neutral"
+    },
+    "determined": {
+      "animation": "thumbs_up"
+    },
+    "angry": {
+      "reaction": "rage",
+      "animation": "furious"
+    },
+    "embarrassed": {
+      "reaction": "scratch",
+      "animation": "head_scratch"
+    }
+  },
+  "unassignedFrames": []
+}

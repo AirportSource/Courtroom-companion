@@ -121,3 +121,51 @@ Legend: `[ ]` not started · `[~]` in progress / partially present · `[x]` done
 - [x] Maya personality guidance keeps burgers and other recurring traits occasional and context-led without counters or keyword filters (D-056)
 - [x] Browser FakeProvider flow: artifact → phone → acknowledgement → summon → existing reply; eight ordinary follow-up turns and 3×/4×/auto Court Record inspection
 - [x] Presentation/audio correction: character-defined local task acknowledgement concurrent with existing provider work, fast-result gate, real Phoenix ringtone loop, scoped BGM duck/restore, Court Record browsing sounds and dev ringtone audition (D-057)
+
+## Asset expansion milestone (2026-10-26, D-079–D-086)
+- [x] Source archive inventory + gaps (`ASSET_EXPANSION_INVENTORY.md`, `ASSET_EXPANSION_GAPS.md`)
+- [x] Character readiness, signature SFX, per-character isolation tests, behaviour framework
+- [x] First wave: Edgeworth, Franziska, Larry, Pearl (native DS, ready after real-provider behaviour tests)
+- [x] HD→DS location pipeline; 20 rooms installed (`bg_30`–`bg_49`)
+- [~] HD→DS character pipeline — prototype passed review (Frank, Angel, Godot); no HD character integrated yet
+- [x] Magnifier status grammar; native evidence frame kept (archive frame is a different design)
+- [x] Trilogy soundtrack (84 runtime tracks), batch loop analyser, conversation music strip
+- [ ] Listen to every `measured_not_auditioned` loop; decide the 4 flagged D-048 loops; loop the 49 `loop: null` tracks (incl. the 4 new character themes)
+- [ ] Next character wave (Godot via HD pipeline; Phoenix, Ema, Manfred von Karma, Judge from native sheets)
+- [ ] Official portraits from the GBA profile sheet; Franziska placement eyeball check
+
+## Presentation and original DS audio integration (2026-10-26)
+
+- [x] Explicit presentation groups, generic fallback and unchanged identity (D-087).
+- [x] Miles discussion sheet and Franziska composited animated-source frames; courtroom sets retained.
+- [x] Preserve 25 older tracks; replace 55 of 59 expansion imports with confidently mapped DS originals (D-088).
+- [x] Fresh scoped loop analysis: 21 measured loops / 34 whole-file fallbacks; audited backup of superseded remasters.
+- [x] Browser context/character switching, scales, blips, whip, player and ducking regression; automated checks pass.
+- [ ] Human audition of all migrated audio and the 21 new loop seams; review relative volume.
+- [ ] Resolve 4 uncertain mappings listed in [migration report](PRESENTATION_DS_MIGRATION.md).
+- [ ] Optional full-motion review of shared whip transition; no further presentation implementation is pending.
+
+The previous expansion's 35-loop/49-null totals above are historical; use the migration report/audit for the current source and loop disposition. Pre-existing loops were deliberately not recalculated.
+
+## Targeted correction pass (2026-10-26)
+
+- [x] Franziska native whip composition/timing and sequenced impact cue; cooldown preserved.
+- [x] Centered selection preview and front-facing native Journal portrait.
+- [x] Native phone evidence frame and request-scoped uploaded-image lifetime/cleanup.
+- [x] Restrained Pearl positive/playful SFX and meaningful lightbulb realization guidance/mapping.
+- [x] Full validation and browser regression; DS soundtrack unchanged by hash.
+- [ ] Obtain mapped official kanji font or authoritative glyph-to-Unicode table for supplied custom-order atlas; current font stack preserved.
+- [ ] Human listening for Franziska impact timing, Pearl cue fit and lightbulb mix. Supplied GIF has zero delays, so exact timing remains uncertain.
+
+Details: [targeted correction report](TARGETED_CORRECTIONS.md). The earlier Franziska selection/profile checks are now completed; historical milestone entries remain intact.
+
+### Whip effect, loops and semantic SFX (2026-10-26, D-091-D-093)
+- [x] Reference whip GIF converted; reaction effect overlay + cues; whip complete or absent.
+- [x] Conversation whip = black screen + slash, fade back to front pose; no courtroom side sprites in conversation.
+- [x] Shared SFX library, character pools, frequency model; Pearl calibrated.
+- [x] Structural loop pass: 51/55 DS tracks loop; Turnabout Sisters later loop.
+- [ ] Human listening: whip/whack timing, new loops (esp. Turnabout Sisters, pursuit 2004, psyche locks), Pearl cue fit.
+- [ ] Decide on v2 loop evidence for pre-expansion/REVIEW tracks and the 4 questionable loops; update `migrate_ds_audio.py --finalize-analysis`.
+
+- [x] D-094: conversation whip starts with the lash; whip triggers balanced with classic emotions.
+- [ ] Measure Franziska's live whip frequency in a real conversation (with an isolated `COURTROOM_CONFIG_DIR`).

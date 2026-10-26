@@ -1,0 +1,107 @@
+{
+  "source": "Franziska_cries.webp",
+  "sourceSha256": "0c4f74861f068c644e9fbba63805200af1b04be5e5811b494d20a8651a9f5ec8",
+  "format": "WEBP",
+  "canvas": {
+    "width": 256,
+    "height": 192
+  },
+  "animated": true,
+  "frameCount": 5,
+  "loop": 0,
+  "webpFrameControls": [
+    {
+      "x": 80,
+      "y": 22,
+      "width": 98,
+      "height": 170,
+      "durationMs": 130,
+      "disposeToBackground": false,
+      "blend": false
+    },
+    {
+      "x": 80,
+      "y": 22,
+      "width": 98,
+      "height": 154,
+      "durationMs": 100,
+      "disposeToBackground": false,
+      "blend": false
+    },
+    {
+      "x": 80,
+      "y": 22,
+      "width": 98,
+      "height": 154,
+      "durationMs": 1000,
+      "disposeToBackground": false,
+      "blend": false
+    },
+    {
+      "x": 80,
+      "y": 22,
+      "width": 98,
+      "height": 154,
+      "durationMs": 100,
+      "disposeToBackground": false,
+      "blend": false
+    },
+    {
+      "x": 80,
+      "y": 22,
+      "width": 98,
+      "height": 154,
+      "durationMs": 2000,
+      "disposeToBackground": false,
+      "blend": false
+    }
+  ],
+  "frames": [
+    {
+      "file": "frame_000.png",
+      "durationMs": 130,
+      "rgbaSha256": "b0c17c069efa9d0a1d95ee0e21c8eb73411a015518d91fda152142956963489f",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_001.png",
+      "durationMs": 100,
+      "rgbaSha256": "f76efd75c9ddfcf9b3588d80f04a888344a543f12ebb07b5d45ed4b500db103f",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_002.png",
+      "durationMs": 1000,
+      "rgbaSha256": "b0c17c069efa9d0a1d95ee0e21c8eb73411a015518d91fda152142956963489f",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_003.png",
+      "durationMs": 100,
+      "rgbaSha256": "f76efd75c9ddfcf9b3588d80f04a888344a543f12ebb07b5d45ed4b500db103f",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_004.png",
+      "durationMs": 2000,
+      "rgbaSha256": "b0c17c069efa9d0a1d95ee0e21c8eb73411a015518d91fda152142956963489f",
+      "alphaRange": [
+        0,
+        255
+      ]
+    }
+  ],
+  "method": "Pillow composited RGBA full-canvas; no crop or resize"
+}

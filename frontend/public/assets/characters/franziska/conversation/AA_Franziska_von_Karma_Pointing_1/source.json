@@ -1,0 +1,179 @@
+{
+  "source": "AA_Franziska_von_Karma_Pointing_1.webp",
+  "sourceSha256": "41ab46771d656be4d0577b7d75d76937ab84caff309d359d627414544836a622",
+  "format": "WEBP",
+  "canvas": {
+    "width": 256,
+    "height": 192
+  },
+  "animated": true,
+  "frameCount": 9,
+  "loop": 0,
+  "webpFrameControls": [
+    {
+      "x": 78,
+      "y": 24,
+      "width": 107,
+      "height": 168,
+      "durationMs": 1160,
+      "disposeToBackground": false,
+      "blend": false
+    },
+    {
+      "x": 106,
+      "y": 56,
+      "width": 24,
+      "height": 5,
+      "durationMs": 100,
+      "disposeToBackground": false,
+      "blend": true
+    },
+    {
+      "x": 106,
+      "y": 56,
+      "width": 24,
+      "height": 6,
+      "durationMs": 100,
+      "disposeToBackground": false,
+      "blend": true
+    },
+    {
+      "x": 106,
+      "y": 56,
+      "width": 24,
+      "height": 6,
+      "durationMs": 100,
+      "disposeToBackground": false,
+      "blend": true
+    },
+    {
+      "x": 106,
+      "y": 56,
+      "width": 24,
+      "height": 5,
+      "durationMs": 3330,
+      "disposeToBackground": false,
+      "blend": true
+    },
+    {
+      "x": 106,
+      "y": 56,
+      "width": 24,
+      "height": 5,
+      "durationMs": 100,
+      "disposeToBackground": false,
+      "blend": true
+    },
+    {
+      "x": 106,
+      "y": 56,
+      "width": 24,
+      "height": 6,
+      "durationMs": 100,
+      "disposeToBackground": false,
+      "blend": true
+    },
+    {
+      "x": 106,
+      "y": 56,
+      "width": 24,
+      "height": 6,
+      "durationMs": 100,
+      "disposeToBackground": false,
+      "blend": true
+    },
+    {
+      "x": 106,
+      "y": 56,
+      "width": 24,
+      "height": 5,
+      "durationMs": 3000,
+      "disposeToBackground": false,
+      "blend": true
+    }
+  ],
+  "frames": [
+    {
+      "file": "frame_000.png",
+      "durationMs": 1160,
+      "rgbaSha256": "e90612cb1014462ff3e824316c32e8513ee3828c2ad8bf0d8f3b1ed085fbb4de",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_001.png",
+      "durationMs": 100,
+      "rgbaSha256": "8513e2358772925a8110a69ef36d35a1dd224fb06327bc745d964839475e23d0",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_002.png",
+      "durationMs": 100,
+      "rgbaSha256": "ddd66129e70d2cab19b4eb0de7c59392a986cdf51502b6af7286f525ff59fdd4",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_003.png",
+      "durationMs": 100,
+      "rgbaSha256": "8513e2358772925a8110a69ef36d35a1dd224fb06327bc745d964839475e23d0",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_004.png",
+      "durationMs": 3330,
+      "rgbaSha256": "e90612cb1014462ff3e824316c32e8513ee3828c2ad8bf0d8f3b1ed085fbb4de",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_005.png",
+      "durationMs": 100,
+      "rgbaSha256": "8513e2358772925a8110a69ef36d35a1dd224fb06327bc745d964839475e23d0",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_006.png",
+      "durationMs": 100,
+      "rgbaSha256": "ddd66129e70d2cab19b4eb0de7c59392a986cdf51502b6af7286f525ff59fdd4",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_007.png",
+      "durationMs": 100,
+      "rgbaSha256": "8513e2358772925a8110a69ef36d35a1dd224fb06327bc745d964839475e23d0",
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "frame_008.png",
+      "durationMs": 3000,
+      "rgbaSha256": "e90612cb1014462ff3e824316c32e8513ee3828c2ad8bf0d8f3b1ed085fbb4de",
+      "alphaRange": [
+        0,
+        255
+      ]
+    }
+  ],
+  "method": "Pillow composited RGBA full-canvas; no crop or resize"
+}

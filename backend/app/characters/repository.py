@@ -11,6 +11,8 @@ dropped with a warning, so bad data can never reach the director as a valid capa
 
 import json
 import logging
+import os
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -38,8 +40,60 @@ class DirectorSettings:
 
 #: Closed set of semantic reaction sound names. The frontend plays audio.json event `sfx_<name>`.
 SFX_NAMES = frozenset(
-    {"surprise", "shock", "realization", "comic", "emphasis", "tension", "notification", "soft_transition"}
+    {"surprise", "shock", "realization", "comic", "emphasis", "tension", "notification", "soft_transition",
+     # Shared "everyone" categories (assets/most used sounds/everyone, D-092).
+     "angry", "flabbergasted", "encouragement"}
 )
+
+#: Source-library category names that mean an existing sound (documented aliases, D-092).
+SFX_ALIASES = {"scared": "shock", "insightful": "realization", "insight": "realization",
+               "you_can_do_it": "encouragement", "encourage": "encouragement"}
+
+#: Semantic sounds every character with an `sfx` block may request explicitly. A character's own
+#: `sfx.reactions` table adds to or overrides these; mapping a name to null removes it.
+SHARED_SFX_REACTIONS = {
+    **{name: name for name in ("surprise", "shock", "realization", "comic", "emphasis",
+                               "angry", "flabbergasted", "encouragement")},
+    **SFX_ALIASES,
+}
+
+
+#: Readiness levels (character.json `readiness`). Only "ready" packs are accepted for AI chat
+#: unless partial packs are explicitly enabled for development (see `partial_allowed`).
+READINESS_LEVELS = ("asset-only", "partial", "ready")
+
+#: Environment switch that lets "partial" packs chat (development only).
+ALLOW_PARTIAL_ENV = "COURTROOM_ALLOW_PARTIAL_CHARACTERS"
+
+SIGNATURE_ID = re.compile(r"^[a-z][a-z0-9_]{1,31}$")
+MAX_SIGNATURES = 4
+
+
+def partial_allowed() -> bool:
+    return os.environ.get(ALLOW_PARTIAL_ENV, "").strip().lower() in ("1", "true", "yes", "on")
+
+
+@dataclass(frozen=True)
+class SignatureSfx:
+    """A character's own sound (e.g. a whip crack), played instead of a generic semantic sound.
+
+    Played as audio event `sfx_<id>`. Eligible when the beat's reaction (requested, or the visual
+    one-shot that survived) is in `reactions` OR its emotion is in `emotions`, and its intensity reaches `min_intensity`. Rare by design:
+    after a use it stays silent for `cooldown_turns` replies, and at most `max_per_reply` per reply.
+    """
+
+    id: str
+    reactions: tuple[str, ...] = ()
+    emotions: tuple[str, ...] = ()
+    min_intensity: float = 0.7
+    cooldown_turns: int = 3
+    max_per_reply: int = 1
+    #: Optional visual one-shot (character reaction id) the signature is performed with. Its sounds
+    #: come from that reaction's effect cues, and the reaction never plays without the signature,
+    #: so the effect is always complete (D-091).
+    performs: str | None = None
+    #: Optional per-emotion thresholds for emotion triggers (else `min_intensity`).
+    emotion_min_intensities: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -56,6 +110,16 @@ class SfxSettings:
     emotions: dict[str, str] = field(default_factory=dict)
     #: Optional per-emotion thresholds for the moderate, non-explicit fallback.
     emotion_min_intensities: dict[str, float] = field(default_factory=dict)
+    #: Character-specific sounds that may override the generic semantic sound (rare, cooldown).
+    signature: tuple[SignatureSfx, ...] = ()
+    #: Replies after a category plays during which the same category stays quiet (0 = none).
+    category_cooldown_turns: int = 0
+    #: Replies after an emotion-fallback sound during which fallbacks stay quiet (0 = none).
+    fallback_cooldown_turns: int = 0
+    #: After this many replies without any sound, fallback thresholds drop by `drought_bonus`
+    #: (0 = off), so a strong beat in a quiet stretch is not lost.
+    drought_turns: int = 0
+    drought_bonus: float = 0.1
 
 
 @dataclass(frozen=True)
@@ -144,6 +208,12 @@ class CharacterProfile:
     event_lines: dict[str, dict[str, list[dict[str, Any]]]] = field(default_factory=dict)
     #: Tool groups this character may use (performance.json `tools`); None = every available group.
     tools: list[str] | None = None
+    #: "asset-only" | "partial" | "ready" (character.json `readiness`, else derived conservatively).
+    readiness: str = "ready"
+
+    def chat_allowed(self) -> bool:
+        """Only "ready" packs chat, plus "partial" ones when the development switch is set."""
+        return self.readiness == "ready" or (self.readiness == "partial" and partial_allowed())
 
     def name_for(self, language: str) -> str:
         return self.names.get(language) or self.display_name
@@ -160,11 +230,26 @@ class CharacterProfile:
             "fallbackEmotion": self.fallback_emotion,
             "reactions": sorted(self.reactions),
             "gestures": sorted(self.gestures),
+            "readiness": self.readiness,
         }
 
 
 class CharacterNotFoundError(KeyError):
     pass
+
+
+class CharacterNotReadyError(CharacterNotFoundError):
+    """A registered pack that is not complete enough for AI chat (readiness)."""
+
+    def __init__(self, character_id: str, readiness: str) -> None:
+        super().__init__(character_id)
+        self.character_id = character_id
+        self.readiness = readiness
+
+    def __str__(self) -> str:
+        return (f"character '{self.character_id}' is not ready for chat (readiness: {self.readiness}); "
+                "it needs personality.md, performance.json and readiness \"ready\" in character.json "
+                f"(development: set {ALLOW_PARTIAL_ENV}=1 to allow \"partial\" packs)")
 
 
 def _read_json(path: Path) -> Any:
@@ -189,7 +274,26 @@ class CharacterRepository:
         return {k: v for k, v in index.get("characters", {}).items() if isinstance(v, str)}
 
     def ids(self) -> list[str]:
+        """Registered characters that can currently chat (ready, or partial in development)."""
+        usable = []
+        for character_id in sorted(self._index()):
+            try:
+                if self.get(character_id).chat_allowed():
+                    usable.append(character_id)
+            except (OSError, ValueError, KeyError):
+                continue
+        return usable
+
+    def all_ids(self) -> list[str]:
+        """Every registered id regardless of readiness."""
         return sorted(self._index())
+
+    def get_for_chat(self, character_id: str) -> CharacterProfile:
+        """`get`, but raises CharacterNotReadyError for packs that must not reach the model."""
+        profile = self.get(character_id)
+        if not profile.chat_allowed():
+            raise CharacterNotReadyError(character_id, profile.readiness)
+        return profile
 
     def get(self, character_id: str) -> CharacterProfile:
         if character_id in self._cache:
@@ -270,6 +374,8 @@ class CharacterRepository:
 
         error = perf.get("errorLine") or {}
         personality_path = pack_dir / "personality.md"
+        personality = personality_path.read_text(encoding="utf-8") if personality_path.exists() else ""
+        readiness = self._readiness(manifest.get("readiness"), bool(personality.strip()), bool(perf), warnings)
         return CharacterProfile(
             id=character_id,
             display_name=str(manifest.get("displayName") or character_id),
@@ -286,13 +392,29 @@ class CharacterRepository:
             sfx=sfx,
             error_text=str(error.get("text") or "..."),
             error_emotion=error.get("emotion") if error.get("emotion") in emotions else None,
-            personality=personality_path.read_text(encoding="utf-8") if personality_path.exists() else "",
+            personality=personality,
             warnings=warnings,
             names=_text_map(manifest.get("names")),
             error_texts=_text_map(error.get("translations")),
             event_lines=_event_lines(perf.get("eventLines"), emotions, reactions, warnings),
             tools=[t for t in perf["tools"] if t in ("reminders", "folders", "web_search")] if isinstance(perf.get("tools"), list) else None,
+            readiness=readiness,
         )
+
+    @staticmethod
+    def _readiness(declared: Any, has_personality: bool, has_performance: bool, warnings: list[str]) -> str:
+        """Declared level, never above what the files support; derived conservatively if absent."""
+        complete = has_personality and has_performance
+        derived = "ready" if complete else "partial" if (has_personality or has_performance) else "asset-only"
+        if declared is None:
+            return derived
+        if declared not in READINESS_LEVELS:
+            warnings.append(f"readiness '{declared}' is not one of {READINESS_LEVELS}; derived '{derived}'")
+            return derived
+        if declared == "ready" and not complete:
+            warnings.append("readiness 'ready' needs personality.md and performance.json; treated as 'partial'")
+            return derived
+        return declared
 
     @staticmethod
     def _read_sfx(
@@ -305,11 +427,13 @@ class CharacterRepository:
         if not isinstance(raw, dict):
             return SfxSettings()
 
-        def table(key: str, known: Any) -> dict[str, str]:
-            out: dict[str, str] = {}
+        def table(key: str, known: Any, base: dict[str, str] | None = None) -> dict[str, str]:
+            out: dict[str, str] = dict(base or {})
             for name, sfx in (raw.get(key) or {}).items():
                 if sfx is None:
-                    continue  # explicit "no sound"
+                    out.pop(name, None)  # explicit "no sound"
+                    continue
+                sfx = SFX_ALIASES.get(sfx, sfx)
                 if name not in known:
                     warnings.append(f"sfx.{key}: unknown id '{name}'; dropped")
                 elif sfx not in SFX_NAMES:
@@ -323,7 +447,14 @@ class CharacterRepository:
             max_per_reply = max(0, int(raw.get("maxPerReply", defaults.max_per_reply)))
         except (TypeError, ValueError):
             max_per_reply = defaults.max_per_reply
-        reaction_names = set(reactions) | set(reaction_aliases) | set(SFX_NAMES)
+        reaction_names = set(reactions) | set(reaction_aliases) | set(SFX_NAMES) | set(SFX_ALIASES)
+
+        def count(key: str, default: int) -> int:
+            try:
+                return max(0, int(raw.get(key, default)))
+            except (TypeError, ValueError):
+                warnings.append(f"sfx.{key}: invalid value; using {default}")
+                return default
         raw_thresholds = raw.get("emotionMinIntensities")
         emotion_min_intensities: dict[str, float] = {}
         if isinstance(raw_thresholds, dict):
@@ -337,7 +468,60 @@ class CharacterRepository:
         return SfxSettings(
             max_per_reply=max_per_reply,
             min_intensity=_clamp01(raw.get("minIntensity"), defaults.min_intensity),
-            reactions=table("reactions", reaction_names),
+            reactions=table("reactions", reaction_names, SHARED_SFX_REACTIONS),
             emotions=table("emotions", emotions),
             emotion_min_intensities=emotion_min_intensities,
+            signature=CharacterRepository._read_signature(raw.get("signature"), emotions, reaction_names, warnings, reactions),
+            category_cooldown_turns=count("categoryCooldownTurns", defaults.category_cooldown_turns),
+            fallback_cooldown_turns=count("fallbackCooldownTurns", defaults.fallback_cooldown_turns),
+            drought_turns=count("droughtTurns", defaults.drought_turns),
+            drought_bonus=_clamp01(raw.get("droughtBonus"), defaults.drought_bonus),
         )
+
+    @staticmethod
+    def _read_signature(
+        raw: Any, emotions: dict[str, EmotionBinding], reaction_names: set[str], warnings: list[str],
+        clips: frozenset[str] = frozenset(),
+    ) -> tuple[SignatureSfx, ...]:
+        if raw is None:
+            return ()
+        if not isinstance(raw, list):
+            warnings.append("sfx.signature: expected a list; dropped")
+            return ()
+        out: list[SignatureSfx] = []
+        for entry in raw:
+            if not isinstance(entry, dict):
+                warnings.append("sfx.signature: entry is not an object; dropped")
+                continue
+            sid = entry.get("id")
+            if not isinstance(sid, str) or not SIGNATURE_ID.match(sid):
+                warnings.append(f"sfx.signature: invalid id {sid!r}; dropped")
+                continue
+            if sid in SFX_NAMES or any(s.id == sid for s in out):
+                warnings.append(f"sfx.signature '{sid}': collides with a global or earlier sound; dropped")
+                continue
+            reactions = tuple(r for r in (entry.get("reactions") or []) if isinstance(r, str) and r in reaction_names)
+            wanted = tuple(e for e in (entry.get("emotions") or []) if isinstance(e, str) and e in emotions)
+            if not reactions and not wanted:
+                warnings.append(f"sfx.signature '{sid}': no valid reactions or emotions to trigger on; dropped")
+                continue
+            try:
+                cooldown = max(0, int(entry.get("cooldownTurns", 3)))
+                per_reply = max(1, int(entry.get("maxPerReply", 1)))
+            except (TypeError, ValueError):
+                warnings.append(f"sfx.signature '{sid}': invalid cooldownTurns/maxPerReply; dropped")
+                continue
+            performs = entry.get("performs")
+            if performs is not None and performs not in clips:
+                warnings.append(f"sfx.signature '{sid}': performs unknown reaction {performs!r}; ignored")
+                performs = None
+            min_intensity = _clamp01(entry.get("minIntensity"), 0.7)
+            raw_levels = entry.get("emotionMinIntensities") or {}
+            levels = {e: _clamp01(v, min_intensity) for e, v in raw_levels.items()
+                      if e in wanted and isinstance(v, (int, float)) and not isinstance(v, bool)} if isinstance(raw_levels, dict) else {}
+            if isinstance(raw_levels, dict) and len(levels) != len(raw_levels):
+                warnings.append(f"sfx.signature '{sid}': emotionMinIntensities entries need a trigger emotion and a number")
+            out.append(SignatureSfx(sid, reactions, wanted, min_intensity, cooldown, per_reply, performs, levels))
+            if len(out) == MAX_SIGNATURES:
+                break
+        return tuple(out)

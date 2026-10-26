@@ -8,7 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from starlette.concurrency import run_in_threadpool
 
 from ..characters.prompt import build_system_prompt, reply_schema
-from ..characters.repository import CharacterNotFoundError
+from ..characters.repository import CharacterNotFoundError, CharacterNotReadyError
 from ..characters.service import CharacterService
 from ..llm.attachments import MAX_BASE64_CHARS, EvidenceError, parse_evidence, record_text
 from ..llm.base import ProviderError
@@ -307,6 +307,8 @@ async def chat(body: ChatRequest, request: Request) -> dict[str, Any]:
                     raise TurnConflict()
         else:
             result = await perform()
+    except CharacterNotReadyError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from None
     except CharacterNotFoundError:
         raise HTTPException(status_code=404, detail="unknown character") from None
     except TurnConflict:

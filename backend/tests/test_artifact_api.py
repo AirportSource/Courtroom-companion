@@ -166,6 +166,8 @@ def test_duplicate_request_is_cached_and_restart_receipt_prevents_second_file(tm
         assert client.delete("/api/chat/turns/" + request["requestId"]).json()["state"] == "artifact-ready"
         history = app.state.character_service._sessions["artifacts-test", "maya_fey"].history
         assert len(history) == 2 and "artifactAction" not in history[-1].content
+        # Later turns must know the file exists, or the model disowns it (D-086).
+        assert f"[File saved and delivered to the user: {first['artifacts'][0]['displayName']}]" in history[-1].content
     restarted, _ = stub_app(tmp_path, store=ArtifactStore(tmp_path))
     with client_for(restarted) as client:
         retry = client.post("/api/chat", json=request).json()

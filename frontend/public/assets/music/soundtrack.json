@@ -4,7 +4,9 @@
     "maya_fey": {
       "defaultTrack": "maya_fey_turnabout_sisters_2001",
       "alternatives": [
-        "initial_investigation_2001"
+        "initial_investigation_2001",
+        "maya_fey_turnabout_sisters_2002",
+        "kurain_village"
       ]
     },
     "dick_gumshoe": {
@@ -21,6 +23,122 @@
         "cross_examination_moderato_2001"
       ]
     },
+    "phoenix_wright": {
+      "defaultTrack": "court_is_now_in_session",
+      "alternatives": [
+        "cross_examination_moderato_2001",
+        "tricks_and_deductions"
+      ]
+    },
+    "ema_skye": {
+      "defaultTrack": "ema_skye_turnabout_sisters_2005",
+      "alternatives": [
+        "heart_of_the_investigation_2001",
+        "initial_investigation_2001"
+      ]
+    },
+    "miles_edgeworth": {
+      "defaultTrack": "triumphant_return_miles_edgeworth",
+      "alternatives": [
+        "cross_examination_allegro_2001",
+        "heart_of_the_investigation_2002"
+      ]
+    },
+    "franziska_von_karma": {
+      "defaultTrack": "triumphant_return_franziska_von_karma",
+      "alternatives": [
+        "cross_examination_allegro_2002",
+        "triumphant_return_miles_edgeworth"
+      ]
+    },
+    "larry_butz": {
+      "defaultTrack": "larry_butz_when_something_smells_its_usually_me",
+      "alternatives": [
+        "eccentrics",
+        "simple_folk"
+      ]
+    },
+    "pearl_fey": {
+      "defaultTrack": "pearl_fey_with_pearly",
+      "alternatives": [
+        "kurain_village",
+        "maya_fey_turnabout_sisters_2002"
+      ]
+    },
+    "diego_armando": {
+      "defaultTrack": "godot_the_fragrance_of_darkness_that_is_coffee",
+      "alternatives": [
+        "cross_examination_allegro_2004",
+        "trials_and_tribulations_court_is_now_in_session"
+      ]
+    },
+    "godot": {
+      "defaultTrack": "godot_the_fragrance_of_darkness_that_is_coffee",
+      "alternatives": [
+        "cross_examination_allegro_2004",
+        "trials_and_tribulations_court_is_now_in_session"
+      ]
+    },
+    "marvin_grossberg": {
+      "defaultTrack": "marvin_grossberg_reckonings_and_regrets_of_an_aged_attorney",
+      "alternatives": [
+        "simple_folk"
+      ]
+    },
+    "damon_gant": {
+      "defaultTrack": "damon_gant_swimming_anyone",
+      "alternatives": [
+        "heart_of_the_investigation_2001"
+      ]
+    },
+    "jake_marshall": {
+      "defaultTrack": "jake_marshall_renegade_sheriff",
+      "alternatives": [
+        "simple_folk"
+      ]
+    },
+    "dahlia_hawthorne": {
+      "defaultTrack": "dahlia_hawthorne_the_visage_of_what_once_was",
+      "alternatives": [
+        "hazakura_temple"
+      ]
+    },
+    "shelly_de_killer": {
+      "defaultTrack": "shelly_de_killer_a_deadly_gentlemans_delight",
+      "alternatives": [
+        "hotline_of_fate"
+      ]
+    },
+    "luke_atmey": {
+      "defaultTrack": "luke_atmey_look_at_me",
+      "alternatives": [
+        "mask_demasque_please_listen_to_meeeee"
+      ]
+    },
+    "mask_demasque": {
+      "defaultTrack": "mask_demasque_please_listen_to_meeeee",
+      "alternatives": [
+        "luke_atmey_look_at_me"
+      ]
+    },
+    "victor_kudo": {
+      "defaultTrack": "victor_kudo_martial_anthem_of_misery",
+      "alternatives": [
+        "detention_center_the_prisoners_elegy"
+      ]
+    },
+    "furio_tigre": {
+      "defaultTrack": "furio_tigre_swingin_tiger",
+      "alternatives": [
+        "tres_bien"
+      ]
+    },
+    "elise_deauxnim": {
+      "defaultTrack": "elise_deauxnim_a_gentle_melody",
+      "alternatives": [
+        "hazakura_temple"
+      ]
+    },
     "default": {
       "defaultTrack": "maya_fey_turnabout_sisters_2001",
       "alternatives": [
@@ -31,7 +149,9 @@
   "tracks": {
     "phoenix_wright_ace_attorney_opening": {
       "number": 1,
+      "game": "aa1",
       "title": "Phoenix Wright: Ace Attorney - Opening",
+      "shortTitle": "Opening",
       "category": "excluded",
       "tags": [
         "title"
@@ -42,7 +162,9 @@
     },
     "defendant_lobby_so_it_begins": {
       "number": 2,
+      "game": "aa1",
       "title": "Defendant Lobby - So it Begins",
+      "shortTitle": "Defendant Lobby",
       "src": "original/02-defendant-lobby-so-it-begins.mp3",
       "category": "bgm",
       "tags": [
@@ -50,13 +172,17 @@
         "calm",
         "pre-trial"
       ],
-      "gain": 1,
+      "gain": 0.92,
       "contextual": false,
-      "loop": null
+      "loop": null,
+      "loopReason": "best candidate 5.82-39.43 s fails: coverage 0.57 < 0.7",
+      "loudnessLufs": -14.3
     },
     "court_is_now_in_session": {
       "number": 3,
+      "game": "aa1",
       "title": "Phoenix Wright: Ace Attorney - Court is Now in Session",
+      "shortTitle": "Court Is Now in Session",
       "src": "original/03-court-is-now-in-session.mp3",
       "category": "bgm",
       "tags": [
@@ -64,20 +190,25 @@
         "trial",
         "neutral"
       ],
-      "gain": 1,
+      "gain": 0.74,
       "contextual": false,
       "loop": {
-        "startSample": 546840,
-        "endSample": 2664135,
+        "startSample": 1076040,
+        "endSample": 3193335,
         "sampleRate": 44100,
-        "confidence": 0.79,
+        "confidence": 0.92,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.86, envelope identity 0.923, seam correlation 0.9991. Not an original DS loop point; not verified by listening."
-      }
+        "method": "lag-diagonal+xcorr-v1",
+        "status": "measured_not_auditioned",
+        "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.936 over 47 windows; envelope identity 0.9809; full-rate seam correlation 0.9991; loop 48.0 s. Not an original DS loop point; not verified by listening."
+      },
+      "loudnessLufs": -12.4
     },
     "cross_examination_moderato_2001": {
       "number": 4,
+      "game": "aa1",
       "title": "Cross-Examination - Moderato 2001",
+      "shortTitle": "Cross-Examination: Moderato",
       "src": "original/04-cross-examination-moderato-2001.mp3",
       "category": "bgm",
       "tags": [
@@ -85,7 +216,7 @@
         "cross-examination",
         "tense"
       ],
-      "gain": 1,
+      "gain": 1.04,
       "contextual": false,
       "loop": {
         "startSample": 541680,
@@ -93,12 +224,17 @@
         "sampleRate": 44100,
         "confidence": 0.96,
         "provenance": "curated-analysis",
-        "note": "Offline multi-scale OST analysis 2026-10-24 (44.1 kHz mono downmix): repeat-window coverage 0.720; post-seam 3 s envelope coverage 1.000 over 66 windows; envelope identity 0.9958; full-rate seam correlation 0.9664. Not an original DS loop point; not verified by listening."
-      }
+        "note": "Offline multi-scale OST analysis 2026-10-24 (44.1 kHz mono downmix): repeat-window coverage 0.720; post-seam 3 s envelope coverage 1.000 over 66 windows; envelope identity 0.9958; full-rate seam correlation 0.9664. Not an original DS loop point; not verified by listening. Independent re-measure (lag-diagonal+xcorr-v1): coverage 0.00, envelope 0.653, seam 0.928 - below the D-044 thresholds; kept unchanged, needs listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -15.3
     },
     "tricks_and_deductions": {
       "number": 5,
+      "game": "aa1",
       "title": "Tricks and Deductions",
+      "shortTitle": "Tricks and Deductions",
       "src": "original/05-tricks-and-deductions.mp3",
       "category": "bgm",
       "tags": [
@@ -106,13 +242,17 @@
         "playful",
         "thinking"
       ],
-      "gain": 1,
+      "gain": 1.0,
       "contextual": false,
-      "loop": null
+      "loop": null,
+      "loopReason": "best candidate 0.50-70.34 s fails: coverage 0.01 < 0.7; envelope identity 0.872 < 0.92; seam correlation 0.918 < 0.95",
+      "loudnessLufs": -15.9
     },
     "objection_2001": {
       "number": 6,
+      "game": "aa1",
       "title": "Phoenix Wright - Objection! 2001",
+      "shortTitle": "Objection!",
       "src": "original/06-objection-2001.mp3",
       "category": "contextual",
       "tags": [
@@ -120,13 +260,17 @@
         "dramatic",
         "courtroom"
       ],
-      "gain": 1,
+      "gain": 0.98,
       "contextual": true,
-      "loop": null
+      "loop": null,
+      "loopReason": "best candidate 24.43-36.43 s fails: coverage 0.42 < 0.7",
+      "loudnessLufs": -14.8
     },
     "cross_examination_allegro_2001": {
       "number": 7,
+      "game": "aa1",
       "title": "Cross-Examination - Allegro 2001",
+      "shortTitle": "Cross-Examination: Allegro",
       "src": "original/07-cross-examination-allegro-2001.mp3",
       "category": "bgm",
       "tags": [
@@ -134,13 +278,17 @@
         "cross-examination",
         "urgent"
       ],
-      "gain": 1,
+      "gain": 0.72,
       "contextual": false,
-      "loop": null
+      "loop": null,
+      "loopReason": "best candidate 28.03-85.36 s fails: coverage 0.02 < 0.7; envelope identity 0.856 < 0.92",
+      "loudnessLufs": -12.1
     },
     "pursuit_corner_the_culprit": {
       "number": 8,
+      "game": "aa1",
       "title": "Pursuit - Corner the Culprit",
+      "shortTitle": "Pursuit: Corner the Culprit",
       "src": "original/08-pursuit-corner-the-culprit.mp3",
       "category": "contextual",
       "tags": [
@@ -148,7 +296,7 @@
         "confrontation",
         "urgent"
       ],
-      "gain": 1,
+      "gain": 0.84,
       "contextual": true,
       "loop": {
         "startSample": 370440,
@@ -156,32 +304,42 @@
         "sampleRate": 44100,
         "confidence": 0.82,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.85, envelope identity 0.966, seam correlation 0.9953. Not an original DS loop point; not verified by listening."
-      }
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.85, envelope identity 0.966, seam correlation 0.9953. Not an original DS loop point; not verified by listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -13.5
     },
     "the_truth_revealed_2001": {
       "number": 9,
+      "game": "aa1",
       "title": "The Truth Revealed 2001",
+      "shortTitle": "The Truth Revealed",
       "src": "original/09-the-truth-revealed-2001.mp3",
       "category": "contextual",
       "tags": [
         "revelation",
         "dramatic"
       ],
-      "gain": 1,
+      "gain": 0.9,
       "contextual": true,
       "loop": {
-        "startSample": 366030,
-        "endSample": 1836374,
+        "startSample": 908460,
+        "endSample": 2378804,
         "sampleRate": 44100,
-        "confidence": 0.74,
+        "confidence": 0.98,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.8, envelope identity 0.926, seam correlation 0.9955. Not an original DS loop point; not verified by listening."
-      }
+        "method": "lag-diagonal+xcorr-v1",
+        "status": "measured_not_auditioned",
+        "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 25 windows; envelope identity 0.9824; full-rate seam correlation 0.9971; loop 33.3 s. Not an original DS loop point; not verified by listening."
+      },
+      "loudnessLufs": -14.1
     },
     "suspense": {
       "number": 10,
+      "game": "aa1",
       "title": "Suspense",
+      "shortTitle": "Suspense",
       "src": "original/10-suspense.mp3",
       "category": "bgm",
       "tags": [
@@ -189,13 +347,17 @@
         "tense",
         "uncertain"
       ],
-      "gain": 1,
+      "gain": 0.87,
       "contextual": false,
-      "loop": null
+      "loop": null,
+      "loopReason": "best candidate 26.40-53.83 s fails: coverage 0.00 < 0.7; envelope identity 0.864 < 0.92; seam correlation 0.722 < 0.95",
+      "loudnessLufs": -13.8
     },
     "pursuit_corner_the_culprit_variation": {
       "number": 11,
+      "game": "aa1",
       "title": "Pursuit - Corner the Culprit (Variation)",
+      "shortTitle": "Pursuit: Corner (Variation)",
       "src": "original/11-pursuit-corner-the-culprit-variation.mp3",
       "category": "contextual",
       "tags": [
@@ -203,13 +365,25 @@
         "confrontation",
         "urgent"
       ],
-      "gain": 1,
+      "gain": 0.85,
       "contextual": true,
-      "loop": null
+      "loop": {
+        "startSample": 443282,
+        "endSample": 2136934,
+        "sampleRate": 44100,
+        "confidence": 0.96,
+        "provenance": "curated-analysis",
+        "method": "lag-diagonal+xcorr-v1",
+        "status": "measured_not_auditioned",
+        "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 58 windows; envelope identity 0.9732; full-rate seam correlation 0.9880; loop 38.4 s. Not an original DS loop point; not verified by listening."
+      },
+      "loudnessLufs": -13.6
     },
     "jingle_theres_no_stopping_here": {
       "number": 12,
+      "game": "aa1",
       "title": "Jingle - There's No Stopping Here",
+      "shortTitle": "Jingle: No Stopping Here",
       "category": "excluded",
       "tags": [
         "jingle"
@@ -220,7 +394,9 @@
     },
     "initial_investigation_2001": {
       "number": 13,
+      "game": "aa1",
       "title": "Initial Investigation 2001",
+      "shortTitle": "Initial Investigation",
       "src": "original/13-initial-investigation-2001.mp3",
       "category": "bgm",
       "tags": [
@@ -228,7 +404,7 @@
         "neutral",
         "curious"
       ],
-      "gain": 1,
+      "gain": 1.0,
       "contextual": false,
       "loop": {
         "startSample": 101430,
@@ -236,12 +412,17 @@
         "sampleRate": 44100,
         "confidence": 0.99,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.989, seam correlation 0.999. Not an original DS loop point; not verified by listening."
-      }
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.989, seam correlation 0.999. Not an original DS loop point; not verified by listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -16.0
     },
     "maya_fey_turnabout_sisters_2001": {
       "number": 14,
+      "game": "aa1",
       "title": "Maya Fey - Turnabout Sisters 2001",
+      "shortTitle": "Maya Fey",
       "src": "original/14-maya-fey-turnabout-sisters-2001.mp3",
       "category": "bgm",
       "tags": [
@@ -249,20 +430,25 @@
         "warm",
         "friendly"
       ],
-      "gain": 1,
+      "gain": 0.86,
       "contextual": false,
       "loop": {
-        "startSample": 3285850,
-        "endSample": 3693182,
+        "startSample": 3260773,
+        "endSample": 6518044,
         "sampleRate": 44100,
-        "confidence": 0.88,
+        "confidence": 0.87,
         "provenance": "curated-analysis",
-        "note": "Offline multi-scale OST analysis 2026-10-24 (44.1 kHz mono downmix): repeat-window coverage 0.914; post-seam 3 s envelope coverage 0.931 over 130 windows; envelope identity 0.9773; full-rate seam correlation 0.9700. Not an original DS loop point; not verified by listening."
-      }
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 73.86 s, repeated run 80 s (mean similarity 0.87); seam NCC 0.985, click ratio 0.19; loop 73.9 s, first loop-back at 92% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 51.50-125.36 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "loudnessLufs": -13.7
     },
     "detention_center_the_security_guards_elegy": {
       "number": 15,
+      "game": "aa1",
       "title": "Detention Center - The Security Guards' Elegy",
+      "shortTitle": "Detention Center",
       "src": "original/15-detention-center-the-security-guards-elegy.mp3",
       "category": "bgm",
       "tags": [
@@ -270,7 +456,7 @@
         "calm",
         "melancholy"
       ],
-      "gain": 1,
+      "gain": 1.19,
       "contextual": false,
       "loop": {
         "startSample": 17191,
@@ -278,12 +464,17 @@
         "sampleRate": 44100,
         "confidence": 0.99,
         "provenance": "curated-analysis",
-        "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9999; full-rate seam correlation 0.9902. Shorter of the equivalent phrase-length candidates. Not an original DS loop point; not verified by listening."
-      }
+        "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9999; full-rate seam correlation 0.9902. Shorter of the equivalent phrase-length candidates. Not an original DS loop point; not verified by listening. Independent re-measure (lag-diagonal+xcorr-v1): coverage 0.30, envelope 0.943, seam 0.980 - below the D-044 thresholds; kept unchanged, needs listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -16.5
     },
     "dick_gumshoe_thats_detective_gumshoe_pal": {
       "number": 16,
+      "game": "aa1",
       "title": "Dick Gumshoe - That's \"Detective Gumshoe,\" Pal!",
+      "shortTitle": "Dick Gumshoe",
       "src": "original/16-dick-gumshoe-thats-detective-gumshoe-pal.mp3",
       "category": "bgm",
       "tags": [
@@ -291,20 +482,25 @@
         "comedic",
         "playful"
       ],
-      "gain": 1,
+      "gain": 0.97,
       "contextual": false,
       "loop": {
-        "startSample": 149940,
-        "endSample": 2556020,
+        "startSample": 2285466,
+        "endSample": 4691546,
         "sampleRate": 44100,
-        "confidence": 0.92,
+        "confidence": 0.98,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.95, envelope identity 0.971, seam correlation 0.997. Not an original DS loop point; not verified by listening."
-      }
+        "method": "lag-diagonal+xcorr-v1",
+        "status": "measured_not_auditioned",
+        "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 4 windows; envelope identity 0.9803; full-rate seam correlation 0.9991; loop 54.6 s. Not an original DS loop point; not verified by listening."
+      },
+      "loudnessLufs": -14.7
     },
     "reminiscences_mayas_sorrow": {
       "number": 17,
+      "game": "aa1",
       "title": "Reminiscences - Maya's Sorrow",
+      "shortTitle": "Maya's Sorrow",
       "src": "original/17-reminiscences-mayas-sorrow.mp3",
       "category": "contextual",
       "tags": [
@@ -312,7 +508,7 @@
         "sad",
         "emotional"
       ],
-      "gain": 1,
+      "gain": 1.04,
       "contextual": true,
       "loop": {
         "startSample": 39690,
@@ -320,12 +516,17 @@
         "sampleRate": 44100,
         "confidence": 0.8,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.83, envelope identity 0.967, seam correlation 0.9969. Not an original DS loop point; not verified by listening."
-      }
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.83, envelope identity 0.967, seam correlation 0.9969. Not an original DS loop point; not verified by listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -15.3
     },
     "marvin_grossberg_reckonings_and_regrets_of_an_aged_attorney": {
       "number": 18,
+      "game": "aa1",
       "title": "Marvin Grossberg - Reckonings and Regrets of an Aged Attorney",
+      "shortTitle": "Marvin Grossberg",
       "src": "original/18-marvin-grossberg-reckonings-and-regrets-of-an-aged-attorney.mp3",
       "category": "bgm",
       "tags": [
@@ -333,7 +534,7 @@
         "wistful",
         "calm"
       ],
-      "gain": 1,
+      "gain": 1.0,
       "contextual": false,
       "loop": {
         "startSample": 17566,
@@ -341,12 +542,17 @@
         "sampleRate": 44100,
         "confidence": 0.99,
         "provenance": "curated-analysis",
-        "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9965; full-rate seam correlation 0.9916. Not an original DS loop point; not verified by listening."
-      }
+        "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9965; full-rate seam correlation 0.9916. Not an original DS loop point; not verified by listening. Independent re-measure (lag-diagonal+xcorr-v1): coverage 0.31, envelope 0.908, seam 0.967 - below the D-044 thresholds; kept unchanged, needs listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -15.0
     },
     "simple_folk": {
       "number": 19,
+      "game": "aa1",
       "title": "Simple Folk",
+      "shortTitle": "Simple Folk",
       "src": "original/19-simple-folk.mp3",
       "category": "bgm",
       "tags": [
@@ -354,26 +560,42 @@
         "playful",
         "calm"
       ],
-      "gain": 1,
+      "gain": 0.82,
       "contextual": false,
-      "loop": null
+      "loop": null,
+      "loopReason": "best candidate 2.99-30.42 s fails: coverage 0.08 < 0.7; envelope identity 0.896 < 0.92",
+      "loudnessLufs": -13.3
     },
     "reminiscences_the_two_faces_of_a_studio": {
       "number": 20,
+      "game": "aa1",
       "title": "Reminiscences - The Two Faces of a Studio",
+      "shortTitle": "The Two Faces of a Studio",
       "src": "original/20-reminiscences-the-two-faces-of-a-studio.mp3",
       "category": "contextual",
       "tags": [
         "reminiscence",
         "mysterious"
       ],
-      "gain": 1,
+      "gain": 0.83,
       "contextual": true,
-      "loop": null
+      "loop": {
+        "startSample": 1175192,
+        "endSample": 2660929,
+        "sampleRate": 44100,
+        "confidence": 0.89,
+        "provenance": "curated-analysis",
+        "method": "lag-diagonal+xcorr-v1",
+        "status": "measured_not_auditioned",
+        "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.929 over 14 windows; envelope identity 0.9736; full-rate seam correlation 0.9872; loop 33.7 s. Not an original DS loop point; not verified by listening."
+      },
+      "loudnessLufs": -13.4
     },
     "steel_samurai_warrior_of_neo_olde_tokyo": {
       "number": 21,
+      "game": "aa1",
       "title": "The Steel Samurai: Warrior of Neo Olde Tokyo",
+      "shortTitle": "The Steel Samurai",
       "category": "excluded",
       "tags": [
         "themed"
@@ -384,27 +606,34 @@
     },
     "reminiscences_the_dl_6_incident": {
       "number": 22,
+      "game": "aa1",
       "title": "Reminiscences - The DL-6 Incident",
+      "shortTitle": "The DL-6 Incident",
       "src": "original/22-reminiscences-the-dl-6-incident.mp3",
       "category": "contextual",
       "tags": [
         "reminiscence",
         "somber"
       ],
-      "gain": 1,
+      "gain": 1.12,
       "contextual": true,
       "loop": {
-        "startSample": 39690,
-        "endSample": 2509868,
+        "startSample": 418950,
+        "endSample": 2889128,
         "sampleRate": 44100,
         "confidence": 0.95,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.971, seam correlation 0.9755. Not an original DS loop point; not verified by listening."
-      }
+        "method": "lag-diagonal+xcorr-v1",
+        "status": "measured_not_auditioned",
+        "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 0.978 over 91 windows; envelope identity 0.9717; full-rate seam correlation 0.9961; loop 56.0 s. Not an original DS loop point; not verified by listening."
+      },
+      "loudnessLufs": -17.0
     },
     "heart_of_the_investigation_2001": {
       "number": 23,
+      "game": "aa1",
       "title": "Heart of the Investigation 2001",
+      "shortTitle": "Heart of the Investigation",
       "src": "original/23-heart-of-the-investigation-2001.mp3",
       "category": "bgm",
       "tags": [
@@ -412,20 +641,24 @@
         "determined",
         "hopeful"
       ],
-      "gain": 1,
+      "gain": 0.97,
       "contextual": false,
-      "loop": null
+      "loop": null,
+      "loopReason": "best candidate 20.97-72.98 s fails: coverage 0.52 < 0.7",
+      "loudnessLufs": -14.7
     },
     "reminiscences_the_class_trial": {
       "number": 24,
+      "game": "aa1",
       "title": "Reminiscences - The Class Trial",
+      "shortTitle": "The Class Trial",
       "src": "original/24-reminiscences-the-class-trial.mp3",
       "category": "contextual",
       "tags": [
         "reminiscence",
         "nostalgic"
       ],
-      "gain": 1,
+      "gain": 0.9,
       "contextual": true,
       "loop": {
         "startSample": 15892,
@@ -433,12 +666,17 @@
         "sampleRate": 44100,
         "confidence": 0.98,
         "provenance": "curated-analysis",
-        "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9999; full-rate seam correlation 0.9797. Shorter of the equivalent phrase-length candidates. Not an original DS loop point; not verified by listening."
-      }
+        "note": "Offline OST analysis 2026-10-24 (44.1 kHz mono downmix): post-seam 3 s envelope coverage 1.000; envelope identity 0.9999; full-rate seam correlation 0.9797. Shorter of the equivalent phrase-length candidates. Not an original DS loop point; not verified by listening. Independent re-measure (lag-diagonal+xcorr-v1): coverage 0.00, envelope 0.773, seam 0.849 - below the D-044 thresholds; kept unchanged, needs listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -14.1
     },
     "victory_our_first_win": {
       "number": 25,
+      "game": "aa1",
       "title": "Victory! - Our First Win",
+      "shortTitle": "Victory: Our First Win",
       "category": "excluded",
       "tags": [
         "victory"
@@ -449,7 +687,9 @@
     },
     "phoenix_wright_ace_attorney_ending": {
       "number": 26,
+      "game": "aa1",
       "title": "Phoenix Wright: Ace Attorney - Ending",
+      "shortTitle": "Ending",
       "category": "excluded",
       "tags": [
         "ending"
@@ -460,7 +700,9 @@
     },
     "the_ballad_of_turnabout_sisters": {
       "number": 27,
+      "game": "aa1",
       "title": "The Ballad of Turnabout Sisters",
+      "shortTitle": "Ballad of Turnabout Sisters",
       "category": "excluded",
       "tags": [
         "vocal"
@@ -471,7 +713,9 @@
     },
     "rise_from_the_ashes_opening": {
       "number": 28,
+      "game": "aa1",
       "title": "Rise from the Ashes - Opening",
+      "shortTitle": "Rise from the Ashes: Opening",
       "category": "excluded",
       "tags": [
         "title"
@@ -482,14 +726,16 @@
     },
     "reminiscences_the_sl_9_incident": {
       "number": 29,
+      "game": "aa1",
       "title": "Reminiscences - The SL-9 Incident",
+      "shortTitle": "The SL-9 Incident",
       "src": "original/29-reminiscences-the-sl-9-incident.mp3",
       "category": "contextual",
       "tags": [
         "reminiscence",
         "somber"
       ],
-      "gain": 1,
+      "gain": 1.0,
       "contextual": true,
       "loop": {
         "startSample": 149940,
@@ -497,12 +743,17 @@
         "sampleRate": 44100,
         "confidence": 0.99,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.99, seam correlation 0.9977. Not an original DS loop point; not verified by listening."
-      }
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.99, seam correlation 0.9977. Not an original DS loop point; not verified by listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -16.0
     },
     "ema_skye_turnabout_sisters_2005": {
       "number": 30,
+      "game": "aa1",
       "title": "Ema Skye - Turnabout Sisters 2005",
+      "shortTitle": "Ema Skye",
       "src": "original/30-ema-skye-turnabout-sisters-2005.mp3",
       "category": "bgm",
       "tags": [
@@ -510,7 +761,7 @@
         "upbeat",
         "energetic"
       ],
-      "gain": 1,
+      "gain": 1.07,
       "contextual": false,
       "loop": {
         "startSample": 61740,
@@ -518,12 +769,17 @@
         "sampleRate": 44100,
         "confidence": 0.98,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.986, seam correlation 0.9954. Not an original DS loop point; not verified by listening."
-      }
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 1, envelope identity 0.986, seam correlation 0.9954. Not an original DS loop point; not verified by listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -15.9
     },
     "the_blue_badger_i_want_to_protect_you": {
       "number": 31,
+      "game": "aa1",
       "title": "The Blue Badger - I Want to Protect You",
+      "shortTitle": "The Blue Badger",
       "category": "excluded",
       "tags": [
         "themed"
@@ -534,7 +790,9 @@
     },
     "jake_marshall_renegade_sheriff": {
       "number": 32,
+      "game": "aa1",
       "title": "Jake Marshall - Renegade Sheriff",
+      "shortTitle": "Jake Marshall",
       "src": "original/32-jake-marshall-renegade-sheriff.mp3",
       "category": "bgm",
       "tags": [
@@ -542,7 +800,7 @@
         "western",
         "bold"
       ],
-      "gain": 1,
+      "gain": 0.85,
       "contextual": false,
       "loop": {
         "startSample": 149940,
@@ -550,12 +808,17 @@
         "sampleRate": 44100,
         "confidence": 0.83,
         "provenance": "curated-analysis",
-        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.87, envelope identity 0.96, seam correlation 0.9898. Not an original DS loop point; not verified by listening."
-      }
+        "note": "OST MP3 analysis 2026-10-24 (44.1 kHz decode): musical repeat coverage 0.87, envelope identity 0.96, seam correlation 0.9898. Not an original DS loop point; not verified by listening.",
+        "status": "measured_not_auditioned",
+        "method": "curated-chrome-analysis-v1"
+      },
+      "loudnessLufs": -13.6
     },
     "damon_gant_swimming_anyone": {
       "number": 33,
+      "game": "aa1",
       "title": "Damon Gant - Swimming, Anyone.",
+      "shortTitle": "Damon Gant",
       "src": "original/33-damon-gant-swimming-anyone.mp3",
       "category": "bgm",
       "tags": [
@@ -563,13 +826,1724 @@
         "smooth",
         "suspicious"
       ],
+      "gain": 1.1,
+      "contextual": false,
+      "loop": null,
+      "loopReason": "best candidate 30.34-68.57 s fails: coverage 0.18 < 0.7; envelope identity 0.268 < 0.92",
+      "loudnessLufs": -15.8
+    },
+    "rise_from_the_ashes_ending": {
+      "number": 34,
+      "game": "aa1",
+      "title": "Rise from the Ashes - Ending",
+      "shortTitle": "Rise from the Ashes: Ending",
+      "category": "excluded",
+      "tags": [
+        "ending"
+      ],
       "gain": 1,
       "contextual": false,
       "loop": null
     },
-    "rise_from_the_ashes_ending": {
+    "defendant_lobby_so_it_begins_again": {
+      "number": 1,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Defendant Lobby - So it Begins Again",
+      "shortTitle": "Defendant Lobby",
+      "src": "original/ds-defendant-lobby-so-it-begins-again.mp3",
+      "category": "bgm",
+      "tags": [
+        "defendant-lobby",
+        "calm",
+        "pre-trial"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 118517,
+        "endSample": 1812494,
+        "sampleRate": 44100,
+        "confidence": 0.91,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 38.41 s, repeated run 45 s (mean similarity 0.95); seam NCC 0.911, click ratio 0.05; loop 38.4 s, first loop-back at 46% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "justice_for_all_court_is_now_in_session": {
+      "number": 2,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Justice for All - Court is Now in Session",
+      "shortTitle": "Court Is Now in Session",
+      "src": "original/ds-justice-for-all-court-is-now-in-session.mp3",
+      "category": "bgm",
+      "tags": [
+        "courtroom",
+        "trial",
+        "neutral"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2143595,
+        "endSample": 4261007,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 48.01 s, repeated run 60 s (mean similarity 0.98); seam NCC 0.981, click ratio 0.03; loop 48.0 s, first loop-back at 88% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 17.40-65.41 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "cross_examination_moderato_2002": {
+      "number": 3,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Cross-Examination - Moderato 2002",
+      "shortTitle": "Cross-Examination: Moderato",
+      "src": "original/ds-cross-examination-moderato-2002.mp3",
+      "category": "bgm",
+      "tags": [
+        "courtroom",
+        "cross-examination",
+        "tense"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 1760533,
+        "endSample": 3489432,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 39.20 s, repeated run 46 s (mean similarity 0.96); seam NCC 0.995, click ratio 0.26; loop 39.2 s, first loop-back at 90% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "magic_and_tricks": {
+      "number": 4,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Magic and Tricks",
+      "shortTitle": "Magic and Tricks",
+      "src": "original/ds-magic-and-tricks.mp3",
+      "category": "bgm",
+      "tags": [
+        "investigation",
+        "playful",
+        "thinking"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2419410,
+        "endSample": 4839405,
+        "sampleRate": 44100,
+        "confidence": 0.79,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 54.88 s, repeated run 61 s (mean similarity 0.88); seam NCC 0.849, click ratio 0.94; loop 54.9 s, first loop-back at 92% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 18.17-73.04 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "objection_2002": {
+      "number": 5,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Phoenix Wright - Objection! 2002",
+      "shortTitle": "Objection!",
+      "src": "original/ds-objection-2002.mp3",
+      "category": "contextual",
+      "tags": [
+        "objection",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 2171797,
+        "endSample": 3583405,
+        "sampleRate": 44100,
+        "confidence": 0.91,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 32.01 s, repeated run 38 s (mean similarity 0.91); seam NCC 0.983, click ratio 0.17; loop 32.0 s, first loop-back at 90% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 33.59-65.60 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "cross_examination_allegro_2002": {
+      "number": 6,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Cross-Examination - Allegro 2002",
+      "shortTitle": "Cross-Examination: Allegro",
+      "src": "original/ds-cross-examination-allegro-2002.mp3",
+      "category": "bgm",
+      "tags": [
+        "courtroom",
+        "cross-examination",
+        "tense",
+        "intense"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 1956045,
+        "endSample": 3922280,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 44.59 s, repeated run 52 s (mean similarity 0.97); seam NCC 0.987, click ratio 0.12; loop 44.6 s, first loop-back at 90% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "pursuit_confront_the_culprit": {
+      "number": 7,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Pursuit - Confront the Culprit",
+      "shortTitle": "Pursuit: Confront the Culprit",
+      "src": "original/ds-pursuit-confront-the-culprit.mp3",
+      "category": "contextual",
+      "tags": [
+        "pursuit",
+        "tense",
+        "intense"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 1732840,
+        "endSample": 3144449,
+        "sampleRate": 44100,
+        "confidence": 0.79,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 32.01 s, repeated run 36 s (mean similarity 0.84); seam NCC 0.881, click ratio 0.11; loop 32.0 s, first loop-back at 89% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "the_truth_revealed_2002": {
+      "number": 8,
+      "disc": 2,
+      "game": "jfa",
+      "title": "The Truth Revealed 2002",
+      "shortTitle": "The Truth Revealed",
+      "src": "original/ds-the-truth-revealed-2002.mp3",
+      "category": "contextual",
+      "tags": [
+        "revelation",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 1881659,
+        "endSample": 3763803,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 42.68 s, repeated run 54 s (mean similarity 0.96); seam NCC 0.999, click ratio 0.03; loop 42.7 s, first loop-back at 85% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 20.03-62.71 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "ringtone_phoenix_wright": {
+      "number": 9,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Ringtone (Phoenix Wright)",
+      "shortTitle": "Ringtone (Phoenix Wright)",
+      "category": "excluded",
+      "tags": [
+        "ringtone"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "pursuit_confront_the_culprit_variation": {
+      "number": 10,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Pursuit - Confront the Culprit (Variation)",
+      "shortTitle": "Pursuit: Confront (Variation)",
+      "src": "original/ds-pursuit-confront-the-culprit-variation.mp3",
+      "category": "contextual",
+      "tags": [
+        "pursuit",
+        "tense",
+        "intense"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 1464163,
+        "endSample": 2875772,
+        "sampleRate": 44100,
+        "confidence": 0.88,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 32.01 s, repeated run 37 s (mean similarity 0.88); seam NCC 0.986, click ratio 0.02; loop 32.0 s, first loop-back at 87% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "jingle_theres_no_sleeping_tonight": {
+      "number": 11,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Jingle - There's No Sleeping Tonight",
+      "shortTitle": "Jingle: No Sleeping Tonight",
+      "category": "excluded",
+      "tags": [
+        "jingle"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "psyche_locks": {
+      "number": 12,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Psyche-Locks",
+      "shortTitle": "Psyche-Locks",
+      "src": "original/ds-psyche-locks.mp3",
+      "category": "contextual",
+      "tags": [
+        "psyche-lock",
+        "tense"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 1437210,
+        "endSample": 2728427,
+        "sampleRate": 44100,
+        "confidence": 0.81,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 29.28 s, repeated run 43 s (mean similarity 0.90); seam NCC 0.968, click ratio 0.17; loop 29.3 s, first loop-back at 77% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "initial_investigation_2002": {
+      "number": 13,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Initial Investigation 2002",
+      "shortTitle": "Initial Investigation",
+      "src": "original/ds-initial-investigation-2002.mp3",
+      "category": "bgm",
+      "tags": [
+        "investigation",
+        "calm",
+        "thinking"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 22050,
+        "endSample": 1716025,
+        "sampleRate": 44100,
+        "confidence": 0.98,
+        "provenance": "curated-analysis",
+        "method": "lag-diagonal+xcorr-v1",
+        "status": "measured_not_auditioned",
+        "note": "Offline batch analysis (lag-diagonal+xcorr-v1, 44.1 kHz mono): post-seam 3 s envelope coverage 1.000 over 74 windows; envelope identity 0.9846; full-rate seam correlation 0.9984; loop 38.4 s. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "maya_fey_turnabout_sisters_2002": {
+      "number": 14,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Maya Fey - Turnabout Sisters 2002",
+      "shortTitle": "Maya Fey",
+      "src": "original/ds-maya-fey-turnabout-sisters-2002.mp3",
+      "category": "bgm",
+      "tags": [
+        "character:maya_fey",
+        "light",
+        "calm"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 10184,
+        "endSample": 2249825,
+        "sampleRate": 44100,
+        "confidence": 0.84,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 50.79 s, repeated run 56 s (mean similarity 0.84); seam NCC 0.952, click ratio 0.12; loop 50.8 s, first loop-back at 46% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "detention_center_the_security_cameras_elegy": {
+      "number": 15,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Detention Center - The Security Camera's Elegy",
+      "shortTitle": "Detention Center",
+      "src": "original/ds-detention-center-the-security-cameras-elegy.mp3",
+      "category": "bgm",
+      "tags": [
+        "detention-center",
+        "calm",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2611230,
+        "endSample": 5222614,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 59.22 s, repeated run 66 s (mean similarity 0.96); seam NCC 0.959, click ratio 0.06; loop 59.2 s, first loop-back at 93% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 2.20-61.42 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "kurain_village": {
+      "number": 16,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Kurain Village",
+      "shortTitle": "Kurain Village",
+      "src": "original/ds-kurain-village.mp3",
+      "category": "bgm",
+      "tags": [
+        "location",
+        "calm",
+        "mystic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2140736,
+        "endSample": 4144651,
+        "sampleRate": 44100,
+        "confidence": 0.93,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 45.44 s, repeated run 53 s (mean similarity 0.93); seam NCC 0.999, click ratio 0.01; loop 45.4 s, first loop-back at 90% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "reminiscences_fire_licked_scars": {
+      "number": 17,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Reminiscences - Fire-Licked Scars",
+      "shortTitle": "Fire-Licked Scars",
+      "src": "original/ds-reminiscences-fire-licked-scars.mp3",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "dramatic",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 3024320,
+        "endSample": 6049261,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 68.59 s, repeated run 76 s (mean similarity 0.97); seam NCC 0.984, click ratio 0.20; loop 68.6 s, first loop-back at 93% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "eccentrics": {
+      "number": 18,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Eccentrics",
+      "shortTitle": "Eccentrics",
+      "src": "original/ds-eccentrics.mp3",
+      "category": "bgm",
+      "tags": [
+        "location",
+        "playful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2021024,
+        "endSample": 4020802,
+        "sampleRate": 44100,
+        "confidence": 0.9,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 45.35 s, repeated run 53 s (mean similarity 0.90); seam NCC 0.996, click ratio 0.00; loop 45.3 s, first loop-back at 91% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "fabulous": {
+      "number": 19,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Fabulous!",
+      "shortTitle": "Fabulous!",
+      "category": "excluded",
+      "tags": [
+        "jingle"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "berry_big_circus": {
+      "number": 20,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Berry Big Circus",
+      "shortTitle": "Berry Big Circus",
+      "src": "original/ds-berry-big-circus.mp3",
+      "category": "bgm",
+      "tags": [
+        "location",
+        "playful",
+        "circus"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 24150,
+        "endSample": 1791876,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 40.08 s, repeated run 47 s (mean similarity 0.96); seam NCC 0.977, click ratio 0.05; loop 40.1 s, first loop-back at 45% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "more_simple_folk": {
+      "number": 21,
+      "disc": 2,
+      "game": "jfa",
+      "title": "More Simple Folk",
+      "shortTitle": "More Simple Folk",
+      "src": "original/ds-more-simple-folk.mp3",
+      "category": "bgm",
+      "tags": [
+        "location",
+        "calm",
+        "playful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 1503802,
+        "endSample": 2964119,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 33.11 s, repeated run 39 s (mean similarity 0.98); seam NCC 1.000, click ratio 0.18; loop 33.1 s, first loop-back at 88% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "reminiscences_pure_pain": {
+      "number": 22,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Reminiscences - Pure Pain",
+      "shortTitle": "Pure Pain",
+      "src": "original/ds-reminiscences-pure-pain.mp3",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "dramatic",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": null,
+      "loopReason": "uncertain seam: best structural candidate 71.32-99.15 s (lag 27.8 s, repeat run 26 s) is not credible: post-seam NCC 0.80 (combined 0.80) below 0.85/0.75. Needs human audition. Not auditioned.",
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "whole_file"
+    },
+    "shelly_de_killer_a_deadly_gentlemans_delight": {
+      "number": 23,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Shelly de Killer - A Deadly Gentleman's Delight",
+      "shortTitle": "Shelly de Killer",
+      "src": "original/ds-shelly-de-killer-a-deadly-gentlemans-delight.mp3",
+      "category": "bgm",
+      "tags": [
+        "character:shelly_de_killer",
+        "tense",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 1752795,
+        "endSample": 3500762,
+        "sampleRate": 44100,
+        "confidence": 0.92,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 39.64 s, repeated run 48 s (mean similarity 0.92); seam NCC 0.978, click ratio 0.05; loop 39.6 s, first loop-back at 89% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 1.40-41.04 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "pearl_fey_with_pearly": {
+      "number": 24,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Pearl Fey - With Pearly",
+      "shortTitle": "Pearl Fey",
+      "src": "original/ds-pearl-fey-with-pearly.mp3",
+      "category": "bgm",
+      "tags": [
+        "character:pearl_fey",
+        "light",
+        "playful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 1316476,
+        "endSample": 2602180,
+        "sampleRate": 44100,
+        "confidence": 0.92,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 29.15 s, repeated run 39 s (mean similarity 0.92); seam NCC 0.973, click ratio 0.07; loop 29.2 s, first loop-back at 84% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "further_investigation_2002": {
+      "number": 25,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Further Investigation 2002",
+      "shortTitle": "Further Investigation",
+      "src": "original/ds-further-investigation-2002.mp3",
+      "category": "bgm",
+      "tags": [
+        "investigation",
+        "thinking"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2047890,
+        "endSample": 4073171,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 45.93 s, repeated run 54 s (mean similarity 0.96); seam NCC 0.994, click ratio 0.11; loop 45.9 s, first loop-back at 91% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "triumphant_return_miles_edgeworth": {
+      "number": 26,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Triumphant Return - Miles Edgeworth",
+      "shortTitle": "Miles Edgeworth",
+      "src": "original/ds-triumphant-return-miles-edgeworth.mp3",
+      "category": "bgm",
+      "tags": [
+        "character:miles_edgeworth",
+        "prosecutor",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 1881800,
+        "endSample": 3354754,
+        "sampleRate": 44100,
+        "confidence": 0.93,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 33.40 s, repeated run 39 s (mean similarity 0.93); seam NCC 0.953, click ratio 0.01; loop 33.4 s, first loop-back at 88% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 39.61-73.01 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "hotline_of_fate": {
+      "number": 27,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Hotline of Fate",
+      "shortTitle": "Hotline of Fate",
+      "src": "original/ds-hotline-of-fate.mp3",
+      "category": "bgm",
+      "tags": [
+        "tense",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null,
+      "loopReason": "insufficient repeated material: best structural candidate 5.34-24.55 s (lag 19.2 s, repeat run 17 s) is not credible: repeat similarity 0.78 over 17 s (needs >= 0.8, or >= 0.75 over a whole cycle). Needs human audition. Not auditioned.",
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "whole_file"
+    },
+    "heart_of_the_investigation_2002": {
+      "number": 28,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Heart of the Investigation 2002",
+      "shortTitle": "Heart of the Investigation",
+      "src": "original/ds-heart-of-the-investigation-2002.mp3",
+      "category": "bgm",
+      "tags": [
+        "investigation",
+        "thinking",
+        "determined"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2255601,
+        "endSample": 4373011,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 48.01 s, repeated run 55 s (mean similarity 0.97); seam NCC 0.990, click ratio 0.02; loop 48.0 s, first loop-back at 90% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "reminiscences_ballad_of_the_steel_samurai": {
+      "number": 29,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Reminiscences - Ballad of The Steel Samurai",
+      "shortTitle": "Ballad of the Steel Samurai",
+      "src": "original/ds-reminiscences-ballad-of-the-steel-samurai.mp3",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 2672759,
+        "endSample": 5346174,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 60.62 s, repeated run 67 s (mean similarity 0.96); seam NCC 0.991, click ratio 0.19; loop 60.6 s, first loop-back at 93% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 0.40-61.02 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "triumphant_return_franziska_von_karma": {
+      "number": 30,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Triumphant Return - Franziska von Karma",
+      "shortTitle": "Franziska von Karma",
+      "src": "original/ds-triumphant-return-franziska-von-karma.mp3",
+      "category": "bgm",
+      "tags": [
+        "character:franziska_von_karma",
+        "prosecutor",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 1867678,
+        "endSample": 3353498,
+        "sampleRate": 44100,
+        "confidence": 0.79,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 33.70 s, repeated run 40 s (mean similarity 0.87); seam NCC 0.856, click ratio 0.06; loop 33.7 s, first loop-back at 88% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "victory_another_win": {
+      "number": 31,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Victory! - Another Win",
+      "shortTitle": "Victory: Another Win",
+      "category": "excluded",
+      "tags": [
+        "victory"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "justice_for_all_ending": {
+      "number": 32,
+      "disc": 2,
+      "game": "jfa",
+      "title": "Justice for All - Ending",
+      "shortTitle": "Justice for All: Ending",
+      "category": "excluded",
+      "tags": [
+        "ending"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "one_prosecutors_musings_until_we_meet_again": {
+      "number": 33,
+      "disc": 2,
+      "game": "jfa",
+      "title": "One Prosecutor's Musings - Until We Meet Again",
+      "shortTitle": "Until We Meet Again",
+      "src": "original/ds-one-prosecutors-musings-until-we-meet-again.mp3",
+      "category": "contextual",
+      "tags": [
+        "prosecutor",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": null,
+      "loopReason": "non-looping cue (56 s, jingle/ending length): no lag between 6 s and 0.8 of the track keeps a musical self-similarity above 0.72 for 10 s (structural v2); the whole file plays once and restarts. Not auditioned.",
+      "audioProvenance": "original-ds-mp3",
+      "loopStatus": "whole_file"
+    },
+    "bonus_prosecutors_path_miles_and_fran": {
       "number": 34,
-      "title": "Rise from the Ashes - Ending",
+      "disc": 2,
+      "game": "jfa",
+      "title": "BONUS - Prosecutor's Path ~ Miles and Fran",
+      "shortTitle": "Prosecutor's Path",
+      "src": "original/d2-34-bonus-prosecutors-path-miles-and-fran.mp3",
+      "category": "contextual",
+      "tags": [
+        "prosecutor",
+        "bonus",
+        "medley"
+      ],
+      "gain": 1.45,
+      "contextual": true,
+      "loop": null,
+      "loopReason": "best candidate 21.64-70.25 s fails: coverage 0.29 < 0.7",
+      "loudnessLufs": -18.3
+    },
+    "trials_and_tribulations_opening": {
+      "number": 1,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Trials and Tribulations - Opening",
+      "shortTitle": "Trials and Tribulations: Opening",
+      "category": "excluded",
+      "tags": [
+        "title"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "defendant_lobby_so_it_will_always_begin": {
+      "number": 2,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Defendant Lobby - So it Will Always Begin",
+      "shortTitle": "Defendant Lobby",
+      "src": "original/ds-defendant-lobby-so-it-will-always-begin.flac",
+      "category": "bgm",
+      "tags": [
+        "defendant-lobby",
+        "calm",
+        "pre-trial"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2303352,
+        "endSample": 4255909,
+        "sampleRate": 44100,
+        "confidence": 0.89,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 44.28 s, repeated run 49 s (mean similarity 0.89); seam NCC 0.974, click ratio 0.20; loop 44.3 s, first loop-back at 90% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 12.54-56.82 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "trials_and_tribulations_court_is_now_in_session": {
+      "number": 3,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Trials and Tribulations - Court is Now in Session",
+      "shortTitle": "Court Is Now in Session",
+      "src": "original/ds-trials-and-tribulations-court-is-now-in-session.flac",
+      "category": "bgm",
+      "tags": [
+        "courtroom",
+        "trial",
+        "neutral"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2816836,
+        "endSample": 5633688,
+        "sampleRate": 44100,
+        "confidence": 0.9,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 63.87 s, repeated run 69 s (mean similarity 0.91); seam NCC 0.943, click ratio 0.07; loop 63.9 s, first loop-back at 93% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 51.58-115.46 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "cross_examination_moderato_2004": {
+      "number": 4,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Cross-Examination - Moderato 2004",
+      "shortTitle": "Cross-Examination: Moderato",
+      "src": "original/ds-cross-examination-moderato-2004.flac",
+      "category": "bgm",
+      "tags": [
+        "courtroom",
+        "cross-examination",
+        "tense"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 4220804,
+        "endSample": 8441820,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 95.71 s, repeated run 105 s (mean similarity 0.97); seam NCC 1.000, click ratio 0.01; loop 95.7 s, first loop-back at 95% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "objection_2004": {
+      "number": 5,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Phoenix Wright - Objection! 2004",
+      "shortTitle": "Objection!",
+      "src": "original/ds-objection-2004.flac",
+      "category": "contextual",
+      "tags": [
+        "objection",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 2438967,
+        "endSample": 4827934,
+        "sampleRate": 44100,
+        "confidence": 0.86,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 54.17 s, repeated run 62 s (mean similarity 0.86); seam NCC 0.997, click ratio 0.01; loop 54.2 s, first loop-back at 92% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 25.12-79.29 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "cross_examination_allegro_2004": {
+      "number": 6,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Cross-Examination - Allegro 2004",
+      "shortTitle": "Cross-Examination: Allegro",
+      "src": "original/ds-cross-examination-allegro-2004.flac",
+      "category": "bgm",
+      "tags": [
+        "courtroom",
+        "cross-examination",
+        "tense",
+        "intense"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 3297029,
+        "endSample": 6563887,
+        "sampleRate": 44100,
+        "confidence": 0.94,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 74.08 s, repeated run 80 s (mean similarity 0.94); seam NCC 0.995, click ratio 0.02; loop 74.1 s, first loop-back at 94% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 28.28-102.36 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "pursuit_catch_the_culprit": {
+      "number": 7,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Pursuit - Catch the Culprit",
+      "shortTitle": "Pursuit: Catch the Culprit",
+      "src": "original/ds-pursuit-catch-the-culprit.flac",
+      "category": "contextual",
+      "tags": [
+        "pursuit",
+        "tense",
+        "intense"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 2384922,
+        "endSample": 4752461,
+        "sampleRate": 44100,
+        "confidence": 0.93,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 53.69 s, repeated run 66 s (mean similarity 0.93); seam NCC 0.984, click ratio 0.03; loop 53.7 s, first loop-back at 87% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "the_truth_revealed_2004": {
+      "number": 8,
+      "disc": 3,
+      "game": "tnt",
+      "title": "The Truth Revealed 2004",
+      "shortTitle": "The Truth Revealed",
+      "src": "original/ds-the-truth-revealed-2004.flac",
+      "category": "contextual",
+      "tags": [
+        "revelation",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 2491700,
+        "endSample": 4998641,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 56.85 s, repeated run 64 s (mean similarity 0.99); seam NCC 1.000, click ratio 0.01; loop 56.8 s, first loop-back at 91% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "pursuit_catch_the_culprit_variation": {
+      "number": 9,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Pursuit - Catch the Culprit (Variation)",
+      "shortTitle": "Pursuit: Catch (Variation)",
+      "src": "original/ds-pursuit-catch-the-culprit-variation.flac",
+      "category": "contextual",
+      "tags": [
+        "pursuit",
+        "tense",
+        "intense"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 2384851,
+        "endSample": 4752390,
+        "sampleRate": 44100,
+        "confidence": 0.94,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 53.69 s, repeated run 60 s (mean similarity 0.94); seam NCC 0.985, click ratio 0.01; loop 53.7 s, first loop-back at 91% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "dahlia_hawthorne_the_visage_of_what_once_was": {
+      "number": 10,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Dahlia Hawthorne - The Visage of What Once Was",
+      "shortTitle": "Dahlia Hawthorne",
+      "src": "original/ds-dahlia-hawthorne-the-visage-of-what-once-was.flac",
+      "category": "bgm",
+      "tags": [
+        "character:dahlia_hawthorne",
+        "tense",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 3069732,
+        "endSample": 6138891,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 69.60 s, repeated run 77 s (mean similarity 0.96); seam NCC 0.999, click ratio 0.01; loop 69.6 s, first loop-back at 93% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "godot_the_fragrance_of_darkness_that_is_coffee": {
+      "number": 11,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Godot - The Fragrance of Darkness; That is Coffee",
+      "shortTitle": "Godot",
+      "src": "original/ds-godot-the-fragrance-of-darkness-that-is-coffee.flac",
+      "category": "bgm",
+      "tags": [
+        "character:diego_armando",
+        "prosecutor",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 3040210,
+        "endSample": 6031028,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 67.82 s, repeated run 74 s (mean similarity 0.96); seam NCC 0.999, click ratio 0.02; loop 67.8 s, first loop-back at 93% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "jingle_theres_no_going_back": {
+      "number": 12,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Jingle - There's No Going Back",
+      "shortTitle": "Jingle: No Going Back",
+      "category": "excluded",
+      "tags": [
+        "jingle"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "initial_investigation_2004": {
+      "number": 13,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Initial Investigation 2004",
+      "shortTitle": "Initial Investigation",
+      "src": "original/ds-initial-investigation-2004.flac",
+      "category": "bgm",
+      "tags": [
+        "investigation",
+        "calm",
+        "thinking"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2425430,
+        "endSample": 4822923,
+        "sampleRate": 44100,
+        "confidence": 0.9,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 54.36 s, repeated run 61 s (mean similarity 0.90); seam NCC 0.999, click ratio 0.01; loop 54.4 s, first loop-back at 92% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "the_stolen_turnabout": {
+      "number": 14,
+      "disc": 3,
+      "game": "tnt",
+      "title": "The Stolen Turnabout",
+      "shortTitle": "The Stolen Turnabout",
+      "src": "original/d3-14-the-stolen-turnabout.mp3",
+      "category": "bgm",
+      "tags": [
+        "case-theme",
+        "dramatic"
+      ],
+      "gain": 0.8,
+      "contextual": false,
+      "loop": null,
+      "loopReason": "no repeating section of at least 8 s found (no candidate lag)",
+      "loudnessLufs": -13.1
+    },
+    "lordly_tailor": {
+      "number": 15,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Lordly Tailor",
+      "shortTitle": "Lordly Tailor",
+      "src": "original/ds-lordly-tailor.flac",
+      "category": "bgm",
+      "tags": [
+        "character",
+        "playful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2724700,
+        "endSample": 5435560,
+        "sampleRate": 44100,
+        "confidence": 0.93,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 61.47 s, repeated run 68 s (mean similarity 0.93); seam NCC 0.997, click ratio 0.00; loop 61.5 s, first loop-back at 93% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 43.88-105.35 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "detention_center_the_prisoners_elegy": {
+      "number": 16,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Detention Center - The Prisoner's Elegy",
+      "shortTitle": "Detention Center",
+      "src": "original/ds-detention-center-the-prisoners-elegy.flac",
+      "category": "bgm",
+      "tags": [
+        "detention-center",
+        "calm",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2694868,
+        "endSample": 5390060,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 61.12 s, repeated run 69 s (mean similarity 0.98); seam NCC 0.997, click ratio 0.28; loop 61.1 s, first loop-back at 93% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "mask_demasque_please_listen_to_meeeee": {
+      "number": 17,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Mask☆DeMasque - Please Listen to Meeeee!",
+      "shortTitle": "Mask DeMasque",
+      "src": "original/ds-mask-demasque-please-listen-to-meeeee.flac",
+      "category": "bgm",
+      "tags": [
+        "character:mask_demasque",
+        "playful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 233548,
+        "endSample": 2053615,
+        "sampleRate": 44100,
+        "confidence": 0.92,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 41.27 s, repeated run 48 s (mean similarity 0.93); seam NCC 0.943, click ratio 0.03; loop 41.3 s, first loop-back at 48% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "luke_atmey_look_at_me": {
+      "number": 18,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Luke Atmey - Look at Me",
+      "shortTitle": "Luke Atmey",
+      "src": "original/ds-luke-atmey-look-at-me.flac",
+      "category": "bgm",
+      "tags": [
+        "character:luke_atmey",
+        "playful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2299787,
+        "endSample": 4069392,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 40.13 s, repeated run 48 s (mean similarity 0.98); seam NCC 0.998, click ratio 0.02; loop 40.1 s, first loop-back at 90% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 23.30-63.43 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "larry_butz_when_something_smells_its_usually_me": {
+      "number": 19,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Larry Butz - When Something Smells, It's Usually Me",
+      "shortTitle": "Larry Butz",
+      "src": "original/ds-larry-butz-when-something-smells-its-usually-me.flac",
+      "category": "bgm",
+      "tags": [
+        "character:larry_butz",
+        "playful",
+        "light"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2376196,
+        "endSample": 4692812,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 52.53 s, repeated run 59 s (mean similarity 0.97); seam NCC 0.997, click ratio 0.03; loop 52.5 s, first loop-back at 92% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 2.86-55.39 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "recipe_for_turnabout": {
+      "number": 20,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Recipe for Turnabout",
+      "shortTitle": "Recipe for Turnabout",
+      "src": "original/d3-20-recipe-for-turnabout.mp3",
+      "category": "bgm",
+      "tags": [
+        "case-theme",
+        "playful"
+      ],
+      "gain": 0.79,
+      "contextual": false,
+      "loop": null,
+      "loopReason": "no repeating section of at least 8 s found (no candidate lag)",
+      "loudnessLufs": -13.0
+    },
+    "tres_bien": {
+      "number": 21,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Trés Bien",
+      "shortTitle": "Trés Bien",
+      "src": "original/ds-tres-bien.flac",
+      "category": "bgm",
+      "tags": [
+        "location",
+        "playful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2142055,
+        "endSample": 4265582,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 48.15 s, repeated run 63 s (mean similarity 0.97); seam NCC 0.997, click ratio 0.00; loop 48.2 s, first loop-back at 86% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 5.20-53.35 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "victor_kudo_martial_anthem_of_misery": {
+      "number": 22,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Victor Kudo - Martial Anthem of Misery",
+      "shortTitle": "Victor Kudo",
+      "src": "original/ds-victor-kudo-martial-anthem-of-misery.flac",
+      "category": "bgm",
+      "tags": [
+        "character:victor_kudo",
+        "tense",
+        "dramatic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2004615,
+        "endSample": 4016389,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 45.62 s, repeated run 58 s (mean similarity 0.95); seam NCC 0.994, click ratio 0.00; loop 45.6 s, first loop-back at 85% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 13.50-59.12 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "furio_tigre_swingin_tiger": {
+      "number": 23,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Furio Tigre - Swingin' Tiger",
+      "shortTitle": "Furio Tigre",
+      "src": "original/ds-furio-tigre-swingin-tiger.flac",
+      "category": "bgm",
+      "tags": [
+        "character:furio_tigre",
+        "playful"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2176897,
+        "endSample": 4123463,
+        "sampleRate": 44100,
+        "confidence": 0.88,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 44.14 s, repeated run 51 s (mean similarity 0.88); seam NCC 1.000, click ratio 0.00; loop 44.1 s, first loop-back at 90% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 5.77-49.91 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "reminiscences_violetta_vitriol": {
+      "number": 24,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Reminiscences - Violetta Vitriol",
+      "shortTitle": "Violetta Vitriol",
+      "src": "original/ds-reminiscences-violetta-vitriol.flac",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "dramatic",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 3503494,
+        "endSample": 6984640,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 78.94 s, repeated run 87 s (mean similarity 0.99); seam NCC 1.000, click ratio 0.03; loop 78.9 s, first loop-back at 94% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "turnabout_beginnings": {
+      "number": 25,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Turnabout Beginnings",
+      "shortTitle": "Turnabout Beginnings",
+      "src": "original/ds-turnabout-beginnings.flac",
+      "category": "bgm",
+      "tags": [
+        "case-theme",
+        "calm"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null,
+      "loopReason": "non-looping cue (50 s, jingle/ending length): no lag between 6 s and 0.8 of the track keeps a musical self-similarity above 0.72 for 10 s (structural v2); the whole file plays once and restarts. Not auditioned.",
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "whole_file"
+    },
+    "reminiscences_the_view_from_dusky_bridge": {
+      "number": 26,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Reminiscences - The View from Dusky Bridge",
+      "shortTitle": "The View from Dusky Bridge",
+      "src": "original/ds-reminiscences-the-view-from-dusky-bridge.flac",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "dramatic",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 4766612,
+        "endSample": 9533717,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 108.10 s, repeated run 115 s (mean similarity 0.97); seam NCC 0.999, click ratio 0.00; loop 108.1 s, first loop-back at 96% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 0.10-108.20 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "bridge_to_the_turnabout": {
+      "number": 27,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Bridge to the Turnabout",
+      "shortTitle": "Bridge to the Turnabout",
+      "category": "excluded",
+      "tags": [
+        "jingle"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "hazakura_temple": {
+      "number": 28,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Hazakura Temple",
+      "shortTitle": "Hazakura Temple",
+      "src": "original/ds-hazakura-temple.flac",
+      "category": "bgm",
+      "tags": [
+        "location",
+        "calm",
+        "mystic"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 404552,
+        "endSample": 3879937,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 78.81 s, repeated run 88 s (mean similarity 0.97); seam NCC 1.000, click ratio 1.21; loop 78.8 s, first loop-back at 50% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "elise_deauxnim_a_gentle_melody": {
+      "number": 29,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Elise Deauxnim - A Gentle Melody",
+      "shortTitle": "Elise Deauxnim",
+      "src": "original/ds-elise-deauxnim-a-gentle-melody.flac",
+      "category": "bgm",
+      "tags": [
+        "character:elise_deauxnim",
+        "calm",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 3317500,
+        "endSample": 6596570,
+        "sampleRate": 44100,
+        "confidence": 0.95,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 74.36 s, repeated run 82 s (mean similarity 0.97); seam NCC 0.968, click ratio 0.05; loop 74.4 s, first loop-back at 94% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "further_investigation_2004": {
+      "number": 30,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Further Investigation 2004",
+      "shortTitle": "Further Investigation",
+      "src": "original/ds-further-investigation-2004.flac",
+      "category": "bgm",
+      "tags": [
+        "investigation",
+        "thinking"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": {
+        "startSample": 2667139,
+        "endSample": 5215325,
+        "sampleRate": 44100,
+        "confidence": 0.93,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 57.78 s, repeated run 74 s (mean similarity 0.93); seam NCC 0.999, click ratio 0.00; loop 57.8 s, first loop-back at 86% of the track. Not an original DS loop point; not verified by listening. Supersedes the earlier lag-diagonal+xcorr-v1 loop 3.99-119.56 s (same repeat period, later phase so more of the track plays before the first loop-back)."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "reminiscences_the_bitterness_of_truth": {
+      "number": 31,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Reminiscences - The Bitterness of Truth",
+      "shortTitle": "The Bitterness of Truth",
+      "src": "original/ds-reminiscences-the-bitterness-of-truth.flac",
+      "category": "contextual",
+      "tags": [
+        "reminiscence",
+        "dramatic",
+        "melancholy"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 3205056,
+        "endSample": 6308778,
+        "sampleRate": 44100,
+        "confidence": 0.91,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 70.38 s, repeated run 77 s (mean similarity 0.91); seam NCC 0.992, click ratio 0.45; loop 70.4 s, first loop-back at 94% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "pursuit_corner_the_culprit_2004": {
+      "number": 32,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Pursuit - Corner the Culprit 2004",
+      "shortTitle": "Pursuit: Corner the Culprit",
+      "src": "original/ds-pursuit-corner-the-culprit-2004.flac",
+      "category": "contextual",
+      "tags": [
+        "pursuit",
+        "tense",
+        "intense"
+      ],
+      "gain": 1,
+      "contextual": true,
+      "loop": {
+        "startSample": 282939,
+        "endSample": 1981806,
+        "sampleRate": 44100,
+        "confidence": 0.65,
+        "provenance": "curated-analysis",
+        "method": "structural-lag-run+seam-v2",
+        "status": "measured_not_auditioned",
+        "note": "Structural analysis (structural-lag-run+seam-v2, 44.1 kHz): repeat lag 38.52 s, repeated run 41 s (mean similarity 0.76); seam NCC 0.990, click ratio 0.01; loop 38.5 s, first loop-back at 48% of the track. Not an original DS loop point; not verified by listening."
+      },
+      "audioProvenance": "original-ds-ncsf123-lossless",
+      "loopStatus": "measured_not_auditioned"
+    },
+    "pursuit_corner_the_culprit_2004_variation": {
+      "number": 33,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Pursuit - Corner the Culprit 2004 (Variation)",
+      "shortTitle": "Pursuit: Corner (Variation)",
+      "src": "original/d3-33-pursuit-corner-the-culprit-2004-variation.mp3",
+      "category": "contextual",
+      "tags": [
+        "pursuit",
+        "tense",
+        "intense"
+      ],
+      "gain": 0.43,
+      "contextual": true,
+      "loop": null,
+      "loopReason": "best candidate 10.75-49.15 s fails: coverage 0.00 < 0.7; envelope identity 0.901 < 0.92; seam correlation 0.638 < 0.95",
+      "loudnessLufs": -7.7
+    },
+    "victory_an_eternal_win": {
+      "number": 34,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Victory! - An Eternal Win",
+      "shortTitle": "Victory: An Eternal Win",
+      "category": "excluded",
+      "tags": [
+        "victory"
+      ],
+      "gain": 1,
+      "contextual": false,
+      "loop": null
+    },
+    "trials_and_tribulations_ending": {
+      "number": 35,
+      "disc": 3,
+      "game": "tnt",
+      "title": "Trials and Tribulations - Ending",
+      "shortTitle": "Trials and Tribulations: Ending",
       "category": "excluded",
       "tags": [
         "ending"

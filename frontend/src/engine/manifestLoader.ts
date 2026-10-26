@@ -6,6 +6,8 @@ import { readWaiting } from './presentation.ts'
 import { readTaskAcknowledgements } from './taskAcknowledgements.ts'
 import { parseRingtones, ringtoneEvents, setRingtoneCatalog, type RingtoneCatalog } from './ringtones.ts'
 import { parseVoices, setVoiceCatalog } from './voices.ts'
+import { listableCharacters, readGroup, readReadiness } from './characterReadiness.ts'
+import { readSemanticSounds, registerSemanticSounds, registerSignatureSfx } from './sfx.ts'
 import type {
   FontMetricDescriptors,
   AnimationClip,
@@ -19,7 +21,9 @@ import type {
   CharacterSummary,
   EmotionBindingManifest,
   LoadedCharacter,
+  LoadedPresentationGroup,
   LoadedUi,
+  ReactionEffect,
   Sound,
   SoundId,
   SpriteFrame,
@@ -90,6 +94,16 @@ export async function loadCharacterIndex(): Promise<CharacterIndexEntry[]> {
     .map(([id, path]) => ({ id, manifestUrl: new URL(path, indexUrl).href }))
 }
 
+/** Menu art can use its own native crop while conversation/courtroom poses stay unchanged. */
+export function characterPreviewPath(manifest: CharacterManifest): string | null {
+  if (typeof manifest.selectionPreview === 'string' && manifest.selectionPreview.trim()) return manifest.selectionPreview
+  const group = manifest.defaultPresentation ? manifest.presentationGroups?.[manifest.defaultPresentation] : undefined
+  const emotions = group?.emotions ?? manifest.emotions
+  const animationId = isRecord(emotions) ? emotions[group?.defaultEmotion ?? manifest.defaultEmotion]?.animation : undefined
+  const firstFrame = animationId ? (group?.animations ?? manifest.animations)?.[animationId]?.idle?.frames?.[0] : undefined
+  return typeof firstFrame === 'string' ? firstFrame : null
+}
+
 /** Reads each registered manifest's JSON (no image decoding) for menu listings. */
 export async function loadCharacterSummaries(): Promise<CharacterSummary[]> {
   const index = await loadCharacterIndex()
@@ -99,23 +113,26 @@ export async function loadCharacterSummaries(): Promise<CharacterSummary[]> {
         const raw = await fetchJson(new URL(manifestUrl))
         if (!isRecord(raw)) return null
         const manifest = raw as unknown as CharacterManifest
-        const animationId = isRecord(manifest.emotions)
-          ? manifest.emotions[manifest.defaultEmotion]?.animation
-          : undefined
-        const firstFrame = animationId ? manifest.animations?.[animationId]?.idle?.frames?.[0] : undefined
+        const preview = characterPreviewPath(manifest)
         return {
           id,
           displayName: typeof manifest.displayName === 'string' ? manifest.displayName : id,
           names: readNames(manifest.names),
           manifestUrl,
-          previewUrl: typeof firstFrame === 'string' ? new URL(firstFrame, manifestUrl).href : null,
+          previewUrl: preview ? new URL(preview, manifestUrl).href : null,
+          readiness: readReadiness(manifest.readiness),
+          group: readGroup(manifest.group),
         }
       } catch {
         return null
       }
     }),
   )
-  return summaries.filter((summary): summary is CharacterSummary => summary !== null)
+  // asset-only packs never reach a menu; partial ones only in development builds.
+  return listableCharacters(
+    summaries.filter((summary): summary is CharacterSummary => summary !== null),
+    Boolean(import.meta.env?.DEV),
+  )
 }
 
 // ---- Character manifest ----
@@ -252,6 +269,10 @@ export function readCourtRecordPortrait(raw: unknown, manifestUrl: string, warni
 
 export async function loadCharacter(manifestUrl: string): Promise<LoadedCharacter> {
   const raw = await fetchJson(new URL(manifestUrl))
+  return loadCharacterData(raw, manifestUrl)
+}
+
+async function loadCharacterData(raw: unknown, manifestUrl: string, prefix = ''): Promise<LoadedCharacter> {
   if (!isRecord(raw) || !isRecord(raw.animations) || !isRecord(raw.emotions)) {
     throw new ManifestError(`${manifestUrl}: missing "animations" or "emotions"`)
   }
@@ -270,8 +291,8 @@ export async function loadCharacter(manifestUrl: string): Promise<LoadedCharacte
         return
       }
       const [idle, talking] = await Promise.all([
-        loadClip(anim.idle, `${id}.idle`, manifestUrl, warnings, false, anim.canvas),
-        loadClip(anim.talking, `${id}.talking`, manifestUrl, warnings, false, anim.canvas),
+        loadClip(anim.idle, `${prefix}${id}.idle`, manifestUrl, warnings, false, anim.canvas),
+        loadClip(anim.talking, `${prefix}${id}.talking`, manifestUrl, warnings, false, anim.canvas),
       ])
       if (idle || talking) animations[id] = { id, idle: idle ?? undefined, talking: talking ?? undefined }
     }),
@@ -280,7 +301,11 @@ export async function loadCharacter(manifestUrl: string): Promise<LoadedCharacte
   const reactions: Record<string, AnimationClip> = {}
   await Promise.all(
     Object.entries(isRecord(manifest.reactions) ? manifest.reactions : {}).map(async ([id, clip]) => {
-      const loaded = await loadClip(clip, `reaction:${id}`, manifestUrl, warnings, true, isRecord(clip) ? clip.canvas : undefined)
+      const loaded = await loadClip(clip, `${prefix}reaction:${id}`, manifestUrl, warnings, true, isRecord(clip) ? clip.canvas : undefined)
+      if (loaded && isRecord(clip) && clip.effect !== undefined) {
+        const effect = await loadReactionEffect(clip.effect, `${prefix}reaction:${id}:effect`, manifestUrl, warnings)
+        if (effect) loaded.effect = effect
+      }
       if (loaded) reactions[id] = loaded
     }),
   )
@@ -315,7 +340,37 @@ export async function loadCharacter(manifestUrl: string): Promise<LoadedCharacte
       ? manifest.defaultEmotion
       : fallbackEmotion
 
+  const presentationGroups: Record<string, LoadedPresentationGroup> = {}
+  for (const [context, group] of Object.entries(isRecord(manifest.presentationGroups) ? manifest.presentationGroups : {})) {
+    if (!isRecord(group) || !isRecord(group.animations)) {
+      warnings.push(`presentationGroups.${context}: missing animations, group dropped`)
+      continue
+    }
+    try {
+      const loaded = await loadCharacterData({
+        ...manifest, ...group,
+        render: { ...manifest.render, ...(isRecord(group.render) ? group.render : {}) },
+        // A conversation group can refuse the shared reactions (courtroom side views, D-091).
+        reactions: group.inheritReactions === false
+          ? (isRecord(group.reactions) ? group.reactions : {})
+          : { ...manifest.reactions, ...(isRecord(group.reactions) ? group.reactions : {}) },
+        presentationGroups: undefined,
+      }, manifestUrl, `presentation:${context}:`)
+      presentationGroups[context] = {
+        animations: loaded.animations, emotions: loaded.emotions, reactions: loaded.reactions,
+        inheritReactions: group.inheritReactions !== false,
+        render: loaded.render, waiting: loaded.waiting,
+        defaultEmotion: loaded.defaultEmotion, fallbackEmotion: loaded.fallbackEmotion,
+      }
+      warnings.push(...loaded.warnings.map((warning) => `presentationGroups.${context}: ${warning}`))
+    } catch (error) {
+      warnings.push(`presentationGroups.${context}: ${String(error)}, group dropped`)
+    }
+  }
+
   return {
+    defaultPresentation: typeof manifest.defaultPresentation === 'string' ? manifest.defaultPresentation : undefined,
+    presentationGroups,
     id: typeof manifest.id === 'string' ? manifest.id : 'unknown',
     displayName: typeof manifest.displayName === 'string' ? manifest.displayName : 'Unknown',
     names: readNames(manifest.names),
@@ -334,8 +389,43 @@ export async function loadCharacter(manifestUrl: string): Promise<LoadedCharacte
     waiting: readWaiting(manifest.waiting, emotions, animations, defaultEmotion),
     taskAcknowledgements: readTaskAcknowledgements(manifest.taskAcknowledgements, emotions, defaultEmotion),
     courtRecordPortrait: readCourtRecordPortrait(manifest.courtRecordPortrait, manifestUrl, warnings),
+    // Ids are checked against audio.json when it is already loaded; validate-assets checks them too.
+    semanticSounds: readSemanticSounds(manifest.semanticSounds, characterSoundIds ?? undefined),
     warnings,
   }
+}
+
+/** Sound ids the audio manifest defines; set by loadAudio so packs can name character sounds. */
+let characterSoundIds: ReadonlySet<string> | null = null
+
+async function loadReactionEffect(raw: unknown, key: string, baseUrl: string, warnings: string[]): Promise<ReactionEffect | null> {
+  if (!isRecord(raw)) {
+    warnings.push(`${key}: not an object, ignored`)
+    return null
+  }
+  const overlay = raw.overlay === undefined ? null
+    : await loadClip(raw.overlay, `${key}:overlay`, baseUrl, warnings, true, isRecord(raw.overlay) ? raw.overlay.canvas : undefined)
+  const overlayStartMs = typeof raw.overlayStartMs === 'number' && raw.overlayStartMs >= 0 ? raw.overlayStartMs : 0
+  const cues = (Array.isArray(raw.cues) ? raw.cues : [])
+    .filter((cue): cue is { atMs: number; event: string } => {
+      const ok = isRecord(cue) && typeof cue.atMs === 'number' && Number.isFinite(cue.atMs) && cue.atMs >= 0
+        && typeof cue.event === 'string' && cue.event.length > 0
+      if (!ok) warnings.push(`${key}: invalid cue ignored`)
+      return ok
+    })
+    .map(({ atMs, event }) => ({ atMs, event }))
+    .sort((a, b) => a.atMs - b.atMs)
+  const rawBackdrop = isRecord(raw.backdrop) ? raw.backdrop : null
+  const backdrop = rawBackdrop && typeof rawBackdrop.fadeStartMs === 'number' && rawBackdrop.fadeStartMs >= 0
+    && typeof rawBackdrop.fadeMs === 'number' && rawBackdrop.fadeMs >= 0
+    ? {
+        color: typeof rawBackdrop.color === 'string' && /^#[0-9a-f]{6}$/i.test(rawBackdrop.color) ? rawBackdrop.color : '#000000',
+        fadeStartMs: rawBackdrop.fadeStartMs, fadeMs: rawBackdrop.fadeMs,
+      }
+    : null
+  if (raw.backdrop !== undefined && !backdrop) warnings.push(`${key}: invalid backdrop ignored`)
+  if (!overlay && cues.length === 0 && !backdrop) return null
+  return { overlay, overlayStartMs, backdrop, cues }
 }
 
 // ---- Backgrounds ----
@@ -356,6 +446,9 @@ export async function loadBackgrounds(): Promise<Background[]> {
       height: typeof bg.height === 'number' ? bg.height : 0,
       description: bg.description ?? '',
       notes: bg.notes,
+      foregroundUrl: typeof bg.foreground === 'string' && bg.foreground ? new URL(bg.foreground, manifestUrl).href : null,
+      characterOffsetY: typeof bg.characterOffsetY === 'number' && Number.isFinite(bg.characterOffsetY)
+        ? Math.round(bg.characterOffsetY) : 0,
     }))
 }
 
@@ -388,6 +481,10 @@ export async function loadAudio(): Promise<{ sounds: Sound[]; events: Record<str
   const ringtones = parseRingtones(manifest.ringtones, known)
   if (ringtones) Object.assign(events, ringtoneEvents(ringtones))
   setRingtoneCatalog(ringtones)
+  // Character signature sounds are plain audio events sfx_<id>; no id list lives in the code.
+  registerSignatureSfx(Object.keys(events))
+  registerSemanticSounds((raw as Record<string, unknown>).semanticSounds, known)
+  characterSoundIds = known
   setVoiceCatalog(parseVoices((raw as Record<string, unknown>).voices, known))
   return { sounds, events, ringtones }
 }

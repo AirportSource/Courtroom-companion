@@ -7,10 +7,9 @@ import './ArtifactDeliveryOverlay.css'
 
 export interface ArtifactDeliveryOverlayProps {
   state: ArtifactDeliveryState
-  workingIcon?: ReactNode
   phoneIcon?: ReactNode
   evidenceIcon?: ReactNode
-  /** Native 70×70 evidence frame (ui.images.evidence_frame); the summon tile is plain when absent. */
+  /** Native 70×70 evidence frame (ui.images.evidence_frame) for the phone and summon. */
   evidenceFrame?: UiImage | null
   /** Parent enables advance after ARTIFACT_SUMMON_MIN_MS and owns the fallback timer. */
   canAdvance?: boolean
@@ -19,7 +18,7 @@ export interface ArtifactDeliveryOverlayProps {
 }
 
 /** UI in the existing 256x192 stage; assets, character performance and audio belong to the caller. */
-export function ArtifactDeliveryOverlay({ state, workingIcon, phoneIcon, evidenceIcon, evidenceFrame = null, canAdvance = false,
+export function ArtifactDeliveryOverlay({ state, phoneIcon, evidenceIcon, evidenceFrame = null, canAdvance = false,
   onPhoneAcknowledge, onSummonAdvance }: ArtifactDeliveryOverlayProps) {
   const t = useT()
   const lastAction = useRef<string | null>(null)
@@ -30,7 +29,7 @@ export function ArtifactDeliveryOverlay({ state, workingIcon, phoneIcon, evidenc
       actionRef.current?.focus({ preventScroll: true })
     }
   }, [phase, canAdvance, state.turnId])
-  if (phase !== 'artifact-working' && phase !== 'waiting-for-phone-acknowledgement' && phase !== 'evidence-summon') return null
+  if (phase !== 'artifact-working' && phase !== 'artifact-done' && phase !== 'waiting-for-phone-acknowledgement' && phase !== 'evidence-summon') return null
 
   const phone = phase === 'waiting-for-phone-acknowledgement'
   const summon = phase === 'evidence-summon'
@@ -59,10 +58,13 @@ export function ArtifactDeliveryOverlay({ state, workingIcon, phoneIcon, evidenc
           </div>
         </div>
       ) : (
-        <div className="artifact-delivery__prop" aria-hidden="true">{phone ? phoneIcon : workingIcon}</div>
+        // The working/done cue is the stage-corner magnifier (D-079); only the phone is a prop here.
+        phone && <div className="artifact-delivery__prop" aria-hidden="true">
+          <EvidenceTile frame={evidenceFrame}>{phoneIcon}</EvidenceTile>
+        </div>
       )}
       {!summon && <div className="artifact-delivery__message" role="status" aria-live="polite">
-        {t(phone ? 'artifact.ready' : 'artifact.creating')}
+        {t(phone || phase === 'artifact-done' ? 'artifact.ready' : 'artifact.creating')}
       </div>}
       {(phone || summon) && (
         <button ref={actionRef} className="artifact-delivery__action" type="button" autoFocus disabled={summon && !canAdvance}

@@ -27,12 +27,24 @@ export interface LoopRegion {
   crossfadeMs?: number
 }
 
+/**
+ * How far a loop has been checked. Optional and backward compatible: an absent or unknown value
+ * means "nothing is claimed".
+ * - measured_not_auditioned: accepted by offline metrics (docs/MUSIC.md), never confirmed by ear
+ * - auditioned: a person listened to the seam and accepted it
+ */
+export type LoopStatus = 'measured_not_auditioned' | 'auditioned'
+
 export interface LoopMetadata {
   region: LoopRegion | null
   /** 0–1, or null when unknown. Honest estimate, never a guarantee. */
   confidence: number | null
   provenance: LoopProvenance
   note?: string
+  /** Verification state of the loop (see LoopStatus). */
+  status?: LoopStatus
+  /** Identifier of the measuring method, e.g. "lag-diagonal+xcorr-v1" (provenance detail, free text). */
+  method?: string
 }
 
 /** Track descriptor common to every Web Audio source (original + imported). */
@@ -109,7 +121,19 @@ export interface MusicSource {
   setVolume(volume: number): void
   /** Temporary mix attenuation, independent of master volume and track fades. */
   setDucking?(factor: number, rampMs: number): void
+  /** Dev/audition aid: jump inside the current track (seconds). Sources that cannot seek omit it. */
+  seek?(seconds: number): void
+  /** Dev/audition aid: current position and loop region (seconds) of the playing track, or null. */
+  getPlaybackInfo?(): PlaybackInfo | null
   dispose(): void
+}
+
+export interface PlaybackInfo {
+  /** Position in seconds from the start of the track. */
+  position: number
+  duration: number
+  /** Active loop region in seconds, or null when the whole track loops. */
+  loop: { start: number; end: number } | null
 }
 
 export interface MusicEngineState {

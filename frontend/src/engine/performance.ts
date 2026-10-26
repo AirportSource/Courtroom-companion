@@ -7,21 +7,19 @@ import { initializeProviderProfiles } from '../settings/providerProfiles.ts'
 import { cancelTurn, parseArtifact, parseTurnTask, watchTurn, type GeneratedArtifact, type TurnTask } from '../artifacts/artifacts.ts'
 import { parseGeneration, type GenerationDiagnostics } from './generation.ts'
 
-/** Closed set of semantic reaction sounds; the frontend plays audio event `sfx_<name>`. */
-export const SFX_NAMES = [
-  'surprise',
-  'shock',
-  'realization',
-  'comic',
-  'emphasis',
-  'tension',
-  'notification',
-  'soft_transition',
-] as const
-export type SfxName = (typeof SFX_NAMES)[number]
+import { isKnownSfx, SFX_NAMES } from './sfx.ts'
+
+/** Closed global set of semantic reaction sounds; the frontend plays audio event `sfx_<name>`. */
+export { SFX_NAMES }
+
+/**
+ * A segment's sound: a global semantic name, or a character signature id (e.g. `whip`) that the
+ * audio manifest defines as event `sfx_<id>` (registered by the manifest loader, see sfx.ts).
+ */
+export type SfxName = string
 
 export function asSfx(value: unknown): SfxName | null {
-  return typeof value === 'string' && (SFX_NAMES as readonly string[]).includes(value) ? (value as SfxName) : null
+  return isKnownSfx(value) ? value : null
 }
 
 export function sfxEventId(name: SfxName): string {

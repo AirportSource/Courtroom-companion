@@ -13,12 +13,14 @@ import type { PerformanceOverride } from '../engine/characterResolver.ts'
 import { dialogueTextLayout } from '../engine/dialogueLayout.ts'
 import type { DialogueLine } from '../engine/dialogueTypes.ts'
 import type { Background, LoadedCharacter, SoundId, UiImage } from '../engine/manifestTypes.ts'
+import { selectPresentation } from '../engine/presentationContext.ts'
 import { playMenuSound } from '../engine/menuSounds.ts'
 import { paginate, sendChat, timelineToLines, type ChatResponse } from '../engine/performance.ts'
 import { taskAcknowledgement } from '../engine/taskAcknowledgements.ts'
 import { musicRuntime } from '../music/musicRuntime.ts'
 import { startPhoneRinging, type PhoneRingingHandle } from '../artifacts/phoneRinging.ts'
-import { playSfx, SFX_EVENTS, type SfxName } from '../engine/sfx.ts'
+import { playSemanticSfx, semanticSoundIds, sfxDiagnostic, SFX_EVENTS, type SfxDiagnostic, type SfxName } from '../engine/sfx.ts'
+import { useReactionEffect } from '../engine/reactionEffect.ts'
 import { nextPhase, waitingOverride, waitingPerformance, type Phase } from '../engine/presentation.ts'
 import { useBlips } from '../engine/useBlips.ts'
 import { useCharacterPlayback, useReactionGate } from '../engine/useCharacterAnimation.ts'
@@ -28,7 +30,12 @@ import { cancelTurn } from '../artifacts/artifacts.ts'
 import { ChatError } from '../engine/performance.ts'
 import { generationFailureMessage } from '../engine/generation.ts'
 import { ArtifactDeliveryOverlay } from '../artifacts/ArtifactDeliveryOverlay.tsx'
+import { ConversationMusicStrip, type ConversationMusicImages } from '../components/ConversationMusicStrip.tsx'
+import { useConversationMusicView } from '../components/conversationMusicAdapter.ts'
+import { StatusMagnifier } from '../components/StatusMagnifier.tsx'
+import { replySucceeded, statusMagnifierMode, STATUS_DONE_MS } from '../components/statusMagnifier.ts'
 import {
+  ARTIFACT_DONE_MS,
   ARTIFACT_SUMMON_AUTO_MS,
   ARTIFACT_SUMMON_MIN_MS,
   ARTIFACT_WORKING_MIN_MS,
@@ -39,6 +46,7 @@ import {
 import type { GeneratedArtifact, TurnTask } from '../artifacts/artifacts.ts'
 import { readEvidence, releaseEvidence, type EvidenceDraft } from '../evidence/evidence.ts'
 import { PendingEvidence, PresentedEvidence } from '../evidence/EvidenceViews.tsx'
+import { EvidencePresentationLifetime } from '../evidence/presentationLifetime.ts'
 import { guessMessageLanguage, localizedName, type StringKey } from '../i18n/i18n.ts'
 import { useT } from '../i18n/useT.ts'
 import { useEventInbox, type Exclamation } from '../events/eventInbox.ts'
@@ -48,6 +56,7 @@ import { shoutSound } from '../engine/voices.ts'
 
 interface ConversationScreenProps {
   character: LoadedCharacter
+  presentationContext?: string
   background: Background | null
   /** Temporary scripted lines playable from the dev panel. */
   testScript: DialogueLine[]
@@ -60,7 +69,11 @@ interface ConversationScreenProps {
   fileIcon: UiImage | null
   /** Photo evidence icon (ui.images.court_record_photo), shown when a presented picture cannot be. */
   photoIcon?: UiImage | null
-  thinkerIcon: UiImage | null
+  /** Status magnifier (ui.images.status_magnifier_*): working while a request runs, checked on success (D-079). */
+  statusWorking?: UiImage | null
+  statusDone?: UiImage | null
+  /** DS-scale Trilogy music-player sprites (ui.images.music_player_*) for the in-stage music strip. */
+  musicImages?: ConversationMusicImages
   phoneIcon: UiImage | null
   onExit: () => void
   /** Native evidence frame (ui.images.evidence_frame) for file tiles, the summon and record slots. */
@@ -78,7 +91,7 @@ interface ConversationScreenProps {
 
 /** Stage overlays opened from the conversation; they own the keyboard while open. */
 type Overlay = 'talk' | 'court-record' | 'conversation-record' | null
-interface SfxPlaybackDiagnostic { name: string; event: string; played: boolean; reason: string; source: 'dialogue' | 'audition' }
+type SfxPlaybackDiagnostic = SfxDiagnostic
 
 interface Settle {
   emotion: string
@@ -118,12 +131,14 @@ function overrideFor(line: DialogueLine): PerformanceOverride {
  * the character settles into the director's end pose and the input comes back. Esc leaves.
  */
 export function ConversationScreen({
-  character, background, testScript, talkBackdrop, generatedArtifacts, artifactsLoading, artifactsError,
-  onArtifactsChanged, fileIcon, photoIcon = null, thinkerIcon, phoneIcon, onExit, devTools, onTaskChange,
+  character: sourceCharacter, presentationContext = 'conversation', background, testScript, talkBackdrop, generatedArtifacts, artifactsLoading, artifactsError,
+  onArtifactsChanged, fileIcon, photoIcon = null, statusWorking = null, statusDone = null, musicImages, phoneIcon, onExit, devTools, onTaskChange,
   evidenceFrame = null, portraitFor, nameFor, exclamations = {}, onRecordOpen,
 }: ConversationScreenProps) {
+  const character = useMemo(() => selectPresentation(sourceCharacter, presentationContext), [sourceCharacter, presentationContext])
   const { settings } = useSettings()
   const t = useT()
+  const musicView = useConversationMusicView(character.id)
   const characterName = localizedName(character, settings.language)
   const [sessionId] = useState(() => crypto.randomUUID())
   const [phase, setPhase] = useState<Phase>('input')
@@ -140,6 +155,13 @@ export function ConversationScreen({
   const [currentTask, setCurrentTask] = useState<TurnTask | null>(null)
   const currentTaskRef = useRef<TurnTask | null>(null)
   const [summonCanAdvance, setSummonCanAdvance] = useState(false)
+  // A reply just succeeded without a file: the checked magnifier shows for STATUS_DONE_MS.
+  const [doneFlash, setDoneFlash] = useState(false)
+  useEffect(() => {
+    if (!doneFlash) return
+    const timer = window.setTimeout(() => setDoneFlash(false), STATUS_DONE_MS)
+    return () => window.clearTimeout(timer)
+  }, [doneFlash])
   const activeRequest = useRef<ActiveRequest | null>(null)
   const pendingReply = useRef<{ turnId: string; lines: DialogueLine[]; settle?: Settle; response?: ChatResponse } | null>(null)
   const acknowledgementSequence = useRef(0)
@@ -149,21 +171,25 @@ export function ConversationScreen({
   const summonFinishStarted = useRef(new Set<string>())
   const revealTimer = useRef<number | null>(null)
   const playedSfxLineKey = useRef<string | null>(null)
+  const mounted = useRef(false)
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false } }, [])
   // Evidence (D-065): the file waiting to be presented with the next message, the one on screen
   // while the character examines it, and drag-and-drop feedback.
   const [evidence, setEvidence] = useState<EvidenceDraft | null>(null)
   const [presented, setPresented] = useState<EvidenceDraft | null>(null)
+  const [presentationLifetime] = useState(() => new EvidencePresentationLifetime())
+  const finishEvidence = useCallback((turnId: string) => {
+    if (presentationLifetime.finish(turnId) && mounted.current) setPresented(null)
+  }, [presentationLifetime])
   const [dragging, setDragging] = useState(false)
   const [evidenceError, setEvidenceError] = useState<string | null>(null)
   const evidenceInput = useRef<HTMLInputElement>(null)
-  const evidenceFiles = useRef({ evidence, presented })
-  useEffect(() => { evidenceFiles.current = { evidence, presented } })
+  const evidenceFiles = useRef({ evidence })
+  useEffect(() => { evidenceFiles.current = { evidence } })
   useEffect(() => () => {
     releaseEvidence(evidenceFiles.current.evidence)
-    releaseEvidence(evidenceFiles.current.presented)
-  }, [])
-  const mounted = useRef(false)
-  useEffect(() => { mounted.current = true; return () => { mounted.current = false } }, [])
+    presentationLifetime.clear()
+  }, [presentationLifetime])
   useEffect(() => () => {
     activeRequest.current?.controller.abort()
     activeRequest.current = null
@@ -200,37 +226,27 @@ export function ConversationScreen({
     sfxSettings.current = { volume: settings.sfxVolume, muted: settings.sfxMuted }
   })
   const lineSfx = line?.sfx ?? null
+  // Character-specific and shared semantic sounds are not all audio events, so preload them here.
+  const characterSounds = character.semanticSounds
+  useEffect(() => {
+    audioEngine.preload(semanticSoundIds(characterSounds))
+  }, [characterSounds])
   useEffect(() => {
     const { volume, muted } = sfxSettings.current
     if (lineSfx && playedSfxLineKey.current !== lineKey) {
       playedSfxLineKey.current = lineKey
-      const played = playSfx(lineSfx, volume, muted)
-      if (devTools) {
-        const lastDiagnostic = audioEngine.getRecentEventDiagnostics().at(-1)
-        const diagnostic = lastDiagnostic?.event === SFX_EVENTS[lineSfx] ? lastDiagnostic : null
-        setSfxPlayback((events) => [...events.slice(-9), {
-          name: lineSfx, event: SFX_EVENTS[lineSfx], played,
-          reason: muted ? 'muted' : volume <= 0 ? 'zero volume' : diagnostic?.reason ?? 'play request rejected',
-          source: 'dialogue',
-        }])
-      }
+      const result = playSemanticSfx(lineSfx, volume, muted, character.id, characterSounds)
+      if (devTools) setSfxPlayback((events) => [...events.slice(-9), sfxDiagnostic(result, 'dialogue')])
     }
-  }, [lineKey, lineSfx, devTools])
+  }, [lineKey, lineSfx, devTools, character.id, characterSounds])
 
   const auditionSfx = useCallback(async (name: SfxName) => {
     audioEngine.unlock()
-    const event = SFX_EVENTS[name]
-    const ready = await audioEngine.prepareEvent(event)
+    await audioEngine.prepareEvent(SFX_EVENTS[name])
     const { volume, muted } = sfxSettings.current
-    const played = ready && playSfx(name, volume, muted)
-    const lastDiagnostic = audioEngine.getRecentEventDiagnostics().at(-1)
-    const diagnostic = lastDiagnostic?.event === event ? lastDiagnostic : null
-    setSfxPlayback((events) => [...events.slice(-9), {
-      name, event, played,
-      reason: muted ? 'muted' : volume <= 0 ? 'zero volume' : diagnostic?.reason ?? (ready ? 'play request rejected' : 'WAV failed to load/decode'),
-      source: 'audition',
-    }])
-  }, [])
+    const result = playSemanticSfx(name, volume, muted, character.id, characterSounds)
+    setSfxPlayback((events) => [...events.slice(-9), sfxDiagnostic(result, 'audition')])
+  }, [character.id, characterSounds])
 
   const gate = useReactionGate(character, emotion, lineKey, override)
   // Every page of a reply types at the same pace, set by the reply's total length.
@@ -239,6 +255,20 @@ export function ConversationScreen({
   const typewriter = useTypewriter(line?.text ?? '', lineKey, Boolean(line) && !gate.pending, textSpeed, onReveal)
   const mode = line && typewriter.state === 'revealing' ? 'talking' : 'idle'
   const animation = useCharacterPlayback(character, emotion, mode, gate, override)
+  // A reaction's one-shot effect (overlay + sound cues) runs from the reaction's start and is
+  // cancelled with it (D-091).
+  const reactionEffect = animation.resolved?.variant === 'reaction' ? animation.resolved.clip.effect : undefined
+  const effectView = useReactionEffect(reactionEffect, reactionEffect ? gate.playKey : null, (event) => {
+    const { volume, muted } = sfxSettings.current
+    const played = !muted && volume > 0 && audioEngine.playEvent(event, volume)
+    if (devTools) {
+      setSfxPlayback((events) => [...events.slice(-9), {
+        name: event, character: character.id, characterCandidate: null, sharedCandidate: null, final: event,
+        played, reason: muted ? 'muted' : volume <= 0 ? 'zero volume' : played ? 'reaction effect cue' : 'playback did not start',
+        source: 'effect',
+      }])
+    }
+  })
 
   const play = useCallback((next: DialogueLine[], nextSettle?: Settle) => {
     if (next.length === 0) return
@@ -292,16 +322,26 @@ export function ConversationScreen({
 
   const exitConversation = useCallback(() => {
     stopRinging.current?.()
+    presentationLifetime.clear()
+    setPresented(null)
     // If the atomic save finished but the scene is interrupted before presentation completes,
     // make the already-persisted artifact visible in the next Court Record view without replay.
     if (delivery.artifact || currentTask?.state === 'artifact-ready') void onArtifactsChanged()
     onExit()
-  }, [currentTask?.state, delivery.artifact, onArtifactsChanged, onExit])
+  }, [currentTask?.state, delivery.artifact, onArtifactsChanged, onExit, presentationLifetime])
 
   useEffect(() => {
     if (delivery.phase !== 'artifact-working' || !delivery.turnId) return
     const turnId = delivery.turnId
     const timer = window.setTimeout(() => dispatchDelivery({ type: 'working-presented', turnId }), ARTIFACT_WORKING_MIN_MS)
+    return () => window.clearTimeout(timer)
+  }, [delivery.phase, delivery.turnId])
+
+  // The checked magnifier beat between the saved file and the phone.
+  useEffect(() => {
+    if (delivery.phase !== 'artifact-done' || !delivery.turnId) return
+    const turnId = delivery.turnId
+    const timer = window.setTimeout(() => dispatchDelivery({ type: 'done-presented', turnId }), ARTIFACT_DONE_MS)
     return () => window.clearTimeout(timer)
   }, [delivery.phase, delivery.turnId])
 
@@ -343,6 +383,7 @@ export function ConversationScreen({
       summonFinishStarted.current.clear()
       dispatchDelivery({ type: 'reset' })
       setSummonCanAdvance(false)
+      setDoneFlash(false)
       const initialTask: TurnTask = { id: request.id, state: 'working', cue: null, artifactId: null, error: null, cues: [] }
       currentTaskRef.current = initialTask
       setCurrentTask(initialTask)
@@ -353,9 +394,9 @@ export function ConversationScreen({
       setLastResponse(null)
       setPhase((current) => nextPhase(current, 'submit'))
       const shownEvidence = evidence
+      setPresented(presentationLifetime.begin(request.id, shownEvidence))
       if (shownEvidence) {
         setEvidence(null)
-        setPresented((previous) => { releaseEvidence(previous); return shownEvidence })
         if (!settings.sfxMuted) audioEngine.playEvent('evidence_reveal', settings.sfxVolume)
       }
       const layoutPromise = dialogueTextLayout()
@@ -395,6 +436,7 @@ export function ConversationScreen({
           layoutPromise,
         ])
         if (activeRequest.current !== request || request.controller.signal.aborted) return
+        finishEvidence(request.id)
         if (response.task) acceptTask(response.task)
         await request.acknowledgement
         if (activeRequest.current !== request || request.controller.signal.aborted) return
@@ -420,13 +462,16 @@ export function ConversationScreen({
         }
         if (request.acknowledgement) {
           pendingReply.current = { turnId: request.id, lines: replyLines, settle: response.performance.settle, response }
+          if (replySucceeded(response.task, generationError)) setDoneFlash(true)
           if (response.task?.error) dispatchDelivery({ type: 'failed', turnId: request.id, error: response.task.error })
           dispatchDelivery({ type: 'response-buffered', turnId: request.id, withoutArtifact: true })
         } else {
           setLastResponse(response)
+          if (replySucceeded(response.task, generationError)) setDoneFlash(true)
           play(replyLines, response.performance.settle)
         }
       } catch (error) {
+        finishEvidence(request.id)
         if (activeRequest.current !== request) return
         const task: TurnTask = { id: request.id, state: 'failed', cue: null, artifactId: null,
           error: request.cancelRequested || request.controller.signal.aborted ? 'cancelled' : 'request_failed',
@@ -453,6 +498,7 @@ export function ConversationScreen({
           dispatchDelivery({ type: 'response-buffered', turnId: request.id, withoutArtifact: true })
         } else play(errorLines)
       } finally {
+        finishEvidence(request.id)
         if (activeRequest.current === request) activeRequest.current = null
       }
     },
@@ -463,6 +509,8 @@ export function ConversationScreen({
       onTaskChange,
       phase,
       evidence,
+      presentationLifetime,
+      finishEvidence,
       settings.sfxMuted,
       settings.sfxVolume,
       settings.language,
@@ -552,6 +600,7 @@ export function ConversationScreen({
     // The atomic save may already have completed; let that final response finish coherently.
     if (task && (task.state === 'artifact-ready' || task.state === 'idle')) return
     request.controller.abort()
+    finishEvidence(request.id)
   }
 
   const finishAcknowledgement = useCallback(() => {
@@ -595,7 +644,7 @@ export function ConversationScreen({
       if (event.target instanceof HTMLElement && event.target.closest('.dev-panel, input, textarea, button, select')) {
         return
       }
-      if (['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon'].includes(delivery.phase)) return
+      if (['artifact-working', 'artifact-done', 'waiting-for-phone-acknowledgement', 'evidence-summon'].includes(delivery.phase)) return
       if (['Enter', ' ', 'z', 'Z'].includes(event.key)) {
         event.preventDefault()
         advance()
@@ -639,7 +688,10 @@ export function ConversationScreen({
           characterCanvas={animation.resolved?.clip.canvas ?? null}
           characterAnchor={character.anchor}
           characterRender={character.render}
-          onClick={overlay || ['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon'].includes(delivery.phase)
+          effectFrame={effectView.frame}
+          effectCanvas={reactionEffect?.overlay?.canvas ?? null}
+          effectBackdrop={effectView.backdrop}
+          onClick={overlay || ['artifact-working', 'artifact-done', 'waiting-for-phone-acknowledgement', 'evidence-summon'].includes(delivery.phase)
             ? undefined : advance}
         >
           {shown && overlay !== 'court-record' && overlay !== 'conversation-record' && (
@@ -668,8 +720,16 @@ export function ConversationScreen({
           {presented && waiting && <PresentedEvidence evidence={presented} fileIcon={fileIcon} photoIcon={photoIcon} />}
           {exclamation && <ExclamationBubble kind={exclamation.kind}
             image={bubbleFor(exclamations, exclamation.kind, exclamation.japanese)} />}
+          <StatusMagnifier working={statusWorking} done={statusDone} label={t('chat.thinking', { name: characterName })}
+            mode={statusMagnifierMode({ running: waiting && currentTask?.state === 'working', doneFlash,
+              deliveryPhase: delivery.phase, halted: currentTask?.state === 'failed' })} />
+          {musicView && musicImages && overlay === null && delivery.phase === 'idle' && (
+            <ConversationMusicStrip view={musicView} images={musicImages}
+              labels={{ open: t('music.stripOpen'), close: t('music.stripClose'), prev: t('music.stripPrev'),
+                next: t('music.stripNext'), theme: t('music.stripTheme'), list: t('music.stripList'),
+                play: t('music.play'), pause: t('music.pause') }} />
+          )}
           <ArtifactDeliveryOverlay state={delivery}
-            workingIcon={thinkerIcon ? <img src={thinkerIcon.url} width={48} height={48} alt="" /> : undefined}
             phoneIcon={phoneIcon ? <img src={phoneIcon.url} width={48} height={48} alt="" /> : undefined}
             evidenceIcon={fileIcon
               // Native size inside the native frame window (no rescaling of the 64×64 icon).
@@ -681,13 +741,13 @@ export function ConversationScreen({
         </GameScene>
         <div className="conversation-actions">
           <button type="button" disabled={phase !== 'input' || overlay !== null
-            || ['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
+            || ['artifact-working', 'artifact-done', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
             onClick={() => { playMenuSound('menu_open'); setOverlay('talk') }}>{t('chat.talk')}</button>
           <button type="button" disabled={phase !== 'input' || overlay !== null
-            || ['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
+            || ['artifact-working', 'artifact-done', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
             onClick={() => { playMenuSound('menu_open'); setOverlay('court-record') }}>{t('chat.courtRecord')}</button>
           <button type="button" disabled={phase !== 'input' || overlay !== null
-            || ['artifact-working', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
+            || ['artifact-working', 'artifact-done', 'waiting-for-phone-acknowledgement', 'evidence-summon', 'response-release'].includes(delivery.phase)}
             onClick={() => { playMenuSound('menu_open'); setOverlay('conversation-record') }}>{t('chat.record')}</button>
           {/* While a request runs, Cancel takes Present's place (Present is unavailable then), so the
               row never gains a button, wraps, and shrinks the stage to a smaller scale. */}

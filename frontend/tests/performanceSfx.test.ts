@@ -17,7 +17,7 @@ const seg = (over: Record<string, unknown>) => ({
 const body = (segments: unknown[]) => ({ performance: { characterId: 'c', segments, settle: {}, notes: [] } })
 
 test('closed sfx set maps to audio events', () => {
-  assert.equal(SFX_NAMES.length, 8)
+  assert.equal(SFX_NAMES.length, 11)
   assert.equal(sfxEventId('shock'), 'sfx_shock')
 })
 

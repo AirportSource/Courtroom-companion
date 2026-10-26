@@ -38,8 +38,14 @@ Reply ONLY with a JSON object that matches the schema below. No prose outside th
   most replies need 1 or 2 beats. Never split a sentence into several beats.
 - Each beat: "text" (what you say, plain dialogue, no stage directions, no markdown),
   "emotion" (one of the allowed emotions), "intensity" (0.0 = barely, 1.0 = maximum),
-  optional "reaction" (only for a genuinely theatrical beat; use shock, surprise, realization,
-  comic or emphasis when that semantic sound is clearly warranted, otherwise null),
+  optional "reaction" (one of the semantic sounds listed below, e.g. surprise, shock, realization,
+  comic, emphasis, angry, flabbergasted or encouragement, when it meaningfully fits the beat,
+  otherwise null). A realization includes a clear moment of understanding: the user corrects or
+  clarifies something, a missing piece or a useful new detail clicks into place, or you make a
+  deduction; it need not be theatrical. Use at most one realization sound in a reply, for the
+  clearest such moment, and leave routine acknowledgments without a sound unless you genuinely
+  show that understanding. "encouragement" is for cheering the user on; "flabbergasted" for
+  being dumbfounded or exasperated; "angry" for real anger, not mild annoyance,
   optional "gesture" (how you express the emotion physically).
 - "settleEmotion": the emotion you calmly settle into after speaking.
 - Use only the IDs listed below. Never include file names, paths, URLs, code to execute,
@@ -94,7 +100,7 @@ def build_system_prompt(profile: CharacterProfile, language: str = "en") -> str:
         f"Allowed emotions: {', '.join(sorted(profile.emotions))}.",
         f"Available visual reactions: {', '.join(sorted(profile.reactions)) or 'none'}.",
         f"Available semantic reaction sounds: {', '.join(sorted(profile.sfx.reactions)) or 'none'}.",
-        "Use a semantic reaction sound only for a genuinely theatrical moment, not routine emotion.",
+        "Use semantic reaction sounds for meaningful moments, including a clear realization or useful detail clicking into place; they are not reserved for genuinely theatrical moments. Use them for clear meaning, not routine emotion. Choose at most one realization per reply, and leave routine acknowledgments and corrections quiet unless you show that understanding. Do not add sounds just because a topic or keyword appears.",
         f"Allowed gestures: {gestures or 'none'}.",
         "## Reply format",
         CONTRACT_RULES.format(max_beats=profile.director.max_beats_per_reply),

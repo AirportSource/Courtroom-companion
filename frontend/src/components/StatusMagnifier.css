@@ -1,0 +1,35 @@
+/* Stage pixels (256x192). Top-right: presented evidence owns top-left, dialogue the bottom. */
+.status-magnifier {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 16;
+  width: 28px;
+  height: 28px;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.status-magnifier img {
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* Two-frame DS-style bob while working, a one-step pop when the check lands. */
+.status-magnifier--working { animation: status-magnifier-bob 800ms steps(1) infinite; }
+.status-magnifier--done { animation: status-magnifier-pop 120ms steps(2) both; }
+
+@keyframes status-magnifier-bob {
+  0% { transform: none; }
+  50% { transform: translateY(-1px); }
+}
+
+@keyframes status-magnifier-pop {
+  from { transform: translateY(-2px); }
+  to { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-magnifier--working,
+  .status-magnifier--done { animation: none; }
+}

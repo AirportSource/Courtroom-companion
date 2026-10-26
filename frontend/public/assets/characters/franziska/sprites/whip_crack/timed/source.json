@@ -1,0 +1,106 @@
+{
+  "method": "native RGBA frames composed 1:1 onto transparent DS stage; existing originals retained",
+  "nativeFrameIds": [
+    20,
+    21,
+    22,
+    23,
+    24,
+    26,
+    27,
+    28
+  ],
+  "nativeCanvas": [
+    344,
+    133
+  ],
+  "nativeOffsets": [
+    [
+      86,
+      2
+    ],
+    [
+      116,
+      2
+    ],
+    [
+      100,
+      2
+    ],
+    [
+      48,
+      3
+    ],
+    [
+      116,
+      0
+    ],
+    [
+      119,
+      0
+    ],
+    [
+      82,
+      3
+    ],
+    [
+      113,
+      3
+    ]
+  ],
+  "nativeToStageOffset": [
+    -44,
+    59
+  ],
+  "frameDurationsMs": [
+    100,
+    100,
+    100,
+    100,
+    250,
+    200,
+    200,
+    450
+  ],
+  "totalDurationMs": 1500,
+  "timingNote": "Deliberate single-strike timing; supplied 400x240 HD GIF has 20 zero-delay frames and two swipes. No exact source timing is claimed; HD black-background effect is not used.",
+  "inspectedGifSha256": "2cc2704ec76b13817fdcaaf50c51355f890a1ac5ad22483188c110ef1981e23b",
+  "portraitSource": "other assets/evidences/DS _ DSi - Phoenix Wright_ Ace Attorney_ Justice for All - Miscellaneous - Evidence.png",
+  "portraitSourceSha256": "8f32da5bea481d4b7e1c9c0064bd92ab49d5449f13c165f41b4736ead425a983",
+  "portraitCrop": [
+    643,
+    75,
+    707,
+    139
+  ],
+  "selectionSource": "conversation/AA_Franziska_von_Karma_Normal_Forward_1/frame_000.png",
+  "selectionCrop": [
+    78,
+    22,
+    206,
+    192
+  ],
+  "selectionOffset": [
+    21,
+    0
+  ],
+  "audio": {
+    "sourceFiles": [
+      "docs/sfx general/sfx-whip.wav",
+      "docs/sfx general/sfx-whack.wav"
+    ],
+    "sourceSha256": [
+      "1424efe5aaba6a23f1fae575ed71bdeeb2288f94ef7c6200de8130059ae11cb6",
+      "227bb6b3f4bcdf05515b16993be63931b0c3aa58a4cb81d40a1cd07151dfb2cb"
+    ],
+    "sampleRate": 22050,
+    "sourceGains": [
+      1.0,
+      0.9446724113994611
+    ],
+    "whipStartMs": 0,
+    "whackStartMs": 400,
+    "whackStartSample": 8820,
+    "humanListening": false
+  }
+}

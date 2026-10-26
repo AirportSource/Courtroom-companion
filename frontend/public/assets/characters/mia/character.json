@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "mia_fey",
+  "readiness": "ready",
+  "group": "aa1",
   "displayName": "Mia Fey",
   "names": {
     "en": "Mia Fey",

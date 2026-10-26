@@ -2,6 +2,7 @@
 // and of the resolved, ready-to-render data produced by the loader.
 // Logical IDs (emotions, animations, backgrounds) are plain strings: the set of valid
 // values lives in the manifests, never in TypeScript.
+import type { Readiness } from './characterReadiness.ts'
 import type { TaskAcknowledgements } from './taskAcknowledgements.ts'
 
 export type EmotionId = string
@@ -12,6 +13,8 @@ export type CharacterId = string
 export type SoundId = string
 
 export type TalkMode = 'idle' | 'talking'
+/** Domain context, independent of backgrounds and character identity. */
+export type PresentationContext = string
 
 // ---- Raw manifest JSON ----
 
@@ -47,6 +50,20 @@ export interface AnimationManifest {
 
 export interface ReactionManifest extends ClipManifest {
   canvas?: CanvasSize
+  effect?: ReactionEffectManifest
+}
+
+/**
+ * Optional one-shot effect played with a reaction (D-091): a stage overlay animation (full
+ * 256×192 canvas, drawn above the character) and sound cues, all timed from the reaction start.
+ */
+export interface ReactionEffectManifest {
+  overlay?: ClipManifest & { canvas?: CanvasSize }
+  overlayStartMs?: number
+  /** Full-stage colour layer above the character: opaque from the start, then fades out. */
+  backdrop?: { color?: string; fadeStartMs: number; fadeMs: number }
+  /** `event` is an audio.json event id. */
+  cues?: { atMs: number; event: string }[]
 }
 
 export interface EmotionBindingManifest {
@@ -64,6 +81,8 @@ export interface CharacterRender {
 }
 
 export interface CharacterManifest {
+  defaultPresentation?: PresentationContext
+  presentationGroups?: Record<PresentationContext, PresentationGroupManifest>
   schemaVersion: number
   id: CharacterId
   displayName: string
@@ -72,6 +91,10 @@ export interface CharacterManifest {
   anchor?: string
   render?: Partial<CharacterRender>
   voice?: { blip?: string; shout?: string }
+  /** "asset-only" | "partial" | "ready": whether the pack may be listed / chat (see characterReadiness.ts). */
+  readiness?: string
+  /** Optional grouping for menus (e.g. the game the character comes from: "aa1"). */
+  group?: string
   defaultEmotion: EmotionId
   fallbackEmotion: EmotionId
   animations: Record<AnimationId, AnimationManifest>
@@ -82,7 +105,22 @@ export interface CharacterManifest {
   taskAcknowledgements?: TaskAcknowledgements
   /** Optional square portrait (path relative to the pack dir) for Court Record style slots. */
   courtRecordPortrait?: { src: string; width: number; height: number }
+  /** Optional menu thumbnail, relative to the pack directory; otherwise use the default idle. */
+  selectionPreview?: string
+  semanticSounds?: Record<string, string[]>
   unassignedFrames?: string[]
+}
+
+export interface PresentationGroupManifest {
+  animations: Record<AnimationId, AnimationManifest>
+  emotions?: Record<EmotionId, EmotionBindingManifest>
+  reactions?: Record<ReactionId, ReactionManifest>
+  /** false = only this group's own reactions; the shared (courtroom) ones are not inherited. */
+  inheritReactions?: boolean
+  render?: Partial<CharacterRender>
+  waiting?: { emotion?: EmotionId; animation?: AnimationId }
+  defaultEmotion?: EmotionId
+  fallbackEmotion?: EmotionId
 }
 
 export interface BackgroundEntryManifest {
@@ -91,6 +129,10 @@ export interface BackgroundEntryManifest {
   height: number
   description?: string
   notes?: string
+  /** Optional layer drawn in front of the character (same size as the plate), e.g. a counter. */
+  foreground?: string
+  /** Optional extra downward shift of characters in this room (stage pixels), e.g. seated. */
+  characterOffsetY?: number
 }
 
 export interface BackgroundsManifest {
@@ -136,6 +178,16 @@ export interface AnimationClip {
   aligned: boolean
   /** Random extra 0..N ms on the first frame of each loop (0 = none). */
   holdJitterMs: number
+  /** Reactions only: overlay + sound cues played with the clip. */
+  effect?: ReactionEffect
+}
+
+export interface ReactionEffect {
+  overlay: AnimationClip | null
+  overlayStartMs: number
+  backdrop: { color: string; fadeStartMs: number; fadeMs: number } | null
+  /** Sorted by time. */
+  cues: { atMs: number; event: string }[]
 }
 
 export interface CharacterAnimation {
@@ -150,6 +202,8 @@ export interface CharacterAnchor {
 }
 
 export interface LoadedCharacter {
+  defaultPresentation?: PresentationContext
+  presentationGroups?: Record<PresentationContext, LoadedPresentationGroup>
   id: CharacterId
   displayName: string
   names: Record<string, string>
@@ -166,8 +220,16 @@ export interface LoadedCharacter {
   taskAcknowledgements?: TaskAcknowledgements
   /** Resolved Court Record portrait, or null when absent/invalid. */
   courtRecordPortrait?: UiImage | null
+  /** Character-specific candidates per semantic sound (character.json `semanticSounds`, D-092). */
+  semanticSounds?: Record<string, string[]>
   /** Non-fatal problems found while loading (missing frames, bad references...). */
   warnings: string[]
+}
+
+export type LoadedPresentationGroup = Pick<LoadedCharacter,
+  'animations' | 'emotions' | 'reactions' | 'render' | 'waiting' | 'defaultEmotion' | 'fallbackEmotion'> & {
+  /** false = the shared character-level reactions (courtroom side views) are not available here. */
+  inheritReactions?: boolean
 }
 
 /** `@font-face` metric descriptors, as percentages (e.g. "87.5%"). */
@@ -211,6 +273,9 @@ export interface CharacterSummary {
   manifestUrl: string
   /** First idle frame of the default emotion, if resolvable. */
   previewUrl: string | null
+  /** Pack completeness; menus list only "ready" packs (plus "partial" in development). */
+  readiness: Readiness
+  group?: string
 }
 
 export interface Sound {
@@ -227,4 +292,8 @@ export interface Background {
   height: number
   description: string
   notes?: string
+  /** Layer in front of the character, placed exactly like the plate; null = none (D-096). */
+  foregroundUrl?: string | null
+  /** Extra downward shift applied to characters in this room. */
+  characterOffsetY?: number
 }

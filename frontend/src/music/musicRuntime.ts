@@ -23,7 +23,10 @@ export type MusicRequest = { kind: 'off' } | { kind: MusicSourceKind; trackId: s
  * `audition` (menu only) means the player pressed Play on a track in the music dock, so the
  * selected source plays even outside a conversation.
  */
-export type MusicContext = { scene: 'menu'; audition?: boolean } | { scene: 'conversation'; characterId: string }
+export type MusicContext =
+  | { scene: 'menu'; audition?: boolean }
+  /** `trackOverride`: live in-conversation choice of a built-in track (conversationMusic.ts); wins over Settings and the theme. */
+  | { scene: 'conversation'; characterId: string; trackOverride?: string | null }
 
 /** Soundtrack profile that menu screens may play (absent today: menus are silent). */
 export const MENU_PROFILE = 'menu'
@@ -47,7 +50,8 @@ export function musicRequestFor(
   }
   switch (settings.musicSource) {
     case 'original': {
-      const chosen = settings.originalTrackId
+      const override = context.scene === 'conversation' ? context.trackOverride : null
+      const chosen = override && manifest?.tracks[override]?.src ? override : settings.originalTrackId
       const valid = manifest && chosen && manifest.tracks[chosen]?.src ? chosen : null
       const profile = context.scene === 'conversation' && context.characterId ? context.characterId : null
       return { kind: 'original', trackId: valid ?? (manifest ? resolveProfileTrack(manifest, profile) : null) }

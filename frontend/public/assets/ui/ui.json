@@ -81,6 +81,61 @@
       "src": "court-record/evidence_frame.png",
       "width": 70,
       "height": 70
+    },
+    "status_magnifier_working": {
+      "src": "status/magnifier_working.png",
+      "width": 28,
+      "height": 28
+    },
+    "status_magnifier_done": {
+      "src": "status/magnifier_done.png",
+      "width": 28,
+      "height": 28
+    },
+    "music_player_play": {
+      "src": "music-player/play.png",
+      "width": 17,
+      "height": 17
+    },
+    "music_player_play_hot": {
+      "src": "music-player/play_hot.png",
+      "width": 17,
+      "height": 17
+    },
+    "music_player_pause": {
+      "src": "music-player/pause.png",
+      "width": 17,
+      "height": 17
+    },
+    "music_player_pause_hot": {
+      "src": "music-player/pause_hot.png",
+      "width": 17,
+      "height": 17
+    },
+    "music_player_next": {
+      "src": "music-player/next.png",
+      "width": 17,
+      "height": 17
+    },
+    "music_player_next_hot": {
+      "src": "music-player/next_hot.png",
+      "width": 17,
+      "height": 17
+    },
+    "music_player_prev": {
+      "src": "music-player/prev.png",
+      "width": 17,
+      "height": 17
+    },
+    "music_player_prev_hot": {
+      "src": "music-player/prev_hot.png",
+      "width": 17,
+      "height": 17
+    },
+    "music_player_note": {
+      "src": "music-player/note.png",
+      "width": 14,
+      "height": 20
     }
   }
 }

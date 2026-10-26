@@ -1,0 +1,516 @@
+{
+  "defendant_lobby_so_it_begins_again": {
+    "duration": 89.0,
+    "reason": "best candidate 34.23-72.64 s fails: coverage 0.10 < 0.7; envelope identity 0.909 < 0.92"
+  },
+  "justice_for_all_court_is_now_in_session": {
+    "duration": 110.0,
+    "best": {
+      "start": 767340,
+      "end": 2884751,
+      "coverage": 0.9565,
+      "envelope": 0.9651,
+      "seam": 0.9924,
+      "windows": 69,
+      "confidence": 0.9162,
+      "loopSeconds": 48.0139,
+      "passes": true,
+      "preference": 0.9162,
+      "lagFrames": 1034,
+      "runSeconds": 56.7496,
+      "frameSimilarity": 0.9861
+    }
+  },
+  "cross_examination_moderato_2002": {
+    "duration": 88.0,
+    "reason": "best candidate 5.20-44.40 s fails: coverage 0.06 < 0.7; envelope identity 0.918 < 0.92"
+  },
+  "magic_and_tricks": {
+    "duration": 119.0,
+    "best": {
+      "start": 801246,
+      "end": 3221244,
+      "coverage": 0.9722,
+      "envelope": 0.9639,
+      "seam": 0.9985,
+      "windows": 72,
+      "confidence": 0.9357,
+      "loopSeconds": 54.8752,
+      "passes": true,
+      "preference": 0.9357,
+      "lagFrames": 1182,
+      "runSeconds": 31.0683,
+      "frameSimilarity": 0.9027
+    }
+  },
+  "objection_2002": {
+    "duration": 90.0,
+    "best": {
+      "start": 1481150,
+      "end": 2892759,
+      "coverage": 1.0,
+      "envelope": 0.9864,
+      "seam": 1.0,
+      "windows": 29,
+      "confidence": 0.9864,
+      "loopSeconds": 32.0093,
+      "passes": true,
+      "preference": 0.9569,
+      "lagFrames": 689,
+      "runSeconds": 36.8733,
+      "frameSimilarity": 0.9142
+    }
+  },
+  "cross_examination_allegro_2002": {
+    "duration": 99.0,
+    "reason": "best candidate 0.00-44.59 s fails: coverage 0.00 < 0.7; envelope identity 0.883 < 0.92"
+  },
+  "pursuit_confront_the_culprit": {
+    "duration": 80.0,
+    "reason": "best candidate 8.26-40.27 s fails: coverage 0.33 < 0.7; seam correlation 0.940 < 0.95"
+  },
+  "the_truth_revealed_2002": {
+    "duration": 100.0,
+    "best": {
+      "start": 883312,
+      "end": 2765457,
+      "coverage": 1.0,
+      "envelope": 0.9773,
+      "seam": 0.9986,
+      "windows": 54,
+      "confidence": 0.976,
+      "loopSeconds": 42.679,
+      "passes": true,
+      "preference": 0.976,
+      "lagFrames": 919,
+      "runSeconds": 48.5761,
+      "frameSimilarity": 0.9773
+    }
+  },
+  "pursuit_confront_the_culprit_variation": {
+    "duration": 75.0,
+    "reason": "best candidate 1.20-33.21 s fails: coverage 0.48 < 0.7; seam correlation 0.947 < 0.95"
+  },
+  "psyche_locks": {
+    "duration": 80.0,
+    "reason": "best candidate 21.62-50.90 s fails: coverage 0.00 < 0.7; envelope identity 0.732 < 0.92; seam correlation 0.475 < 0.95"
+  },
+  "initial_investigation_2002": {
+    "duration": 86.0,
+    "best": {
+      "start": 22050,
+      "end": 1716025,
+      "coverage": 1.0,
+      "envelope": 0.9846,
+      "seam": 0.9984,
+      "windows": 74,
+      "confidence": 0.983,
+      "loopSeconds": 38.4121,
+      "passes": true,
+      "preference": 0.9771,
+      "lagFrames": 827,
+      "runSeconds": 43.0962,
+      "frameSimilarity": 0.9662
+    }
+  },
+  "maya_fey_turnabout_sisters_2002": {
+    "duration": 111.0,
+    "reason": "best candidate 41.87-92.65 s fails: coverage 0.25 < 0.7"
+  },
+  "detention_center_the_security_cameras_elegy": {
+    "duration": 128.0,
+    "best": {
+      "start": 97020,
+      "end": 2708633,
+      "coverage": 0.8468,
+      "envelope": 0.97,
+      "seam": 0.9958,
+      "windows": 111,
+      "confidence": 0.818,
+      "loopSeconds": 59.2202,
+      "passes": true,
+      "preference": 0.818,
+      "lagFrames": 1275,
+      "runSeconds": 34.6442,
+      "frameSimilarity": 0.9722
+    }
+  },
+  "kurain_village": {
+    "duration": 105.0,
+    "reason": "best candidate 44.95-90.38 s fails: seam correlation 0.782 < 0.95"
+  },
+  "reminiscences_fire_licked_scars": {
+    "duration": 147.0,
+    "reason": "best candidate 0.00-68.61 s fails: coverage 0.00 < 0.7; envelope identity 0.686 < 0.92; seam correlation 0.813 < 0.95"
+  },
+  "eccentrics": {
+    "duration": 100.0,
+    "reason": "best candidate 66.69-77.36 s fails: seam correlation 0.936 < 0.95"
+  },
+  "berry_big_circus": {
+    "duration": 90.0,
+    "reason": "best candidate 23.80-63.88 s fails: coverage 0.52 < 0.7"
+  },
+  "more_simple_folk": {
+    "duration": 76.0,
+    "reason": "best candidate 10.60-43.71 s fails: coverage 0.53 < 0.7"
+  },
+  "reminiscences_pure_pain": {
+    "duration": 149.0,
+    "reason": "best candidate 12.80-110.22 s fails: coverage 0.18 < 0.7; envelope identity 0.606 < 0.92; seam correlation 0.773 < 0.95"
+  },
+  "shelly_de_killer_a_deadly_gentlemans_delight": {
+    "duration": 89.0,
+    "best": {
+      "start": 61740,
+      "end": 1809707,
+      "coverage": 0.9867,
+      "envelope": 0.978,
+      "seam": 0.9962,
+      "windows": 75,
+      "confidence": 0.9613,
+      "loopSeconds": 39.6364,
+      "passes": true,
+      "preference": 0.96,
+      "lagFrames": 854,
+      "runSeconds": 20.6193,
+      "frameSimilarity": 0.9392
+    }
+  },
+  "pearl_fey_with_pearly": {
+    "duration": 70.0,
+    "reason": "best candidate 8.40-37.55 s fails: coverage 0.20 < 0.7; envelope identity 0.918 < 0.92"
+  },
+  "further_investigation_2002": {
+    "duration": 101.0,
+    "reason": "best candidate 2.30-48.23 s fails: coverage 0.43 < 0.7"
+  },
+  "triumphant_return_miles_edgeworth": {
+    "duration": 86.0,
+    "best": {
+      "start": 1746954,
+      "end": 3219905,
+      "coverage": 1.0,
+      "envelope": 0.9691,
+      "seam": 0.9504,
+      "windows": 4,
+      "confidence": 0.9211,
+      "loopSeconds": 33.4002,
+      "passes": true,
+      "preference": 0.8983,
+      "lagFrames": 719,
+      "runSeconds": 21.1302,
+      "frameSimilarity": 0.9351
+    }
+  },
+  "hotline_of_fate": {
+    "duration": 48.0,
+    "reason": "best candidate 15.39-34.60 s fails: coverage 0.00 < 0.7; envelope identity 0.874 < 0.92; seam correlation 0.496 < 0.95"
+  },
+  "heart_of_the_investigation_2002": {
+    "duration": 110.0,
+    "reason": "best candidate 5.03-53.04 s fails: coverage 0.24 < 0.7; envelope identity 0.877 < 0.92"
+  },
+  "reminiscences_ballad_of_the_steel_samurai": {
+    "duration": 131.0,
+    "best": {
+      "start": 17640,
+      "end": 2691058,
+      "coverage": 0.8667,
+      "envelope": 0.9709,
+      "seam": 0.9925,
+      "windows": 120,
+      "confidence": 0.8351,
+      "loopSeconds": 60.6217,
+      "passes": true,
+      "preference": 0.8351,
+      "lagFrames": 1305,
+      "runSeconds": 66.7341,
+      "frameSimilarity": 0.962
+    }
+  },
+  "triumphant_return_franziska_von_karma": {
+    "duration": 86.0,
+    "reason": "best candidate 9.03-51.15 s fails: coverage 0.15 < 0.7; envelope identity 0.818 < 0.92; seam correlation 0.914 < 0.95"
+  },
+  "one_prosecutors_musings_until_we_meet_again": {
+    "duration": 56.49414965986394,
+    "reason": "no repeating section of at least 8 s found (no candidate lag)"
+  },
+  "defendant_lobby_so_it_will_always_begin": {
+    "duration": 107.00562358276645,
+    "best": {
+      "start": 552810,
+      "end": 2505619,
+      "coverage": 0.8701,
+      "envelope": 0.9642,
+      "seam": 0.9857,
+      "windows": 77,
+      "confidence": 0.8269,
+      "loopSeconds": 44.2814,
+      "passes": true,
+      "preference": 0.8269,
+      "lagFrames": 953,
+      "runSeconds": 43.1891,
+      "frameSimilarity": 0.8994
+    }
+  },
+  "trials_and_tribulations_court_is_now_in_session": {
+    "duration": 138.0073469387755,
+    "best": {
+      "start": 2274748,
+      "end": 5091601,
+      "coverage": 0.7391,
+      "envelope": 0.9408,
+      "seam": 0.957,
+      "windows": 23,
+      "confidence": 0.6655,
+      "loopSeconds": 63.8742,
+      "passes": true,
+      "preference": 0.6655,
+      "lagFrames": 1375,
+      "runSeconds": 14.2106,
+      "frameSimilarity": 0.9278
+    }
+  },
+  "cross_examination_moderato_2004": {
+    "duration": 201.00514739229024,
+    "reason": "best candidate 0.10-95.81 s fails: coverage 0.46 < 0.7; envelope identity 0.898 < 0.92"
+  },
+  "objection_2004": {
+    "duration": 119.00857142857143,
+    "best": {
+      "start": 1107800,
+      "end": 3496767,
+      "coverage": 1.0,
+      "envelope": 0.9857,
+      "seam": 0.9994,
+      "windows": 55,
+      "confidence": 0.9851,
+      "loopSeconds": 54.1716,
+      "passes": true,
+      "preference": 0.9851,
+      "lagFrames": 1166,
+      "runSeconds": 13.6533,
+      "frameSimilarity": 0.8746
+    }
+  },
+  "cross_examination_allegro_2004": {
+    "duration": 158.00049886621315,
+    "best": {
+      "start": 1247012,
+      "end": 4513870,
+      "coverage": 0.7912,
+      "envelope": 0.9545,
+      "seam": 0.9988,
+      "windows": 91,
+      "confidence": 0.7543,
+      "loopSeconds": 74.0784,
+      "passes": true,
+      "preference": 0.7543,
+      "lagFrames": 1595,
+      "runSeconds": 56.7031,
+      "frameSimilarity": 0.945
+    }
+  },
+  "pursuit_catch_the_culprit": {
+    "duration": 124.00684807256236,
+    "reason": "best candidate 5.04-58.72 s fails: coverage 0.00 < 0.7; envelope identity 0.911 < 0.92; seam correlation 0.503 < 0.95"
+  },
+  "the_truth_revealed_2004": {
+    "duration": 124.00684807256236,
+    "reason": "best candidate 3.90-60.75 s fails: coverage 0.42 < 0.7"
+  },
+  "pursuit_catch_the_culprit_variation": {
+    "duration": 118.00539682539683,
+    "reason": "best candidate 0.00-53.69 s fails: coverage 0.00 < 0.7; envelope identity 0.858 < 0.92; seam correlation 0.160 < 0.95"
+  },
+  "dahlia_hawthorne_the_visage_of_what_once_was": {
+    "duration": 149.00709750566892,
+    "reason": "best candidate 24.80-94.40 s fails: coverage 0.36 < 0.7"
+  },
+  "godot_the_fragrance_of_darkness_that_is_coffee": {
+    "duration": 147.00074829931972,
+    "reason": "best candidate 1.88-69.75 s fails: coverage 0.00 < 0.7; envelope identity 0.502 < 0.92"
+  },
+  "initial_investigation_2004": {
+    "duration": 119.00857142857143,
+    "reason": "best candidate 20.70-75.07 s fails: coverage 0.59 < 0.7"
+  },
+  "lordly_tailor": {
+    "duration": 133.00024943310657,
+    "best": {
+      "start": 1934972,
+      "end": 4645832,
+      "coverage": 1.0,
+      "envelope": 0.988,
+      "seam": 0.9973,
+      "windows": 29,
+      "confidence": 0.9854,
+      "loopSeconds": 61.4707,
+      "passes": true,
+      "preference": 0.9854,
+      "lagFrames": 1324,
+      "runSeconds": 29.8609,
+      "frameSimilarity": 0.9437
+    }
+  },
+  "detention_center_the_prisoners_elegy": {
+    "duration": 132.00587301587302,
+    "reason": "best candidate 24.20-85.32 s fails: coverage 0.38 < 0.7"
+  },
+  "mask_demasque_please_listen_to_meeeee": {
+    "duration": 98.00342403628117,
+    "reason": "best candidate 24.99-66.26 s fails: seam correlation 0.873 < 0.95"
+  },
+  "luke_atmey_look_at_me": {
+    "duration": 102.00734693877551,
+    "best": {
+      "start": 1027342,
+      "end": 2797080,
+      "coverage": 1.0,
+      "envelope": 0.9694,
+      "seam": 0.9977,
+      "windows": 55,
+      "confidence": 0.9672,
+      "loopSeconds": 40.1301,
+      "passes": true,
+      "preference": 0.9672,
+      "lagFrames": 864,
+      "runSeconds": 46.4399,
+      "frameSimilarity": 0.9899
+    }
+  },
+  "larry_butz_when_something_smells_its_usually_me": {
+    "duration": 116.0078231292517,
+    "best": {
+      "start": 126170,
+      "end": 2442786,
+      "coverage": 1.0,
+      "envelope": 0.9778,
+      "seam": 0.9995,
+      "windows": 101,
+      "confidence": 0.9773,
+      "loopSeconds": 52.531,
+      "passes": true,
+      "preference": 0.9773,
+      "lagFrames": 1131,
+      "runSeconds": 57.957,
+      "frameSimilarity": 0.9698
+    }
+  },
+  "tres_bien": {
+    "duration": 113.00709750566894,
+    "best": {
+      "start": 229320,
+      "end": 2352847,
+      "coverage": 1.0,
+      "envelope": 0.9778,
+      "seam": 0.999,
+      "windows": 99,
+      "confidence": 0.9769,
+      "loopSeconds": 48.1525,
+      "passes": true,
+      "preference": 0.9769,
+      "lagFrames": 1037,
+      "runSeconds": 63.2976,
+      "frameSimilarity": 0.9658
+    }
+  },
+  "victor_kudo_martial_anthem_of_misery": {
+    "duration": 107.00562358276645,
+    "best": {
+      "start": 595350,
+      "end": 2607124,
+      "coverage": 0.9333,
+      "envelope": 0.975,
+      "seam": 0.999,
+      "windows": 75,
+      "confidence": 0.9091,
+      "loopSeconds": 45.6185,
+      "passes": true,
+      "preference": 0.9091,
+      "lagFrames": 982,
+      "runSeconds": 58.1428,
+      "frameSimilarity": 0.9495
+    }
+  },
+  "furio_tigre_swingin_tiger": {
+    "duration": 104.00489795918368,
+    "best": {
+      "start": 254266,
+      "end": 2200832,
+      "coverage": 1.0,
+      "envelope": 0.9993,
+      "seam": 0.9975,
+      "windows": 84,
+      "confidence": 0.9968,
+      "loopSeconds": 44.1398,
+      "passes": true,
+      "preference": 0.9968,
+      "lagFrames": 950,
+      "runSeconds": 41.4244,
+      "frameSimilarity": 0.8927
+    }
+  },
+  "reminiscences_violetta_vitriol": {
+    "duration": 168.00587301587302,
+    "reason": "best candidate 0.20-79.14 s fails: coverage 0.17 < 0.7; envelope identity 0.766 < 0.92"
+  },
+  "turnabout_beginnings": {
+    "duration": 50.00049886621315,
+    "reason": "no repeating section of at least 8 s found (no candidate lag)"
+  },
+  "reminiscences_the_view_from_dusky_bridge": {
+    "duration": 226.00539682539682,
+    "best": {
+      "start": 4410,
+      "end": 4771515,
+      "coverage": 0.8618,
+      "envelope": 0.9641,
+      "seam": 0.997,
+      "windows": 217,
+      "confidence": 0.8283,
+      "loopSeconds": 108.0976,
+      "passes": true,
+      "preference": 0.8283,
+      "lagFrames": 2328,
+      "runSeconds": 112.3381,
+      "frameSimilarity": 0.9736
+    }
+  },
+  "hazakura_temple": {
+    "duration": 177.00807256235828,
+    "reason": "best candidate 9.96-88.77 s fails: coverage 0.64 < 0.7"
+  },
+  "elise_deauxnim_a_gentle_melody": {
+    "duration": 159.00367346938776,
+    "reason": "best candidate 22.70-97.05 s fails: coverage 0.08 < 0.7; envelope identity 0.910 < 0.92; seam correlation 0.915 < 0.95"
+  },
+  "further_investigation_2004": {
+    "duration": 138.0073469387755,
+    "best": {
+      "start": 175800,
+      "end": 5272402,
+      "coverage": 0.9375,
+      "envelope": 0.9659,
+      "seam": 0.9946,
+      "windows": 16,
+      "confidence": 0.9006,
+      "loopSeconds": 115.5692,
+      "passes": true,
+      "preference": 0.9006,
+      "lagFrames": 2489,
+      "runSeconds": 7.9877,
+      "frameSimilarity": 0.8441
+    }
+  },
+  "reminiscences_the_bitterness_of_truth": {
+    "duration": 153.00222222222223,
+    "reason": "best candidate 0.86-71.23 s fails: coverage 0.00 < 0.7; envelope identity 0.650 < 0.92; seam correlation 0.057 < 0.95"
+  },
+  "pursuit_corner_the_culprit_2004": {
+    "duration": 94.00832199546485,
+    "reason": "best candidate 25.38-63.90 s fails: coverage 0.00 < 0.7; envelope identity 0.914 < 0.92"
+  }
+}

@@ -697,6 +697,29 @@ test('pause stops the node and resume restarts at the remembered position withou
   assert.equal(context.suspendCalls, 0)
 })
 
+test('dev audition: seek restarts the node at the requested position and reports the loop', async () => {
+  const { source, context } = webSource({
+    track: makeTrack({ loop: { region: { startSample: 44100 * 2, endSample: 44100 * 12, sampleRate: 44100 }, confidence: null, provenance: 'curated-analysis' } }),
+  })
+  assert.equal(source.getPlaybackInfo?.(), null) // nothing playing yet
+  await source.start('t', startOptions())
+  assert.deepEqual(source.getPlaybackInfo?.(), { position: 0, duration: 20, loop: { start: 2, end: 12 } })
+  source.seek?.(12 - 5) // 5 s before the loop end
+  assert.equal(context.sources.length, 2)
+  assert.equal(context.sources[0].stopped, true)
+  assert.deepEqual(context.sources[1].startedWith, [0, 7])
+  context.currentTime = 6 // 7 + 6 = 13 -> wrapped into the loop: 2 + (13 - 2) % 10 = 3
+  assert.equal(source.getPlaybackInfo?.()?.position, 3)
+  source.seek?.(1000) // clamped inside the buffer
+  assert.ok((context.sources[2].startedWith?.[1] ?? 0) < 20)
+  source.pause()
+  source.seek?.(8) // paused: resume continues from the new position
+  source.resume()
+  assert.equal(context.sources[context.sources.length - 1].startedWith?.[1], 8)
+  source.seek?.(Number.NaN) // ignored
+  assert.equal(context.sources.length, 4)
+})
+
 test('stop releases the chain; the decoded buffer is cached across starts', async () => {
   const { source, context, fetchCount } = webSource()
   await source.start('t', startOptions())
@@ -745,8 +768,8 @@ test('validateSoundtrackManifest reports structural problems', () => {
   assert.match(errors, /profile default: unknown track missing/)
 })
 
-test('curated categories: 16 bgm, 9 contextual, 9 excluded', () => {
-  const byCategory = (c: string) => Object.values(soundtrack.tracks).filter((t) => t.category === c)
+test('curated categories: PWAA OST 16 bgm / 9 contextual / 9 excluded; Trilogy discs 2+3 add 40 / 19 / 10', () => {
+  const byCategory = (c: string, disc?: number) => Object.values(soundtrack.tracks).filter((t) => t.category === c && t.disc === disc)
   assert.equal(byCategory('bgm').length, 16)
   assert.equal(byCategory('contextual').length, 9)
   assert.equal(byCategory('excluded').length, 9)
@@ -754,14 +777,18 @@ test('curated categories: 16 bgm, 9 contextual, 9 excluded', () => {
   assert.deepEqual(numbers('bgm'), [2, 3, 4, 5, 7, 10, 13, 14, 15, 16, 18, 19, 23, 30, 32, 33])
   assert.deepEqual(numbers('contextual'), [6, 8, 9, 11, 17, 20, 22, 24, 29])
   assert.deepEqual(numbers('excluded'), [1, 12, 21, 25, 26, 27, 28, 31, 34])
+  assert.equal(byCategory('bgm', 2).length + byCategory('bgm', 3).length, 40)
+  assert.equal(byCategory('contextual', 2).length + byCategory('contextual', 3).length, 19)
+  assert.equal(byCategory('excluded', 2).length + byCategory('excluded', 3).length, 10)
+  assert.equal(Object.values(soundtrack.tracks).filter((t) => t.src).length, 84)
 })
 
 test('bgm pool excludes contextual and excluded tracks', () => {
   const pool = bgmPool(soundtrack)
-  assert.equal(pool.length, 16)
+  assert.equal(pool.length, 56)
   for (const id of pool) assert.equal(soundtrack.tracks[id].category, 'bgm')
   const contextual = contextualPool(soundtrack)
-  assert.equal(contextual.length, 9)
+  assert.equal(contextual.length, 28)
   for (const id of contextual) assert.ok(!pool.includes(id))
   for (const [id, track] of Object.entries(soundtrack.tracks)) {
     if (track.category === 'excluded') {
@@ -771,30 +798,25 @@ test('bgm pool excludes contextual and excluded tracks', () => {
   }
 })
 
-test('every runtime src exists on disk with a clean lowercase name', () => {
-  // The OST is local-only (scripts/install_ost.py): without any installed track, only names are checked.
-  const installed = Object.values(soundtrack.tracks).some((track) => track.src && existsSync(new URL(track.src, musicRoot)))
+test('every runtime src has a clean lowercase name and exists on disk once its source is installed', () => {
+  // The OST is local-only (scripts/install_ost.py): a source group that is not installed is only name-checked.
+  const root = (track: { disc?: number }) => String(track.disc ?? 1)
+  const installedGroups = new Set(
+    Object.values(soundtrack.tracks).filter((t) => t.src && existsSync(new URL(t.src, musicRoot))).map(root),
+  )
   for (const [id, track] of Object.entries(soundtrack.tracks)) {
     if (!track.src) continue
-    if (installed) assert.ok(existsSync(new URL(track.src, musicRoot)), `${id}: ${track.src} missing`)
-    assert.match(track.src, /^original\/[0-9]{2}-[a-z0-9-]+\.mp3$/)
+    if (installedGroups.has(root(track))) assert.ok(existsSync(new URL(track.src, musicRoot)), `${id}: ${track.src} missing`)
+    assert.match(track.src, /^original\/(?:(?:d[23]-)?[0-9]{2}-[a-z0-9-]+\.mp3|ds-[a-z0-9-]+\.(?:mp3|flac))$/)
   }
 })
 
-// Curated loops come only from documented OST analysis (docs/MUSIC.md); tracks that failed the
-// acceptance thresholds stay null rather than receiving an invented loop.
-const CURATED_LOOPS = [
-  'court_is_now_in_session', 'pursuit_corner_the_culprit', 'the_truth_revealed_2001', 'initial_investigation_2001',
-  'dick_gumshoe_thats_detective_gumshoe_pal', 'reminiscences_mayas_sorrow', 'reminiscences_the_dl_6_incident',
-  'reminiscences_the_sl_9_incident', 'ema_skye_turnabout_sisters_2005', 'jake_marshall_renegade_sheriff',
-  'cross_examination_moderato_2001', 'maya_fey_turnabout_sisters_2001', 'detention_center_the_security_guards_elegy',
-  'marvin_grossberg_reckonings_and_regrets_of_an_aged_attorney', 'reminiscences_the_class_trial',
-]
-
-test('loop metadata is not invented: only analysed tracks carry honest curated loops', () => {
+// Loops come only from documented offline analysis (docs/MUSIC.md, scripts/analyse_loops.py); tracks that
+// failed the acceptance thresholds stay null (with a reason) rather than receiving an invented loop.
+test('loop metadata is not invented: loops are curated-analysis, measured_not_auditioned, never DS loop points', () => {
   for (const [id, track] of Object.entries(soundtrack.tracks)) {
-    if (!CURATED_LOOPS.includes(id)) {
-      assert.equal(track.loop, null, `${id} has no validated loop`)
+    if (track.loop === null) {
+      if (track.src) assert.ok(track.loopReason, `${id}: no loop needs a reason`)
       continue
     }
     assert.ok(track.src, `${id}: loops only on runtime tracks`)
@@ -802,14 +824,11 @@ test('loop metadata is not invented: only analysed tracks carry honest curated l
     const meta = parseLoopMetadata(raw)
     assert.ok(meta.region, `${id}: valid region`)
     assert.equal(meta.provenance, 'curated-analysis')
+    assert.equal(meta.status, 'measured_not_auditioned')
     assert.equal(meta.region.sampleRate, 44100)
     assert.ok(meta.confidence !== null && meta.confidence > 0 && meta.confidence <= 1)
     assert.match(String(raw.note), /Not an original DS loop point/)
   }
-  // Maya's loop is metric-validated, not verified by listening or claimed as a DS loop point.
-  const mayaLoop = parseLoopMetadata(soundtrack.tracks.maya_fey_turnabout_sisters_2001.loop)
-  assert.ok(mayaLoop.region)
-  assert.match(mayaLoop.note ?? '', /Not an original DS loop point; not verified by listening/)
 })
 
 test('profile resolution lives in data and falls back to the default profile', () => {

@@ -7,17 +7,43 @@ import type { MusicTrack } from './types.ts'
 
 export type SoundtrackCategory = 'bgm' | 'contextual' | 'excluded'
 
+/** Which game of the Trilogy a track belongs to (display grouping only). */
+export type SoundtrackGame = 'aa1' | 'jfa' | 'tnt'
+
+export const SOUNDTRACK_GAMES: readonly SoundtrackGame[] = ['aa1', 'jfa', 'tnt']
+
+export const GAME_LABELS: Record<SoundtrackGame, string> = {
+  aa1: 'Ace Attorney',
+  jfa: 'Justice for All',
+  tnt: 'Trials and Tribulations',
+}
+
 export interface SoundtrackTrackEntry {
+  /** Track number within its source: the PWAA OST for entries without `disc`, otherwise within the Trilogy disc. */
   number: number
+  /** Original expansion catalogue disc (2 or 3), retained as identity metadata after DS migration. */
+  disc?: number
+  game?: SoundtrackGame
   title: string
+  /** Short display name for players (falls back to `title`). */
+  shortTitle?: string
   /** Path relative to assets/music/. Absent for excluded tracks (no runtime file). */
   src?: string
   category: SoundtrackCategory
   tags: string[]
+  /** Linear per-track gain (offline loudness matching toward -15 LUFS, see docs/MUSIC.md). */
   gain: number
+  /** Integrated loudness measured offline (informational; `gain` is derived from it). */
+  loudnessLufs?: number
   contextual: boolean
   /** Raw loop metadata (parsed leniently by parseLoopMetadata); null = no known loop. */
   loop: unknown
+  /** Why a looping candidate has no loop (offline analysis result); informational. */
+  loopReason?: string
+  /** Physical audio provenance, independent of logical track ID/catalogue numbering. */
+  audioProvenance?: 'original-ds-mp3' | 'original-ds-ncsf123-lossless'
+  /** Whole-file/unmeasured state also exists when there is no loop object. */
+  loopStatus?: 'unmeasured' | 'measured_not_auditioned' | 'whole_file'
 }
 
 export interface SoundtrackProfile {
@@ -53,6 +79,11 @@ export function validateSoundtrackManifest(json: unknown): string[] {
       continue
     }
     if (!Number.isInteger(raw.number)) errors.push(`${id}: number must be an integer`)
+    if (raw.disc !== undefined && !(Number.isInteger(raw.disc) && (raw.disc as number) >= 1 && (raw.disc as number) <= 9)) errors.push(`${id}: disc must be a small positive integer`)
+    if (raw.game !== undefined && !SOUNDTRACK_GAMES.some((g) => g === raw.game)) errors.push(`${id}: game must be one of ${SOUNDTRACK_GAMES.join(', ')}`)
+    if (raw.shortTitle !== undefined && (typeof raw.shortTitle !== 'string' || raw.shortTitle === '')) errors.push(`${id}: shortTitle must be a non-empty string`)
+    if (raw.loudnessLufs !== undefined && typeof raw.loudnessLufs !== 'number') errors.push(`${id}: loudnessLufs must be a number`)
+    if (raw.loopReason !== undefined && typeof raw.loopReason !== 'string') errors.push(`${id}: loopReason must be a string`)
     if (typeof raw.title !== 'string' || raw.title === '') errors.push(`${id}: title is required`)
     const category = CATEGORIES.find((c) => c === raw.category)
     if (!category) errors.push(`${id}: category must be one of ${CATEGORIES.join(', ')}`)
@@ -114,6 +145,25 @@ export function contextualPool(manifest: SoundtrackManifest): string[] {
   return Object.entries(manifest.tracks)
     .filter(([, t]) => t.category === 'contextual' && t.src !== undefined)
     .map(([id]) => id)
+}
+
+/** Ids a player may select: the bgm pool, then contextual cues, in manifest (disc) order. Excluded tracks never. */
+export function selectablePool(manifest: SoundtrackManifest): string[] {
+  return Object.entries(manifest.tracks)
+    .filter(([, t]) => (t.category === 'bgm' || t.category === 'contextual') && t.src !== undefined)
+    .map(([id]) => id)
+}
+
+/** Short title for players; falls back to the full title. */
+export function trackShortTitle(entry: Pick<SoundtrackTrackEntry, 'title' | 'shortTitle'>): string {
+  return entry.shortTitle && entry.shortTitle !== '' ? entry.shortTitle : entry.title
+}
+
+/** "Short title (Game)" for lists where the same short title exists in several games. */
+export function trackListLabel(entry: Pick<SoundtrackTrackEntry, 'title' | 'shortTitle' | 'game'>): string {
+  const short = trackShortTitle(entry)
+  const game = entry.game && entry.game !== 'aa1' ? ` (${entry.game === 'jfa' ? 'JFA' : 'T&T'})` : entry.game === 'aa1' ? ' (AA)' : ''
+  return `${short}${game}`
 }
 
 /** Default track for a profile name, falling back to the "default" profile, then the pool. */

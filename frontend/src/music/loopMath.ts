@@ -1,6 +1,6 @@
 // Pure loop-region maths: validation, sample -> seconds conversion, loop position tracking
 // and the optional seam crossfade. No Web Audio types, so everything is unit-testable.
-import type { LoopMetadata, LoopProvenance, LoopRegion } from './types.ts'
+import type { LoopMetadata, LoopProvenance, LoopRegion, LoopStatus } from './types.ts'
 
 /** A loop shorter than this is treated as malformed metadata (it would stutter). */
 export const MIN_LOOP_SECONDS = 1
@@ -72,6 +72,8 @@ export function bakeLoopCrossfade(
 
 const PROVENANCES: readonly LoopProvenance[] = ['curated-analysis', 'auto-detected', 'user-accepted', 'user-adjusted', 'none']
 
+const STATUSES: readonly LoopStatus[] = ['measured_not_auditioned', 'auditioned']
+
 const NO_LOOP: LoopMetadata = { region: null, confidence: null, provenance: 'none' }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -81,7 +83,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 /** Reads untrusted loop metadata. Anything malformed becomes "no loop" (never throws). */
 export function parseLoopMetadata(raw: unknown): LoopMetadata {
   if (!isRecord(raw)) return { ...NO_LOOP }
-  const { startSample, endSample, sampleRate, crossfadeMs, confidence, provenance, note } = raw
+  const { startSample, endSample, sampleRate, crossfadeMs, confidence, provenance, note, status, method } = raw
   if (typeof startSample !== 'number' || typeof endSample !== 'number' || typeof sampleRate !== 'number') {
     return { ...NO_LOOP }
   }
@@ -94,5 +96,8 @@ export function parseLoopMetadata(raw: unknown): LoopMetadata {
     confidence: typeof confidence === 'number' && confidence >= 0 && confidence <= 1 ? confidence : null,
     provenance: known && known !== 'none' ? known : 'auto-detected', // unknown origin: claim the least
     ...(typeof note === 'string' ? { note } : {}),
+    // Lenient: unknown statuses/methods are dropped (nothing is claimed), never an error.
+    ...(STATUSES.find((s) => s === status) ? { status: status as LoopStatus } : {}),
+    ...(typeof method === 'string' && method !== '' ? { method } : {}),
   }
 }
