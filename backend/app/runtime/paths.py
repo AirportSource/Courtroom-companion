@@ -125,6 +125,11 @@ def instance_dir() -> Path:
     return _data_child(None, "instance")
 
 
+def knowledge_dir() -> Path:
+    """User-approved character knowledge overlays (Character Lore Builder, D-102)."""
+    return _data_child(None, "character-knowledge")
+
+
 def describe_paths() -> dict[str, str]:
     """Resolved locations for diagnostics (paths only; no secrets)."""
     return {
@@ -139,4 +144,5 @@ def describe_paths() -> dict[str, str]:
         "conversation_record": str(conversation_record_dir()),
         "logs": str(logs_dir()),
         "instance": str(instance_dir()),
+        "character_knowledge": str(knowledge_dir()),
     }

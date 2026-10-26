@@ -18,7 +18,7 @@ from ..llm.attachments import Evidence, evidence_message, history_message
 from ..llm.gateway import LLMGateway
 from ..llm.schemas import ChatMessage, CharacterReply
 from .context import fit_history
-from .prompt import build_system_prompt, reply_schema
+from .prompt import build_system_prompt, reply_schema, warn_if_context_large
 from .repository import CharacterRepository
 from ..artifacts.contracts import turn_prompt, turn_schema
 from ..artifacts.store import ArtifactError, ArtifactStore
@@ -91,6 +91,7 @@ class CharacterService:
         active_gateway = gateway or self.gateway
         schema = reply_schema(profile)
         prompt = build_system_prompt(profile, language)
+        warn_if_context_large(profile, prompt)
         if artifact_store is not None:
             schema = turn_schema(schema)
             prompt = turn_prompt(prompt, schema)

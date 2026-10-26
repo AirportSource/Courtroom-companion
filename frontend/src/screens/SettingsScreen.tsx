@@ -35,11 +35,13 @@ interface SettingsScreenProps {
   /** Imported library entries for the track picker (empty until the library loads). */
   importedTracks?: { id: string; title: string }[]
   onBack: () => void
+  /** Opens the Character Studio (Character Lore Builder, D-103). */
+  onCharacterStudio?: () => void
   backdrop: UiImage | null
 }
 
 export function SettingsScreen({
-  previewBlip, testCharacterId, soundtrack, importedTracks = [], onBack, backdrop,
+  previewBlip, testCharacterId, soundtrack, importedTracks = [], onBack, onCharacterStudio, backdrop,
 }: SettingsScreenProps) {
   const { settings, update: updateSettings } = useSettings()
   const t = useT()
@@ -111,6 +113,15 @@ export function SettingsScreen({
 
         <ProviderProfilesPanel characterId={testCharacterId} />
         <ToolsPanel />
+
+        {onCharacterStudio && (
+          <div className="settings-row settings-row-field">
+            <span>{t('settings.characterStudio')}</span>
+            <button type="button" onClick={() => { playMenuSound('menu_confirm'); onCharacterStudio() }}>
+              {t('settings.characterStudioOpen')}
+            </button>
+          </div>
+        )}
 
         <div className="settings-row">
           <span>{t('settings.speed')}</span>
