@@ -1,0 +1,3133 @@
+{
+  "schemaVersion": 1,
+  "id": "iris",
+  "displayName": "Iris",
+  "names": {
+    "en": "Iris",
+    "fr": "Iris",
+    "ja": "あやめ",
+    "it": "Iris",
+    "es": "Iris"
+  },
+  "anchor": "bottom-center",
+  "render": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  "voice": {
+    "blip": "blip_female"
+  },
+  "courtRecordPortrait": {
+    "src": "portraits/court_record.png",
+    "width": 64,
+    "height": 64
+  },
+  "selectionPreview": "portraits/selection.png",
+  "waiting": {
+    "emotion": "thinking",
+    "animation": "thinking"
+  },
+  "taskAcknowledgements": {
+    "artifact": {
+      "emotion": "polite",
+      "lines": {
+        "en": [
+          "Of course. Please leave it to me.",
+          "Yes, I'll prepare it for you right away.",
+          "Just a moment, please. I'll take care of it.",
+          "Certainly. I'll do my best."
+        ],
+        "fr": [
+          "Bien sûr. Laisse-moi faire.",
+          "Oui, je te prépare ça tout de suite.",
+          "Un instant, s'il te plaît. Je m'en occupe.",
+          "Certainement. Je vais faire de mon mieux."
+        ],
+        "ja": [
+          "もちろんです。わたしにまかせてください。",
+          "はい、すぐに用意しますね。",
+          "少しだけ待っていてくださいね。",
+          "かしこまりました。がんばります。"
+        ],
+        "it": [
+          "Certo. Lascia fare a me.",
+          "Sì, te lo preparo subito.",
+          "Un attimo, per favore. Me ne occupo io.",
+          "Senz'altro. Farò del mio meglio."
+        ],
+        "es": [
+          "Por supuesto. Déjamelo a mí.",
+          "Sí, te lo preparo enseguida.",
+          "Un momento, por favor. Yo me encargo.",
+          "Claro. Haré lo mejor que pueda."
+        ]
+      }
+    }
+  },
+  "defaultEmotion": "neutral",
+  "fallbackEmotion": "neutral",
+  "semanticSounds": {
+    "shock": [
+      "fx_shock2"
+    ]
+  },
+  "readiness": "ready",
+  "group": "aa3",
+  "animations": {
+    "normal": {
+      "canvas": {
+        "width": 74,
+        "height": 162
+      },
+      "idle": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          1250,
+          130,
+          130,
+          130,
+          3250,
+          130,
+          130,
+          130,
+          2080
+        ],
+        "holdJitterMs": 0,
+        "frames": [
+          "sprites/normal/normal_frame_000.png",
+          "sprites/normal/normal_frame_001.png",
+          "sprites/normal/normal_frame_002.png",
+          "sprites/normal/normal_frame_001.png",
+          "sprites/normal/normal_frame_000.png",
+          "sprites/normal/normal_frame_001.png",
+          "sprites/normal/normal_frame_002.png",
+          "sprites/normal/normal_frame_001.png",
+          "sprites/normal/normal_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          100,
+          210,
+          210,
+          210,
+          210,
+          210,
+          30,
+          130,
+          50,
+          80,
+          130,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          130,
+          80,
+          50,
+          130,
+          30,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          110
+        ],
+        "frames": [
+          "sprites/normal/normal_frame_000.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_004.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_000.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_004.png",
+          "sprites/normal/normal_frame_005.png",
+          "sprites/normal/normal_frame_006.png",
+          "sprites/normal/normal_frame_007.png",
+          "sprites/normal/normal_frame_008.png",
+          "sprites/normal/normal_frame_000.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_004.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_000.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_004.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_000.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_004.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_001.png",
+          "sprites/normal/normal_frame_002.png",
+          "sprites/normal/normal_frame_007.png",
+          "sprites/normal/normal_frame_008.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_004.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_000.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_004.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_000.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_004.png",
+          "sprites/normal/normal_frame_003.png",
+          "sprites/normal/normal_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "blush": {
+      "canvas": {
+        "width": 74,
+        "height": 160
+      },
+      "idle": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          580,
+          150,
+          150,
+          150,
+          3000,
+          150,
+          150,
+          150,
+          3000
+        ],
+        "holdJitterMs": 0,
+        "frames": [
+          "sprites/blush/blush_frame_000.png",
+          "sprites/blush/blush_frame_001.png",
+          "sprites/blush/blush_frame_002.png",
+          "sprites/blush/blush_frame_001.png",
+          "sprites/blush/blush_frame_000.png",
+          "sprites/blush/blush_frame_001.png",
+          "sprites/blush/blush_frame_002.png",
+          "sprites/blush/blush_frame_001.png",
+          "sprites/blush/blush_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          100,
+          210,
+          210,
+          210,
+          130,
+          80,
+          60,
+          150,
+          150,
+          60,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          210,
+          110
+        ],
+        "frames": [
+          "sprites/blush/blush_frame_000.png",
+          "sprites/blush/blush_frame_003.png",
+          "sprites/blush/blush_frame_004.png",
+          "sprites/blush/blush_frame_003.png",
+          "sprites/blush/blush_frame_000.png",
+          "sprites/blush/blush_frame_001.png",
+          "sprites/blush/blush_frame_005.png",
+          "sprites/blush/blush_frame_006.png",
+          "sprites/blush/blush_frame_007.png",
+          "sprites/blush/blush_frame_004.png",
+          "sprites/blush/blush_frame_003.png",
+          "sprites/blush/blush_frame_000.png",
+          "sprites/blush/blush_frame_003.png",
+          "sprites/blush/blush_frame_004.png",
+          "sprites/blush/blush_frame_003.png",
+          "sprites/blush/blush_frame_000.png",
+          "sprites/blush/blush_frame_003.png",
+          "sprites/blush/blush_frame_004.png",
+          "sprites/blush/blush_frame_003.png",
+          "sprites/blush/blush_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "crying": {
+      "canvas": {
+        "width": 73,
+        "height": 159
+      },
+      "idle": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          830,
+          130,
+          130,
+          130,
+          3000,
+          130,
+          130,
+          130,
+          1660
+        ],
+        "holdJitterMs": 0,
+        "frames": [
+          "sprites/crying/crying_frame_000.png",
+          "sprites/crying/crying_frame_001.png",
+          "sprites/crying/crying_frame_002.png",
+          "sprites/crying/crying_frame_001.png",
+          "sprites/crying/crying_frame_000.png",
+          "sprites/crying/crying_frame_001.png",
+          "sprites/crying/crying_frame_002.png",
+          "sprites/crying/crying_frame_001.png",
+          "sprites/crying/crying_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          110,
+          230,
+          230,
+          230,
+          180,
+          50,
+          80,
+          130,
+          10,
+          110,
+          110,
+          230,
+          230,
+          230,
+          230,
+          230,
+          230,
+          230,
+          230,
+          230,
+          110
+        ],
+        "frames": [
+          "sprites/crying/crying_frame_000.png",
+          "sprites/crying/crying_frame_003.png",
+          "sprites/crying/crying_frame_004.png",
+          "sprites/crying/crying_frame_003.png",
+          "sprites/crying/crying_frame_000.png",
+          "sprites/crying/crying_frame_001.png",
+          "sprites/crying/crying_frame_005.png",
+          "sprites/crying/crying_frame_006.png",
+          "sprites/crying/crying_frame_005.png",
+          "sprites/crying/crying_frame_007.png",
+          "sprites/crying/crying_frame_004.png",
+          "sprites/crying/crying_frame_003.png",
+          "sprites/crying/crying_frame_000.png",
+          "sprites/crying/crying_frame_003.png",
+          "sprites/crying/crying_frame_004.png",
+          "sprites/crying/crying_frame_003.png",
+          "sprites/crying/crying_frame_000.png",
+          "sprites/crying/crying_frame_003.png",
+          "sprites/crying/crying_frame_004.png",
+          "sprites/crying/crying_frame_003.png",
+          "sprites/crying/crying_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "serious": {
+      "canvas": {
+        "width": 85,
+        "height": 161
+      },
+      "idle": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          830,
+          110,
+          110,
+          110,
+          2160,
+          110,
+          110,
+          110,
+          2830
+        ],
+        "holdJitterMs": 0,
+        "frames": [
+          "sprites/serious/serious_frame_000.png",
+          "sprites/serious/serious_frame_001.png",
+          "sprites/serious/serious_frame_002.png",
+          "sprites/serious/serious_frame_001.png",
+          "sprites/serious/serious_frame_000.png",
+          "sprites/serious/serious_frame_001.png",
+          "sprites/serious/serious_frame_002.png",
+          "sprites/serious/serious_frame_001.png",
+          "sprites/serious/serious_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          100,
+          200,
+          200,
+          200,
+          200,
+          100,
+          100,
+          10,
+          110,
+          60,
+          50,
+          150,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          100
+        ],
+        "frames": [
+          "sprites/serious/serious_frame_000.png",
+          "sprites/serious/serious_frame_003.png",
+          "sprites/serious/serious_frame_004.png",
+          "sprites/serious/serious_frame_003.png",
+          "sprites/serious/serious_frame_000.png",
+          "sprites/serious/serious_frame_003.png",
+          "sprites/serious/serious_frame_005.png",
+          "sprites/serious/serious_frame_006.png",
+          "sprites/serious/serious_frame_007.png",
+          "sprites/serious/serious_frame_006.png",
+          "sprites/serious/serious_frame_005.png",
+          "sprites/serious/serious_frame_003.png",
+          "sprites/serious/serious_frame_000.png",
+          "sprites/serious/serious_frame_003.png",
+          "sprites/serious/serious_frame_004.png",
+          "sprites/serious/serious_frame_003.png",
+          "sprites/serious/serious_frame_000.png",
+          "sprites/serious/serious_frame_003.png",
+          "sprites/serious/serious_frame_004.png",
+          "sprites/serious/serious_frame_003.png",
+          "sprites/serious/serious_frame_000.png",
+          "sprites/serious/serious_frame_003.png",
+          "sprites/serious/serious_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "surprised": {
+      "canvas": {
+        "width": 73,
+        "height": 159
+      },
+      "idle": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          660,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          2000,
+          60,
+          60,
+          60,
+          1660
+        ],
+        "holdJitterMs": 0,
+        "frames": [
+          "sprites/surprised/surprised_frame_000.png",
+          "sprites/surprised/surprised_frame_001.png",
+          "sprites/surprised/surprised_frame_002.png",
+          "sprites/surprised/surprised_frame_001.png",
+          "sprites/surprised/surprised_frame_000.png",
+          "sprites/surprised/surprised_frame_001.png",
+          "sprites/surprised/surprised_frame_002.png",
+          "sprites/surprised/surprised_frame_001.png",
+          "sprites/surprised/surprised_frame_000.png",
+          "sprites/surprised/surprised_frame_001.png",
+          "sprites/surprised/surprised_frame_002.png",
+          "sprites/surprised/surprised_frame_001.png",
+          "sprites/surprised/surprised_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          60,
+          60,
+          50,
+          10,
+          160,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ],
+        "frames": [
+          "sprites/surprised/surprised_frame_003.png",
+          "sprites/surprised/surprised_frame_004.png",
+          "sprites/surprised/surprised_frame_000.png",
+          "sprites/surprised/surprised_frame_004.png",
+          "sprites/surprised/surprised_frame_003.png",
+          "sprites/surprised/surprised_frame_004.png",
+          "sprites/surprised/surprised_frame_001.png",
+          "sprites/surprised/surprised_frame_002.png",
+          "sprites/surprised/surprised_frame_001.png",
+          "sprites/surprised/surprised_frame_005.png",
+          "sprites/surprised/surprised_frame_004.png",
+          "sprites/surprised/surprised_frame_003.png",
+          "sprites/surprised/surprised_frame_004.png",
+          "sprites/surprised/surprised_frame_000.png",
+          "sprites/surprised/surprised_frame_004.png",
+          "sprites/surprised/surprised_frame_003.png",
+          "sprites/surprised/surprised_frame_004.png",
+          "sprites/surprised/surprised_frame_000.png",
+          "sprites/surprised/surprised_frame_004.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "thinking": {
+      "canvas": {
+        "width": 74,
+        "height": 158
+      },
+      "idle": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          830,
+          130,
+          130,
+          130,
+          2410,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          130,
+          1500
+        ],
+        "holdJitterMs": 0,
+        "frames": [
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_001.png",
+          "sprites/thinking/thinking_frame_002.png",
+          "sprites/thinking/thinking_frame_001.png",
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_001.png",
+          "sprites/thinking/thinking_frame_002.png",
+          "sprites/thinking/thinking_frame_001.png",
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_001.png",
+          "sprites/thinking/thinking_frame_002.png",
+          "sprites/thinking/thinking_frame_001.png",
+          "sprites/thinking/thinking_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "talking": {
+        "fps": 10,
+        "loop": true,
+        "frameDurations": [
+          100,
+          200,
+          200,
+          200,
+          200,
+          200,
+          130,
+          60,
+          60,
+          130,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          130,
+          60,
+          60,
+          130,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          100
+        ],
+        "frames": [
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_004.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_005.png",
+          "sprites/thinking/thinking_frame_006.png",
+          "sprites/thinking/thinking_frame_007.png",
+          "sprites/thinking/thinking_frame_008.png",
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_004.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_004.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_005.png",
+          "sprites/thinking/thinking_frame_006.png",
+          "sprites/thinking/thinking_frame_007.png",
+          "sprites/thinking/thinking_frame_008.png",
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_004.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_004.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_000.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_004.png",
+          "sprites/thinking/thinking_frame_003.png",
+          "sprites/thinking/thinking_frame_000.png"
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "reactions": {},
+  "emotions": {
+    "neutral": {
+      "animation": "normal"
+    },
+    "happy": {
+      "animation": "blush"
+    },
+    "polite": {
+      "animation": "normal"
+    },
+    "grateful": {
+      "animation": "blush"
+    },
+    "serious": {
+      "animation": "serious"
+    },
+    "surprised": {
+      "animation": "surprised"
+    },
+    "thinking": {
+      "animation": "thinking"
+    },
+    "sad": {
+      "animation": "crying"
+    },
+    "anxious": {
+      "animation": "serious"
+    },
+    "embarrassed": {
+      "animation": "blush"
+    }
+  },
+  "unassignedFrames": [],
+  "defaultPresentation": "conversation",
+  "presentationGroups": {
+    "conversation": {
+      "inheritReactions": false,
+      "animations": {
+        "normal": {
+          "canvas": {
+            "width": 74,
+            "height": 162
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              1250,
+              130,
+              130,
+              130,
+              3250,
+              130,
+              130,
+              130,
+              2080
+            ],
+            "holdJitterMs": 0,
+            "frames": [
+              "sprites/normal/normal_frame_000.png",
+              "sprites/normal/normal_frame_001.png",
+              "sprites/normal/normal_frame_002.png",
+              "sprites/normal/normal_frame_001.png",
+              "sprites/normal/normal_frame_000.png",
+              "sprites/normal/normal_frame_001.png",
+              "sprites/normal/normal_frame_002.png",
+              "sprites/normal/normal_frame_001.png",
+              "sprites/normal/normal_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              100,
+              210,
+              210,
+              210,
+              210,
+              210,
+              30,
+              130,
+              50,
+              80,
+              130,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              130,
+              80,
+              50,
+              130,
+              30,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              110
+            ],
+            "frames": [
+              "sprites/normal/normal_frame_000.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_004.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_000.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_004.png",
+              "sprites/normal/normal_frame_005.png",
+              "sprites/normal/normal_frame_006.png",
+              "sprites/normal/normal_frame_007.png",
+              "sprites/normal/normal_frame_008.png",
+              "sprites/normal/normal_frame_000.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_004.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_000.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_004.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_000.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_004.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_001.png",
+              "sprites/normal/normal_frame_002.png",
+              "sprites/normal/normal_frame_007.png",
+              "sprites/normal/normal_frame_008.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_004.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_000.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_004.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_000.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_004.png",
+              "sprites/normal/normal_frame_003.png",
+              "sprites/normal/normal_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "blush": {
+          "canvas": {
+            "width": 74,
+            "height": 160
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              580,
+              150,
+              150,
+              150,
+              3000,
+              150,
+              150,
+              150,
+              3000
+            ],
+            "holdJitterMs": 0,
+            "frames": [
+              "sprites/blush/blush_frame_000.png",
+              "sprites/blush/blush_frame_001.png",
+              "sprites/blush/blush_frame_002.png",
+              "sprites/blush/blush_frame_001.png",
+              "sprites/blush/blush_frame_000.png",
+              "sprites/blush/blush_frame_001.png",
+              "sprites/blush/blush_frame_002.png",
+              "sprites/blush/blush_frame_001.png",
+              "sprites/blush/blush_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              100,
+              210,
+              210,
+              210,
+              130,
+              80,
+              60,
+              150,
+              150,
+              60,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              210,
+              110
+            ],
+            "frames": [
+              "sprites/blush/blush_frame_000.png",
+              "sprites/blush/blush_frame_003.png",
+              "sprites/blush/blush_frame_004.png",
+              "sprites/blush/blush_frame_003.png",
+              "sprites/blush/blush_frame_000.png",
+              "sprites/blush/blush_frame_001.png",
+              "sprites/blush/blush_frame_005.png",
+              "sprites/blush/blush_frame_006.png",
+              "sprites/blush/blush_frame_007.png",
+              "sprites/blush/blush_frame_004.png",
+              "sprites/blush/blush_frame_003.png",
+              "sprites/blush/blush_frame_000.png",
+              "sprites/blush/blush_frame_003.png",
+              "sprites/blush/blush_frame_004.png",
+              "sprites/blush/blush_frame_003.png",
+              "sprites/blush/blush_frame_000.png",
+              "sprites/blush/blush_frame_003.png",
+              "sprites/blush/blush_frame_004.png",
+              "sprites/blush/blush_frame_003.png",
+              "sprites/blush/blush_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "crying": {
+          "canvas": {
+            "width": 73,
+            "height": 159
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              830,
+              130,
+              130,
+              130,
+              3000,
+              130,
+              130,
+              130,
+              1660
+            ],
+            "holdJitterMs": 0,
+            "frames": [
+              "sprites/crying/crying_frame_000.png",
+              "sprites/crying/crying_frame_001.png",
+              "sprites/crying/crying_frame_002.png",
+              "sprites/crying/crying_frame_001.png",
+              "sprites/crying/crying_frame_000.png",
+              "sprites/crying/crying_frame_001.png",
+              "sprites/crying/crying_frame_002.png",
+              "sprites/crying/crying_frame_001.png",
+              "sprites/crying/crying_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              110,
+              230,
+              230,
+              230,
+              180,
+              50,
+              80,
+              130,
+              10,
+              110,
+              110,
+              230,
+              230,
+              230,
+              230,
+              230,
+              230,
+              230,
+              230,
+              230,
+              110
+            ],
+            "frames": [
+              "sprites/crying/crying_frame_000.png",
+              "sprites/crying/crying_frame_003.png",
+              "sprites/crying/crying_frame_004.png",
+              "sprites/crying/crying_frame_003.png",
+              "sprites/crying/crying_frame_000.png",
+              "sprites/crying/crying_frame_001.png",
+              "sprites/crying/crying_frame_005.png",
+              "sprites/crying/crying_frame_006.png",
+              "sprites/crying/crying_frame_005.png",
+              "sprites/crying/crying_frame_007.png",
+              "sprites/crying/crying_frame_004.png",
+              "sprites/crying/crying_frame_003.png",
+              "sprites/crying/crying_frame_000.png",
+              "sprites/crying/crying_frame_003.png",
+              "sprites/crying/crying_frame_004.png",
+              "sprites/crying/crying_frame_003.png",
+              "sprites/crying/crying_frame_000.png",
+              "sprites/crying/crying_frame_003.png",
+              "sprites/crying/crying_frame_004.png",
+              "sprites/crying/crying_frame_003.png",
+              "sprites/crying/crying_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "serious": {
+          "canvas": {
+            "width": 85,
+            "height": 161
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              830,
+              110,
+              110,
+              110,
+              2160,
+              110,
+              110,
+              110,
+              2830
+            ],
+            "holdJitterMs": 0,
+            "frames": [
+              "sprites/serious/serious_frame_000.png",
+              "sprites/serious/serious_frame_001.png",
+              "sprites/serious/serious_frame_002.png",
+              "sprites/serious/serious_frame_001.png",
+              "sprites/serious/serious_frame_000.png",
+              "sprites/serious/serious_frame_001.png",
+              "sprites/serious/serious_frame_002.png",
+              "sprites/serious/serious_frame_001.png",
+              "sprites/serious/serious_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              100,
+              200,
+              200,
+              200,
+              200,
+              100,
+              100,
+              10,
+              110,
+              60,
+              50,
+              150,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              100
+            ],
+            "frames": [
+              "sprites/serious/serious_frame_000.png",
+              "sprites/serious/serious_frame_003.png",
+              "sprites/serious/serious_frame_004.png",
+              "sprites/serious/serious_frame_003.png",
+              "sprites/serious/serious_frame_000.png",
+              "sprites/serious/serious_frame_003.png",
+              "sprites/serious/serious_frame_005.png",
+              "sprites/serious/serious_frame_006.png",
+              "sprites/serious/serious_frame_007.png",
+              "sprites/serious/serious_frame_006.png",
+              "sprites/serious/serious_frame_005.png",
+              "sprites/serious/serious_frame_003.png",
+              "sprites/serious/serious_frame_000.png",
+              "sprites/serious/serious_frame_003.png",
+              "sprites/serious/serious_frame_004.png",
+              "sprites/serious/serious_frame_003.png",
+              "sprites/serious/serious_frame_000.png",
+              "sprites/serious/serious_frame_003.png",
+              "sprites/serious/serious_frame_004.png",
+              "sprites/serious/serious_frame_003.png",
+              "sprites/serious/serious_frame_000.png",
+              "sprites/serious/serious_frame_003.png",
+              "sprites/serious/serious_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "surprised": {
+          "canvas": {
+            "width": 73,
+            "height": 159
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              660,
+              60,
+              60,
+              60,
+              60,
+              60,
+              60,
+              60,
+              2000,
+              60,
+              60,
+              60,
+              1660
+            ],
+            "holdJitterMs": 0,
+            "frames": [
+              "sprites/surprised/surprised_frame_000.png",
+              "sprites/surprised/surprised_frame_001.png",
+              "sprites/surprised/surprised_frame_002.png",
+              "sprites/surprised/surprised_frame_001.png",
+              "sprites/surprised/surprised_frame_000.png",
+              "sprites/surprised/surprised_frame_001.png",
+              "sprites/surprised/surprised_frame_002.png",
+              "sprites/surprised/surprised_frame_001.png",
+              "sprites/surprised/surprised_frame_000.png",
+              "sprites/surprised/surprised_frame_001.png",
+              "sprites/surprised/surprised_frame_002.png",
+              "sprites/surprised/surprised_frame_001.png",
+              "sprites/surprised/surprised_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              60,
+              60,
+              50,
+              10,
+              160,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180,
+              180
+            ],
+            "frames": [
+              "sprites/surprised/surprised_frame_003.png",
+              "sprites/surprised/surprised_frame_004.png",
+              "sprites/surprised/surprised_frame_000.png",
+              "sprites/surprised/surprised_frame_004.png",
+              "sprites/surprised/surprised_frame_003.png",
+              "sprites/surprised/surprised_frame_004.png",
+              "sprites/surprised/surprised_frame_001.png",
+              "sprites/surprised/surprised_frame_002.png",
+              "sprites/surprised/surprised_frame_001.png",
+              "sprites/surprised/surprised_frame_005.png",
+              "sprites/surprised/surprised_frame_004.png",
+              "sprites/surprised/surprised_frame_003.png",
+              "sprites/surprised/surprised_frame_004.png",
+              "sprites/surprised/surprised_frame_000.png",
+              "sprites/surprised/surprised_frame_004.png",
+              "sprites/surprised/surprised_frame_003.png",
+              "sprites/surprised/surprised_frame_004.png",
+              "sprites/surprised/surprised_frame_000.png",
+              "sprites/surprised/surprised_frame_004.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "thinking": {
+          "canvas": {
+            "width": 74,
+            "height": 158
+          },
+          "idle": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              830,
+              130,
+              130,
+              130,
+              2410,
+              130,
+              130,
+              130,
+              130,
+              130,
+              130,
+              130,
+              1500
+            ],
+            "holdJitterMs": 0,
+            "frames": [
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_001.png",
+              "sprites/thinking/thinking_frame_002.png",
+              "sprites/thinking/thinking_frame_001.png",
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_001.png",
+              "sprites/thinking/thinking_frame_002.png",
+              "sprites/thinking/thinking_frame_001.png",
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_001.png",
+              "sprites/thinking/thinking_frame_002.png",
+              "sprites/thinking/thinking_frame_001.png",
+              "sprites/thinking/thinking_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "talking": {
+            "fps": 10,
+            "loop": true,
+            "frameDurations": [
+              100,
+              200,
+              200,
+              200,
+              200,
+              200,
+              130,
+              60,
+              60,
+              130,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              130,
+              60,
+              60,
+              130,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              200,
+              100
+            ],
+            "frames": [
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_004.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_005.png",
+              "sprites/thinking/thinking_frame_006.png",
+              "sprites/thinking/thinking_frame_007.png",
+              "sprites/thinking/thinking_frame_008.png",
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_004.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_004.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_005.png",
+              "sprites/thinking/thinking_frame_006.png",
+              "sprites/thinking/thinking_frame_007.png",
+              "sprites/thinking/thinking_frame_008.png",
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_004.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_004.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_000.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_004.png",
+              "sprites/thinking/thinking_frame_003.png",
+              "sprites/thinking/thinking_frame_000.png"
+            ],
+            "offsets": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "emotions": {
+        "neutral": {
+          "animation": "normal"
+        },
+        "happy": {
+          "animation": "blush"
+        },
+        "polite": {
+          "animation": "normal"
+        },
+        "grateful": {
+          "animation": "blush"
+        },
+        "serious": {
+          "animation": "serious"
+        },
+        "surprised": {
+          "animation": "surprised"
+        },
+        "thinking": {
+          "animation": "thinking"
+        },
+        "sad": {
+          "animation": "crying"
+        },
+        "anxious": {
+          "animation": "serious"
+        },
+        "embarrassed": {
+          "animation": "blush"
+        }
+      },
+      "waiting": {
+        "emotion": "thinking",
+        "animation": "thinking"
+      }
+    }
+  }
+}

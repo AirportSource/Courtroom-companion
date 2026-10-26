@@ -260,3 +260,7 @@ Checks: backend629 passed/2 skipped; frontend327 passed; source-asset tests4 pas
 - Shared semantic SFX library (angry, flabbergasted, encouragement + aliases), character pools, rotation, deterministic frequency model; Pearl calibrated to her real intensity range.
 - 51/55 DS-original tracks now loop; Turnabout Sisters 2001 loops at its second return (91.7% heard).
 - Checks: backend 644 passed / 2 skipped; frontend 347; validate:assets 1020 / 0; source tests 4; tsc, lint, build, diff check clean. Nothing auditioned by ear.
+
+## Iris (2026-10-26, D-098)
+
+Eight playable characters: Iris (`iris`, aa3) joins as ready. Her rejected 3DS-derived runtime conversion has been replaced completely by the owner-supplied pixel-art GIF set: six normal-outfit poses, preserved GIF timing/blinks/talking motion, 48 native-pixel runtime frames, and matching native-pixel portrait/selection art. The hooded costume remains source-only so emotions cannot change outfits. Source provenance is deliberately conservative: the files are supplied pixel art, but their original game/platform has not been independently verified. Iris keeps her existing personality, ten-emotion contract, restrained sounds, no signature and no theme.

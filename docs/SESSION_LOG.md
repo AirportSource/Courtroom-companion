@@ -1101,3 +1101,10 @@ Final validation: backend629 passed/2 skipped, frontend327 passed, source tests4
 ## 2026-10-26 — Codex prompt for Dahlia Hawthorne
 
 - Wrote `docs/prompts/CODEX_DAHLIA_HAWTHORNE.md`: the full character-pack procedure (sources, HD→DS conversion, pack files, readiness, sounds, tests, browser QA, docs, safety rules learned this session). No code changes.
+
+## 2026-10-26 — Dahlia removed, Iris added (D-098)
+
+- Start: HEAD 788ad68; uncommitted work was only the Dahlia pack (pack folder, 2 tests, build script, report) plus Dahlia hunks in 6 docs and `index.json`. Hunks reverse-applied from a saved patch; untracked Dahlia files deleted after a backup outside the repo. Soundtrack Dahlia data (committed earlier) kept. Ignored QA scratch `build/dahlia-qa/` left in place.
+- Iris was initially integrated from a converted 3DS sheet, then fully migrated to 16 owner-supplied pixel-art GIFs before commit. Six normal-outfit poses produce 48 exact-pixel frames plus native-pixel portrait/preview; the two hooded poses are inventoried but source-only. No active runtime image references the former conversion.
+- The builder preserves GIF disposal/order/timing without scaling or recolouring. `iris-thinking(b).gif` has a truncated final data block; explicit Pillow truncated decoding recovers its 37 frames deterministically and is recorded in provenance.
+- Focused verification: 8 backend Iris tests passed; builder check matched all 50 generated images; 1x/3x pose contact sheets show crisp alignment and no halos. Full milestone validation follows before commit.

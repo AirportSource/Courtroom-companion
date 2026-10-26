@@ -173,3 +173,7 @@ Only font material found: GBA GS3(JPN) Font.png atlas in `police_extract`, custo
 ## Repository source folder `assets/` (2026-10-26)
 
 Root `assets/` is read-only source material, never served at runtime; the validator rejects machine paths and paths into it. Used this pass: `other assets/whip/whip effect gif.gif` (whip overlay, timing inferred) and `most used sounds/{everyone,maya,pearl}` (3 new byte copies, the rest already present). `whip effect.png` (HD layered shapes) was inspected and not used.
+
+## Iris (2026-10-26, D-098)
+
+Read-only source: 16 transparent 256x192 GIFs in `assets/characters/sprites_iris/`, eight poses with separate idle `(a)` and talking `(b)` animations. They are supplied pixel art; their original title/platform and download provenance could not be independently verified, so no Nintendo DS origin is claimed. `scripts/build_iris_pack.py` reconstructs disposal and preserves exact source RGBA pixels/order/timing without scaling, recolouring or palette processing. The truncated final data block in `iris-thinking(b).gif` is decoded under an explicit Pillow truncated-image exception; all 37 logical frames reproduce deterministically. Active runtime uses six normal-outfit poses; two hooded poses are source-only. Source/output SHA-256 values and extraction metrics are in `characters/iris/source.json`.

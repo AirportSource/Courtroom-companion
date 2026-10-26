@@ -169,3 +169,12 @@ Details: [targeted correction report](TARGETED_CORRECTIONS.md). The earlier Fran
 
 - [x] D-094: conversation whip starts with the lash; whip triggers balanced with classic emotions.
 - [ ] Measure Franziska's live whip frequency in a real conversation (with an isolated `COURTROOM_CONFIG_DIR`).
+
+## Iris (2026-10-26, D-098)
+
+- [x] Rejected uncommitted Dahlia pack removed surgically (soundtrack entry kept).
+- [x] Iris: replace every active 3DS-derived visual with the supplied 16-file pixel-art GIF set; no scaling, recolouring or rejected-source fallback.
+- [x] Six normal-outfit poses, 48 native-pixel frames, GIF timing/blinks/talking motion, portrait and preview; hooded poses inventoried but source-only.
+- [x] Preserve personality, five-language lines, ten-emotion contract and restrained SFX; keep the pack `ready`.
+- [x] Deterministic 50-file rebuild, focused source/manifest tests, and 1x/3x contact-sheet QA.
+- [ ] Optional: a ten-turn real-model session with Iris (isolated `COURTROOM_CONFIG_DIR`), and an Iris theme if a fitting track is imported later.

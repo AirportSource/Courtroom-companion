@@ -1,0 +1,324 @@
+{
+  "sourceDirectory": "assets/characters/sprites_iris",
+  "sourcePlatform": "supplied pixel-art animation GIFs; original game/platform provenance not independently verified",
+  "sourceCanvas": [
+    256,
+    192
+  ],
+  "extraction": {
+    "builder": "scripts/build_iris_pack.py",
+    "method": "Pillow GIF disposal reconstruction, shared-pose alpha crop, exact RGBA pixels; no scaling or recolouring",
+    "idleSuffix": "(a)",
+    "talkingSuffix": "(b)",
+    "loadTruncatedImages": true,
+    "truncatedSource": "assets/characters/sprites_iris/iris-thinking(b).gif"
+  },
+  "activePoses": {
+    "normal": {
+      "sources": {
+        "a": {
+          "path": "assets/characters/sprites_iris/iris-normal(a).gif",
+          "sha256": "ab0836c3598aba3cecd4f07c5cc4f83475787a8b35381cc4ffa4f9960aa164f3",
+          "frames": 9
+        },
+        "b": {
+          "path": "assets/characters/sprites_iris/iris-normal(b).gif",
+          "sha256": "f384f4478b7ad7c2de77a0a8a7caac0e86e02e9691f8f156cbcedb3a779e749d",
+          "frames": 39
+        }
+      },
+      "metrics": {
+        "canvas": [
+          74,
+          162
+        ],
+        "sourceBbox": [
+          93,
+          30,
+          167,
+          192
+        ],
+        "idleFrames": 9,
+        "talkingFrames": 39,
+        "uniqueFrames": 9,
+        "idleDurationMs": 7360,
+        "talkingDurationMs": 6720,
+        "disposalMethods": [
+          2
+        ]
+      }
+    },
+    "blush": {
+      "sources": {
+        "a": {
+          "path": "assets/characters/sprites_iris/iris-blush(a).gif",
+          "sha256": "495450eadbc5901f8ab65dc176739be3ca7dbe7d3ff1abbe340545ff8ee9d324",
+          "frames": 9
+        },
+        "b": {
+          "path": "assets/characters/sprites_iris/iris-blush(b).gif",
+          "sha256": "da122a756dc34f0fd876e848d89860a933cf73dc55ccb3ea7ffeb6d0fac487de",
+          "frames": 20
+        }
+      },
+      "metrics": {
+        "canvas": [
+          74,
+          160
+        ],
+        "sourceBbox": [
+          93,
+          32,
+          167,
+          192
+        ],
+        "idleFrames": 9,
+        "talkingFrames": 20,
+        "uniqueFrames": 8,
+        "idleDurationMs": 7480,
+        "talkingDurationMs": 3360,
+        "disposalMethods": [
+          2
+        ]
+      }
+    },
+    "crying": {
+      "sources": {
+        "a": {
+          "path": "assets/characters/sprites_iris/iris-crying(a).gif",
+          "sha256": "bdfabca728b2d9b63d53747f0ff56fd0a7bad41880f4558f07b720cec18067b7",
+          "frames": 9
+        },
+        "b": {
+          "path": "assets/characters/sprites_iris/iris-crying(b).gif",
+          "sha256": "55b71e8e5e02291d44dbbf1f37bc403bff61d5c2327dc7263084a5c71cbe559b",
+          "frames": 21
+        }
+      },
+      "metrics": {
+        "canvas": [
+          73,
+          159
+        ],
+        "sourceBbox": [
+          94,
+          33,
+          167,
+          192
+        ],
+        "idleFrames": 9,
+        "talkingFrames": 21,
+        "uniqueFrames": 8,
+        "idleDurationMs": 6270,
+        "talkingDurationMs": 3650,
+        "disposalMethods": [
+          2
+        ]
+      }
+    },
+    "serious": {
+      "sources": {
+        "a": {
+          "path": "assets/characters/sprites_iris/iris-serious(a).gif",
+          "sha256": "ceb73b1b8475dc2811b8ab2094adb409a9dd7bf24530176894f362f57b625c5f",
+          "frames": 9
+        },
+        "b": {
+          "path": "assets/characters/sprites_iris/iris-serious(b).gif",
+          "sha256": "5ddbe839ad73abee0d3747b92c2955fe9c7f59f732d96c97e534f5409094eac8",
+          "frames": 23
+        }
+      },
+      "metrics": {
+        "canvas": [
+          85,
+          161
+        ],
+        "sourceBbox": [
+          86,
+          31,
+          171,
+          192
+        ],
+        "idleFrames": 9,
+        "talkingFrames": 23,
+        "uniqueFrames": 8,
+        "idleDurationMs": 6480,
+        "talkingDurationMs": 3580,
+        "disposalMethods": [
+          2
+        ]
+      }
+    },
+    "surprised": {
+      "sources": {
+        "a": {
+          "path": "assets/characters/sprites_iris/iris-surprised(a).gif",
+          "sha256": "9672d53954f7be9882b403f3de7d9677bfc37a435dac19021f4a887f518a0285",
+          "frames": 13
+        },
+        "b": {
+          "path": "assets/characters/sprites_iris/iris-surprised(b).gif",
+          "sha256": "0bf679ac4a70871177d4eb2a2d43e44061f555816bea7404a14d02ec0a8facd5",
+          "frames": 19
+        }
+      },
+      "metrics": {
+        "canvas": [
+          73,
+          159
+        ],
+        "sourceBbox": [
+          94,
+          33,
+          167,
+          192
+        ],
+        "idleFrames": 13,
+        "talkingFrames": 19,
+        "uniqueFrames": 6,
+        "idleDurationMs": 4920,
+        "talkingDurationMs": 2860,
+        "disposalMethods": [
+          2
+        ]
+      }
+    },
+    "thinking": {
+      "sources": {
+        "a": {
+          "path": "assets/characters/sprites_iris/iris-thinking(a).gif",
+          "sha256": "fc116206b4fcca5161be7e5709bf146def9ac6d6e75b90457eb506f31bb2dc9e",
+          "frames": 13
+        },
+        "b": {
+          "path": "assets/characters/sprites_iris/iris-thinking(b).gif",
+          "sha256": "7522231cbdb63e633535193a8183e3af44d630a1b2902678924d904dfa8ad916",
+          "frames": 37
+        }
+      },
+      "metrics": {
+        "canvas": [
+          74,
+          158
+        ],
+        "sourceBbox": [
+          93,
+          34,
+          167,
+          192
+        ],
+        "idleFrames": 13,
+        "talkingFrames": 37,
+        "uniqueFrames": 9,
+        "idleDurationMs": 6040,
+        "talkingDurationMs": 6360,
+        "disposalMethods": [
+          2
+        ]
+      }
+    }
+  },
+  "sourceOnlyPoses": {
+    "hood": {
+      "reason": "hooded costume excluded from normal conversation to prevent emotion-driven outfit changes",
+      "sources": {
+        "a": {
+          "path": "assets/characters/sprites_iris/iris-hood(a).gif",
+          "sha256": "0052b0855d8b45bd2b5d30bb4feed67095e4e12a49300bd5c695b7f655e7e59b",
+          "frames": 9
+        },
+        "b": {
+          "path": "assets/characters/sprites_iris/iris-hood(b).gif",
+          "sha256": "faef77cedca858d9caad4f45753531e86edae214720e5bed8a17fbb70e25b113",
+          "frames": 39
+        }
+      }
+    },
+    "hood-oh": {
+      "reason": "hooded costume excluded from normal conversation to prevent emotion-driven outfit changes",
+      "sources": {
+        "a": {
+          "path": "assets/characters/sprites_iris/iris-hood-oh(a).gif",
+          "sha256": "2d804e0ce4bda536254b279024be5a6f556dcc2bbbfa5dcf4aaafe335a90d1de",
+          "frames": 13
+        },
+        "b": {
+          "path": "assets/characters/sprites_iris/iris-hood-oh(b).gif",
+          "sha256": "3a979f531b7005843fab2bd20b62d8e97ff93b19f5c3bcfc7c2bd0a1b5c72a21",
+          "frames": 19
+        }
+      }
+    }
+  },
+  "portrait": {
+    "from": "assets/characters/sprites_iris/iris-normal(a).gif frame 0",
+    "crop": [
+      96,
+      28,
+      64,
+      64
+    ],
+    "nativePixelScale": true
+  },
+  "selectionPreview": {
+    "from": "assets/characters/sprites_iris/iris-normal(a).gif frame 0",
+    "canvas": [
+      170,
+      170
+    ],
+    "nativePixelScale": true
+  },
+  "files": {
+    "sprites/normal/normal_frame_000.png": "6d30c228a4ae1fa2fe018c365015bc24d12292cb9b2034f5f0f3f5a6fb39fac8",
+    "sprites/normal/normal_frame_001.png": "b4118b9a227d6722efe894a4a1a77a784b2afa2c6a44a6c9df353e580ee6b03e",
+    "sprites/normal/normal_frame_002.png": "f53329166ff04688037e0e46af2456421a296d5c6bda02e9959701e2dde992d0",
+    "sprites/normal/normal_frame_003.png": "6ed0745554368f75274e29183e7e374c0abeb249e96af5f4920b9888e479a876",
+    "sprites/normal/normal_frame_004.png": "724afdcc197cb255c5887150bd39b433edf285ad2257312b4464d90b4e7901dd",
+    "sprites/normal/normal_frame_005.png": "2801dc5073fa94fbdb386ec806a5ded3c4c19f8e097dbf4581b19fb366adb356",
+    "sprites/normal/normal_frame_006.png": "48066f996bb9f766f0c8d1e66fe355fe6070b8ee7dba077a96eb1950e52647e9",
+    "sprites/normal/normal_frame_007.png": "fb71de521c7a006ccd76729a6e491d2b3d4ba53de35e51d56c7586ffccabc775",
+    "sprites/normal/normal_frame_008.png": "76bf03b3b38401b41fe9bafe0b023896c6684041584220fd1147b240ed1681ab",
+    "sprites/blush/blush_frame_000.png": "33bedb72acafbc259ca724096bd43bed795d0ae79ae039684b82fb8678d2556e",
+    "sprites/blush/blush_frame_001.png": "4748120b507ed6e6ac19a4014ff939b65a006a4759efdef8fafdf26ab503693f",
+    "sprites/blush/blush_frame_002.png": "39c5abed6c7cf254d3bbafa26dc31e7b8b0dc1404909eca573cee32ae051b80f",
+    "sprites/blush/blush_frame_003.png": "31b2335954e58652151faa73dc36911f38a3df35e7dfcb049f187d189df588d4",
+    "sprites/blush/blush_frame_004.png": "5b3f4cf98461973462c896b93da7ce97b2b668b70b746d7d648c2e76c8e404ea",
+    "sprites/blush/blush_frame_005.png": "7a52b161b3d9b0089da9547316b1fd71d794d0d065f5081453b4336df0003817",
+    "sprites/blush/blush_frame_006.png": "a67b156e351e6d4dc5b76e1d0c3001fa8365f655f3b4e260269a86126c9622c1",
+    "sprites/blush/blush_frame_007.png": "fc46ac5692617c834f6c8502773d121fe0f8890bc9faddbf24d566f07e540f1c",
+    "sprites/crying/crying_frame_000.png": "8d70819e21a3cb454112035e522170d7879abf879f9dfc8274fa68cd16791849",
+    "sprites/crying/crying_frame_001.png": "cacd7580b7c0f0297f83eb9b7107cdb0a0fa1c2aa6582b975dff7db6abee0676",
+    "sprites/crying/crying_frame_002.png": "bb75f993874f027bc1f7981bc944963558f5dc0b8fb238fb4ea8adba22f42d6a",
+    "sprites/crying/crying_frame_003.png": "92876bdbac373997eaaf27dab9fd4c42289f7cd2cdbfbfdc26f3f251caa2aa98",
+    "sprites/crying/crying_frame_004.png": "5758b910e4d43b2e38293e8ea206aee8f10ae1e8bfa30b855ed25805b666a44e",
+    "sprites/crying/crying_frame_005.png": "fcd35fede72d0dfa6885591180dcdd02baaa1c1c0918f4cb668c61246865ffe5",
+    "sprites/crying/crying_frame_006.png": "a80b8e4ed04c2a35dad5ef45e851bee0f78ba915bfbc47a2291e5c705d5dbf65",
+    "sprites/crying/crying_frame_007.png": "abd19939eead29e92c17772144a89c5e4d3ffd34f438de30197c79ae423ff4e6",
+    "sprites/serious/serious_frame_000.png": "c6a3858e911cb96844bc820a13319d93aba66ed9b2c509394420ca0742e193e6",
+    "sprites/serious/serious_frame_001.png": "ec9d56098bc2e1f914960a388bd394b2fa4e7094ccc7bac7d3eea5b671387e12",
+    "sprites/serious/serious_frame_002.png": "2f7f425fc80387dd1e8be931cd96a754d4222219e970c892e4c15b432264693e",
+    "sprites/serious/serious_frame_003.png": "294dc6edd20af16384043a86a3bacff151342f9985c4009a204ed9ba9cb433a4",
+    "sprites/serious/serious_frame_004.png": "e23084970c09dfc69658d10cd2a18dd90a57da23a1f687b47e887c5c580ddf87",
+    "sprites/serious/serious_frame_005.png": "e825c3745c0f1747726b01b2f41fda9ef874d543aea2e6f11991b5b003b6bfd1",
+    "sprites/serious/serious_frame_006.png": "ba854d00632e93b6776f881b54449208d3b9e0edaf3184fb9ff04b388796e48d",
+    "sprites/serious/serious_frame_007.png": "389951ccefed63d5bc0425ac250b465ec3b30c369302eb4df159d563125f7404",
+    "sprites/surprised/surprised_frame_000.png": "cc5820c5a5a4fed286092d62535410b8059916f3b9560cef647bf6e721dcb10d",
+    "sprites/surprised/surprised_frame_001.png": "96936061af22d2b1dbd06ba8d0f8dd97a4482734ec939992c4d7cd9a695ca378",
+    "sprites/surprised/surprised_frame_002.png": "dade4bf26ba3da0c9074f120de0491075e6cdb9ebedd6317c49b140fdb755730",
+    "sprites/surprised/surprised_frame_003.png": "6f0c6385cf1c179c38957d3aad19cef705a557b9e0f219e9903fd4929f0ce5fb",
+    "sprites/surprised/surprised_frame_004.png": "23b21aec831d1e6c8a04d9ce7ea00fdcd91e732d34642f7c761d0c968330a6fe",
+    "sprites/surprised/surprised_frame_005.png": "61d2f4728717c24ed0e122b6c029e8af9f7530aacc93d84d4c324cc652bdd054",
+    "sprites/thinking/thinking_frame_000.png": "9e7f997d30315e09bb4d4baf05af18abdf81387d3803e4651aed61061a1c3f45",
+    "sprites/thinking/thinking_frame_001.png": "9c5423178a2be769daa8cda39378e3df0f214b8859456467ee8c64a4e046283a",
+    "sprites/thinking/thinking_frame_002.png": "0ca8091d5446999cd9391a760bab81202ee0202f0227de6d1c1e4b82ea897ed6",
+    "sprites/thinking/thinking_frame_003.png": "996c803ee6f815ebfa56b39b722bcdafa4e51f5b9a5264adc6d73ac29777e375",
+    "sprites/thinking/thinking_frame_004.png": "f1956a41c54f0064d97648b8525ec8329efbc04a1e86ff4bc868902d7e91e39b",
+    "sprites/thinking/thinking_frame_005.png": "316e1d4a43ecf357e82df323d085ea1d658ec497ab2d44986e56d28406421730",
+    "sprites/thinking/thinking_frame_006.png": "452488ec2f176b18e5e88aeb0d63227cb05f0c5f659a9b89b17c31c80adf5db9",
+    "sprites/thinking/thinking_frame_007.png": "40e8c40dce6392aba948756b44d1cd5e1b0123cb67497cac900fd8dce3407892",
+    "sprites/thinking/thinking_frame_008.png": "dfda6b9258a251c23460854ef5ffe2a0117e061ca45f29309552647d063421f8",
+    "portraits/court_record.png": "a3df9bd970651c95b95684ff107fd3f33ec6049afc87a80e8a2e13a75afe9211",
+    "portraits/selection.png": "b7096e8707dee394fa50800d7d65a41ea494521e7b297b8eb552a4ce1020d5a0"
+  }
+}

@@ -447,3 +447,7 @@ Each has `character.json`, `performance.json`, `personality.md` and a 64×64 sta
 - Validation: 1020 referenced files, 0 errors.
 
 - 2026-10-26 (D-096): `backgrounds/background_03_foreground.png` (256x192 RGBA, window frame + counter of bg_03, cut 1:1 by `scripts/make_background_foreground.py`); bg_03 also sets `characterOffsetY: 20`. Validation 1021 files / 0 errors.
+
+## Iris runtime pack (2026-10-26, D-098)
+
+`characters/iris/`: 48 exact-pixel sprite PNGs in `sprites/{normal,blush,crying,serious,surprised,thinking}/`, `portraits/court_record.png` (64x64), `portraits/selection.png` (170x170), `character.json`, `performance.json`, `personality.md` and `source.json` (source hashes, frame counts/timing, crop metrics and output hashes). `scripts/build_iris_pack.py --check` reconstructs GIF disposal and verifies all 50 generated images. The previous 3DS-derived sprite groups and portraits are absent from runtime; hooded variants remain source-only.
