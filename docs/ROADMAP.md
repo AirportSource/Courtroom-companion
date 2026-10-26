@@ -191,3 +191,10 @@ Details: [targeted correction report](TARGETED_CORRECTIONS.md). The earlier Fran
 - [x] Optional validated Iris/Franziska boundary profiles, prompt integration and conversation-safe capabilities.
 - [x] Automated isolation/contract/artifact regressions and reproducible multi-turn evaluation pack.
 - [ ] Complete real-LLM behavioral evaluation and refinement; automated checks do not establish emotional realism.
+
+## Generalized emotional behavior (2026-10-26)
+
+- [x] Distinct source-grounded profiles for all eight registered ready characters; no invented biography required.
+- [x] Additive v1 temperament/interaction guidance, legacy single-presentation and missing-profile compatibility.
+- [x] Dynamic roster-wide contract, animation, history/isolation and feature-flag tests; 22 multi-turn evaluation cases.
+- [ ] Complete real-model evaluation across the roster and evaluate whether longer emotional continuity warrants additional state.

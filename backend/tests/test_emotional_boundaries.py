@@ -54,15 +54,13 @@ def response(text, emotion='neutral', **extra):
     return {'beats': [{'text': text, 'emotion': emotion, 'intensity': 0.3}], **extra}
 
 
-def test_only_optional_pilot_packs_are_enabled(repo, monkeypatch):
+def test_every_registered_ready_pack_is_enabled_and_flag_disables_all(repo, monkeypatch):
     for key in repo.all_ids():
-        assert bool(repo.get(key).emotional_boundaries) == (key in PILOTS)
-    plain = repo.get('maya_fey')
-    assert boundary_prompt(plain.emotional_boundaries) == ''
-    assert 'Experimental emotional boundaries' not in build_system_prompt(plain)
+        if repo.get(key).chat_allowed():
+            assert repo.get(key).emotional_boundaries is not None
     monkeypatch.setenv('COURTROOM_EMOTIONAL_BOUNDARIES', 'off')
     repo.invalidate()
-    for key in PILOTS:
+    for key in repo.all_ids():
         assert repo.get(key).emotional_boundaries is None
         assert BOUNDARY_RULES not in build_system_prompt(repo.get(key))
 
@@ -71,7 +69,7 @@ def test_only_optional_pilot_packs_are_enabled(repo, monkeypatch):
     lambda d: d.update(schemaVersion=2), lambda d: d.update(schemaVersion=True),
     lambda d: d.update(schemaVersion='1'), lambda d: d.update(characterId='other'),
     lambda d: d.update(presentation='courtroom'), lambda d: d.update(trust=100),
-    lambda d: d.update(topics=[]), lambda d: d['topics'][0].update(emotions=['missing']),
+    lambda d: d.update(topics=None), lambda d: d['topics'][0].update(emotions=['missing']),
     lambda d: d['topics'].append(deepcopy(d['topics'][0])),
 ])
 def test_invalid_optional_policy_disables_with_actionable_warning(repo, tmp_path, mutate):
@@ -240,4 +238,5 @@ def test_evaluation_pack_covers_required_scenarios_without_fabricated_scores():
     assert set('ABCDEFGHIJKLMNO') <= {tag for case in pack['cases'] for tag in case['covers']}
     assert all(len(case['turns']) >= 2 and case['review'] for case in pack['cases'])
     assert {case['language'] for case in pack['cases']} >= {'en','fr','ja'}
-    assert {case['character'] for case in pack['cases']} == set(PILOTS)
+    index = json.loads((ASSETS/'characters/index.json').read_text(encoding='utf8'))
+    assert {case['character'] for case in pack['cases']} == set(index['characters'])

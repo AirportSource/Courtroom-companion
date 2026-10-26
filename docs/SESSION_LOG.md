@@ -1164,3 +1164,11 @@ Final validation: backend629 passed/2 skipped, frontend327 passed, source tests4
 - Owner authorized a scoped commit, PR and merge after review and automated validation. Real-LLM conversation testing remains partial; unit tests are not evidence of emotional realism.
 - Reran validation: backend 793 passed / 4 skipped (private-PDF and Windows-symlink prerequisites), frontend 396 passed, TypeScript/lint/build clean, assets 990 references / 0 errors, diff whitespace clean. Optional soundtrack files were not installed in the isolated checkout.
 - Reviewed only the prototype's 13 source/config/test/documentation files for publication. Private archives, wiki PDFs, user knowledge, credentials, local histories and ignored manual-test launch files are excluded. The experimental worktree is retained.
+
+## 2026-10-26 — Generalize emotional behavior to the complete roster
+
+- Started `feat/emotional-behavior-system` at verified origin/main `1d198c1` in the retained worktree. Added six independent personality-grounded profiles, optional v1 temperament/interaction styles for all eight characters and legacy single-presentation compatibility. Invalid/missing/disabled profiles retain the previous fallback.
+- Kept provider schemas, personality/lore, approved overlays, document tools, frontend layouts and Japanese-reading systems unchanged. Retained bounded session/character history with its documented six-exchange limitation; no inferred trust counter or permanent emotional memory.
+- Added 32 registry-wide/backward-compatibility checks and six evaluation scenarios (22 total). All-roster baseline/policy prompt exports made zero model calls. Real-LLM behavioral testing remains partial; no authenticity scores claimed.
+- Validation: backend 825 passed / 4 skipped; frontend 396 passed; TypeScript/lint/build and diff whitespace clean; asset validation 990 references / 0 errors. Skips are private-PDF and Windows-symlink prerequisites; optional local soundtrack files absent.
+- No new development servers or browsers started. Existing user-requested test instances and private files left untouched. Publication scope excludes root assets, private PDFs, credentials, local configurations/histories and ignored scratch files; existing worktrees retained.
